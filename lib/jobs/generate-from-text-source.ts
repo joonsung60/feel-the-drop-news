@@ -56,7 +56,7 @@ type GeneratedArticle = {
 const ALLOWED_CATEGORIES = ['페스티벌', '릴리즈', '뉴스']
 const DEFAULT_CATEGORY = '뉴스'
 const DEFAULT_GENRE = 'edm'
-const SLUG_MAX_LENGTH = 30
+const SLUG_MAX_LENGTH = 50
 
 const displayNameRules = Object.entries(displayNames as Record<string, string>)
   .map(([en, ko]) => `- ${en} → ${ko}`)

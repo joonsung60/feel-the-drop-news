@@ -169,7 +169,7 @@ function cleanInterviewSourceText(text: string): string {
     .join('\n')
 }
 
-const SLUG_MAX_LENGTH = 30
+const SLUG_MAX_LENGTH = 50
 function normalizeSlug(raw: string): string {
   return raw
     .toLowerCase()
