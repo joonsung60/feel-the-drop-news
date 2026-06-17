@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin as supabase } from '@/lib/supabase-admin'
 
 export async function triggerDeployHook(): Promise<{ success: boolean; cooldown?: boolean }> {
   const deployHookUrl = process.env.CLOUDFLARE_DEPLOY_HOOK_URL

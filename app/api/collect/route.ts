@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin as supabase } from '@/lib/supabase-admin'
 import { extractArticleText, extractArticleTitle, extractImageUrl, isUrlLikeTitle, titleFromUrl } from '@/lib/article-extraction'
 import Parser from 'rss-parser'
 
@@ -20,6 +20,25 @@ type CollectFailure = {
   source: string
   url: string
   error: string
+}
+
+type RssDiagnostics = {
+  sourceCount: number
+  parsedSourceCount: number
+  failedSourceCount: number
+  totalFeedItems: number
+  processedFeedItems: number
+  insertedCount: number
+  duplicateSkippedCount: number
+  skippedNoLinkCount: number
+  failedItemCount: number
+}
+
+type UrlDiagnostics = {
+  urlCount: number
+  insertedCount: number
+  duplicateSkippedCount: number
+  failedItemCount: number
 }
 
 function parsePublishedAt(value: unknown): string | null {
@@ -66,7 +85,19 @@ async function fetchArticleContent(url: string): Promise<{ content: string; imag
 }
 
 // RSS 자동 수집
-async function collectFromRSS(): Promise<{ collected: number; failures: CollectFailure[] }> {
+async function collectFromRSS(): Promise<{ collected: number; failures: CollectFailure[]; diagnostics: RssDiagnostics }> {
+  const diagnostics: RssDiagnostics = {
+    sourceCount: 0,
+    parsedSourceCount: 0,
+    failedSourceCount: 0,
+    totalFeedItems: 0,
+    processedFeedItems: 0,
+    insertedCount: 0,
+    duplicateSkippedCount: 0,
+    skippedNoLinkCount: 0,
+    failedItemCount: 0,
+  }
+
   const { data: sources } = await supabase
     .from('rss_sources')
     .select('*')
@@ -74,9 +105,10 @@ async function collectFromRSS(): Promise<{ collected: number; failures: CollectF
 
   if (!sources) {
     console.log('소스 없음')
-    return { collected: 0, failures: [] }
+    return { collected: 0, failures: [], diagnostics }
   }
 
+  diagnostics.sourceCount = sources.length
   console.log(`소스 ${sources.length}개 발견`)
   let collected = 0
   const failures: CollectFailure[] = []
@@ -85,10 +117,23 @@ async function collectFromRSS(): Promise<{ collected: number; failures: CollectF
     try {
       console.log(`파싱 시도: ${source.name} - ${source.url}`)
       const feed = await fetchFeed(source.url)
-      console.log(`파싱 성공: ${source.name} - ${feed.items.length}개 아이템`)
+      diagnostics.parsedSourceCount++
+      diagnostics.totalFeedItems += feed.items.length
+      
+      const itemsToProcess = feed.items.slice(0, 10)
+      diagnostics.processedFeedItems += itemsToProcess.length
+      console.log(`파싱 성공: ${source.name} - feed ${feed.items.length}개, 처리 ${itemsToProcess.length}개`)
 
-      for (const item of feed.items.slice(0, 10)) {
-        if (!item.link) continue
+      let sourceInserted = 0
+      let sourceDuplicates = 0
+      let sourceNoLink = 0
+
+      for (const item of itemsToProcess) {
+        if (!item.link) {
+          diagnostics.skippedNoLinkCount++
+          sourceNoLink++
+          continue
+        }
 
         const { data: existing } = await supabase
           .from('raw_articles')
@@ -96,7 +141,11 @@ async function collectFromRSS(): Promise<{ collected: number; failures: CollectF
           .eq('url', item.link)
           .single()
 
-        if (existing) continue
+        if (existing) {
+          diagnostics.duplicateSkippedCount++
+          sourceDuplicates++
+          continue
+        }
 
         const { content, imageUrl, title: extractedTitle } = await fetchArticleContent(item.link)
         const feedTitle = typeof item.title === 'string' ? item.title.trim() : ''
@@ -104,7 +153,7 @@ async function collectFromRSS(): Promise<{ collected: number; failures: CollectF
           ? feedTitle
           : extractedTitle ?? titleFromUrl(item.link) ?? '제목 없음'
 
-        await supabase.from('raw_articles').insert({
+        const { error: insertError } = await supabase.from('raw_articles').insert({
           source_id: source.id,
           title,
           content,
@@ -114,8 +163,18 @@ async function collectFromRSS(): Promise<{ collected: number; failures: CollectF
           published_at: parsePublishedAt(item.pubDate || item.isoDate),
         })
 
-        collected++
+        if (insertError) {
+          diagnostics.failedItemCount++
+          failures.push({ source: source.name, url: item.link, error: String(insertError.message || insertError) })
+          console.error(`Insert 실패: ${item.link}`, insertError)
+        } else {
+          diagnostics.insertedCount++
+          sourceInserted++
+          collected++
+        }
       }
+
+      console.log(`소스 완료: ${source.name} - 신규 ${sourceInserted}개, 중복 ${sourceDuplicates}개, 링크없음 ${sourceNoLink}개`)
 
       await supabase
         .from('rss_sources')
@@ -123,17 +182,24 @@ async function collectFromRSS(): Promise<{ collected: number; failures: CollectF
         .eq('id', source.id)
 
     } catch (err) {
+      diagnostics.failedSourceCount++
       console.error(`RSS 실패: ${source.name}`, err)
       failures.push({ source: source.name, url: source.url, error: String(err) })
     }
   }
 
-  return { collected, failures }
+  return { collected, failures, diagnostics }
 }
 
 // URL 직접 추가
-async function collectFromUrls(urls: string[]): Promise<number> {
+async function collectFromUrls(urls: string[]): Promise<{ collected: number; diagnostics: UrlDiagnostics }> {
   let collected = 0
+  const diagnostics: UrlDiagnostics = {
+    urlCount: urls.length,
+    insertedCount: 0,
+    duplicateSkippedCount: 0,
+    failedItemCount: 0,
+  }
 
   for (const url of urls) {
     try {
@@ -143,11 +209,14 @@ async function collectFromUrls(urls: string[]): Promise<number> {
         .eq('url', url)
         .single()
 
-      if (existing) continue
+      if (existing) {
+        diagnostics.duplicateSkippedCount++
+        continue
+      }
 
       const { content, imageUrl, title } = await fetchArticleContent(url)
 
-      await supabase.from('raw_articles').insert({
+      const { error: insertError } = await supabase.from('raw_articles').insert({
         source_id: null,
         title: title ?? titleFromUrl(url) ?? '제목 없음',
         content,
@@ -156,13 +225,20 @@ async function collectFromUrls(urls: string[]): Promise<number> {
         published_at: new Date().toISOString(),
       })
 
-      collected++
+      if (insertError) {
+        diagnostics.failedItemCount++
+        console.error(`Insert 실패: ${url}`, insertError)
+      } else {
+        diagnostics.insertedCount++
+        collected++
+      }
     } catch (err) {
+      diagnostics.failedItemCount++
       console.error(`URL 추가 실패: ${url}`, err)
     }
   }
 
-  return collected
+  return { collected, diagnostics }
 }
 
 export async function POST(req: NextRequest) {
@@ -172,12 +248,21 @@ export async function POST(req: NextRequest) {
 
     console.log('수집 시작:', urls ? `URL ${urls.length}개` : 'RSS 모드')
 
-    const result = urls && urls.length > 0
-      ? { collected: await collectFromUrls(urls), failures: [] }
-      : await collectFromRSS()
+    let result;
+    if (urls && urls.length > 0) {
+      const { collected, diagnostics } = await collectFromUrls(urls)
+      result = { collected, failures: [], diagnostics }
+    } else {
+      result = await collectFromRSS()
+    }
 
     console.log('수집 완료:', result.collected)
-    return NextResponse.json({ success: true, collected: result.collected, failures: result.failures })
+    return NextResponse.json({ 
+      success: true, 
+      collected: result.collected, 
+      failures: result.failures,
+      diagnostics: result.diagnostics
+    })
   } catch (err) {
     console.error('collect API 에러:', err)
     return NextResponse.json({ success: false, error: String(err) }, { status: 500 })

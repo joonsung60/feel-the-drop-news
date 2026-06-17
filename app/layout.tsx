@@ -156,22 +156,49 @@ export default function RootLayout({
         <main className="flex-1">{children}</main>
 
         {/* ── 푸터 ── */}
-        <footer className="border-t border-gray-200 bg-[#F7F7F7] mt-16">
-          <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-8 py-8">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div className="flex items-center gap-5 text-sm text-gray-500">
+        <footer className="border-t border-gray-200 bg-[#F7F7F7] mt-16 text-[#0A0A0A]">
+          <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-8 py-10 md:py-12">
+            <div className="flex flex-col md:flex-row justify-between gap-8 md:gap-12">
+              <div className="max-w-xs">
+                <h2 
+                  className="text-lg font-black uppercase tracking-tight mb-2"
+                  style={{ fontFamily: "var(--font-display), sans-serif" }}
+                >
+                  EDM Star News
+                </h2>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  한국어 EDM 뉴스와 전자음악 아카이브를 위한 독립 미디어
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-x-6 gap-y-3 text-sm font-medium text-gray-700">
                 <Link href="/about" className="hover:text-black transition-colors">
                   소개
                 </Link>
-                <a
-                  href="mailto:gwakjoonsung@gmail.com"
-                  className="hover:text-black transition-colors"
-                >
+                <Link href="/editorial-policy" className="hover:text-black transition-colors">
+                  편집·출처 정책
+                </Link>
+                <Link href="/corrections" className="hover:text-black transition-colors">
+                  정정·제보
+                </Link>
+                <Link href="/privacy" className="hover:text-black transition-colors">
+                  개인정보처리방침
+                </Link>
+                <Link href="/terms" className="hover:text-black transition-colors">
+                  이용약관
+                </Link>
+                <a href="mailto:gwakjoonsung@gmail.com" className="hover:text-black transition-colors">
                   문의
                 </a>
               </div>
-              <div className="text-xs text-gray-400">
-                © 2026 EDM Star News · 발행인 곽준성
+            </div>
+            <div className="mt-10 pt-6 border-t border-gray-200 flex flex-col md:flex-row justify-between gap-6 text-xs text-gray-500">
+              <div>
+                <p className="mb-1">상호: 디디 · 대표: 곽준성 · 사업자등록번호: 536-56-00864</p>
+                <p>문의: gwakjoonsung@gmail.com</p>
+              </div>
+              <div className="md:text-right">
+                <p className="mb-1">© 2026 EDM Star News. All rights reserved.</p>
+                <p>발행인·편집인 곽준성</p>
               </div>
             </div>
           </div>

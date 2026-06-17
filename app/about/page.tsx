@@ -35,6 +35,22 @@ export default function AboutPage() {
 
         <dl className="mt-16 pt-8 border-t border-zinc-200 space-y-3 text-sm">
           <div className="flex gap-4">
+            <dt className="w-28 shrink-0 text-zinc-500">운영 매체명</dt>
+            <dd className="text-zinc-800">EDM Star News</dd>
+          </div>
+          <div className="flex gap-4">
+            <dt className="w-28 shrink-0 text-zinc-500">상호</dt>
+            <dd className="text-zinc-800">디디 (대표: 곽준성)</dd>
+          </div>
+          <div className="flex gap-4">
+            <dt className="w-28 shrink-0 text-zinc-500">사업자등록번호</dt>
+            <dd className="text-zinc-800">536-56-00864</dd>
+          </div>
+          <div className="flex gap-4">
+            <dt className="w-28 shrink-0 text-zinc-500">다루는 분야</dt>
+            <dd className="text-zinc-800">EDM, 전자음악, 페스티벌, DJ/프로듀서, 릴리즈, 클럽 문화</dd>
+          </div>
+          <div className="flex gap-4">
             <dt className="w-28 shrink-0 text-zinc-500">발행인 · 편집인</dt>
             <dd className="text-zinc-800 font-medium">곽준성</dd>
           </div>

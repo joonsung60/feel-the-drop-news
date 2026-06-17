@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin as supabase } from '@/lib/supabase-admin'
 import { RawArticle, SuggestionWithArticles } from '@/lib/suggest/types'
 import { buildEntityIndex, loadEntityDictionary, buildPairClusters } from '@/lib/suggest/entity-index'
 import { articleSnippet, normalizeSuggestion } from '@/lib/suggest/normalize'

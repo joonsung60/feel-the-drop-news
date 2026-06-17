@@ -27,16 +27,17 @@ if (!NOTIFY_ENABLED) {
 
 const supabaseUrl =
   process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey =
-  process.env.SUPABASE_ANON_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-if (!supabaseUrl || !supabaseAnonKey) {
+if (!supabaseUrl || !supabaseServiceRoleKey) {
   throw new Error(
-    'SUPABASE_URL / SUPABASE_ANON_KEY 환경변수가 없습니다.'
+    'SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY 환경변수가 없습니다.'
   )
 }
 
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+const supabase = createClient(supabaseUrl, supabaseServiceRoleKey, {
+  auth: { persistSession: false, autoRefreshToken: false },
+})
 
 type JobRow = {
   id: string

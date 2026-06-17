@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin as supabase } from '@/lib/supabase-admin'
 import { triggerDeployHook } from '@/lib/deploy-hook'
 
 export const runtime = 'nodejs'

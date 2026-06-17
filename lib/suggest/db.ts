@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin as supabase } from '@/lib/supabase-admin'
 import { DbSuggestedCluster, PersistedSuggestion, RawArticle, SuggestionWithArticles } from './types'
 import { calculateCohesionScore, isCategoryKeyword } from './normalize'
 

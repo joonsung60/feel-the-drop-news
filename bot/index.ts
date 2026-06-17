@@ -155,18 +155,84 @@ bot.command("deploy", async (ctx) => {
 bot.command("collect", async (ctx) => {
   console.log("/collect 진입:", ctx.from?.id);
   const msg = await ctx.reply("RSS 수집 중...");
+  let res;
+  
   try {
-    const res = await fetch(`${LOCAL_API}/api/collect`, { method: "POST" });
-    const data = await res.json();
-    const collected = data.collected ?? 0;
-    const failed = data.failures?.length ?? 0;
+    res = await fetch(`${LOCAL_API}/api/collect`, { method: "POST" });
+  } catch (e) {
+    const errorMessage = e instanceof Error ? e.message : String(e);
     await ctx.api.editMessageText(
       ctx.chat.id,
       msg.message_id,
-      `수집 완료\n새 기사: ${collected}개${failed > 0 ? `\n실패 소스: ${failed}개` : ""}`
+      `Next API에 연결하지 못했습니다. 로컬 서버가 켜져 있는지 확인하세요.\n에러: ${errorMessage.split('\n')[0]}`
     );
+    return;
+  }
+
+  try {
+    const data = await res.json().catch(() => ({}));
+    
+    if (!res.ok || data.success === false) {
+      await ctx.api.editMessageText(
+        ctx.chat.id,
+        msg.message_id,
+        `collect API가 실패했습니다. (HTTP ${res.status})\n에러: ${data.error || '알 수 없는 에러'}`
+      );
+      return;
+    }
+
+    const { collected = 0, failures = [], diagnostics } = data;
+    let resultText = "";
+
+    if (diagnostics && typeof diagnostics.sourceCount === "number") {
+      const {
+        insertedCount,
+        duplicateSkippedCount,
+        processedFeedItems,
+        totalFeedItems,
+        parsedSourceCount,
+        sourceCount,
+        failedSourceCount,
+      } = diagnostics;
+
+      resultText += `RSS 수집 완료\n`;
+      resultText += `- 신규 저장: ${insertedCount}개\n`;
+      resultText += `- 중복 스킵: ${duplicateSkippedCount}개\n`;
+      resultText += `- 처리 아이템: ${processedFeedItems}개 / 피드 전체 ${totalFeedItems}개\n`;
+      resultText += `- 소스 성공: ${parsedSourceCount}/${sourceCount}개\n`;
+      resultText += `- 실패 소스: ${failedSourceCount}개\n`;
+
+      if (collected === 0 && duplicateSkippedCount > 0) {
+        resultText += `\n새 기사는 없지만 RSS 확인은 정상 완료됐습니다.\n`;
+      }
+    } else {
+      resultText += `수집 완료\n새 기사: ${collected}개\n`;
+    }
+
+    if (failures.length > 0) {
+      resultText += `\n실패 소스:\n`;
+      failures.slice(0, 5).forEach((f: any) => {
+        let errStr = String(f.error).split('\n')[0];
+        if (errStr.length > 50) errStr = errStr.substring(0, 50) + "...";
+        resultText += `- ${f.source}: ${errStr}\n`;
+      });
+      if (failures.length > 5) {
+        resultText += `...외 ${failures.length - 5}개 실패\n`;
+      }
+    }
+
+    if (resultText.length > 4000) {
+      resultText = resultText.substring(0, 4000) + "... (메시지 길이 초과)";
+    }
+
+    await ctx.api.editMessageText(ctx.chat.id, msg.message_id, resultText.trim());
   } catch (e) {
-    await ctx.api.editMessageText(ctx.chat.id, msg.message_id, `오류 발생: ${e}`);
+    const errorMessage = e instanceof Error ? e.message : String(e);
+    await ctx.api.editMessageText(
+      ctx.chat.id,
+      msg.message_id,
+      `응답 처리 중 오류 발생: ${errorMessage.split('\n')[0]}`
+    );
   }
 });
 

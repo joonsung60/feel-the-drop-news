@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin as supabase } from '@/lib/supabase-admin'
 import { SYSTEM_PROMPT_A, SYSTEM_PROMPT_B } from '@/lib/prompts'
 import { findGenre } from '@/lib/taxonomy'
 import displayNames from '@/lib/display-names.json'

@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin as supabase } from '@/lib/supabase-admin'
 import { cleanArticleText, extractArticleText } from '@/lib/article-extraction'
 import displayNames from '@/lib/display-names.json'
 import { SYSTEM_PROMPT_A } from '@/lib/prompts'

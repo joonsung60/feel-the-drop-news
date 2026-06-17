@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin as supabase } from '@/lib/supabase-admin'
 import { SuggestionWithArticles, TopicBlockRule } from './types'
 import { normalizeTopicKey } from './normalize'
 
