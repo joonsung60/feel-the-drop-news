@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: '개인정보처리방침 | EDM Star News',
+  title: '개인정보처리방침 | FEEL THE DROP',
 }
 
 export default function PrivacyPolicyPage() {
@@ -14,7 +14,7 @@ export default function PrivacyPolicyPage() {
         <div className="text-base leading-relaxed text-zinc-800 space-y-8">
           <section>
             <p>
-              EDM Star News(이하 &quot;본 사이트&quot;)는 이용자의 개인정보를 소중히 다루며, 관련 법령을 준수합니다. 본 사이트는 별도의 회원가입, 댓글, 결제 기능 등을 운영하지 않으므로 식별 가능한 개인정보를 원칙적으로 수집하지 않습니다.
+              FEEL THE DROP(이하 &quot;본 사이트&quot;)는 이용자의 개인정보를 소중히 다루며, 관련 법령을 준수합니다. 본 사이트는 별도의 회원가입, 댓글, 결제 기능 등을 운영하지 않으므로 식별 가능한 개인정보를 원칙적으로 수집하지 않습니다.
             </p>
           </section>
 

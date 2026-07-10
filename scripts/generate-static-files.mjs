@@ -4,7 +4,8 @@ import { createClient } from '@supabase/supabase-js'
 const CATEGORY_SLUGS = ['festival', 'artist', 'release', 'news', 'interview']
 const GENRE_SLUGS = ['house', 'techno', 'trance', 'drum-and-bass', 'dubstep', 'ambient']
 
-const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://edmstarnews.com').replace(/\/$/, '')
+// Keep this fallback synchronized with lib/site.ts.
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://feel-the-drop.com').replace(/\/$/, '')
 
 function loadEnvLocal() {
   let text = ''
@@ -111,7 +112,7 @@ Allow: /
 Sitemap: ${SITE_URL}/sitemap.xml
 `
 
-const llms = `# EDM Star News
+const llms = `# FEEL THE DROP
 
 > Korean-language EDM and electronic music news site. Articles are generated from curated English-language source articles, then reviewed before publication.
 

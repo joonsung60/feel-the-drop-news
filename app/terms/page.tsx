@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: '이용약관 | EDM Star News',
+  title: '이용약관 | FEEL THE DROP',
 }
 
 export default function TermsOfServicePage() {
@@ -14,7 +14,7 @@ export default function TermsOfServicePage() {
         <div className="text-base leading-relaxed text-zinc-800 space-y-8">
           <section>
             <p>
-              EDM Star News(이하 &quot;본 사이트&quot;)를 이용해 주셔서 감사합니다. 본 사이트의 서비스를 이용함에 있어 필요한 사항을 아래와 같이 안내합니다.
+              FEEL THE DROP(이하 &quot;본 사이트&quot;)를 이용해 주셔서 감사합니다. 본 사이트의 서비스를 이용함에 있어 필요한 사항을 아래와 같이 안내합니다.
             </p>
           </section>
 
@@ -28,7 +28,7 @@ export default function TermsOfServicePage() {
           <section>
             <h2 className="text-xl font-bold mb-3">2. 저작권 및 무단 복제 금지</h2>
             <p>
-              본 사이트가 자체적으로 작성한 기사, 요약문, 편집물 및 기타 콘텐츠에 대한 저작권은 본 사이트에 있습니다. 원칙적으로 콘텐츠의 무단 복제 및 전체 재배포를 금지합니다. 단, 출처(EDM Star News)와 해당 기사의 링크를 명시하는 범위 내에서의 인용은 가능합니다.
+              본 사이트가 자체적으로 작성한 기사, 요약문, 편집물 및 기타 콘텐츠에 대한 저작권은 본 사이트에 있습니다. 원칙적으로 콘텐츠의 무단 복제 및 전체 재배포를 금지합니다. 단, 출처(FEEL THE DROP)와 해당 기사의 링크를 명시하는 범위 내에서의 인용은 가능합니다.
             </p>
           </section>
 
@@ -59,7 +59,7 @@ export default function TermsOfServicePage() {
               <li><strong>상호:</strong> 디디</li>
               <li><strong>대표자:</strong> 곽준성</li>
               <li><strong>사업자등록번호:</strong> 536-56-00864</li>
-              <li><strong>운영 매체명:</strong> EDM Star News</li>
+              <li><strong>운영 매체명:</strong> FEEL THE DROP</li>
               <li><strong>문의:</strong> <a href="mailto:gwakjoonsung@gmail.com" className="text-blue-600 hover:underline">gwakjoonsung@gmail.com</a></li>
             </ul>
           </section>

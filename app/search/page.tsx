@@ -157,7 +157,7 @@ export default function SearchPage() {
                       />
                     ) : (
                       <div className="flex h-full w-full items-center justify-center bg-gray-900 text-xs font-bold uppercase tracking-widest text-gray-400">
-                        EDM Star News
+                        FEEL THE DROP
                       </div>
                     )}
                     {article.category && (

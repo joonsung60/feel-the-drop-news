@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: '편집·출처 정책 | EDM Star News',
+  title: '편집·출처 정책 | FEEL THE DROP',
 }
 
 export default function EditorialPolicyPage() {
@@ -14,7 +14,7 @@ export default function EditorialPolicyPage() {
         <div className="text-base leading-relaxed text-zinc-800 space-y-8">
           <section>
             <p>
-              EDM Star News는 신뢰도 높은 한국어 EDM 정보를 제공하기 위해 아래와 같은 기준을 가지고 콘텐츠를 제작 및 편집합니다.
+              FEEL THE DROP는 신뢰도 높은 한국어 EDM 정보를 제공하기 위해 아래와 같은 기준을 가지고 콘텐츠를 제작 및 편집합니다.
             </p>
           </section>
 

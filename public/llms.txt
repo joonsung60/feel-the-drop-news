@@ -1,14 +1,14 @@
-# EDM Star News
+# FEEL THE DROP
 
 > Korean-language EDM and electronic music news site. Articles are generated from curated English-language source articles, then reviewed before publication.
 
-Base URL: https://edmstarnews.com
-Sitemap: https://edmstarnews.com/sitemap.xml
+Base URL: https://feel-the-drop.com
+Sitemap: https://feel-the-drop.com/sitemap.xml
 
 ## Public Content
 
-- Home: https://edmstarnews.com/
-- Articles: https://edmstarnews.com/articles/
+- Home: https://feel-the-drop.com/
+- Articles: https://feel-the-drop.com/articles/
 
 ## Notes for AI Crawlers
 

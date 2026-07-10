@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: '소개 | EDM Star News',
-  description: 'EDM Star News는 한국어권 EDM 저널리즘의 공백을 채우기 위해 만들어진 독립 미디어입니다.',
+  title: '소개 | FEEL THE DROP',
+  description: 'FEEL THE DROP는 한국어권 EDM 저널리즘의 공백을 채우기 위해 만들어진 독립 미디어입니다.',
 }
 
 export default function AboutPage() {
@@ -10,7 +10,7 @@ export default function AboutPage() {
     <div className="min-h-full bg-zinc-50 text-zinc-900">
       <main className="max-w-3xl mx-auto px-6 py-16">
         <h1 className="text-3xl font-bold tracking-tight mb-10">
-          EDM Star News는
+          FEEL THE DROP는
         </h1>
 
         <div className="text-base leading-relaxed text-zinc-800 space-y-6">
@@ -36,7 +36,7 @@ export default function AboutPage() {
         <dl className="mt-16 pt-8 border-t border-zinc-200 space-y-3 text-sm">
           <div className="flex gap-4">
             <dt className="w-28 shrink-0 text-zinc-500">운영 매체명</dt>
-            <dd className="text-zinc-800">EDM Star News</dd>
+            <dd className="text-zinc-800">FEEL THE DROP</dd>
           </div>
           <div className="flex gap-4">
             <dt className="w-28 shrink-0 text-zinc-500">상호</dt>

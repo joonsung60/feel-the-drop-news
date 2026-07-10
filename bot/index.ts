@@ -96,7 +96,7 @@ bot.use(async (ctx, next) => {
 bot.command("start", async (ctx) => {
   console.log("/start 진입:", ctx.from?.id);
   await ctx.reply(
-    "EDM Star News 봇입니다.\n\n" +
+    "FEEL THE DROP 봇입니다.\n\n" +
     "/collect - RSS 수집\n" +
     "/suggest - 토픽 제안\n" +
     "/suggest2 - 토픽 확장 제안\n" +
@@ -181,7 +181,22 @@ bot.command("collect", async (ctx) => {
       return;
     }
 
-    const { collected = 0, failures = [], diagnostics } = data;
+    type CollectFailure = { source: string; error: unknown };
+    const { collected = 0, failures = [], diagnostics } = data as {
+      collected?: number;
+      failures?: CollectFailure[];
+      diagnostics?: {
+        insertedCount: number;
+        duplicateSkippedCount: number;
+        processedFeedItems: number;
+        totalFeedItems: number;
+        parsedSourceCount: number;
+        sourceCount: number;
+        failedSourceCount: number;
+      };
+      success?: boolean;
+      error?: string;
+    };
     let resultText = "";
 
     if (diagnostics && typeof diagnostics.sourceCount === "number") {
@@ -211,7 +226,7 @@ bot.command("collect", async (ctx) => {
 
     if (failures.length > 0) {
       resultText += `\n실패 소스:\n`;
-      failures.slice(0, 5).forEach((f: any) => {
+      failures.slice(0, 5).forEach((f) => {
         let errStr = String(f.error).split('\n')[0];
         if (errStr.length > 50) errStr = errStr.substring(0, 50) + "...";
         resultText += `- ${f.source}: ${errStr}\n`;
@@ -443,7 +458,7 @@ async function main() {
 
     await bot.start({
       onStart: (botInfo) => {
-        console.log(`EDM Star News 봇 시작됨: @${botInfo.username}`);
+        console.log(`FEEL THE DROP 봇 시작됨: @${botInfo.username}`);
       },
     });
   } catch (e) {

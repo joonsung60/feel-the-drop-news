@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Script from "next/script";
 import { Barlow_Condensed, Noto_Sans_KR } from "next/font/google";
+import { SITE_URL } from "@/lib/site";
 import { CATEGORY_NAV, RELEASE_GENRE_NAV } from "@/lib/taxonomy";
 import "./globals.css";
 
@@ -22,7 +23,8 @@ const notoSansKR = Noto_Sans_KR({
 });
 
 export const metadata: Metadata = {
-  title: "EDM Star News",
+  metadataBase: new URL(SITE_URL),
+  title: "FEEL THE DROP",
   description: "한국어 EDM 뉴스 종합",
   verification: {
     google: "dBSG9LfIn9zB1n1Hu13rgD_RqKS5GeEknVNf9a2PlMg",
@@ -77,7 +79,7 @@ export default function RootLayout({
                   className="block text-2xl md:text-3xl font-black leading-none tracking-tight uppercase hover:text-[#0052D4] transition-colors"
                   style={{ fontFamily: "var(--font-display), sans-serif" }}
                 >
-                  EDM Star News
+                  FEEL THE DROP
                 </Link>
                 <p className="mt-1 text-xs font-medium text-gray-500">
                   EDM의 순간을 기록합니다
@@ -164,7 +166,7 @@ export default function RootLayout({
                   className="text-lg font-black uppercase tracking-tight mb-2"
                   style={{ fontFamily: "var(--font-display), sans-serif" }}
                 >
-                  EDM Star News
+                  FEEL THE DROP
                 </h2>
                 <p className="text-sm text-gray-600 leading-relaxed">
                   한국어 EDM 뉴스와 전자음악 아카이브를 위한 독립 미디어
@@ -197,7 +199,7 @@ export default function RootLayout({
                 <p>문의: gwakjoonsung@gmail.com</p>
               </div>
               <div className="md:text-right">
-                <p className="mb-1">© 2026 EDM Star News. All rights reserved.</p>
+                <p className="mb-1">© 2026 FEEL THE DROP. All rights reserved.</p>
                 <p>발행인·편집인 곽준성</p>
               </div>
             </div>

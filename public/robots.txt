@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://edmstarnews.com/sitemap.xml
+Sitemap: https://feel-the-drop.com/sitemap.xml

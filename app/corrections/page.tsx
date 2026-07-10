@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: '정정·제보 | EDM Star News',
+  title: '정정·제보 | FEEL THE DROP',
 }
 
 export default function CorrectionsPage() {
@@ -14,7 +14,7 @@ export default function CorrectionsPage() {
         <div className="text-base leading-relaxed text-zinc-800 space-y-8">
           <section>
             <p>
-              EDM Star News는 정확하고 신뢰할 수 있는 정보를 제공하기 위해 최선을 다하고 있습니다. 기사 내용 중 수정이 필요하거나 중요한 제보가 있다면 언제든 알려주시기 바랍니다.
+              FEEL THE DROP는 정확하고 신뢰할 수 있는 정보를 제공하기 위해 최선을 다하고 있습니다. 기사 내용 중 수정이 필요하거나 중요한 제보가 있다면 언제든 알려주시기 바랍니다.
             </p>
           </section>
 

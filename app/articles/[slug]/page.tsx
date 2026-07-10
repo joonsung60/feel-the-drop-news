@@ -32,7 +32,7 @@ export async function generateMetadata({
 
   if (!data) {
     return {
-      title: "기사 없음 | EDM Star News",
+      title: "기사 없음 | FEEL THE DROP",
       description: "한국어 EDM 뉴스 종합",
     };
   }
@@ -42,14 +42,19 @@ export async function generateMetadata({
     ? data.image_url
     : (await loadClusterImageUrl(data.cluster_id)) ??
       extractFirstMarkdownImage(data.content);
+  const articlePath = `/articles/${data.slug ?? data.id}/`;
 
   return {
-    title: `${data.title} | EDM Star News`,
+    title: `${data.title} | FEEL THE DROP`,
     description,
+    alternates: {
+      canonical: articlePath,
+    },
     openGraph: {
       title: data.title,
       description,
       type: "article",
+      url: articlePath,
       publishedTime: data.published_at ?? data.created_at,
       modifiedTime: data.updated_at ?? undefined,
       images: imageUrl ? [{ url: imageUrl }] : undefined,
@@ -80,6 +85,7 @@ async function loadArticle(key: string): Promise<{
     .from("articles")
     .select(ARTICLE_SELECT)
     .eq("slug", key)
+    .eq("published", true)
     .maybeSingle();
   if (bySlug.error) return { data: null, errorMessage: bySlug.error.message };
   if (bySlug.data)
@@ -90,6 +96,7 @@ async function loadArticle(key: string): Promise<{
       .from("articles")
       .select(ARTICLE_SELECT)
       .eq("id", key)
+      .eq("published", true)
       .maybeSingle();
     if (byId.error) return { data: null, errorMessage: byId.error.message };
     return {
