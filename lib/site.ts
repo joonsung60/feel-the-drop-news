@@ -6,7 +6,7 @@ export const DEFAULT_OG_IMAGE_URL = SITE_URL + DEFAULT_OG_IMAGE_PATH
 export const CONTACT_EMAIL = 'feelthedrop.official@gmail.com'
 
 export const SOCIAL_LINKS = [
-  { platform: 'instagram', locale: 'KR', handle: '@feelthedrop', url: 'https://www.instagram.com/feelthedrop/' },
+  { platform: 'instagram', locale: 'KR', handle: '@feelthedrop_kr', url: 'https://www.instagram.com/feelthedrop_kr/' },
   { platform: 'instagram', locale: 'JP', handle: '@feelthedrop_jp', url: 'https://www.instagram.com/feelthedrop_jp/' },
 ] as const
 
