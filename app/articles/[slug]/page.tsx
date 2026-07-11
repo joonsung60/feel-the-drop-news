@@ -4,7 +4,7 @@ import { notFound, permanentRedirect } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { isUsableImageUrl, loadClusterImageUrl, loadPublishedArticles } from "@/lib/articles";
 import { ArticleCard } from "@/components/ArticleCard";
-import { DEFAULT_OG_IMAGE_URL } from "@/lib/site";
+import { DEFAULT_OG_IMAGE_URL, PUBLISHER } from "@/lib/site";
 
 // ── 원본 유지 — 데이터/유틸 ───────────────────────────
 
@@ -298,7 +298,7 @@ export default async function ArticlePage({
         {/* 발행인 구분선 */}
         <div className="mb-8 pb-4 border-b border-gray-200 text-sm">
           <span className="text-gray-500">기사 · 편집</span>
-          <span className="ml-2 text-gray-800 font-medium">곽준성</span>
+          <span className="ml-2 text-gray-800 font-medium">{PUBLISHER}</span>
         </div>
 
         {/* 본문 블록 */}

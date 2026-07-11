@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Script from "next/script";
 import { Barlow_Condensed, Noto_Sans_KR } from "next/font/google";
-import { DEFAULT_OG_IMAGE_URL, SITE_URL } from "@/lib/site";
+import { CONTACT_EMAIL, DEFAULT_OG_IMAGE_URL, PUBLISHER, SITE_URL, SOCIAL_LINKS } from "@/lib/site";
 import { CATEGORY_NAV, RELEASE_GENRE_NAV } from "@/lib/taxonomy";
 import "./globals.css";
 
@@ -49,6 +49,7 @@ const NAV_ITEMS = [
     label: item.label,
     href: `/category/${item.slug}`,
   })),
+  { label: "도서", href: "/books" },
 ];
 
 const showAdminLink = process.env.BUILD_STATIC !== "1";
@@ -179,49 +180,18 @@ export default function RootLayout({
         {/* ── 푸터 ── */}
         <footer className="border-t border-gray-200 bg-[#F7F7F7] mt-16 text-[#0A0A0A]">
           <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-8 py-10 md:py-12">
-            <div className="flex flex-col md:flex-row justify-between gap-8 md:gap-12">
+            <div className="grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-12">
               <div className="max-w-xs">
-                <h2 
-                  className="text-lg font-black uppercase tracking-tight mb-2"
-                  style={{ fontFamily: "var(--font-display), sans-serif" }}
-                >
-                  FEEL THE DROP
-                </h2>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  한국어 EDM 뉴스와 전자음악 아카이브를 위한 독립 미디어
-                </p>
+                <Image src="/logo.png" alt="FEEL THE DROP" width={2508} height={627} className="h-7 w-auto" />
+                <p className="mt-3 text-sm text-gray-600 leading-relaxed">한국어 EDM 뉴스와 전자음악 아카이브를 위한 독립 미디어</p>
+                <div className="mt-5 flex gap-4 text-sm font-medium text-gray-700">
+                  {SOCIAL_LINKS.map((link) => <a key={link.locale} href={link.url} target="_blank" rel="noopener noreferrer" aria-label={`FEEL THE DROP ${link.locale === 'KR' ? '한국어' : '일본어'} 인스타그램`} className="inline-flex items-center gap-1.5 hover:text-black transition-colors"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" /></svg>{link.locale}</a>)}
+                </div>
               </div>
-              <div className="flex flex-wrap gap-x-6 gap-y-3 text-sm font-medium text-gray-700">
-                <Link href="/about" className="hover:text-black transition-colors">
-                  소개
-                </Link>
-                <Link href="/editorial-policy" className="hover:text-black transition-colors">
-                  편집·출처 정책
-                </Link>
-                <Link href="/corrections" className="hover:text-black transition-colors">
-                  정정·제보
-                </Link>
-                <Link href="/privacy" className="hover:text-black transition-colors">
-                  개인정보처리방침
-                </Link>
-                <Link href="/terms" className="hover:text-black transition-colors">
-                  이용약관
-                </Link>
-                <a href="mailto:gwakjoonsung@gmail.com" className="hover:text-black transition-colors">
-                  문의
-                </a>
-              </div>
+              <div><h2 className="text-xs font-bold tracking-[0.2em] uppercase" style={{ fontFamily: "var(--font-display), sans-serif" }}>섹션</h2><div className="mt-4 grid grid-cols-2 gap-x-5 gap-y-3 text-sm font-medium text-gray-700">{CATEGORY_NAV.map((item) => <Link key={item.slug} href={`/category/${item.slug}`} className="hover:text-black transition-colors">{item.label}</Link>)}{RELEASE_GENRE_NAV.map((item) => <Link key={item.slug} href={`/genre/${item.slug}`} className="hover:text-black transition-colors">{item.label}</Link>)}<Link href="/books" className="hover:text-black transition-colors">도서</Link><Link href="/feed.xml" className="hover:text-black transition-colors">RSS</Link></div></div>
+              <div><h2 className="text-xs font-bold tracking-[0.2em] uppercase" style={{ fontFamily: "var(--font-display), sans-serif" }}>정보</h2><div className="mt-4 flex flex-col gap-3 text-sm font-medium text-gray-700"><Link href="/about" className="hover:text-black transition-colors">소개</Link><Link href="/editorial-policy" className="hover:text-black transition-colors">편집·출처 정책</Link><Link href="/corrections" className="hover:text-black transition-colors">정정·제보</Link><Link href="/privacy" className="hover:text-black transition-colors">개인정보처리방침</Link><Link href="/terms" className="hover:text-black transition-colors">이용약관</Link><a href={`mailto:${CONTACT_EMAIL}`} className="hover:text-black transition-colors">문의</a></div></div>
             </div>
-            <div className="mt-10 pt-6 border-t border-gray-200 flex flex-col md:flex-row justify-between gap-6 text-xs text-gray-500">
-              <div>
-                <p className="mb-1">상호: 디디 · 대표: 곽준성 · 사업자등록번호: 536-56-00864</p>
-                <p>문의: gwakjoonsung@gmail.com</p>
-              </div>
-              <div className="md:text-right">
-                <p className="mb-1">© 2026 FEEL THE DROP. All rights reserved.</p>
-                <p>발행인·편집인 곽준성</p>
-              </div>
-            </div>
+            <div className="mt-10 pt-6 border-t border-gray-200 flex flex-col md:flex-row justify-between gap-6 text-xs text-gray-500"><p>© 2026 FEEL THE DROP. All rights reserved.</p><p>발행인·편집인 {PUBLISHER}</p></div>
           </div>
         </footer>
       </body>
