@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import Script from "next/script";
 import { Barlow_Condensed, Noto_Sans_KR } from "next/font/google";
-import { SITE_URL } from "@/lib/site";
+import { DEFAULT_OG_IMAGE_URL, SITE_URL } from "@/lib/site";
 import { CATEGORY_NAV, RELEASE_GENRE_NAV } from "@/lib/taxonomy";
 import "./globals.css";
 
@@ -28,6 +29,17 @@ export const metadata: Metadata = {
   description: "한국어 EDM 뉴스 종합",
   verification: {
     google: "dBSG9LfIn9zB1n1Hu13rgD_RqKS5GeEknVNf9a2PlMg",
+  },
+  icons: {
+    icon: "/icon.png",
+    apple: "/apple-icon.png",
+  },
+  openGraph: {
+    title: "FEEL THE DROP",
+    description: "한국어 EDM 뉴스 종합",
+    url: SITE_URL,
+    siteName: "FEEL THE DROP",
+    images: [{ url: DEFAULT_OG_IMAGE_URL }],
   },
 };
 
@@ -76,10 +88,17 @@ export default function RootLayout({
               <div className="min-w-0">
                 <Link
                   href="/"
-                  className="block text-2xl md:text-3xl font-black leading-none tracking-tight uppercase hover:text-[#0052D4] transition-colors"
-                  style={{ fontFamily: "var(--font-display), sans-serif" }}
+                  className="block transition-opacity hover:opacity-80"
+                  aria-label="FEEL THE DROP home"
                 >
-                  FEEL THE DROP
+                  <Image
+                    src="/logo.png"
+                    alt="FEEL THE DROP"
+                    width={2508}
+                    height={627}
+                    priority
+                    className="h-8 w-auto md:h-10"
+                  />
                 </Link>
                 <p className="mt-1 text-xs font-medium text-gray-500">
                   EDM의 순간을 기록합니다

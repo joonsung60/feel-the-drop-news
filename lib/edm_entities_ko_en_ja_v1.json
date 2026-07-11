@@ -1,0 +1,6007 @@
+{
+  "schema_version": "1.0",
+  "title": "FEEL THE DROP EDM Entity Style Guide (KO-EN-JA)",
+  "last_reviewed": "2026-07-11",
+  "scope": "EDM and electronic-music artists, festivals, clubs/venues, labels, and genres",
+  "counts": {
+    "artist": 160,
+    "festival": 40,
+    "venue": 30,
+    "label": 33,
+    "genre": 35
+  },
+  "usage_policy": {
+    "priority": "For matching entities, this file is the preferred FEEL THE DROP house-style authority.",
+    "english": "Preserve the exact capitalization, spacing, punctuation, accents, and symbols in `en`.",
+    "korean": "Use `ko` as the preferred Korean output. Values in `aliases.ko` are for input recognition only.",
+    "japanese": "In Japanese social copy, use `ja_display` by default. Use `ja_reading` only when a pronunciation aid or katakana rendering is needed.",
+    "aliases": "Aliases are accepted input variants; do not automatically use them as output.",
+    "avoid": "Do not output values in `avoid` unless quoting an error or explaining a correction.",
+    "unknown_entity": "For entities not in this file, preserve the official Latin spelling and do not invent a Korean or Japanese transliteration.",
+    "conflicts": "If the user explicitly requests a different spelling, follow the user and briefly flag the house-style conflict only when useful.",
+    "editorial_note": "Korean and Japanese transliterations can vary by outlet. This file defines FEEL THE DROP's preferred editorial style rather than claiming a single universally mandatory spelling."
+  },
+  "entities": [
+    {
+      "id": "artist_above_and_beyond",
+      "type": "artist",
+      "en": "Above & Beyond",
+      "ko": "어보브 앤 비욘드",
+      "ja_display": "Above & Beyond",
+      "ja_reading": "アバヴ＆ビヨンド",
+      "aliases": {
+        "en": [
+          "Above and Beyond",
+          "A&B"
+        ],
+        "ko": [
+          "어보브 앤 비욘드"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_adam_beyer",
+      "type": "artist",
+      "en": "Adam Beyer",
+      "ko": "아담 베이어",
+      "ja_display": "Adam Beyer",
+      "ja_reading": "アダム・ベイヤー",
+      "aliases": {
+        "en": [
+          "ADAM BEYER"
+        ],
+        "ko": [
+          "아담 바이어"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_adriatique",
+      "type": "artist",
+      "en": "Adriatique",
+      "ko": "아드리아티크",
+      "ja_display": "Adriatique",
+      "ja_reading": "アドリアティーク",
+      "aliases": {
+        "en": [
+          "ADRIATIQUE"
+        ],
+        "ko": [
+          "아드리아틱"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_afrojack",
+      "type": "artist",
+      "en": "Afrojack",
+      "ko": "아프로잭",
+      "ja_display": "Afrojack",
+      "ja_reading": "アフロジャック",
+      "aliases": {
+        "en": [
+          "AFROJACK"
+        ],
+        "ko": [
+          "아프로 잭"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_agents_of_time",
+      "type": "artist",
+      "en": "Agents Of Time",
+      "ko": "에이전츠 오브 타임",
+      "ja_display": "Agents Of Time",
+      "ja_reading": "エージェンツ・オブ・タイム",
+      "aliases": {
+        "en": [
+          "AGENTS OF TIME"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_alan_walker",
+      "type": "artist",
+      "en": "Alan Walker",
+      "ko": "앨런 워커",
+      "ja_display": "Alan Walker",
+      "ja_reading": "アラン・ウォーカー",
+      "aliases": {
+        "en": [
+          "ALAN WALKER"
+        ],
+        "ko": [
+          "알란 워커"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_alesso",
+      "type": "artist",
+      "en": "Alesso",
+      "ko": "알레소",
+      "ja_display": "Alesso",
+      "ja_reading": "アレッソ",
+      "aliases": {
+        "en": [
+          "ALESSO"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_alok",
+      "type": "artist",
+      "en": "Alok",
+      "ko": "알록",
+      "ja_display": "Alok",
+      "ja_reading": "アロック",
+      "aliases": {
+        "en": [
+          "ALOK"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_amelie_lens",
+      "type": "artist",
+      "en": "Amelie Lens",
+      "ko": "아멜리 렌즈",
+      "ja_display": "Amelie Lens",
+      "ja_reading": "アメリー・レンズ",
+      "aliases": {
+        "en": [
+          "AMELIE LENS"
+        ],
+        "ko": [
+          "아멜리에 렌즈",
+          "아멜리아 렌즈"
+        ],
+        "ja": [
+          "アメリーレンズ"
+        ]
+      },
+      "avoid": {
+        "ko": [
+          "아멜리에 렌즈",
+          "아멜리아 렌즈"
+        ],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_angerfist",
+      "type": "artist",
+      "en": "Angerfist",
+      "ko": "앵거피스트",
+      "ja_display": "Angerfist",
+      "ja_reading": "アンガーフィスト",
+      "aliases": {
+        "en": [
+          "ANGERFIST"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_anyma",
+      "type": "artist",
+      "en": "Anyma",
+      "ko": "애니마",
+      "ja_display": "Anyma",
+      "ja_reading": "アニマ",
+      "aliases": {
+        "en": [
+          "ANYMA"
+        ],
+        "ko": [
+          "아니마"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_aphex_twin",
+      "type": "artist",
+      "en": "Aphex Twin",
+      "ko": "에이펙스 트윈",
+      "ja_display": "Aphex Twin",
+      "ja_reading": "エイフェックス・ツイン",
+      "aliases": {
+        "en": [
+          "APHEX TWIN"
+        ],
+        "ko": [
+          "에이펙스 트윈"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_armin_van_buuren",
+      "type": "artist",
+      "en": "Armin van Buuren",
+      "ko": "아민 반 뷰렌",
+      "ja_display": "Armin van Buuren",
+      "ja_reading": "アーミン・ヴァン・ブーレン",
+      "aliases": {
+        "en": [
+          "ARMIN VAN BUUREN"
+        ],
+        "ko": [
+          "아르민 반 뷰렌",
+          "아민 밴 뷰렌"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [
+          "아르민 반 뷰렌",
+          "아민 밴 뷰렌"
+        ],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_artbat",
+      "type": "artist",
+      "en": "ARTBAT",
+      "ko": "아트뱃",
+      "ja_display": "ARTBAT",
+      "ja_reading": "アートバット",
+      "aliases": {
+        "en": [
+          "Artbat"
+        ],
+        "ko": [
+          "아트배트"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": "공식 영문 대문자 표기를 보존한다."
+    },
+    {
+      "id": "artist_avicii",
+      "type": "artist",
+      "en": "Avicii",
+      "ko": "아비치",
+      "ja_display": "Avicii",
+      "ja_reading": "アヴィーチー",
+      "aliases": {
+        "en": [
+          "AVICII"
+        ],
+        "ko": [
+          "아비치이",
+          "아비키"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [
+          "아비치이",
+          "아비키"
+        ],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_ben_bohmer",
+      "type": "artist",
+      "en": "Ben Böhmer",
+      "ko": "벤 뵈머",
+      "ja_display": "Ben Böhmer",
+      "ja_reading": "ベン・ブーマー",
+      "aliases": {
+        "en": [
+          "Ben Bohmer",
+          "BEN BÖHMER"
+        ],
+        "ko": [
+          "벤 보머"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_ben_klock",
+      "type": "artist",
+      "en": "Ben Klock",
+      "ko": "벤 클록",
+      "ja_display": "Ben Klock",
+      "ja_reading": "ベン・クロック",
+      "aliases": {
+        "en": [
+          "BEN KLOCK"
+        ],
+        "ko": [
+          "벤 클락"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_bicep",
+      "type": "artist",
+      "en": "Bicep",
+      "ko": "바이셉",
+      "ja_display": "Bicep",
+      "ja_reading": "バイセップ",
+      "aliases": {
+        "en": [
+          "BICEP"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_black_coffee",
+      "type": "artist",
+      "en": "Black Coffee",
+      "ko": "블랙 커피",
+      "ja_display": "Black Coffee",
+      "ja_reading": "ブラック・コーヒー",
+      "aliases": {
+        "en": [
+          "BLACK COFFEE"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_bonobo",
+      "type": "artist",
+      "en": "Bonobo",
+      "ko": "보노보",
+      "ja_display": "Bonobo",
+      "ja_reading": "ボノボ",
+      "aliases": {
+        "en": [
+          "BONOBO"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_boris_brejcha",
+      "type": "artist",
+      "en": "Boris Brejcha",
+      "ko": "보리스 브레차",
+      "ja_display": "Boris Brejcha",
+      "ja_reading": "ボリス・ブレチャ",
+      "aliases": {
+        "en": [
+          "BORIS BREJCHA"
+        ],
+        "ko": [
+          "보리스 브레이차"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_boys_noize",
+      "type": "artist",
+      "en": "Boys Noize",
+      "ko": "보이즈 노이즈",
+      "ja_display": "Boys Noize",
+      "ja_reading": "ボーイズ・ノイズ",
+      "aliases": {
+        "en": [
+          "BOYS NOIZE"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_calvin_harris",
+      "type": "artist",
+      "en": "Calvin Harris",
+      "ko": "칼빈 해리스",
+      "ja_display": "Calvin Harris",
+      "ja_reading": "カルヴィン・ハリス",
+      "aliases": {
+        "en": [
+          "CALVIN HARRIS"
+        ],
+        "ko": [
+          "캘빈 해리스"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": "한국어 표기는 기존 FEEL THE DROP 기준을 유지한다."
+    },
+    {
+      "id": "artist_camelphat",
+      "type": "artist",
+      "en": "CamelPhat",
+      "ko": "캐멀팻",
+      "ja_display": "CamelPhat",
+      "ja_reading": "キャメルファット",
+      "aliases": {
+        "en": [
+          "CAMELPHAT",
+          "Camelphat"
+        ],
+        "ko": [
+          "카멜팻"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_carl_cox",
+      "type": "artist",
+      "en": "Carl Cox",
+      "ko": "칼 콕스",
+      "ja_display": "Carl Cox",
+      "ja_reading": "カール・コックス",
+      "aliases": {
+        "en": [
+          "CARL COX"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_charlotte_de_witte",
+      "type": "artist",
+      "en": "Charlotte de Witte",
+      "ko": "샬롯 드 비테",
+      "ja_display": "Charlotte de Witte",
+      "ja_reading": "シャーロット・デ・ウィッテ",
+      "aliases": {
+        "en": [
+          "CHARLOTTE DE WITTE"
+        ],
+        "ko": [
+          "샤를로트 드 비테",
+          "샬롯 드 윗",
+          "샬롯 드 위트"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [
+          "샤를로트 드 비테",
+          "샬롯 드 윗",
+          "샬롯 드 위트"
+        ],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_chase_and_status",
+      "type": "artist",
+      "en": "Chase & Status",
+      "ko": "체이스 앤 스테이터스",
+      "ja_display": "Chase & Status",
+      "ja_reading": "チェイス＆ステイタス",
+      "aliases": {
+        "en": [
+          "Chase and Status"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_chris_lake",
+      "type": "artist",
+      "en": "Chris Lake",
+      "ko": "크리스 레이크",
+      "ja_display": "Chris Lake",
+      "ja_reading": "クリス・レイク",
+      "aliases": {
+        "en": [
+          "CHRIS LAKE"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_chris_liebing",
+      "type": "artist",
+      "en": "Chris Liebing",
+      "ko": "크리스 리빙",
+      "ja_display": "Chris Liebing",
+      "ja_reading": "クリス・リービング",
+      "aliases": {
+        "en": [
+          "CHRIS LIEBING"
+        ],
+        "ko": [
+          "크리스 리빙그"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_claptone",
+      "type": "artist",
+      "en": "Claptone",
+      "ko": "클랩톤",
+      "ja_display": "Claptone",
+      "ja_reading": "クラプトーン",
+      "aliases": {
+        "en": [
+          "CLAPTONE"
+        ],
+        "ko": [
+          "클랩턴"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_cosmic_gate",
+      "type": "artist",
+      "en": "Cosmic Gate",
+      "ko": "코스믹 게이트",
+      "ja_display": "Cosmic Gate",
+      "ja_reading": "コズミック・ゲート",
+      "aliases": {
+        "en": [
+          "COSMIC GATE"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_da_tweekaz",
+      "type": "artist",
+      "en": "Da Tweekaz",
+      "ko": "다 트위카즈",
+      "ja_display": "Da Tweekaz",
+      "ja_reading": "ダ・ツイーカズ",
+      "aliases": {
+        "en": [
+          "DA TWEEKAZ"
+        ],
+        "ko": [
+          "다 트위카스"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_daft_punk",
+      "type": "artist",
+      "en": "Daft Punk",
+      "ko": "다프트 펑크",
+      "ja_display": "Daft Punk",
+      "ja_reading": "ダフト・パンク",
+      "aliases": {
+        "en": [
+          "DAFT PUNK"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_david_guetta",
+      "type": "artist",
+      "en": "David Guetta",
+      "ko": "데이비드 게타",
+      "ja_display": "David Guetta",
+      "ja_reading": "デヴィッド・ゲッタ",
+      "aliases": {
+        "en": [
+          "DAVID GUETTA"
+        ],
+        "ko": [
+          "데이빗 게타",
+          "데이비드 구에타"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [
+          "데이빗 게타",
+          "데이비드 구에타"
+        ],
+        "ja": []
+      },
+      "notes": "한국어 출력은 FEEL THE DROP 기준으로 '데이비드 게타'를 사용한다."
+    },
+    {
+      "id": "artist_deadmau5",
+      "type": "artist",
+      "en": "deadmau5",
+      "ko": "데드마우스",
+      "ja_display": "deadmau5",
+      "ja_reading": "デッドマウス",
+      "aliases": {
+        "en": [
+          "Deadmau5",
+          "DEADMAU5"
+        ],
+        "ko": [
+          "데드마우5"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [
+          "데드마우5"
+        ],
+        "ja": []
+      },
+      "notes": "공식 영문 표기는 소문자 deadmau5를 유지한다."
+    },
+    {
+      "id": "artist_dillon_francis",
+      "type": "artist",
+      "en": "Dillon Francis",
+      "ko": "딜런 프랜시스",
+      "ja_display": "Dillon Francis",
+      "ja_reading": "ディロン・フランシス",
+      "aliases": {
+        "en": [
+          "DILLON FRANCIS"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_dimitri_vegas_and_like_mike",
+      "type": "artist",
+      "en": "Dimitri Vegas & Like Mike",
+      "ko": "디미트리 베가스 앤 라이크 마이크",
+      "ja_display": "Dimitri Vegas & Like Mike",
+      "ja_reading": "ディミトリ・ヴェガス＆ライク・マイク",
+      "aliases": {
+        "en": [
+          "DVLM",
+          "Dimitri Vegas and Like Mike"
+        ],
+        "ko": [
+          "디미트리 베가스 & 라이크 마이크"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_diplo",
+      "type": "artist",
+      "en": "Diplo",
+      "ko": "디플로",
+      "ja_display": "Diplo",
+      "ja_reading": "ディプロ",
+      "aliases": {
+        "en": [
+          "DIPLO"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_disclosure",
+      "type": "artist",
+      "en": "Disclosure",
+      "ko": "디스클로저",
+      "ja_display": "Disclosure",
+      "ja_reading": "ディスクロージャー",
+      "aliases": {
+        "en": [
+          "DISCLOSURE"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_dixon",
+      "type": "artist",
+      "en": "Dixon",
+      "ko": "딕슨",
+      "ja_display": "Dixon",
+      "ja_reading": "ディクソン",
+      "aliases": {
+        "en": [
+          "DIXON"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_dj_heartstring",
+      "type": "artist",
+      "en": "DJ Heartstring",
+      "ko": "DJ 하트스트링",
+      "ja_display": "DJ Heartstring",
+      "ja_reading": "DJハートストリング",
+      "aliases": {
+        "en": [
+          "DJ HEARTSTRING"
+        ],
+        "ko": [
+          "디제이 하트스트링"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_dj_koze",
+      "type": "artist",
+      "en": "DJ Koze",
+      "ko": "DJ 코제",
+      "ja_display": "DJ Koze",
+      "ja_reading": "DJコーツェ",
+      "aliases": {
+        "en": [
+          "DJ KOZE"
+        ],
+        "ko": [
+          "DJ 코즈"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_dj_nobu",
+      "type": "artist",
+      "en": "DJ NOBU",
+      "ko": "DJ 노부",
+      "ja_display": "DJ NOBU",
+      "ja_reading": "DJ NOBU",
+      "aliases": {
+        "en": [
+          "DJ Nobu"
+        ],
+        "ko": [
+          "디제이 노부"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_dj_snake",
+      "type": "artist",
+      "en": "DJ Snake",
+      "ko": "DJ 스네이크",
+      "ja_display": "DJ Snake",
+      "ja_reading": "DJスネイク",
+      "aliases": {
+        "en": [
+          "DJ SNAKE"
+        ],
+        "ko": [
+          "디제이 스네이크"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_dom_dolla",
+      "type": "artist",
+      "en": "Dom Dolla",
+      "ko": "돔 돌라",
+      "ja_display": "Dom Dolla",
+      "ja_reading": "ドム・ドラ",
+      "aliases": {
+        "en": [
+          "DOM DOLLA"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_don_diablo",
+      "type": "artist",
+      "en": "Don Diablo",
+      "ko": "돈 디아블로",
+      "ja_display": "Don Diablo",
+      "ja_reading": "ドン・ディアブロ",
+      "aliases": {
+        "en": [
+          "DON DIABLO"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_duke_dumont",
+      "type": "artist",
+      "en": "Duke Dumont",
+      "ko": "듀크 듀몬트",
+      "ja_display": "Duke Dumont",
+      "ja_reading": "デューク・デュモン",
+      "aliases": {
+        "en": [
+          "DUKE DUMONT"
+        ],
+        "ko": [
+          "듀크 듀몽"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_eli_and_fur",
+      "type": "artist",
+      "en": "Eli & Fur",
+      "ko": "엘리 앤 퍼",
+      "ja_display": "Eli & Fur",
+      "ja_reading": "エリ＆ファー",
+      "aliases": {
+        "en": [
+          "Eli and Fur"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_eric_prydz",
+      "type": "artist",
+      "en": "Eric Prydz",
+      "ko": "에릭 프리즈",
+      "ja_display": "Eric Prydz",
+      "ja_reading": "エリック・プライズ",
+      "aliases": {
+        "en": [
+          "ERIC PRYDZ",
+          "Pryda",
+          "Cirez D"
+        ],
+        "ko": [
+          "에릭 프라이즈"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": "국내에서 '에릭 프라이즈'도 쓰이지만 FEEL THE DROP 기본 표기는 '에릭 프리즈'로 고정한다."
+    },
+    {
+      "id": "artist_excision",
+      "type": "artist",
+      "en": "Excision",
+      "ko": "엑시전",
+      "ja_display": "Excision",
+      "ja_reading": "エクシジョン",
+      "aliases": {
+        "en": [
+          "EXCISION"
+        ],
+        "ko": [
+          "엑시션"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_fatboy_slim",
+      "type": "artist",
+      "en": "Fatboy Slim",
+      "ko": "팻보이 슬림",
+      "ja_display": "Fatboy Slim",
+      "ja_reading": "ファットボーイ・スリム",
+      "aliases": {
+        "en": [
+          "FATBOY SLIM"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_ferry_corsten",
+      "type": "artist",
+      "en": "Ferry Corsten",
+      "ko": "페리 코스턴",
+      "ja_display": "Ferry Corsten",
+      "ja_reading": "フェリー・コーステン",
+      "aliases": {
+        "en": [
+          "FERRY CORSTEN"
+        ],
+        "ko": [
+          "페리 코스텐"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_fisher",
+      "type": "artist",
+      "en": "FISHER",
+      "ko": "피셔",
+      "ja_display": "FISHER",
+      "ja_reading": "フィッシャー",
+      "aliases": {
+        "en": [
+          "Fisher"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": "공식 영문 대문자 표기를 보존한다."
+    },
+    {
+      "id": "artist_floating_points",
+      "type": "artist",
+      "en": "Floating Points",
+      "ko": "플로팅 포인츠",
+      "ja_display": "Floating Points",
+      "ja_reading": "フローティング・ポインツ",
+      "aliases": {
+        "en": [
+          "FLOATING POINTS"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_flume",
+      "type": "artist",
+      "en": "Flume",
+      "ko": "플룸",
+      "ja_display": "Flume",
+      "ja_reading": "フルーム",
+      "aliases": {
+        "en": [
+          "FLUME"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_four_tet",
+      "type": "artist",
+      "en": "Four Tet",
+      "ko": "포 텟",
+      "ja_display": "Four Tet",
+      "ja_reading": "フォー・テット",
+      "aliases": {
+        "en": [
+          "FOUR TET"
+        ],
+        "ko": [
+          "포테트"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_fred_again",
+      "type": "artist",
+      "en": "Fred again..",
+      "ko": "프레드 어게인..",
+      "ja_display": "Fred again..",
+      "ja_reading": "フレッド・アゲイン",
+      "aliases": {
+        "en": [
+          "Fred Again",
+          "Fred again"
+        ],
+        "ko": [
+          "프레드 어게인"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": "공식 영문 표기의 소문자와 마침표 두 개를 보존한다."
+    },
+    {
+      "id": "artist_funk_tribu",
+      "type": "artist",
+      "en": "Funk Tribu",
+      "ko": "펑크 트리부",
+      "ja_display": "Funk Tribu",
+      "ja_reading": "ファンク・トリブ",
+      "aliases": {
+        "en": [
+          "FUNK TRIBU"
+        ],
+        "ko": [
+          "펑크 트리뷰"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_galantis",
+      "type": "artist",
+      "en": "Galantis",
+      "ko": "갈란티스",
+      "ja_display": "Galantis",
+      "ja_reading": "ギャランティス",
+      "aliases": {
+        "en": [
+          "GALANTIS"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_gareth_emery",
+      "type": "artist",
+      "en": "Gareth Emery",
+      "ko": "가레스 에머리",
+      "ja_display": "Gareth Emery",
+      "ja_reading": "ギャレス・エメリー",
+      "aliases": {
+        "en": [
+          "GARETH EMERY"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_gesaffelstein",
+      "type": "artist",
+      "en": "Gesaffelstein",
+      "ko": "게사펠슈타인",
+      "ja_display": "Gesaffelstein",
+      "ja_reading": "ゲサフェルスタイン",
+      "aliases": {
+        "en": [
+          "GESAFFELSTEIN"
+        ],
+        "ko": [
+          "게사펠스타인"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_giuseppe_ottaviani",
+      "type": "artist",
+      "en": "Giuseppe Ottaviani",
+      "ko": "주세페 오타비아니",
+      "ja_display": "Giuseppe Ottaviani",
+      "ja_reading": "ジュゼッペ・オッタヴィアーニ",
+      "aliases": {
+        "en": [
+          "GIUSEPPE OTTAVIANI"
+        ],
+        "ko": [
+          "주세페 오타비아니"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_gorgon_city",
+      "type": "artist",
+      "en": "Gorgon City",
+      "ko": "고르곤 시티",
+      "ja_display": "Gorgon City",
+      "ja_reading": "ゴルゴン・シティ",
+      "aliases": {
+        "en": [
+          "GORGON CITY"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_green_velvet",
+      "type": "artist",
+      "en": "Green Velvet",
+      "ko": "그린 벨벳",
+      "ja_display": "Green Velvet",
+      "ja_reading": "グリーン・ヴェルヴェット",
+      "aliases": {
+        "en": [
+          "GREEN VELVET"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_hardwell",
+      "type": "artist",
+      "en": "Hardwell",
+      "ko": "하드웰",
+      "ja_display": "Hardwell",
+      "ja_reading": "ハードウェル",
+      "aliases": {
+        "en": [
+          "HARDWELL"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_headhunterz",
+      "type": "artist",
+      "en": "Headhunterz",
+      "ko": "헤드헌터즈",
+      "ja_display": "Headhunterz",
+      "ja_reading": "ヘッドハンターズ",
+      "aliases": {
+        "en": [
+          "HEADHUNTERZ"
+        ],
+        "ko": [
+          "헤드헌터스"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_honey_dijon",
+      "type": "artist",
+      "en": "Honey Dijon",
+      "ko": "허니 디종",
+      "ja_display": "Honey Dijon",
+      "ja_reading": "ハニー・ディジョン",
+      "aliases": {
+        "en": [
+          "HONEY DIJON"
+        ],
+        "ko": [
+          "허니 디존"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_hot_since_82",
+      "type": "artist",
+      "en": "Hot Since 82",
+      "ko": "핫 신스 82",
+      "ja_display": "Hot Since 82",
+      "ja_reading": "ホット・シンス・82",
+      "aliases": {
+        "en": [
+          "HOT SINCE 82"
+        ],
+        "ko": [
+          "핫 신스 에이티투"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_i_hate_models",
+      "type": "artist",
+      "en": "I Hate Models",
+      "ko": "아이 헤이트 모델스",
+      "ja_display": "I Hate Models",
+      "ja_reading": "アイ・ヘイト・モデルズ",
+      "aliases": {
+        "en": [
+          "IHM"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_illenium",
+      "type": "artist",
+      "en": "ILLENIUM",
+      "ko": "일레니엄",
+      "ja_display": "ILLENIUM",
+      "ja_reading": "イレニアム",
+      "aliases": {
+        "en": [
+          "Illenium"
+        ],
+        "ko": [
+          "일리니엄"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [
+          "일리니엄"
+        ],
+        "ja": []
+      },
+      "notes": "공식 영문 대문자 표기를 보존한다."
+    },
+    {
+      "id": "artist_indira_paganotto",
+      "type": "artist",
+      "en": "Indira Paganotto",
+      "ko": "인디라 파가노토",
+      "ja_display": "Indira Paganotto",
+      "ja_reading": "インディラ・パガノット",
+      "aliases": {
+        "en": [
+          "INDIRA PAGANOTTO"
+        ],
+        "ko": [
+          "인디라 파가노또"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_james_hype",
+      "type": "artist",
+      "en": "James Hype",
+      "ko": "제임스 하이프",
+      "ja_display": "James Hype",
+      "ja_reading": "ジェームス・ハイプ",
+      "aliases": {
+        "en": [
+          "JAMES HYPE"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_jamie_xx",
+      "type": "artist",
+      "en": "Jamie xx",
+      "ko": "제이미 엑스엑스",
+      "ja_display": "Jamie xx",
+      "ja_reading": "ジェイミー・エックス・エックス",
+      "aliases": {
+        "en": [
+          "JAMIE XX"
+        ],
+        "ko": [
+          "제이미 XX"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_jan_blomqvist",
+      "type": "artist",
+      "en": "Jan Blomqvist",
+      "ko": "얀 블롬크비스트",
+      "ja_display": "Jan Blomqvist",
+      "ja_reading": "ヤン・ブロムクヴィスト",
+      "aliases": {
+        "en": [
+          "JAN BLOMQVIST"
+        ],
+        "ko": [
+          "얀 블롬퀴스트"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_jeff_mills",
+      "type": "artist",
+      "en": "Jeff Mills",
+      "ko": "제프 밀스",
+      "ja_display": "Jeff Mills",
+      "ja_reading": "ジェフ・ミルズ",
+      "aliases": {
+        "en": [
+          "JEFF MILLS"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_john_summit",
+      "type": "artist",
+      "en": "John Summit",
+      "ko": "존 서밋",
+      "ja_display": "John Summit",
+      "ja_reading": "ジョン・サミット",
+      "aliases": {
+        "en": [
+          "JOHN SUMMIT"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_jon_hopkins",
+      "type": "artist",
+      "en": "Jon Hopkins",
+      "ko": "존 홉킨스",
+      "ja_display": "Jon Hopkins",
+      "ja_reading": "ジョン・ホプキンス",
+      "aliases": {
+        "en": [
+          "JON HOPKINS"
+        ],
+        "ko": [
+          "존 합킨스"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_justice",
+      "type": "artist",
+      "en": "Justice",
+      "ko": "저스티스",
+      "ja_display": "Justice",
+      "ja_reading": "ジャスティス",
+      "aliases": {
+        "en": [
+          "JUSTICE"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_kaskade",
+      "type": "artist",
+      "en": "Kaskade",
+      "ko": "캐스케이드",
+      "ja_display": "Kaskade",
+      "ja_reading": "カスケード",
+      "aliases": {
+        "en": [
+          "KASKADE"
+        ],
+        "ko": [
+          "카스케이드"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_kaytranada",
+      "type": "artist",
+      "en": "Kaytranada",
+      "ko": "케이트라나다",
+      "ja_display": "Kaytranada",
+      "ja_reading": "ケイトラナダ",
+      "aliases": {
+        "en": [
+          "KAYTRANADA"
+        ],
+        "ko": [
+          "카이트라나다"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_keinemusik",
+      "type": "artist",
+      "en": "Keinemusik",
+      "ko": "카이네뮤직",
+      "ja_display": "Keinemusik",
+      "ja_reading": "カイネムジーク",
+      "aliases": {
+        "en": [
+          "KEINEMUSIK"
+        ],
+        "ko": [
+          "케이네뮤직",
+          "카이네무직"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_ken_ishii",
+      "type": "artist",
+      "en": "Ken Ishii",
+      "ko": "켄 이시이",
+      "ja_display": "Ken Ishii",
+      "ja_reading": "ケン・イシイ",
+      "aliases": {
+        "en": [
+          "KEN ISHII",
+          "ケン・イシイ"
+        ],
+        "ko": [
+          "켄 이시"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_kerri_chandler",
+      "type": "artist",
+      "en": "Kerri Chandler",
+      "ko": "케리 챈들러",
+      "ja_display": "Kerri Chandler",
+      "ja_reading": "ケリー・チャンドラー",
+      "aliases": {
+        "en": [
+          "KERRI CHANDLER"
+        ],
+        "ko": [
+          "케리 챈들러"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_ki_ki",
+      "type": "artist",
+      "en": "KI/KI",
+      "ko": "키키",
+      "ja_display": "KI/KI",
+      "ja_reading": "KI/KI",
+      "aliases": {
+        "en": [
+          "KIKI",
+          "KI KI"
+        ],
+        "ko": [
+          "케이아이 케이아이"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": "공식 영문 슬래시 표기를 보존한다."
+    },
+    {
+      "id": "artist_kobosil",
+      "type": "artist",
+      "en": "Kobosil",
+      "ko": "코보실",
+      "ja_display": "Kobosil",
+      "ja_reading": "コボシル",
+      "aliases": {
+        "en": [
+          "KOBOSIL"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_kshmr",
+      "type": "artist",
+      "en": "KSHMR",
+      "ko": "카슈미르",
+      "ja_display": "KSHMR",
+      "ja_reading": "カシミア",
+      "aliases": {
+        "en": [
+          "Kashmir"
+        ],
+        "ko": [
+          "케이에스에이치엠알"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_kygo",
+      "type": "artist",
+      "en": "Kygo",
+      "ko": "카이고",
+      "ja_display": "Kygo",
+      "ja_reading": "カイゴ",
+      "aliases": {
+        "en": [
+          "KYGO"
+        ],
+        "ko": [
+          "키고"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [
+          "키고"
+        ],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_kolsch",
+      "type": "artist",
+      "en": "Kölsch",
+      "ko": "쾰쉬",
+      "ja_display": "Kölsch",
+      "ja_reading": "ケルシュ",
+      "aliases": {
+        "en": [
+          "Kolsch",
+          "KÖLSCH"
+        ],
+        "ko": [
+          "콜쉬",
+          "쾰슈"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_lane_8",
+      "type": "artist",
+      "en": "Lane 8",
+      "ko": "레인 에이트",
+      "ja_display": "Lane 8",
+      "ja_reading": "レーン・エイト",
+      "aliases": {
+        "en": [
+          "LANE 8"
+        ],
+        "ko": [
+          "레인 8"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_licaxxx",
+      "type": "artist",
+      "en": "Licaxxx",
+      "ko": "리카엑스엑스",
+      "ja_display": "Licaxxx",
+      "ja_reading": "Licaxxx",
+      "aliases": {
+        "en": [
+          "LICAXXX"
+        ],
+        "ko": [
+          "리카XXX"
+        ],
+        "ja": [
+          "リカックス"
+        ]
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_lost_frequencies",
+      "type": "artist",
+      "en": "Lost Frequencies",
+      "ko": "로스트 프리퀀시스",
+      "ja_display": "Lost Frequencies",
+      "ja_reading": "ロスト・フリクエンシーズ",
+      "aliases": {
+        "en": [
+          "LOST FREQUENCIES"
+        ],
+        "ko": [
+          "로스트 프리퀀시"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_madeon",
+      "type": "artist",
+      "en": "Madeon",
+      "ko": "마데온",
+      "ja_display": "Madeon",
+      "ja_reading": "マデオン",
+      "aliases": {
+        "en": [
+          "MADEON"
+        ],
+        "ko": [
+          "메이든"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [
+          "메이든"
+        ],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_major_lazer",
+      "type": "artist",
+      "en": "Major Lazer",
+      "ko": "메이저 레이저",
+      "ja_display": "Major Lazer",
+      "ja_reading": "メジャー・レイザー",
+      "aliases": {
+        "en": [
+          "MAJOR LAZER"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_malaa",
+      "type": "artist",
+      "en": "Malaa",
+      "ko": "말라",
+      "ja_display": "Malaa",
+      "ja_reading": "マーラ",
+      "aliases": {
+        "en": [
+          "MALAA"
+        ],
+        "ko": [
+          "마라"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_marcel_dettmann",
+      "type": "artist",
+      "en": "Marcel Dettmann",
+      "ko": "마르셀 데트만",
+      "ja_display": "Marcel Dettmann",
+      "ja_reading": "マルセル・デットマン",
+      "aliases": {
+        "en": [
+          "MARCEL DETTMANN"
+        ],
+        "ko": [
+          "마르셀 데트먼"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_marlon_hoffstadt",
+      "type": "artist",
+      "en": "Marlon Hoffstadt",
+      "ko": "말론 호프슈타트",
+      "ja_display": "Marlon Hoffstadt",
+      "ja_reading": "マーロン・ホフシュタット",
+      "aliases": {
+        "en": [
+          "DJ Daddy Trance"
+        ],
+        "ko": [
+          "말론 호프스타트"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_marshmello",
+      "type": "artist",
+      "en": "Marshmello",
+      "ko": "마시멜로",
+      "ja_display": "Marshmello",
+      "ja_reading": "マシュメロ",
+      "aliases": {
+        "en": [
+          "MARSHMELLO"
+        ],
+        "ko": [
+          "마시멜로우",
+          "마시멜로 DJ"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [
+          "마시멜로우"
+        ],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_martin_garrix",
+      "type": "artist",
+      "en": "Martin Garrix",
+      "ko": "마틴 게릭스",
+      "ja_display": "Martin Garrix",
+      "ja_reading": "マーティン・ギャリックス",
+      "aliases": {
+        "en": [
+          "MARTIN GARRIX"
+        ],
+        "ko": [
+          "마틴 가릭스",
+          "마틴 개릭스"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [
+          "마틴 가릭스",
+          "마틴 개릭스"
+        ],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_max_cooper",
+      "type": "artist",
+      "en": "Max Cooper",
+      "ko": "맥스 쿠퍼",
+      "ja_display": "Max Cooper",
+      "ja_reading": "マックス・クーパー",
+      "aliases": {
+        "en": [
+          "MAX COOPER"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_meduza",
+      "type": "artist",
+      "en": "MEDUZA",
+      "ko": "메두자",
+      "ja_display": "MEDUZA",
+      "ja_reading": "メデューサ",
+      "aliases": {
+        "en": [
+          "Meduza"
+        ],
+        "ko": [
+          "메두사"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": "공식 영문 대문자 표기를 보존한다."
+    },
+    {
+      "id": "artist_mind_against",
+      "type": "artist",
+      "en": "Mind Against",
+      "ko": "마인드 어게인스트",
+      "ja_display": "Mind Against",
+      "ja_reading": "マインド・アゲインスト",
+      "aliases": {
+        "en": [
+          "MIND AGAINST"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_miss_monique",
+      "type": "artist",
+      "en": "Miss Monique",
+      "ko": "미스 모니크",
+      "ja_display": "Miss Monique",
+      "ja_reading": "ミス・モニーク",
+      "aliases": {
+        "en": [
+          "MISS MONIQUE"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_mk",
+      "type": "artist",
+      "en": "MK",
+      "ko": "엠케이",
+      "ja_display": "MK",
+      "ja_reading": "MK",
+      "aliases": {
+        "en": [
+          "Marc Kinchen"
+        ],
+        "ko": [
+          "엠 케이"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_moby",
+      "type": "artist",
+      "en": "Moby",
+      "ko": "모비",
+      "ja_display": "Moby",
+      "ja_reading": "モービー",
+      "aliases": {
+        "en": [
+          "MOBY"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_monolink",
+      "type": "artist",
+      "en": "Monolink",
+      "ko": "모노링크",
+      "ja_display": "Monolink",
+      "ja_reading": "モノリンク",
+      "aliases": {
+        "en": [
+          "MONOLINK"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_netsky",
+      "type": "artist",
+      "en": "Netsky",
+      "ko": "넷스카이",
+      "ja_display": "Netsky",
+      "ja_reading": "ネツキー",
+      "aliases": {
+        "en": [
+          "NETSKY"
+        ],
+        "ko": [
+          "네츠키"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_nicky_romero",
+      "type": "artist",
+      "en": "Nicky Romero",
+      "ko": "니키 로메로",
+      "ja_display": "Nicky Romero",
+      "ja_reading": "ニッキー・ロメロ",
+      "aliases": {
+        "en": [
+          "NICKY ROMERO"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_nico_moreno",
+      "type": "artist",
+      "en": "Nico Moreno",
+      "ko": "니코 모레노",
+      "ja_display": "Nico Moreno",
+      "ja_reading": "ニコ・モレノ",
+      "aliases": {
+        "en": [
+          "NICO MORENO"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_nina_kraviz",
+      "type": "artist",
+      "en": "Nina Kraviz",
+      "ko": "니나 크라비츠",
+      "ja_display": "Nina Kraviz",
+      "ja_reading": "ニーナ・クラヴィッツ",
+      "aliases": {
+        "en": [
+          "NINA KRAVIZ"
+        ],
+        "ko": [
+          "니나 크라비즈"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_nora_en_pure",
+      "type": "artist",
+      "en": "Nora En Pure",
+      "ko": "노라 엔 퓨어",
+      "ja_display": "Nora En Pure",
+      "ja_reading": "ノラ・エン・ピュア",
+      "aliases": {
+        "en": [
+          "NORA EN PURE"
+        ],
+        "ko": [
+          "노라 엔 퓨어"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_odesza",
+      "type": "artist",
+      "en": "ODESZA",
+      "ko": "오데자",
+      "ja_display": "ODESZA",
+      "ja_reading": "オデッザ",
+      "aliases": {
+        "en": [
+          "Odesza"
+        ],
+        "ko": [
+          "오데사"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [
+          "오데사"
+        ],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_oliver_heldens",
+      "type": "artist",
+      "en": "Oliver Heldens",
+      "ko": "올리버 헬든스",
+      "ja_display": "Oliver Heldens",
+      "ja_reading": "オリヴァー・ヘルデンス",
+      "aliases": {
+        "en": [
+          "OLIVER HELDENS",
+          "HI-LO"
+        ],
+        "ko": [
+          "올리버 헬덴스"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_orbital",
+      "type": "artist",
+      "en": "Orbital",
+      "ko": "오비탈",
+      "ja_display": "Orbital",
+      "ja_reading": "オービタル",
+      "aliases": {
+        "en": [
+          "ORBITAL"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_park_hye_jin",
+      "type": "artist",
+      "en": "Park Hye Jin",
+      "ko": "박혜진",
+      "ja_display": "Park Hye Jin",
+      "ja_reading": "パク・ヘジン",
+      "aliases": {
+        "en": [
+          "박혜진 Park",
+          "PARK HYE JIN"
+        ],
+        "ko": [
+          "박 혜진"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_paul_kalkbrenner",
+      "type": "artist",
+      "en": "Paul Kalkbrenner",
+      "ko": "폴 칼크브레너",
+      "ja_display": "Paul Kalkbrenner",
+      "ja_reading": "ポール・カルクブレンナー",
+      "aliases": {
+        "en": [
+          "PAUL KALKBRENNER"
+        ],
+        "ko": [
+          "폴 칼브레너"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_paul_van_dyk",
+      "type": "artist",
+      "en": "Paul van Dyk",
+      "ko": "폴 반 다이크",
+      "ja_display": "Paul van Dyk",
+      "ja_reading": "ポール・ヴァン・ダイク",
+      "aliases": {
+        "en": [
+          "PAUL VAN DYK"
+        ],
+        "ko": [
+          "폴 밴 다이크"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_peggy_gou",
+      "type": "artist",
+      "en": "Peggy Gou",
+      "ko": "페기 구",
+      "ja_display": "Peggy Gou",
+      "ja_reading": "ペギー・グー",
+      "aliases": {
+        "en": [
+          "PEGGY GOU"
+        ],
+        "ko": [
+          "페기 고우"
+        ],
+        "ja": [
+          "ペギー・グー"
+        ]
+      },
+      "avoid": {
+        "ko": [
+          "페기 고우"
+        ],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_pendulum",
+      "type": "artist",
+      "en": "Pendulum",
+      "ko": "펜듈럼",
+      "ja_display": "Pendulum",
+      "ja_reading": "ペンデュラム",
+      "aliases": {
+        "en": [
+          "PENDULUM"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_porter_robinson",
+      "type": "artist",
+      "en": "Porter Robinson",
+      "ko": "포터 로빈슨",
+      "ja_display": "Porter Robinson",
+      "ja_reading": "ポーター・ロビンソン",
+      "aliases": {
+        "en": [
+          "PORTER ROBINSON"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_purple_disco_machine",
+      "type": "artist",
+      "en": "Purple Disco Machine",
+      "ko": "퍼플 디스코 머신",
+      "ja_display": "Purple Disco Machine",
+      "ja_reading": "パープル・ディスコ・マシーン",
+      "aliases": {
+        "en": [
+          "PDM"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_qrion",
+      "type": "artist",
+      "en": "Qrion",
+      "ko": "큐리온",
+      "ja_display": "Qrion",
+      "ja_reading": "Qrion",
+      "aliases": {
+        "en": [
+          "QRION"
+        ],
+        "ko": [
+          "크리온"
+        ],
+        "ja": [
+          "クリオン"
+        ]
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_r3hab",
+      "type": "artist",
+      "en": "R3HAB",
+      "ko": "리햅",
+      "ja_display": "R3HAB",
+      "ja_reading": "リハブ",
+      "aliases": {
+        "en": [
+          "R3hab",
+          "r3hab"
+        ],
+        "ko": [
+          "리하브",
+          "알쓰리햅"
+        ],
+        "ja": [
+          "リーハブ"
+        ]
+      },
+      "avoid": {
+        "ko": [
+          "리하브",
+          "알쓰리햅"
+        ],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_reinier_zonneveld",
+      "type": "artist",
+      "en": "Reinier Zonneveld",
+      "ko": "레이니어 존네벨트",
+      "ja_display": "Reinier Zonneveld",
+      "ja_reading": "レイニアー・ゾンネフェルド",
+      "aliases": {
+        "en": [
+          "REINIER ZONNEVELD"
+        ],
+        "ko": [
+          "라이니어 존네벨트",
+          "레이니어 조네벨트"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_ricardo_villalobos",
+      "type": "artist",
+      "en": "Ricardo Villalobos",
+      "ko": "리카르도 비야로보스",
+      "ja_display": "Ricardo Villalobos",
+      "ja_reading": "リカルド・ヴィラロボス",
+      "aliases": {
+        "en": [
+          "RICARDO VILLALOBOS"
+        ],
+        "ko": [
+          "리카르도 빌라로보스"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_richie_hawtin",
+      "type": "artist",
+      "en": "Richie Hawtin",
+      "ko": "리치 호틴",
+      "ja_display": "Richie Hawtin",
+      "ja_reading": "リッチー・ホウティン",
+      "aliases": {
+        "en": [
+          "RICHIE HAWTIN",
+          "Plastikman"
+        ],
+        "ko": [
+          "리치 하우틴"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_rl_grime",
+      "type": "artist",
+      "en": "RL Grime",
+      "ko": "알엘 그라임",
+      "ja_display": "RL Grime",
+      "ja_reading": "RLグライム",
+      "aliases": {
+        "en": [
+          "RL GRIME"
+        ],
+        "ko": [
+          "알엘그라임"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_robin_schulz",
+      "type": "artist",
+      "en": "Robin Schulz",
+      "ko": "로빈 슐츠",
+      "ja_display": "Robin Schulz",
+      "ja_reading": "ロビン・シュルツ",
+      "aliases": {
+        "en": [
+          "ROBIN SCHULZ"
+        ],
+        "ko": [
+          "로빈 슐즈"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_rufus_du_sol",
+      "type": "artist",
+      "en": "RÜFÜS DU SOL",
+      "ko": "루퍼스 듀 솔",
+      "ja_display": "RÜFÜS DU SOL",
+      "ja_reading": "ルーファス・デュ・ソル",
+      "aliases": {
+        "en": [
+          "RUFUS DU SOL",
+          "Rüfüs Du Sol"
+        ],
+        "ko": [
+          "루푸스 듀 솔"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": "공식 영문 대문자와 움라우트를 보존한다."
+    },
+    {
+      "id": "artist_sara_landry",
+      "type": "artist",
+      "en": "Sara Landry",
+      "ko": "사라 랜드리",
+      "ja_display": "Sara Landry",
+      "ja_reading": "サラ・ランドリー",
+      "aliases": {
+        "en": [
+          "SARA LANDRY"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_seven_lions",
+      "type": "artist",
+      "en": "Seven Lions",
+      "ko": "세븐 라이온스",
+      "ja_display": "Seven Lions",
+      "ja_reading": "セヴン・ライオンズ",
+      "aliases": {
+        "en": [
+          "SEVEN LIONS"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_shinichi_osawa",
+      "type": "artist",
+      "en": "Shinichi Osawa",
+      "ko": "오사와 신이치",
+      "ja_display": "Shinichi Osawa",
+      "ja_reading": "大沢伸一",
+      "aliases": {
+        "en": [
+          "MONDO GROSSO",
+          "SHINICHI OSAWA"
+        ],
+        "ko": [
+          "신이치 오사와"
+        ],
+        "ja": [
+          "おおさわしんいち"
+        ]
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": "일본어 게시물에서는 한자명 大沢伸一을 우선한다."
+    },
+    {
+      "id": "artist_skrillex",
+      "type": "artist",
+      "en": "Skrillex",
+      "ko": "스크릴렉스",
+      "ja_display": "Skrillex",
+      "ja_reading": "スクリレックス",
+      "aliases": {
+        "en": [
+          "SKRILLEX"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_soichi_terada",
+      "type": "artist",
+      "en": "Soichi Terada",
+      "ko": "테라다 소이치",
+      "ja_display": "Soichi Terada",
+      "ja_reading": "寺田創一",
+      "aliases": {
+        "en": [
+          "SOICHI TERADA"
+        ],
+        "ko": [
+          "소이치 테라다"
+        ],
+        "ja": [
+          "てらだそういち"
+        ]
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": "일본어 게시물에서는 한자명 寺田創一을 우선한다."
+    },
+    {
+      "id": "artist_solomun",
+      "type": "artist",
+      "en": "Solomun",
+      "ko": "솔로문",
+      "ja_display": "Solomun",
+      "ja_reading": "ソロムン",
+      "aliases": {
+        "en": [
+          "SOLOMUN"
+        ],
+        "ko": [
+          "솔로먼"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_soulwax",
+      "type": "artist",
+      "en": "Soulwax",
+      "ko": "소울왁스",
+      "ja_display": "Soulwax",
+      "ja_reading": "ソウルワックス",
+      "aliases": {
+        "en": [
+          "SOULWAX",
+          "2manydjs"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_steve_aoki",
+      "type": "artist",
+      "en": "Steve Aoki",
+      "ko": "스티브 아오키",
+      "ja_display": "Steve Aoki",
+      "ja_reading": "スティーヴ・アオキ",
+      "aliases": {
+        "en": [
+          "STEVE AOKI"
+        ],
+        "ko": [
+          "스티븐 아오키"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_sub_focus",
+      "type": "artist",
+      "en": "Sub Focus",
+      "ko": "서브 포커스",
+      "ja_display": "Sub Focus",
+      "ja_reading": "サブ・フォーカス",
+      "aliases": {
+        "en": [
+          "SUB FOCUS"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_sub_zero_project",
+      "type": "artist",
+      "en": "Sub Zero Project",
+      "ko": "서브 제로 프로젝트",
+      "ja_display": "Sub Zero Project",
+      "ja_reading": "サブ・ゼロ・プロジェクト",
+      "aliases": {
+        "en": [
+          "SZP"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_sven_vath",
+      "type": "artist",
+      "en": "Sven Väth",
+      "ko": "스벤 베트",
+      "ja_display": "Sven Väth",
+      "ja_reading": "スヴェン・フェート",
+      "aliases": {
+        "en": [
+          "Sven Vath",
+          "SVEN VÄTH"
+        ],
+        "ko": [
+          "스벤 베스"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": "한국어 표기가 혼재하지만 FEEL THE DROP 기본값은 '스벤 베트'다."
+    },
+    {
+      "id": "artist_swedish_house_mafia",
+      "type": "artist",
+      "en": "Swedish House Mafia",
+      "ko": "스웨디시 하우스 마피아",
+      "ja_display": "Swedish House Mafia",
+      "ja_reading": "スウェディッシュ・ハウス・マフィア",
+      "aliases": {
+        "en": [
+          "SHM"
+        ],
+        "ko": [
+          "스웨덴 하우스 마피아"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [
+          "스웨덴 하우스 마피아"
+        ],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_takkyu_ishino",
+      "type": "artist",
+      "en": "Takkyu Ishino",
+      "ko": "이시노 탓큐",
+      "ja_display": "Takkyu Ishino",
+      "ja_reading": "石野卓球",
+      "aliases": {
+        "en": [
+          "TAKKYU ISHINO",
+          "Takkyu Ishino"
+        ],
+        "ko": [
+          "타큐 이시노",
+          "이시노 타큐"
+        ],
+        "ja": [
+          "いしのたっきゅう"
+        ]
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": "일본어 게시물에서는 한자명 石野卓球을 우선한다."
+    },
+    {
+      "id": "artist_tale_of_us",
+      "type": "artist",
+      "en": "Tale Of Us",
+      "ko": "테일 오브 어스",
+      "ja_display": "Tale Of Us",
+      "ja_reading": "テイル・オブ・アス",
+      "aliases": {
+        "en": [
+          "TALE OF US"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_tchami",
+      "type": "artist",
+      "en": "Tchami",
+      "ko": "차미",
+      "ja_display": "Tchami",
+      "ja_reading": "チャミ",
+      "aliases": {
+        "en": [
+          "TCHAMI"
+        ],
+        "ko": [
+          "차미 DJ"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_the_chainsmokers",
+      "type": "artist",
+      "en": "The Chainsmokers",
+      "ko": "체인스모커스",
+      "ja_display": "The Chainsmokers",
+      "ja_reading": "ザ・チェインスモーカーズ",
+      "aliases": {
+        "en": [
+          "Chainsmokers"
+        ],
+        "ko": [
+          "더 체인스모커스"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_the_chemical_brothers",
+      "type": "artist",
+      "en": "The Chemical Brothers",
+      "ko": "케미컬 브라더스",
+      "ja_display": "The Chemical Brothers",
+      "ja_reading": "ケミカル・ブラザーズ",
+      "aliases": {
+        "en": [
+          "Chemical Brothers"
+        ],
+        "ko": [
+          "더 케미컬 브라더스"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_the_martinez_brothers",
+      "type": "artist",
+      "en": "The Martinez Brothers",
+      "ko": "마르티네즈 브라더스",
+      "ja_display": "The Martinez Brothers",
+      "ja_reading": "ザ・マルティネス・ブラザーズ",
+      "aliases": {
+        "en": [
+          "Martinez Brothers"
+        ],
+        "ko": [
+          "더 마르티네즈 브라더스"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_the_prodigy",
+      "type": "artist",
+      "en": "The Prodigy",
+      "ko": "프로디지",
+      "ja_display": "The Prodigy",
+      "ja_reading": "ザ・プロディジー",
+      "aliases": {
+        "en": [
+          "Prodigy"
+        ],
+        "ko": [
+          "더 프로디지"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_timmy_trumpet",
+      "type": "artist",
+      "en": "Timmy Trumpet",
+      "ko": "티미 트럼펫",
+      "ja_display": "Timmy Trumpet",
+      "ja_reading": "ティミー・トランペット",
+      "aliases": {
+        "en": [
+          "TIMMY TRUMPET"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_tinlicker",
+      "type": "artist",
+      "en": "Tinlicker",
+      "ko": "틴리커",
+      "ja_display": "Tinlicker",
+      "ja_reading": "ティンリッカー",
+      "aliases": {
+        "en": [
+          "TINLICKER"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_tiesto",
+      "type": "artist",
+      "en": "Tiësto",
+      "ko": "티에스토",
+      "ja_display": "Tiësto",
+      "ja_reading": "ティエスト",
+      "aliases": {
+        "en": [
+          "Tiesto",
+          "TIESTO"
+        ],
+        "ko": [],
+        "ja": [
+          "ティエスト"
+        ]
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": "영문 공식 표기의 ï를 보존한다."
+    },
+    {
+      "id": "artist_underworld",
+      "type": "artist",
+      "en": "Underworld",
+      "ko": "언더월드",
+      "ja_display": "Underworld",
+      "ja_reading": "アンダーワールド",
+      "aliases": {
+        "en": [
+          "UNDERWORLD"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_vini_vici",
+      "type": "artist",
+      "en": "Vini Vici",
+      "ko": "비니 비치",
+      "ja_display": "Vini Vici",
+      "ja_reading": "ヴィニ・ヴィチ",
+      "aliases": {
+        "en": [
+          "VINI VICI"
+        ],
+        "ko": [
+          "비니 비시"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_vintage_culture",
+      "type": "artist",
+      "en": "Vintage Culture",
+      "ko": "빈티지 컬처",
+      "ja_display": "Vintage Culture",
+      "ja_reading": "ヴィンテージ・カルチャー",
+      "aliases": {
+        "en": [
+          "VINTAGE CULTURE"
+        ],
+        "ko": [
+          "빈티지 컬쳐"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_w_and_w",
+      "type": "artist",
+      "en": "W&W",
+      "ko": "더블유 앤 더블유",
+      "ja_display": "W&W",
+      "ja_reading": "W&W",
+      "aliases": {
+        "en": [
+          "W and W"
+        ],
+        "ko": [
+          "더블앤더블",
+          "더블유앤더블유"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [
+          "더블앤더블"
+        ],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_wata_igarashi",
+      "type": "artist",
+      "en": "Wata Igarashi",
+      "ko": "이가라시 와타",
+      "ja_display": "Wata Igarashi",
+      "ja_reading": "五十嵐 渉",
+      "aliases": {
+        "en": [
+          "WATA IGARASHI"
+        ],
+        "ko": [
+          "와타 이가라시"
+        ],
+        "ja": [
+          "いがらしわた"
+        ]
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": "일본어 게시물에서는 공식 한자 표기가 확인되는 경우 한자를 우선한다."
+    },
+    {
+      "id": "artist_yaeji",
+      "type": "artist",
+      "en": "Yaeji",
+      "ko": "예지",
+      "ja_display": "Yaeji",
+      "ja_reading": "イェジ",
+      "aliases": {
+        "en": [
+          "YAEJI"
+        ],
+        "ko": [
+          "야에지"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_yotto",
+      "type": "artist",
+      "en": "Yotto",
+      "ko": "요토",
+      "ja_display": "Yotto",
+      "ja_reading": "ヨット",
+      "aliases": {
+        "en": [
+          "YOTTO"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_zedd",
+      "type": "artist",
+      "en": "Zedd",
+      "ko": "제드",
+      "ja_display": "Zedd",
+      "ja_reading": "ゼッド",
+      "aliases": {
+        "en": [
+          "ZEDD"
+        ],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_zeds_dead",
+      "type": "artist",
+      "en": "Zeds Dead",
+      "ko": "제즈 데드",
+      "ja_display": "Zeds Dead",
+      "ja_reading": "ゼッズ・デッド",
+      "aliases": {
+        "en": [
+          "ZEDS DEAD"
+        ],
+        "ko": [
+          "제드스 데드"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "artist_ame",
+      "type": "artist",
+      "en": "Âme",
+      "ko": "아메",
+      "ja_display": "Âme",
+      "ja_reading": "アーム",
+      "aliases": {
+        "en": [
+          "Ame",
+          "ÂME"
+        ],
+        "ko": [
+          "암",
+          "에임"
+        ],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": "영문 공식 표기의 곡절부호를 보존한다."
+    },
+    {
+      "id": "festival_808_festival",
+      "type": "festival",
+      "en": "808 Festival",
+      "ko": "808 페스티벌",
+      "ja_display": "808 Festival",
+      "ja_reading": "808フェスティバル",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_a_state_of_trance",
+      "type": "festival",
+      "en": "A State of Trance",
+      "ko": "아 스테이트 오브 트랜스",
+      "ja_display": "A State of Trance",
+      "ja_reading": "ア・ステート・オブ・トランス",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_amsterdam_dance_event",
+      "type": "festival",
+      "en": "Amsterdam Dance Event",
+      "ko": "암스테르담 댄스 이벤트",
+      "ja_display": "Amsterdam Dance Event",
+      "ja_reading": "アムステルダム・ダンス・イベント",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_awakenings",
+      "type": "festival",
+      "en": "Awakenings",
+      "ko": "어웨이크닝스",
+      "ja_display": "Awakenings",
+      "ja_reading": "アウェイクニングス",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_clockenflap",
+      "type": "festival",
+      "en": "Clockenflap",
+      "ko": "클락켄플랩",
+      "ja_display": "Clockenflap",
+      "ja_reading": "クロッケンフラップ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_coachella",
+      "type": "festival",
+      "en": "Coachella",
+      "ko": "코첼라",
+      "ja_display": "Coachella",
+      "ja_reading": "コーチェラ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_creamfields",
+      "type": "festival",
+      "en": "Creamfields",
+      "ko": "크림필즈",
+      "ja_display": "Creamfields",
+      "ja_reading": "クリームフィールズ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_defqon_1",
+      "type": "festival",
+      "en": "Defqon.1",
+      "ko": "데프콘 원",
+      "ja_display": "Defqon.1",
+      "ja_reading": "デフコン・ワン",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_dekmantel",
+      "type": "festival",
+      "en": "Dekmantel",
+      "ko": "데크만텔",
+      "ja_display": "Dekmantel",
+      "ja_reading": "デクマンテル",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_dgtl",
+      "type": "festival",
+      "en": "DGTL",
+      "ko": "디지틀",
+      "ja_display": "DGTL",
+      "ja_reading": "DGTL",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_djakarta_warehouse_project",
+      "type": "festival",
+      "en": "Djakarta Warehouse Project",
+      "ko": "자카르타 웨어하우스 프로젝트",
+      "ja_display": "Djakarta Warehouse Project",
+      "ja_reading": "ジャカルタ・ウェアハウス・プロジェクト",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_edc_japan",
+      "type": "festival",
+      "en": "EDC Japan",
+      "ko": "EDC 재팬",
+      "ja_display": "EDC Japan",
+      "ja_reading": "EDCジャパン",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_edc_las_vegas",
+      "type": "festival",
+      "en": "EDC Las Vegas",
+      "ko": "EDC 라스베이거스",
+      "ja_display": "EDC Las Vegas",
+      "ja_reading": "EDCラスベガス",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_electric_forest",
+      "type": "festival",
+      "en": "Electric Forest",
+      "ko": "일렉트릭 포레스트",
+      "ja_display": "Electric Forest",
+      "ja_reading": "エレクトリック・フォレスト",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_electric_zoo",
+      "type": "festival",
+      "en": "Electric Zoo",
+      "ko": "일렉트릭 주",
+      "ja_display": "Electric Zoo",
+      "ja_reading": "エレクトリック・ズー",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_exit_festival",
+      "type": "festival",
+      "en": "EXIT Festival",
+      "ko": "엑시트 페스티벌",
+      "ja_display": "EXIT Festival",
+      "ja_reading": "エグジット・フェスティバル",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_fuji_rock_festival",
+      "type": "festival",
+      "en": "Fuji Rock Festival",
+      "ko": "후지 록 페스티벌",
+      "ja_display": "Fuji Rock Festival",
+      "ja_reading": "フジロックフェスティバル",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_glastonbury_festival",
+      "type": "festival",
+      "en": "Glastonbury Festival",
+      "ko": "글래스턴베리 페스티벌",
+      "ja_display": "Glastonbury Festival",
+      "ja_reading": "グラストンベリー・フェスティバル",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_kappa_futurfestival",
+      "type": "festival",
+      "en": "Kappa FuturFestival",
+      "ko": "카파 퓨처페스티벌",
+      "ja_display": "Kappa FuturFestival",
+      "ja_reading": "カッパ・フューチャーフェスティバル",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_movement_detroit",
+      "type": "festival",
+      "en": "Movement Detroit",
+      "ko": "무브먼트 디트로이트",
+      "ja_display": "Movement Detroit",
+      "ja_reading": "ムーブメント・デトロイト",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_mutek",
+      "type": "festival",
+      "en": "MUTEK",
+      "ko": "뮤텍",
+      "ja_display": "MUTEK",
+      "ja_reading": "ミューテック",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_mysteryland",
+      "type": "festival",
+      "en": "Mysteryland",
+      "ko": "미스터리랜드",
+      "ja_display": "Mysteryland",
+      "ja_reading": "ミステリーランド",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_parookaville",
+      "type": "festival",
+      "en": "Parookaville",
+      "ko": "파루카빌",
+      "ja_display": "Parookaville",
+      "ja_reading": "パルーカヴィル",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_qlimax",
+      "type": "festival",
+      "en": "Qlimax",
+      "ko": "클라이맥스",
+      "ja_display": "Qlimax",
+      "ja_reading": "クライマックス",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_rainbow_disco_club",
+      "type": "festival",
+      "en": "Rainbow Disco Club",
+      "ko": "레인보우 디스코 클럽",
+      "ja_display": "Rainbow Disco Club",
+      "ja_reading": "レインボー・ディスコ・クラブ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_s2o_korea_songkran_music_festival",
+      "type": "festival",
+      "en": "S2O Korea Songkran Music Festival",
+      "ko": "S2O 코리아 송크란 뮤직 페스티벌",
+      "ja_display": "S2O Korea Songkran Music Festival",
+      "ja_reading": "S2O KOREA ソンクラーン・ミュージック・フェスティバル",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_sonus_festival",
+      "type": "festival",
+      "en": "Sonus Festival",
+      "ko": "소너스 페스티벌",
+      "ja_display": "Sonus Festival",
+      "ja_reading": "ソナス・フェスティバル",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_summer_sonic",
+      "type": "festival",
+      "en": "Summer Sonic",
+      "ko": "서머 소닉",
+      "ja_display": "Summer Sonic",
+      "ja_reading": "サマーソニック",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_sonar",
+      "type": "festival",
+      "en": "Sónar",
+      "ko": "소나르",
+      "ja_display": "Sónar",
+      "ja_reading": "ソナー",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_time_warp",
+      "type": "festival",
+      "en": "Time Warp",
+      "ko": "타임 워프",
+      "ja_display": "Time Warp",
+      "ja_reading": "タイム・ワープ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_tomorrowland",
+      "type": "festival",
+      "en": "Tomorrowland",
+      "ko": "투모로우랜드",
+      "ja_display": "Tomorrowland",
+      "ja_reading": "トゥモローランド",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_transmission_festival",
+      "type": "festival",
+      "en": "Transmission Festival",
+      "ko": "트랜스미션 페스티벌",
+      "ja_display": "Transmission Festival",
+      "ja_reading": "トランスミッション・フェスティバル",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_ultra_japan",
+      "type": "festival",
+      "en": "ULTRA JAPAN",
+      "ko": "울트라 재팬",
+      "ja_display": "ULTRA JAPAN",
+      "ja_reading": "ウルトラ・ジャパン",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_ultra_korea",
+      "type": "festival",
+      "en": "ULTRA KOREA",
+      "ko": "울트라 코리아",
+      "ja_display": "ULTRA KOREA",
+      "ja_reading": "ウルトラ・コリア",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_ultra_music_festival",
+      "type": "festival",
+      "en": "Ultra Music Festival",
+      "ko": "울트라 뮤직 페스티벌",
+      "ja_display": "Ultra Music Festival",
+      "ja_reading": "ウルトラ・ミュージック・フェスティバル",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_waterbomb",
+      "type": "festival",
+      "en": "Waterbomb",
+      "ko": "워터밤",
+      "ja_display": "Waterbomb",
+      "ja_reading": "ウォーターボム",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_wonderfruit",
+      "type": "festival",
+      "en": "Wonderfruit",
+      "ko": "원더프루트",
+      "ja_display": "Wonderfruit",
+      "ja_reading": "ワンダーフルーツ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_world_club_dome",
+      "type": "festival",
+      "en": "World Club Dome",
+      "ko": "월드 클럽 돔",
+      "ja_display": "World Club Dome",
+      "ja_reading": "ワールド・クラブ・ドーム",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_world_dj_festival",
+      "type": "festival",
+      "en": "World DJ Festival",
+      "ko": "월드 디제이 페스티벌",
+      "ja_display": "World DJ Festival",
+      "ja_reading": "ワールドDJフェスティバル",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "festival_zoukout",
+      "type": "festival",
+      "en": "ZoukOut",
+      "ko": "주크아웃",
+      "ja_display": "ZoukOut",
+      "ja_reading": "ズークアウト",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_ageha",
+      "type": "venue",
+      "en": "ageHa",
+      "ko": "아게하",
+      "ja_display": "ageHa",
+      "ja_reading": "アゲハ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_amnesia_ibiza",
+      "type": "venue",
+      "en": "Amnesia Ibiza",
+      "ko": "암네시아 이비사",
+      "ja_display": "Amnesia Ibiza",
+      "ja_reading": "アムネシア・イビサ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_bassiani",
+      "type": "venue",
+      "en": "Bassiani",
+      "ko": "바시아니",
+      "ja_display": "Bassiani",
+      "ja_reading": "バシアニ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_berghain",
+      "type": "venue",
+      "en": "Berghain",
+      "ko": "베르크하인",
+      "ja_display": "Berghain",
+      "ja_reading": "ベルクハイン",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_cakeshop_seoul",
+      "type": "venue",
+      "en": "Cakeshop Seoul",
+      "ko": "케이크샵 서울",
+      "ja_display": "Cakeshop Seoul",
+      "ja_reading": "ケイクショップ・ソウル",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_circus_tokyo",
+      "type": "venue",
+      "en": "CIRCUS TOKYO",
+      "ko": "서커스 도쿄",
+      "ja_display": "CIRCUS TOKYO",
+      "ja_reading": "サーカス・トーキョー",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_dc_10",
+      "type": "venue",
+      "en": "DC-10",
+      "ko": "DC-10",
+      "ja_display": "DC-10",
+      "ja_reading": "ディーシー・テン",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_de_school",
+      "type": "venue",
+      "en": "De School",
+      "ko": "더 스쿨",
+      "ja_display": "De School",
+      "ja_reading": "デ・スクール",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_fabric",
+      "type": "venue",
+      "en": "fabric",
+      "ko": "패브릭",
+      "ja_display": "fabric",
+      "ja_reading": "ファブリック",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_faust_seoul",
+      "type": "venue",
+      "en": "Faust Seoul",
+      "ko": "파우스트 서울",
+      "ja_display": "Faust Seoul",
+      "ja_reading": "ファウスト・ソウル",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_hi_ibiza",
+      "type": "venue",
+      "en": "Hï Ibiza",
+      "ko": "하이 이비사",
+      "ja_display": "Hï Ibiza",
+      "ja_reading": "ハイ・イビサ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_khidi",
+      "type": "venue",
+      "en": "Khidi",
+      "ko": "키디",
+      "ja_display": "Khidi",
+      "ja_reading": "キディ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_ministry_of_sound",
+      "type": "venue",
+      "en": "Ministry of Sound",
+      "ko": "미니스트리 오브 사운드",
+      "ja_display": "Ministry of Sound",
+      "ja_reading": "ミニストリー・オブ・サウンド",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_octagon_seoul",
+      "type": "venue",
+      "en": "Octagon Seoul",
+      "ko": "옥타곤 서울",
+      "ja_display": "Octagon Seoul",
+      "ja_reading": "オクタゴン・ソウル",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_pacha_ibiza",
+      "type": "venue",
+      "en": "Pacha Ibiza",
+      "ko": "파차 이비사",
+      "ja_display": "Pacha Ibiza",
+      "ja_reading": "パチャ・イビサ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_panorama_bar",
+      "type": "venue",
+      "en": "Panorama Bar",
+      "ko": "파노라마 바",
+      "ja_display": "Panorama Bar",
+      "ja_reading": "パノラマ・バー",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_printworks_london",
+      "type": "venue",
+      "en": "Printworks London",
+      "ko": "프린트웍스 런던",
+      "ja_display": "Printworks London",
+      "ja_reading": "プリントワークス・ロンドン",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_rex_club",
+      "type": "venue",
+      "en": "Rex Club",
+      "ko": "렉스 클럽",
+      "ja_display": "Rex Club",
+      "ja_reading": "レックス・クラブ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_robert_johnson",
+      "type": "venue",
+      "en": "Robert Johnson",
+      "ko": "로베르트 존슨",
+      "ja_display": "Robert Johnson",
+      "ja_reading": "ロバート・ジョンソン",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_shelter_amsterdam",
+      "type": "venue",
+      "en": "Shelter Amsterdam",
+      "ko": "셸터 암스테르담",
+      "ja_display": "Shelter Amsterdam",
+      "ja_reading": "シェルター・アムステルダム",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_sisyphos",
+      "type": "venue",
+      "en": "Sisyphos",
+      "ko": "시지포스",
+      "ja_display": "Sisyphos",
+      "ja_reading": "シジフォス",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_space_ibiza",
+      "type": "venue",
+      "en": "Space Ibiza",
+      "ko": "스페이스 이비사",
+      "ja_display": "Space Ibiza",
+      "ja_reading": "スペース・イビサ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_the_warehouse_project",
+      "type": "venue",
+      "en": "The Warehouse Project",
+      "ko": "더 웨어하우스 프로젝트",
+      "ja_display": "The Warehouse Project",
+      "ja_reading": "ザ・ウェアハウス・プロジェクト",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_tresor",
+      "type": "venue",
+      "en": "Tresor",
+      "ko": "트레조어",
+      "ja_display": "Tresor",
+      "ja_reading": "トレゾア",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_ushuaia_ibiza",
+      "type": "venue",
+      "en": "Ushuaïa Ibiza",
+      "ko": "우슈아이아 이비사",
+      "ja_display": "Ushuaïa Ibiza",
+      "ja_reading": "ウシュアイア・イビサ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_vent",
+      "type": "venue",
+      "en": "VENT",
+      "ko": "벤트",
+      "ja_display": "VENT",
+      "ja_reading": "ヴェント",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_watergate",
+      "type": "venue",
+      "en": "Watergate",
+      "ko": "워터게이트",
+      "ja_display": "Watergate",
+      "ja_reading": "ウォーターゲート",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_womb",
+      "type": "venue",
+      "en": "WOMB",
+      "ko": "웜",
+      "ja_display": "WOMB",
+      "ja_reading": "ウーム",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_zerotokyo",
+      "type": "venue",
+      "en": "ZEROTOKYO",
+      "ko": "제로도쿄",
+      "ja_display": "ZEROTOKYO",
+      "ja_reading": "ゼロトウキョウ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "venue_zouk_singapore",
+      "type": "venue",
+      "en": "Zouk Singapore",
+      "ko": "주크 싱가포르",
+      "ja_display": "Zouk Singapore",
+      "ja_reading": "ズーク・シンガポール",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_afterlife",
+      "type": "label",
+      "en": "Afterlife",
+      "ko": "애프터라이프",
+      "ja_display": "Afterlife",
+      "ja_reading": "アフターライフ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_anjunabeats",
+      "type": "label",
+      "en": "Anjunabeats",
+      "ko": "안주나비츠",
+      "ja_display": "Anjunabeats",
+      "ja_reading": "アンジュナビーツ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_anjunadeep",
+      "type": "label",
+      "en": "Anjunadeep",
+      "ko": "안주나딥",
+      "ja_display": "Anjunadeep",
+      "ja_reading": "アンジュナディープ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_armada_music",
+      "type": "label",
+      "en": "Armada Music",
+      "ko": "아르마다 뮤직",
+      "ja_display": "Armada Music",
+      "ja_reading": "アルマダ・ミュージック",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_black_book_records",
+      "type": "label",
+      "en": "Black Book Records",
+      "ko": "블랙 북 레코즈",
+      "ja_display": "Black Book Records",
+      "ja_reading": "ブラック・ブック・レコーズ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_defected_records",
+      "type": "label",
+      "en": "Defected Records",
+      "ko": "디펙티드 레코즈",
+      "ja_display": "Defected Records",
+      "ja_reading": "ディフェクテッド・レコーズ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_dirtybird",
+      "type": "label",
+      "en": "Dirtybird",
+      "ko": "더티버드",
+      "ja_display": "Dirtybird",
+      "ja_reading": "ダーティバード",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_diynamic",
+      "type": "label",
+      "en": "Diynamic",
+      "ko": "다이내믹",
+      "ja_display": "Diynamic",
+      "ja_reading": "ダイナミック",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_drumcode",
+      "type": "label",
+      "en": "Drumcode",
+      "ko": "드럼코드",
+      "ja_display": "Drumcode",
+      "ja_reading": "ドラムコード",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_experts_only",
+      "type": "label",
+      "en": "Experts Only",
+      "ko": "엑스퍼츠 온리",
+      "ja_display": "Experts Only",
+      "ja_reading": "エキスパーツ・オンリー",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_filth_on_acid",
+      "type": "label",
+      "en": "Filth on Acid",
+      "ko": "필스 온 애시드",
+      "ja_display": "Filth on Acid",
+      "ja_reading": "フィルス・オン・アシッド",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_hexagon",
+      "type": "label",
+      "en": "HEXAGON",
+      "ko": "헥사곤",
+      "ja_display": "HEXAGON",
+      "ja_reading": "ヘキサゴン",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_hospital_records",
+      "type": "label",
+      "en": "Hospital Records",
+      "ko": "호스피털 레코즈",
+      "ja_display": "Hospital Records",
+      "ja_reading": "ホスピタル・レコーズ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_innervisions",
+      "type": "label",
+      "en": "Innervisions",
+      "ko": "이너비전스",
+      "ja_display": "Innervisions",
+      "ja_reading": "インナーヴィジョンズ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_kntxt",
+      "type": "label",
+      "en": "KNTXT",
+      "ko": "KNTXT",
+      "ja_display": "KNTXT",
+      "ja_reading": "コンテクスト",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_kompakt",
+      "type": "label",
+      "en": "Kompakt",
+      "ko": "콤팍트",
+      "ja_display": "Kompakt",
+      "ja_reading": "コンパクト",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_mad_decent",
+      "type": "label",
+      "en": "Mad Decent",
+      "ko": "매드 디센트",
+      "ja_display": "Mad Decent",
+      "ja_reading": "マッド・ディセント",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_mau5trap",
+      "type": "label",
+      "en": "mau5trap",
+      "ko": "마우스트랩",
+      "ja_display": "mau5trap",
+      "ja_reading": "マウストラップ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_ministry_of_sound_recordings",
+      "type": "label",
+      "en": "Ministry of Sound Recordings",
+      "ko": "미니스트리 오브 사운드 레코딩스",
+      "ja_display": "Ministry of Sound Recordings",
+      "ja_reading": "ミニストリー・オブ・サウンド・レコーディングス",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_monstercat",
+      "type": "label",
+      "en": "Monstercat",
+      "ko": "몬스터캣",
+      "ja_display": "Monstercat",
+      "ja_reading": "モンスターキャット",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_musical_freedom",
+      "type": "label",
+      "en": "Musical Freedom",
+      "ko": "뮤지컬 프리덤",
+      "ja_display": "Musical Freedom",
+      "ja_reading": "ミュージカル・フリーダム",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_night_bass",
+      "type": "label",
+      "en": "Night Bass",
+      "ko": "나이트 베이스",
+      "ja_display": "Night Bass",
+      "ja_reading": "ナイト・ベース",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_ninja_tune",
+      "type": "label",
+      "en": "Ninja Tune",
+      "ko": "닌자 튠",
+      "ja_display": "Ninja Tune",
+      "ja_reading": "ニンジャ・チューン",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_ostgut_ton",
+      "type": "label",
+      "en": "Ostgut Ton",
+      "ko": "오스트구트 톤",
+      "ja_display": "Ostgut Ton",
+      "ja_reading": "オストグート・トン",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_owsla",
+      "type": "label",
+      "en": "OWSLA",
+      "ko": "아우슬라",
+      "ja_display": "OWSLA",
+      "ja_reading": "アウスラ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_protocol_recordings",
+      "type": "label",
+      "en": "Protocol Recordings",
+      "ko": "프로토콜 레코딩스",
+      "ja_display": "Protocol Recordings",
+      "ja_reading": "プロトコル・レコーディングス",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_revealed_recordings",
+      "type": "label",
+      "en": "Revealed Recordings",
+      "ko": "리빌드 레코딩스",
+      "ja_display": "Revealed Recordings",
+      "ja_reading": "リヴィールド・レコーディングス",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_spinnin_records",
+      "type": "label",
+      "en": "Spinnin' Records",
+      "ko": "스피닝 레코즈",
+      "ja_display": "Spinnin' Records",
+      "ja_reading": "スピニン・レコーズ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_stmpd_rcrds",
+      "type": "label",
+      "en": "STMPD RCRDS",
+      "ko": "스탬프트 레코즈",
+      "ja_display": "STMPD RCRDS",
+      "ja_reading": "スタンプト・レコーズ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_toolroom_records",
+      "type": "label",
+      "en": "Toolroom Records",
+      "ko": "툴룸 레코즈",
+      "ja_display": "Toolroom Records",
+      "ja_reading": "ツールルーム・レコーズ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_tresor_records",
+      "type": "label",
+      "en": "Tresor Records",
+      "ko": "트레조어 레코즈",
+      "ja_display": "Tresor Records",
+      "ja_reading": "トレゾア・レコーズ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_ultra_records",
+      "type": "label",
+      "en": "Ultra Records",
+      "ko": "울트라 레코즈",
+      "ja_display": "Ultra Records",
+      "ja_reading": "ウルトラ・レコーズ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "label_warp_records",
+      "type": "label",
+      "en": "Warp Records",
+      "ko": "워프 레코즈",
+      "ja_display": "Warp Records",
+      "ja_reading": "ワープ・レコーズ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_acid_house",
+      "type": "genre",
+      "en": "acid house",
+      "ko": "애시드 하우스",
+      "ja_display": "アシッド・ハウス",
+      "ja_reading": "アシッド・ハウス",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_bass_house",
+      "type": "genre",
+      "en": "bass house",
+      "ko": "베이스 하우스",
+      "ja_display": "ベース・ハウス",
+      "ja_reading": "ベース・ハウス",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_big_room_house",
+      "type": "genre",
+      "en": "big room house",
+      "ko": "빅 룸 하우스",
+      "ja_display": "ビッグルーム・ハウス",
+      "ja_reading": "ビッグルーム・ハウス",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_breakbeat",
+      "type": "genre",
+      "en": "breakbeat",
+      "ko": "브레이크비트",
+      "ja_display": "ブレイクビーツ",
+      "ja_reading": "ブレイクビーツ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_brostep",
+      "type": "genre",
+      "en": "brostep",
+      "ko": "브로스텝",
+      "ja_display": "ブロステップ",
+      "ja_reading": "ブロステップ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_chicago_house",
+      "type": "genre",
+      "en": "Chicago house",
+      "ko": "시카고 하우스",
+      "ja_display": "シカゴ・ハウス",
+      "ja_reading": "シカゴ・ハウス",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_deep_house",
+      "type": "genre",
+      "en": "deep house",
+      "ko": "딥 하우스",
+      "ja_display": "ディープ・ハウス",
+      "ja_reading": "ディープ・ハウス",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_detroit_techno",
+      "type": "genre",
+      "en": "Detroit techno",
+      "ko": "디트로이트 테크노",
+      "ja_display": "デトロイト・テクノ",
+      "ja_reading": "デトロイト・テクノ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_disco_house",
+      "type": "genre",
+      "en": "disco house",
+      "ko": "디스코 하우스",
+      "ja_display": "ディスコ・ハウス",
+      "ja_reading": "ディスコ・ハウス",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_drum_and_bass",
+      "type": "genre",
+      "en": "drum & bass",
+      "ko": "드럼 앤 베이스",
+      "ja_display": "ドラムンベース",
+      "ja_reading": "ドラムンベース",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_dubstep",
+      "type": "genre",
+      "en": "dubstep",
+      "ko": "덥스텝",
+      "ja_display": "ダブステップ",
+      "ja_reading": "ダブステップ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_edm",
+      "type": "genre",
+      "en": "EDM",
+      "ko": "EDM",
+      "ja_display": "EDM",
+      "ja_reading": "イーディーエム",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_electro_house",
+      "type": "genre",
+      "en": "electro house",
+      "ko": "일렉트로 하우스",
+      "ja_display": "エレクトロ・ハウス",
+      "ja_reading": "エレクトロ・ハウス",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_electronic_dance_music",
+      "type": "genre",
+      "en": "electronic dance music",
+      "ko": "전자 댄스 음악",
+      "ja_display": "エレクトロニック・ダンス・ミュージック",
+      "ja_reading": "エレクトロニック・ダンス・ミュージック",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_french_house",
+      "type": "genre",
+      "en": "French house",
+      "ko": "프렌치 하우스",
+      "ja_display": "フレンチ・ハウス",
+      "ja_reading": "フレンチ・ハウス",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_future_bass",
+      "type": "genre",
+      "en": "future bass",
+      "ko": "퓨처 베이스",
+      "ja_display": "フューチャー・ベース",
+      "ja_reading": "フューチャー・ベース",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_future_house",
+      "type": "genre",
+      "en": "future house",
+      "ko": "퓨처 하우스",
+      "ja_display": "フューチャー・ハウス",
+      "ja_reading": "フューチャー・ハウス",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_gabber",
+      "type": "genre",
+      "en": "gabber",
+      "ko": "개버",
+      "ja_display": "ガバ",
+      "ja_reading": "ガバ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_hardcore",
+      "type": "genre",
+      "en": "hardcore",
+      "ko": "하드코어",
+      "ja_display": "ハードコア",
+      "ja_reading": "ハードコア",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_hardstyle",
+      "type": "genre",
+      "en": "hardstyle",
+      "ko": "하드스타일",
+      "ja_display": "ハードスタイル",
+      "ja_reading": "ハードスタイル",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_house",
+      "type": "genre",
+      "en": "house",
+      "ko": "하우스",
+      "ja_display": "ハウス",
+      "ja_reading": "ハウス",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_jungle",
+      "type": "genre",
+      "en": "jungle",
+      "ko": "정글",
+      "ja_display": "ジャングル",
+      "ja_reading": "ジャングル",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_melodic_house_and_techno",
+      "type": "genre",
+      "en": "melodic house & techno",
+      "ko": "멜로딕 하우스 앤 테크노",
+      "ja_display": "メロディック・ハウス＆テクノ",
+      "ja_reading": "メロディック・ハウス＆テクノ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_minimal_techno",
+      "type": "genre",
+      "en": "minimal techno",
+      "ko": "미니멀 테크노",
+      "ja_display": "ミニマル・テクノ",
+      "ja_reading": "ミニマル・テクノ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_progressive_house",
+      "type": "genre",
+      "en": "progressive house",
+      "ko": "프로그레시브 하우스",
+      "ja_display": "プログレッシブ・ハウス",
+      "ja_reading": "プログレッシブ・ハウス",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_progressive_trance",
+      "type": "genre",
+      "en": "progressive trance",
+      "ko": "프로그레시브 트랜스",
+      "ja_display": "プログレッシブ・トランス",
+      "ja_reading": "プログレッシブ・トランス",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_psytrance",
+      "type": "genre",
+      "en": "psytrance",
+      "ko": "사이키델릭 트랜스",
+      "ja_display": "サイケデリック・トランス",
+      "ja_reading": "サイケデリック・トランス",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_synthwave",
+      "type": "genre",
+      "en": "synthwave",
+      "ko": "신스웨이브",
+      "ja_display": "シンセウェイヴ",
+      "ja_reading": "シンセウェイヴ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_tech_house",
+      "type": "genre",
+      "en": "tech house",
+      "ko": "테크 하우스",
+      "ja_display": "テック・ハウス",
+      "ja_reading": "テック・ハウス",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_techno",
+      "type": "genre",
+      "en": "techno",
+      "ko": "테크노",
+      "ja_display": "テクノ",
+      "ja_reading": "テクノ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_trance",
+      "type": "genre",
+      "en": "trance",
+      "ko": "트랜스",
+      "ja_display": "トランス",
+      "ja_reading": "トランス",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_trap",
+      "type": "genre",
+      "en": "trap",
+      "ko": "트랩",
+      "ja_display": "トラップ",
+      "ja_reading": "トラップ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_tropical_house",
+      "type": "genre",
+      "en": "tropical house",
+      "ko": "트로피컬 하우스",
+      "ja_display": "トロピカル・ハウス",
+      "ja_reading": "トロピカル・ハウス",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_uk_garage",
+      "type": "genre",
+      "en": "UK garage",
+      "ko": "UK 개러지",
+      "ja_display": "UKガラージ",
+      "ja_reading": "ユーケー・ガラージ",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    },
+    {
+      "id": "genre_uplifting_trance",
+      "type": "genre",
+      "en": "uplifting trance",
+      "ko": "업리프팅 트랜스",
+      "ja_display": "アップリフティング・トランス",
+      "ja_reading": "アップリフティング・トランス",
+      "aliases": {
+        "en": [],
+        "ko": [],
+        "ja": []
+      },
+      "avoid": {
+        "ko": [],
+        "ja": []
+      },
+      "notes": ""
+    }
+  ]
+}

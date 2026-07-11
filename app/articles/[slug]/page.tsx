@@ -4,6 +4,7 @@ import { notFound, permanentRedirect } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { isUsableImageUrl, loadClusterImageUrl, loadPublishedArticles } from "@/lib/articles";
 import { ArticleCard } from "@/components/ArticleCard";
+import { DEFAULT_OG_IMAGE_URL } from "@/lib/site";
 
 // ── 원본 유지 — 데이터/유틸 ───────────────────────────
 
@@ -57,7 +58,7 @@ export async function generateMetadata({
       url: articlePath,
       publishedTime: data.published_at ?? data.created_at,
       modifiedTime: data.updated_at ?? undefined,
-      images: imageUrl ? [{ url: imageUrl }] : undefined,
+      images: [{ url: imageUrl ?? DEFAULT_OG_IMAGE_URL }],
     },
   };
 }

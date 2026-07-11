@@ -2,75 +2,141 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://feel-the-drop.com/</loc>
-    <lastmod>2026-07-06T12:38:52.236Z</lastmod>
+    <lastmod>2026-07-11T11:35:51.904Z</lastmod>
     <changefreq>hourly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://feel-the-drop.com/category/festival/</loc>
-    <lastmod>2026-07-06T12:38:52.236Z</lastmod>
+    <lastmod>2026-07-11T11:35:51.904Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://feel-the-drop.com/category/artist/</loc>
-    <lastmod>2026-07-06T12:38:52.236Z</lastmod>
+    <lastmod>2026-07-11T11:35:51.904Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://feel-the-drop.com/category/release/</loc>
-    <lastmod>2026-07-06T12:38:52.236Z</lastmod>
+    <lastmod>2026-07-11T11:35:51.904Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://feel-the-drop.com/category/news/</loc>
-    <lastmod>2026-07-06T12:38:52.236Z</lastmod>
+    <lastmod>2026-07-11T11:35:51.904Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://feel-the-drop.com/category/interview/</loc>
-    <lastmod>2026-07-06T12:38:52.236Z</lastmod>
+    <lastmod>2026-07-11T11:35:51.904Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://feel-the-drop.com/genre/house/</loc>
-    <lastmod>2026-07-06T12:38:52.236Z</lastmod>
+    <lastmod>2026-07-11T11:35:51.904Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://feel-the-drop.com/genre/techno/</loc>
-    <lastmod>2026-07-06T12:38:52.236Z</lastmod>
+    <lastmod>2026-07-11T11:35:51.904Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://feel-the-drop.com/genre/trance/</loc>
-    <lastmod>2026-07-06T12:38:52.236Z</lastmod>
+    <lastmod>2026-07-11T11:35:51.904Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://feel-the-drop.com/genre/drum-and-bass/</loc>
-    <lastmod>2026-07-06T12:38:52.236Z</lastmod>
+    <lastmod>2026-07-11T11:35:51.904Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://feel-the-drop.com/genre/dubstep/</loc>
-    <lastmod>2026-07-06T12:38:52.236Z</lastmod>
+    <lastmod>2026-07-11T11:35:51.904Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://feel-the-drop.com/genre/ambient/</loc>
-    <lastmod>2026-07-06T12:38:52.236Z</lastmod>
+    <lastmod>2026-07-11T11:35:51.904Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://feel-the-drop.com/articles/victor-willis-village-people-death-2024/</loc>
+    <lastmod>2026-07-10T13:35:37.318Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://feel-the-drop.com/articles/corsica-studios-london-club-memories/</loc>
+    <lastmod>2026-07-10T13:35:32.828Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://feel-the-drop.com/articles/lost-club-london-phone-free-2026/</loc>
+    <lastmod>2026-07-10T13:35:31.818Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://feel-the-drop.com/articles/lukas-wigflex-peep-festival-abuse-allegations-2024/</loc>
+    <lastmod>2026-07-10T13:35:28.067Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://feel-the-drop.com/articles/uk-cocaine-deaths-record-high-2024/</loc>
+    <lastmod>2026-07-10T13:35:24.589Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://feel-the-drop.com/articles/rhythm-buro-kyiv-wartime-2026/</loc>
+    <lastmod>2026-07-10T13:35:20.142Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://feel-the-drop.com/articles/new-york-club-rawhide-dmx-street-2026/</loc>
+    <lastmod>2026-07-10T13:05:25.698Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://feel-the-drop.com/articles/franky-rizardo-pete-tong-john-summit-dispute-2024/</loc>
+    <lastmod>2026-07-10T13:05:22.589Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://feel-the-drop.com/articles/russia-nightclub-lgbtqia-jailed-2024/</loc>
+    <lastmod>2026-07-07T07:36:54.593Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://feel-the-drop.com/articles/2-live-crew-copyright-lawsuit-2024/</loc>
+    <lastmod>2026-07-07T07:36:44.451Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://feel-the-drop.com/articles/marlon-hoffstadt-das-ist-daddy-2026/</loc>
+    <lastmod>2026-07-07T07:36:41.059Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://feel-the-drop.com/articles/david-guetta-human-2026/</loc>
