@@ -182,8 +182,9 @@ bot.command("collect", async (ctx) => {
     }
 
     type CollectFailure = { source: string; error: unknown };
-    const { collected = 0, failures = [], diagnostics } = data as {
+    const { collected = 0, failures = [], diagnostics, viewsSynced = 0 } = data as {
       collected?: number;
+      viewsSynced?: number;
       failures?: CollectFailure[];
       diagnostics?: {
         insertedCount: number;
@@ -223,6 +224,7 @@ bot.command("collect", async (ctx) => {
     } else {
       resultText += `수집 완료\n새 기사: ${collected}개\n`;
     }
+    resultText += `- 조회수 동기화: ${viewsSynced}개\n`;
 
     if (failures.length > 0) {
       resultText += `\n실패 소스:\n`;

@@ -1,0 +1,7600 @@
+{
+  "schema_version": "2.0",
+  "title": "FEEL THE DROP EDM Entity Dictionary (SOT)",
+  "last_reviewed": "2026-07-12",
+  "scope": "EDM/electronic music artists, festivals, venues, labels, equipment brands. Korea + Japan + global coverage.",
+  "usage_policy": {
+    "english": "Preserve exact capitalization, spacing, punctuation, and accents in `en`.",
+    "korean_established": "ko_status=established: use `ko` as the Korean output. Verified against Korean media / official festival lineups (see ko_source).",
+    "korean_none": "ko_status=none: NO settled Korean notation exists. Keep the English form as-is. NEVER invent a Korean transliteration.",
+    "ko_avoid": "Incorrect Korean notations that circulate but must never be output.",
+    "aliases_en": "Accepted input variants for matching. Do not use as output.",
+    "weight": "Entity-matching weight used by the topic suggestion pipeline."
+  },
+  "counts": {
+    "artist": 360,
+    "equipment": 33,
+    "festival": 60,
+    "label": 49,
+    "venue": 39,
+    "total": 541,
+    "ko_established": 90
+  },
+  "entities": [
+    {
+      "id": "artist_tiesto",
+      "type": "artist",
+      "en": "Tiësto",
+      "aliases_en": [
+        "Tiesto"
+      ],
+      "ko": "티에스토",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "GLOBAL",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "artist_david_guetta",
+      "type": "artist",
+      "en": "David Guetta",
+      "aliases_en": [],
+      "ko": "데이비드 게타",
+      "ko_status": "established",
+      "ko_avoid": [
+        "데이빗 게타"
+      ],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "GLOBAL",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "artist_calvin_harris",
+      "type": "artist",
+      "en": "Calvin Harris",
+      "aliases_en": [],
+      "ko": "칼빈 해리스",
+      "ko_status": "established",
+      "ko_avoid": [
+        "캘빈 해리스"
+      ],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "GLOBAL",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "artist_martin_garrix",
+      "type": "artist",
+      "en": "Martin Garrix",
+      "aliases_en": [],
+      "ko": "마틴 게릭스",
+      "ko_status": "established",
+      "ko_avoid": [
+        "마틴 개릭스"
+      ],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "GLOBAL",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "artist_skrillex",
+      "type": "artist",
+      "en": "Skrillex",
+      "aliases_en": [],
+      "ko": "스크릴렉스",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "US",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "artist_armin_van_buuren",
+      "type": "artist",
+      "en": "Armin van Buuren",
+      "aliases_en": [
+        "Armin"
+      ],
+      "ko": "아민 반 뷰렌",
+      "ko_status": "established",
+      "ko_avoid": [
+        "아르민 반 부렌"
+      ],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "GLOBAL",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "artist_marshmello",
+      "type": "artist",
+      "en": "Marshmello",
+      "aliases_en": [],
+      "ko": "마시멜로",
+      "ko_status": "established",
+      "ko_avoid": [
+        "마쉬멜로"
+      ],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "US",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "artist_the_chainsmokers",
+      "type": "artist",
+      "en": "The Chainsmokers",
+      "aliases_en": [
+        "Chainsmokers"
+      ],
+      "ko": "체인스모커스",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "US",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "artist_avicii",
+      "type": "artist",
+      "en": "Avicii",
+      "aliases_en": [
+        "Tim Bergling"
+      ],
+      "ko": "아비치",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "GLOBAL",
+      "ko_source": {
+        "name": "울트라 코리아 2016 1·2차 라인업 기사",
+        "url": "https://sports.khan.co.kr/article/201605121218003"
+      }
+    },
+    {
+      "id": "artist_swedish_house_mafia",
+      "type": "artist",
+      "en": "Swedish House Mafia",
+      "aliases_en": [
+        "SHM"
+      ],
+      "ko": "스웨디시 하우스 마피아",
+      "ko_status": "established",
+      "ko_avoid": [
+        "스웨디쉬 하우스 마피아"
+      ],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "EU",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "artist_alesso",
+      "type": "artist",
+      "en": "Alesso",
+      "aliases_en": [],
+      "ko": "알레소",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "artist_zedd",
+      "type": "artist",
+      "en": "Zedd",
+      "aliases_en": [],
+      "ko": "제드",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "GLOBAL",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "artist_diplo",
+      "type": "artist",
+      "en": "Diplo",
+      "aliases_en": [],
+      "ko": "디플로",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "artist_major_lazer",
+      "type": "artist",
+      "en": "Major Lazer",
+      "aliases_en": [],
+      "ko": "메이저 레이저",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "GLOBAL",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "artist_steve_aoki",
+      "type": "artist",
+      "en": "Steve Aoki",
+      "aliases_en": [],
+      "ko": "스티브 아오키",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "artist_afrojack",
+      "type": "artist",
+      "en": "Afrojack",
+      "aliases_en": [],
+      "ko": "아프로잭",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "GLOBAL",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "artist_hardwell",
+      "type": "artist",
+      "en": "Hardwell",
+      "aliases_en": [],
+      "ko": "하드웰",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "GLOBAL",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "artist_dimitri_vegas_like_mike",
+      "type": "artist",
+      "en": "Dimitri Vegas & Like Mike",
+      "aliases_en": [
+        "DVLM"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_don_diablo",
+      "type": "artist",
+      "en": "Don Diablo",
+      "aliases_en": [],
+      "ko": "돈 디아블로",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "GLOBAL",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "artist_kshmr",
+      "type": "artist",
+      "en": "KSHMR",
+      "aliases_en": [],
+      "ko": "카슈미르",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": {
+        "name": "울트라 코리아 2017 1차 라인업 발표 기사",
+        "url": "https://www.maniareport.com/view.php?ud=201703131358080212555nr_19"
+      }
+    },
+    {
+      "id": "artist_alan_walker",
+      "type": "artist",
+      "en": "Alan Walker",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "GLOBAL",
+      "ko_source": null
+    },
+    {
+      "id": "artist_kygo",
+      "type": "artist",
+      "en": "Kygo",
+      "aliases_en": [],
+      "ko": "카이고",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "GLOBAL",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "artist_illenium",
+      "type": "artist",
+      "en": "Illenium",
+      "aliases_en": [
+        "ILLENIUM"
+      ],
+      "ko": "일레니움",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": {
+        "name": "EDC Korea 2026 라인업 발표 기사",
+        "url": "https://v.daum.net/v/20260615160753916"
+      }
+    },
+    {
+      "id": "artist_porter_robinson",
+      "type": "artist",
+      "en": "Porter Robinson",
+      "aliases_en": [],
+      "ko": "포터 로빈슨",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "artist_madeon",
+      "type": "artist",
+      "en": "Madeon",
+      "aliases_en": [],
+      "ko": "마데온",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "artist_flume",
+      "type": "artist",
+      "en": "Flume",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "GLOBAL",
+      "ko_source": null
+    },
+    {
+      "id": "artist_rufus_du_sol",
+      "type": "artist",
+      "en": "RÜFÜS DU SOL",
+      "aliases_en": [
+        "Rufus Du Sol"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "GLOBAL",
+      "ko_source": null
+    },
+    {
+      "id": "artist_odesza",
+      "type": "artist",
+      "en": "ODESZA",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_disclosure",
+      "type": "artist",
+      "en": "Disclosure",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_fred_again",
+      "type": "artist",
+      "en": "Fred again..",
+      "aliases_en": [
+        "Fred Again"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_four_tet",
+      "type": "artist",
+      "en": "Four Tet",
+      "aliases_en": [
+        "Kieran Hebden"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_bonobo",
+      "type": "artist",
+      "en": "Bonobo",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_caribou",
+      "type": "artist",
+      "en": "Caribou",
+      "aliases_en": [
+        "Daphni"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "GLOBAL",
+      "ko_source": null
+    },
+    {
+      "id": "artist_jamie_xx",
+      "type": "artist",
+      "en": "Jamie xx",
+      "aliases_en": [
+        "Jamie XX"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_bicep",
+      "type": "artist",
+      "en": "Bicep",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_overmono",
+      "type": "artist",
+      "en": "Overmono",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_aphex_twin",
+      "type": "artist",
+      "en": "Aphex Twin",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_the_chemical_brothers",
+      "type": "artist",
+      "en": "The Chemical Brothers",
+      "aliases_en": [
+        "Chemical Brothers"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_fatboy_slim",
+      "type": "artist",
+      "en": "Fatboy Slim",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_the_prodigy",
+      "type": "artist",
+      "en": "The Prodigy",
+      "aliases_en": [
+        "Prodigy"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_daft_punk",
+      "type": "artist",
+      "en": "Daft Punk",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_deadmau5",
+      "type": "artist",
+      "en": "deadmau5",
+      "aliases_en": [
+        "Deadmau5"
+      ],
+      "ko": "데드마우스",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "GLOBAL",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "artist_above_beyond",
+      "type": "artist",
+      "en": "Above & Beyond",
+      "aliases_en": [
+        "Above and Beyond"
+      ],
+      "ko": "어보브 앤 비욘드",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": {
+        "name": "울트라 코리아 2018 1차 라인업 발표 기사",
+        "url": "https://www.dtoday.co.kr/news/articleView.html?idxno=263980"
+      }
+    },
+    {
+      "id": "artist_paul_van_dyk",
+      "type": "artist",
+      "en": "Paul van Dyk",
+      "aliases_en": [],
+      "ko": "폴 반 다이크",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "artist_ferry_corsten",
+      "type": "artist",
+      "en": "Ferry Corsten",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_aly_fila",
+      "type": "artist",
+      "en": "Aly & Fila",
+      "aliases_en": [],
+      "ko": "알리 앤 필라",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EG",
+      "ko_source": {
+        "name": "EDC Korea 2026 라인업 발표 기사",
+        "url": "https://v.daum.net/v/20260615160753916"
+      }
+    },
+    {
+      "id": "artist_vini_vici",
+      "type": "artist",
+      "en": "Vini Vici",
+      "aliases_en": [],
+      "ko": "비니 비치",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "IL",
+      "ko_source": {
+        "name": "EDC Korea 2026 라인업 발표 기사",
+        "url": "https://v.daum.net/v/20260615160753916"
+      }
+    },
+    {
+      "id": "artist_w_w",
+      "type": "artist",
+      "en": "W&W",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "GLOBAL",
+      "ko_source": null
+    },
+    {
+      "id": "artist_nicky_romero",
+      "type": "artist",
+      "en": "Nicky Romero",
+      "aliases_en": [],
+      "ko": "니키 로메로",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "GLOBAL",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "artist_r3hab",
+      "type": "artist",
+      "en": "R3HAB",
+      "aliases_en": [
+        "R3hab"
+      ],
+      "ko": "리햅",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "GLOBAL",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "artist_oliver_heldens",
+      "type": "artist",
+      "en": "Oliver Heldens",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "GLOBAL",
+      "ko_source": null
+    },
+    {
+      "id": "artist_timmy_trumpet",
+      "type": "artist",
+      "en": "Timmy Trumpet",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "GLOBAL",
+      "ko_source": null
+    },
+    {
+      "id": "artist_yellow_claw",
+      "type": "artist",
+      "en": "Yellow Claw",
+      "aliases_en": [],
+      "ko": "옐로우 클로우",
+      "ko_status": "established",
+      "ko_avoid": [
+        "옐로 클로"
+      ],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "GLOBAL",
+      "ko_source": {
+        "name": "S2O Korea 2026 라인업 소개 기사",
+        "url": "https://v.daum.net/v/yV2ASzLxpv"
+      }
+    },
+    {
+      "id": "artist_gryffin",
+      "type": "artist",
+      "en": "Gryffin",
+      "aliases_en": [],
+      "ko": "그리핀",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": {
+        "name": "연합뉴스 그리핀 첫 내한 인터뷰",
+        "url": "https://www.yna.co.kr/view/AKR20200213172600005"
+      }
+    },
+    {
+      "id": "artist_seven_lions",
+      "type": "artist",
+      "en": "Seven Lions",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_slander",
+      "type": "artist",
+      "en": "SLANDER",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_excision",
+      "type": "artist",
+      "en": "Excision",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "CA",
+      "ko_source": null
+    },
+    {
+      "id": "artist_subtronics",
+      "type": "artist",
+      "en": "Subtronics",
+      "aliases_en": [],
+      "ko": "서브트로닉스",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": {
+        "name": "S2O Korea 2025 라인업 소개 기사",
+        "url": "https://sports.khan.co.kr/article/202507101850003"
+      }
+    },
+    {
+      "id": "artist_rezz",
+      "type": "artist",
+      "en": "Rezz",
+      "aliases_en": [
+        "REZZ"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "CA",
+      "ko_source": null
+    },
+    {
+      "id": "artist_alison_wonderland",
+      "type": "artist",
+      "en": "Alison Wonderland",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "GLOBAL",
+      "ko_source": null
+    },
+    {
+      "id": "artist_charlotte_de_witte",
+      "type": "artist",
+      "en": "Charlotte de Witte",
+      "aliases_en": [],
+      "ko": "샬롯 드 비테",
+      "ko_status": "established",
+      "ko_avoid": [
+        "샬롯 드 위트"
+      ],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": {
+        "name": "Mixmag Korea 어웨이크닝스 25주년 라인업 기사",
+        "url": "https://www.mixmag.kr/5608"
+      }
+    },
+    {
+      "id": "artist_amelie_lens",
+      "type": "artist",
+      "en": "Amelie Lens",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_nina_kraviz",
+      "type": "artist",
+      "en": "Nina Kraviz",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_anotr",
+      "type": "artist",
+      "en": "ANOTR",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_artbat",
+      "type": "artist",
+      "en": "ARTBAT",
+      "aliases_en": [
+        "Artbat"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_adam_beyer",
+      "type": "artist",
+      "en": "Adam Beyer",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_carl_cox",
+      "type": "artist",
+      "en": "Carl Cox",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_richie_hawtin",
+      "type": "artist",
+      "en": "Richie Hawtin",
+      "aliases_en": [
+        "Plastikman"
+      ],
+      "ko": "리치 하틴",
+      "ko_status": "established",
+      "ko_avoid": [
+        "리치 호틴"
+      ],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "CA",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "artist_jeff_mills",
+      "type": "artist",
+      "en": "Jeff Mills",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_ben_klock",
+      "type": "artist",
+      "en": "Ben Klock",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_tale_of_us",
+      "type": "artist",
+      "en": "Tale Of Us",
+      "aliases_en": [
+        "Tale of Us"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_anyma",
+      "type": "artist",
+      "en": "Anyma",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_kevin_de_vries",
+      "type": "artist",
+      "en": "Kevin de Vries",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_adriatique",
+      "type": "artist",
+      "en": "Adriatique",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_maceo_plex",
+      "type": "artist",
+      "en": "Maceo Plex",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_solomun",
+      "type": "artist",
+      "en": "Solomun",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_black_coffee",
+      "type": "artist",
+      "en": "Black Coffee",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "ZA",
+      "ko_source": null
+    },
+    {
+      "id": "artist_eric_prydz",
+      "type": "artist",
+      "en": "Eric Prydz",
+      "aliases_en": [
+        "Pryda",
+        "Cirez D"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_dj_snake",
+      "type": "artist",
+      "en": "DJ Snake",
+      "aliases_en": [],
+      "ko": "DJ 스네이크",
+      "ko_status": "established",
+      "ko_avoid": [
+        "디제이 스네이크"
+      ],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "FR",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "artist_fisher",
+      "type": "artist",
+      "en": "FISHER",
+      "aliases_en": [
+        "Fisher"
+      ],
+      "ko": "피셔",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "AU",
+      "ko_source": {
+        "name": "EDC Korea 2026 라인업 발표 기사",
+        "url": "https://v.daum.net/v/20260615160753916"
+      }
+    },
+    {
+      "id": "artist_chris_lake",
+      "type": "artist",
+      "en": "Chris Lake",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_john_summit",
+      "type": "artist",
+      "en": "John Summit",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_dom_dolla",
+      "type": "artist",
+      "en": "Dom Dolla",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "AU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_mau_p",
+      "type": "artist",
+      "en": "Mau P",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "NL",
+      "ko_source": null
+    },
+    {
+      "id": "artist_meduza",
+      "type": "artist",
+      "en": "MEDUZA",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "IT",
+      "ko_source": null
+    },
+    {
+      "id": "artist_james_hype",
+      "type": "artist",
+      "en": "James Hype",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_vintage_culture",
+      "type": "artist",
+      "en": "Vintage Culture",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "BR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_claptone",
+      "type": "artist",
+      "en": "Claptone",
+      "aliases_en": [],
+      "ko": "클랩톤",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "DE",
+      "ko_source": {
+        "name": "스펙트럼 댄스 뮤직 페스티벌 2019 발표 기사",
+        "url": "https://sports.khan.co.kr/article/201905162004003"
+      }
+    },
+    {
+      "id": "artist_camelphat",
+      "type": "artist",
+      "en": "CamelPhat",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_gorgon_city",
+      "type": "artist",
+      "en": "Gorgon City",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_duke_dumont",
+      "type": "artist",
+      "en": "Duke Dumont",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_mk",
+      "type": "artist",
+      "en": "MK",
+      "aliases_en": [
+        "Marc Kinchen"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_purple_disco_machine",
+      "type": "artist",
+      "en": "Purple Disco Machine",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "artist_honey_dijon",
+      "type": "artist",
+      "en": "Honey Dijon",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_the_blessed_madonna",
+      "type": "artist",
+      "en": "The Blessed Madonna",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_pawsa",
+      "type": "artist",
+      "en": "PAWSA",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_michael_bibi",
+      "type": "artist",
+      "en": "Michael Bibi",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_jamie_jones",
+      "type": "artist",
+      "en": "Jamie Jones",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_loco_dice",
+      "type": "artist",
+      "en": "Loco Dice",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "artist_marco_carola",
+      "type": "artist",
+      "en": "Marco Carola",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "IT",
+      "ko_source": null
+    },
+    {
+      "id": "artist_joseph_capriati",
+      "type": "artist",
+      "en": "Joseph Capriati",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "IT",
+      "ko_source": null
+    },
+    {
+      "id": "artist_anna",
+      "type": "artist",
+      "en": "ANNA",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "BR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_reinier_zonneveld",
+      "type": "artist",
+      "en": "Reinier Zonneveld",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "NL",
+      "ko_source": null
+    },
+    {
+      "id": "artist_boris_brejcha",
+      "type": "artist",
+      "en": "Boris Brejcha",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "artist_kolsch",
+      "type": "artist",
+      "en": "Kölsch",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "DK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_paul_kalkbrenner",
+      "type": "artist",
+      "en": "Paul Kalkbrenner",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "artist_stephan_bodzin",
+      "type": "artist",
+      "en": "Stephan Bodzin",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "artist_dixon",
+      "type": "artist",
+      "en": "Dixon",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "artist_ame",
+      "type": "artist",
+      "en": "Âme",
+      "aliases_en": [
+        "Ame"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "artist_mind_against",
+      "type": "artist",
+      "en": "Mind Against",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "IT",
+      "ko_source": null
+    },
+    {
+      "id": "artist_mathame",
+      "type": "artist",
+      "en": "Mathame",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "IT",
+      "ko_source": null
+    },
+    {
+      "id": "artist_agents_of_time",
+      "type": "artist",
+      "en": "Agents Of Time",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "IT",
+      "ko_source": null
+    },
+    {
+      "id": "artist_miss_monique",
+      "type": "artist",
+      "en": "Miss Monique",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UA",
+      "ko_source": null
+    },
+    {
+      "id": "artist_nora_en_pure",
+      "type": "artist",
+      "en": "Nora En Pure",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "CH",
+      "ko_source": null
+    },
+    {
+      "id": "artist_lane_8",
+      "type": "artist",
+      "en": "Lane 8",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_ben_bohmer",
+      "type": "artist",
+      "en": "Ben Böhmer",
+      "aliases_en": [
+        "Ben Bohmer"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "artist_yotto",
+      "type": "artist",
+      "en": "Yotto",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "FI",
+      "ko_source": null
+    },
+    {
+      "id": "artist_tinlicker",
+      "type": "artist",
+      "en": "Tinlicker",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "NL",
+      "ko_source": null
+    },
+    {
+      "id": "artist_eelke_kleijn",
+      "type": "artist",
+      "en": "Eelke Kleijn",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "NL",
+      "ko_source": null
+    },
+    {
+      "id": "artist_cristoph",
+      "type": "artist",
+      "en": "Cristoph",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_rl_grime",
+      "type": "artist",
+      "en": "RL Grime",
+      "aliases_en": [],
+      "ko": "알엘 그라임",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": {
+        "name": "울트라 코리아 2018 2차 라인업 발표 기사",
+        "url": "https://www.sisayonhapnews.com/news/articleView.html?idxno=20889"
+      }
+    },
+    {
+      "id": "artist_baauer",
+      "type": "artist",
+      "en": "Baauer",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_troyboi",
+      "type": "artist",
+      "en": "TroyBoi",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_what_so_not",
+      "type": "artist",
+      "en": "What So Not",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "AU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_nghtmre",
+      "type": "artist",
+      "en": "NGHTMRE",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_zeds_dead",
+      "type": "artist",
+      "en": "Zeds Dead",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "CA",
+      "ko_source": null
+    },
+    {
+      "id": "artist_flux_pavilion",
+      "type": "artist",
+      "en": "Flux Pavilion",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_netsky",
+      "type": "artist",
+      "en": "Netsky",
+      "aliases_en": [],
+      "ko": "넷스카이",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "BE",
+      "ko_source": {
+        "name": "울트라 코리아 2016 1·2차 라인업 기사",
+        "url": "https://sports.khan.co.kr/article/201605121218003"
+      }
+    },
+    {
+      "id": "artist_sub_focus",
+      "type": "artist",
+      "en": "Sub Focus",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_chase_status",
+      "type": "artist",
+      "en": "Chase & Status",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_pendulum",
+      "type": "artist",
+      "en": "Pendulum",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "AU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_wilkinson",
+      "type": "artist",
+      "en": "Wilkinson",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_dimension",
+      "type": "artist",
+      "en": "Dimension",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_andy_c",
+      "type": "artist",
+      "en": "Andy C",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_andrew_rayel",
+      "type": "artist",
+      "en": "Andrew Rayel",
+      "aliases_en": [],
+      "ko": "앤드류 라이엘",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "MD",
+      "ko_source": {
+        "name": "S2O Korea 2026 라인업 소개 기사",
+        "url": "https://v.daum.net/v/yV2ASzLxpv"
+      }
+    },
+    {
+      "id": "artist_gareth_emery",
+      "type": "artist",
+      "en": "Gareth Emery",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_markus_schulz",
+      "type": "artist",
+      "en": "Markus Schulz",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "artist_cosmic_gate",
+      "type": "artist",
+      "en": "Cosmic Gate",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "artist_atb",
+      "type": "artist",
+      "en": "ATB",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "artist_ben_nicky",
+      "type": "artist",
+      "en": "Ben Nicky",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_brennan_heart",
+      "type": "artist",
+      "en": "Brennan Heart",
+      "aliases_en": [],
+      "ko": "브레넌 하트",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "NL",
+      "ko_source": {
+        "name": "EDC Korea 2026 라인업 발표 기사",
+        "url": "https://v.daum.net/v/20260615160753916"
+      }
+    },
+    {
+      "id": "artist_headhunterz",
+      "type": "artist",
+      "en": "Headhunterz",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "NL",
+      "ko_source": null
+    },
+    {
+      "id": "artist_angerfist",
+      "type": "artist",
+      "en": "Angerfist",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "NL",
+      "ko_source": null
+    },
+    {
+      "id": "artist_sub_zero_project",
+      "type": "artist",
+      "en": "Sub Zero Project",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "NL",
+      "ko_source": null
+    },
+    {
+      "id": "artist_jax_jones",
+      "type": "artist",
+      "en": "Jax Jones",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_joel_corry",
+      "type": "artist",
+      "en": "Joel Corry",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_imanbek",
+      "type": "artist",
+      "en": "Imanbek",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KZ",
+      "ko_source": null
+    },
+    {
+      "id": "artist_acraze",
+      "type": "artist",
+      "en": "Acraze",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_sidepiece",
+      "type": "artist",
+      "en": "SIDEPIECE",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_elderbrook",
+      "type": "artist",
+      "en": "Elderbrook",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_san_holo",
+      "type": "artist",
+      "en": "San Holo",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "NL",
+      "ko_source": null
+    },
+    {
+      "id": "artist_jai_wolf",
+      "type": "artist",
+      "en": "Jai Wolf",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_louis_the_child",
+      "type": "artist",
+      "en": "Louis The Child",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_deorro",
+      "type": "artist",
+      "en": "Deorro",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_edx",
+      "type": "artist",
+      "en": "EDX",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "CH",
+      "ko_source": null
+    },
+    {
+      "id": "artist_joris_voorn",
+      "type": "artist",
+      "en": "Joris Voorn",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "NL",
+      "ko_source": null
+    },
+    {
+      "id": "artist_dubfire",
+      "type": "artist",
+      "en": "Dubfire",
+      "aliases_en": [],
+      "ko": "덥파이어",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": {
+        "name": "울트라 코리아 2017 1차 라인업 발표 기사",
+        "url": "https://www.maniareport.com/view.php?ud=201703131358080212555nr_19"
+      }
+    },
+    {
+      "id": "artist_kaskade",
+      "type": "artist",
+      "en": "Kaskade",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_steve_angello",
+      "type": "artist",
+      "en": "Steve Angello",
+      "aliases_en": [],
+      "ko": "스티브 안젤로",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "SE",
+      "ko_source": {
+        "name": "울트라 코리아 2017 1차 라인업 발표 기사",
+        "url": "https://www.maniareport.com/view.php?ud=201703131358080212555nr_19"
+      }
+    },
+    {
+      "id": "artist_axwell",
+      "type": "artist",
+      "en": "Axwell",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "SE",
+      "ko_source": null
+    },
+    {
+      "id": "artist_sebastian_ingrosso",
+      "type": "artist",
+      "en": "Sebastian Ingrosso",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "SE",
+      "ko_source": null
+    },
+    {
+      "id": "artist_alok",
+      "type": "artist",
+      "en": "Alok",
+      "aliases_en": [
+        "ALOK"
+      ],
+      "ko": "알록",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "BR",
+      "ko_source": {
+        "name": "EDC Korea 2026 라인업 발표 기사",
+        "url": "https://v.daum.net/v/20260615160753916"
+      }
+    },
+    {
+      "id": "artist_tchami",
+      "type": "artist",
+      "en": "Tchami",
+      "aliases_en": [],
+      "ko": "차미",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "FR",
+      "ko_source": {
+        "name": "울트라 코리아 2017 1차 라인업 발표 기사",
+        "url": "https://www.maniareport.com/view.php?ud=201703131358080212555nr_19"
+      }
+    },
+    {
+      "id": "artist_malaa",
+      "type": "artist",
+      "en": "Malaa",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "FR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_solardo",
+      "type": "artist",
+      "en": "Solardo",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_eli_brown",
+      "type": "artist",
+      "en": "Eli Brown",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_cloonee",
+      "type": "artist",
+      "en": "Cloonee",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_hugel",
+      "type": "artist",
+      "en": "HUGEL",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "FR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_matroda",
+      "type": "artist",
+      "en": "Matroda",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "HR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_dennis_cruz",
+      "type": "artist",
+      "en": "Dennis Cruz",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "ES",
+      "ko_source": null
+    },
+    {
+      "id": "artist_green_velvet",
+      "type": "artist",
+      "en": "Green Velvet",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_hot_since_82",
+      "type": "artist",
+      "en": "Hot Since 82",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_seth_troxler",
+      "type": "artist",
+      "en": "Seth Troxler",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_sasha",
+      "type": "artist",
+      "en": "Sasha",
+      "aliases_en": [],
+      "ko": "샤샤",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": {
+        "name": "울트라 코리아 2017 1차 라인업 발표 기사",
+        "url": "https://www.maniareport.com/view.php?ud=201703131358080212555nr_19"
+      }
+    },
+    {
+      "id": "artist_john_digweed",
+      "type": "artist",
+      "en": "John Digweed",
+      "aliases_en": [],
+      "ko": "존 딕위드",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": {
+        "name": "울트라 코리아 2017 1차 라인업 발표 기사",
+        "url": "https://www.maniareport.com/view.php?ud=201703131358080212555nr_19"
+      }
+    },
+    {
+      "id": "artist_pan_pot",
+      "type": "artist",
+      "en": "Pan-Pot",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "artist_chris_liebing",
+      "type": "artist",
+      "en": "Chris Liebing",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "artist_klangkuenstler",
+      "type": "artist",
+      "en": "Klangkuenstler",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "artist_i_hate_models",
+      "type": "artist",
+      "en": "I Hate Models",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "FR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_sara_landry",
+      "type": "artist",
+      "en": "Sara Landry",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_indira_paganotto",
+      "type": "artist",
+      "en": "Indira Paganotto",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "ES",
+      "ko_source": null
+    },
+    {
+      "id": "artist_deborah_de_luca",
+      "type": "artist",
+      "en": "Deborah de Luca",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "IT",
+      "ko_source": null
+    },
+    {
+      "id": "artist_nicole_moudaber",
+      "type": "artist",
+      "en": "Nicole Moudaber",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_helena_hauff",
+      "type": "artist",
+      "en": "Helena Hauff",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "artist_paula_temple",
+      "type": "artist",
+      "en": "Paula Temple",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_dax_j",
+      "type": "artist",
+      "en": "Dax J",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_fjaak",
+      "type": "artist",
+      "en": "FJAAK",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "artist_kerri_chandler",
+      "type": "artist",
+      "en": "Kerri Chandler",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_moodymann",
+      "type": "artist",
+      "en": "Moodymann",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_larry_heard",
+      "type": "artist",
+      "en": "Larry Heard",
+      "aliases_en": [
+        "Mr. Fingers"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_todd_terry",
+      "type": "artist",
+      "en": "Todd Terry",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_masters_at_work",
+      "type": "artist",
+      "en": "Masters At Work",
+      "aliases_en": [
+        "MAW"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_armand_van_helden",
+      "type": "artist",
+      "en": "Armand Van Helden",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_basement_jaxx",
+      "type": "artist",
+      "en": "Basement Jaxx",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_orbital",
+      "type": "artist",
+      "en": "Orbital",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_underworld",
+      "type": "artist",
+      "en": "Underworld",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_the_martinez_brothers",
+      "type": "artist",
+      "en": "The Martinez Brothers",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_dennis_ferrer",
+      "type": "artist",
+      "en": "Dennis Ferrer",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_folamour",
+      "type": "artist",
+      "en": "Folamour",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "FR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_hunee",
+      "type": "artist",
+      "en": "Hunee",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "artist_dj_koze",
+      "type": "artist",
+      "en": "DJ Koze",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "artist_sven_vath",
+      "type": "artist",
+      "en": "Sven Väth",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "artist_ricardo_villalobos",
+      "type": "artist",
+      "en": "Ricardo Villalobos",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "CL",
+      "ko_source": null
+    },
+    {
+      "id": "artist_moby",
+      "type": "artist",
+      "en": "Moby",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_riton",
+      "type": "artist",
+      "en": "Riton",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_a_trak",
+      "type": "artist",
+      "en": "A-Trak",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "CA",
+      "ko_source": null
+    },
+    {
+      "id": "artist_3lau",
+      "type": "artist",
+      "en": "3LAU",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_dvbbs",
+      "type": "artist",
+      "en": "DVBBS",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "CA",
+      "ko_source": null
+    },
+    {
+      "id": "artist_nervo",
+      "type": "artist",
+      "en": "NERVO",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "AU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_borgore",
+      "type": "artist",
+      "en": "Borgore",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "IL",
+      "ko_source": null
+    },
+    {
+      "id": "artist_krewella",
+      "type": "artist",
+      "en": "Krewella",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_adventure_club",
+      "type": "artist",
+      "en": "Adventure Club",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "CA",
+      "ko_source": null
+    },
+    {
+      "id": "artist_black_tiger_sex_machine",
+      "type": "artist",
+      "en": "Black Tiger Sex Machine",
+      "aliases_en": [
+        "BTSM"
+      ],
+      "ko": "블랙 타이거 섹스 머신",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "CA",
+      "ko_source": {
+        "name": "S2O Korea 2026 라인업 소개 기사",
+        "url": "https://v.daum.net/v/yV2ASzLxpv"
+      }
+    },
+    {
+      "id": "artist_svdden_death",
+      "type": "artist",
+      "en": "SVDDEN DEATH",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_wooli",
+      "type": "artist",
+      "en": "Wooli",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_space_laces",
+      "type": "artist",
+      "en": "Space Laces",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_blanke",
+      "type": "artist",
+      "en": "Blanke",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "AU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_apashe",
+      "type": "artist",
+      "en": "Apashe",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "CA",
+      "ko_source": null
+    },
+    {
+      "id": "artist_gioli_assia",
+      "type": "artist",
+      "en": "GIOLÌ & ASSIA",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "IT",
+      "ko_source": null
+    },
+    {
+      "id": "artist_lp_giobbi",
+      "type": "artist",
+      "en": "LP Giobbi",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_tsha",
+      "type": "artist",
+      "en": "TSHA",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_barry_can_t_swim",
+      "type": "artist",
+      "en": "Barry Can't Swim",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_bunt",
+      "type": "artist",
+      "en": "BUNT.",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "artist_disco_lines",
+      "type": "artist",
+      "en": "Disco Lines",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_knock2",
+      "type": "artist",
+      "en": "Knock2",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_isoxo",
+      "type": "artist",
+      "en": "ISOxo",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_sammy_virji",
+      "type": "artist",
+      "en": "Sammy Virji",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_dash_berlin",
+      "type": "artist",
+      "en": "Dash Berlin",
+      "aliases_en": [],
+      "ko": "대쉬 베를린",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "NL",
+      "ko_source": {
+        "name": "울트라 코리아 2017 1차 라인업 발표 기사",
+        "url": "https://www.maniareport.com/view.php?ud=201703131358080212555nr_19"
+      }
+    },
+    {
+      "id": "artist_martin_solveig",
+      "type": "artist",
+      "en": "Martin Solveig",
+      "aliases_en": [],
+      "ko": "마틴 솔베이그",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "FR",
+      "ko_source": {
+        "name": "울트라 코리아 2017 1차 라인업 발표 기사",
+        "url": "https://www.maniareport.com/view.php?ud=201703131358080212555nr_19"
+      }
+    },
+    {
+      "id": "artist_nic_fanciulli",
+      "type": "artist",
+      "en": "Nic Fanciulli",
+      "aliases_en": [],
+      "ko": "닉 판시울리",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": {
+        "name": "울트라 코리아 2017 1차 라인업 발표 기사",
+        "url": "https://www.maniareport.com/view.php?ud=201703131358080212555nr_19"
+      }
+    },
+    {
+      "id": "artist_ansolo",
+      "type": "artist",
+      "en": "Ansolo",
+      "aliases_en": [],
+      "ko": "안솔로",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "SE",
+      "ko_source": {
+        "name": "울트라 코리아 2016 최종 라인업 기사",
+        "url": "https://www.sportsq.co.kr/news/articleView.html?idxno=166248"
+      }
+    },
+    {
+      "id": "artist_fred_falke",
+      "type": "artist",
+      "en": "Fred Falke",
+      "aliases_en": [],
+      "ko": "프레드 팔케",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "FR",
+      "ko_source": {
+        "name": "울트라 코리아 2016 최종 라인업 기사",
+        "url": "https://www.sportsq.co.kr/news/articleView.html?idxno=166248"
+      }
+    },
+    {
+      "id": "artist_virtual_riot",
+      "type": "artist",
+      "en": "Virtual Riot",
+      "aliases_en": [],
+      "ko": "버츄얼 라이엇",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "DE",
+      "ko_source": {
+        "name": "5TARDIUM 2020 라인업 발표 기사",
+        "url": "https://view.asiae.co.kr/article/2020011415284304420"
+      }
+    },
+    {
+      "id": "artist_dabin",
+      "type": "artist",
+      "en": "Dabin",
+      "aliases_en": [],
+      "ko": "다빈",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "CA",
+      "ko_source": {
+        "name": "EDC Korea 2026 라인업 발표 기사",
+        "url": "https://v.daum.net/v/20260615160753916"
+      }
+    },
+    {
+      "id": "artist_coone",
+      "type": "artist",
+      "en": "Coone",
+      "aliases_en": [],
+      "ko": "코온",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "BE",
+      "ko_source": {
+        "name": "EDC Korea 2026 라인업 발표 기사",
+        "url": "https://v.daum.net/v/20260615160753916"
+      }
+    },
+    {
+      "id": "artist_frank_walker",
+      "type": "artist",
+      "en": "Frank Walker",
+      "aliases_en": [],
+      "ko": "프랭크 워커",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "CA",
+      "ko_source": {
+        "name": "S2O Korea 2026 라인업 소개 기사",
+        "url": "https://v.daum.net/v/yV2ASzLxpv"
+      }
+    },
+    {
+      "id": "artist_hedex",
+      "type": "artist",
+      "en": "Hedex",
+      "aliases_en": [],
+      "ko": "헤덱스",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": {
+        "name": "S2O Korea 2026 라인업 소개 기사",
+        "url": "https://v.daum.net/v/yV2ASzLxpv"
+      }
+    },
+    {
+      "id": "artist_mike_williams",
+      "type": "artist",
+      "en": "Mike Williams",
+      "aliases_en": [],
+      "ko": "마이크 윌리엄스",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "NL",
+      "ko_source": {
+        "name": "S2O Korea 2026 라인업 소개 기사",
+        "url": "https://v.daum.net/v/yV2ASzLxpv"
+      }
+    },
+    {
+      "id": "artist_mike_perry",
+      "type": "artist",
+      "en": "Mike Perry",
+      "aliases_en": [],
+      "ko": "마이크 페리",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "SE",
+      "ko_source": {
+        "name": "S2O Korea 2026 라인업 소개 기사",
+        "url": "https://v.daum.net/v/yV2ASzLxpv"
+      }
+    },
+    {
+      "id": "artist_snakehips",
+      "type": "artist",
+      "en": "Snakehips",
+      "aliases_en": [],
+      "ko": "스네이크힙스",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": {
+        "name": "스펙트럼 댄스 뮤직 페스티벌 2019 발표 기사",
+        "url": "https://sports.khan.co.kr/article/201905162004003"
+      }
+    },
+    {
+      "id": "artist_showtek",
+      "type": "artist",
+      "en": "Showtek",
+      "aliases_en": [],
+      "ko": "쇼텍",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "NL",
+      "ko_source": {
+        "name": "월드 디제이 페스티벌 공식 애프터파티 공연 상세",
+        "url": "https://event-us.kr/aroundent/event/108895"
+      }
+    },
+    {
+      "id": "artist_galantis",
+      "type": "artist",
+      "en": "Galantis",
+      "aliases_en": [],
+      "ko": "갈란티스",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "SE",
+      "ko_source": {
+        "name": "울트라 코리아 2018 1차 라인업 발표 기사",
+        "url": "https://www.dtoday.co.kr/news/articleView.html?idxno=263980"
+      }
+    },
+    {
+      "id": "artist_axwell_ingrosso",
+      "type": "artist",
+      "en": "Axwell Λ Ingrosso",
+      "aliases_en": [
+        "Axwell & Ingrosso",
+        "Axwell Ingrosso"
+      ],
+      "ko": "악스웰·인그로소",
+      "ko_status": "established",
+      "ko_avoid": [
+        "악스웰 앤 인그로소"
+      ],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "SE",
+      "ko_source": {
+        "name": "울트라 코리아 2018 1차 라인업 발표 기사",
+        "url": "https://www.dtoday.co.kr/news/articleView.html?idxno=263980"
+      }
+    },
+    {
+      "id": "artist_knife_party",
+      "type": "artist",
+      "en": "Knife Party",
+      "aliases_en": [],
+      "ko": "나이프파티",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "AU",
+      "ko_source": {
+        "name": "울트라 코리아 2016 1·2차 라인업 기사",
+        "url": "https://sports.khan.co.kr/article/201605121218003"
+      }
+    },
+    {
+      "id": "artist_jauz",
+      "type": "artist",
+      "en": "Jauz",
+      "aliases_en": [],
+      "ko": "자우즈",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": {
+        "name": "울트라 코리아 2016 최종 라인업 기사",
+        "url": "https://www.segye.com/newsView/20160520000863"
+      }
+    },
+    {
+      "id": "artist_massano",
+      "type": "artist",
+      "en": "Massano",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_peggy_gou",
+      "type": "artist",
+      "en": "Peggy Gou",
+      "aliases_en": [],
+      "ko": "페기 구",
+      "ko_status": "established",
+      "ko_avoid": [
+        "페기 고우"
+      ],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "KR",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "artist_ken_ishii",
+      "type": "artist",
+      "en": "KEN ISHII",
+      "aliases_en": [
+        "Ken Ishii"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_dj_krush",
+      "type": "artist",
+      "en": "DJ KRUSH",
+      "aliases_en": [
+        "DJ Krush"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_shinichi_osawa",
+      "type": "artist",
+      "en": "Shinichi Osawa",
+      "aliases_en": [
+        "Mondo Grosso"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_takkyu_ishino",
+      "type": "artist",
+      "en": "Takkyu Ishino",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_satoshi_tomiie",
+      "type": "artist",
+      "en": "Satoshi Tomiie",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_dj_nobu",
+      "type": "artist",
+      "en": "DJ Nobu",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_fumiya_tanaka",
+      "type": "artist",
+      "en": "Fumiya Tanaka",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_dj_emma",
+      "type": "artist",
+      "en": "DJ EMMA",
+      "aliases_en": [
+        "DJ Emma"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_tomoyuki_tanaka",
+      "type": "artist",
+      "en": "Tomoyuki Tanaka",
+      "aliases_en": [
+        "Fantastic Plastic Machine"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_taku_takahashi",
+      "type": "artist",
+      "en": "☆Taku Takahashi",
+      "aliases_en": [
+        "Taku Takahashi"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_banvox",
+      "type": "artist",
+      "en": "banvox",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_yasutaka_nakata",
+      "type": "artist",
+      "en": "Yasutaka Nakata",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_capsule",
+      "type": "artist",
+      "en": "CAPSULE",
+      "aliases_en": [
+        "capsule"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_teddyloid",
+      "type": "artist",
+      "en": "TeddyLoid",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_qrion",
+      "type": "artist",
+      "en": "Qrion",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_licaxxx",
+      "type": "artist",
+      "en": "Licaxxx",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_wata_igarashi",
+      "type": "artist",
+      "en": "Wata Igarashi",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_akiko_kiyama",
+      "type": "artist",
+      "en": "Akiko Kiyama",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_gonno",
+      "type": "artist",
+      "en": "Gonno",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_kuniyuki",
+      "type": "artist",
+      "en": "Kuniyuki",
+      "aliases_en": [
+        "Kuniyuki Takahashi"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_soichi_terada",
+      "type": "artist",
+      "en": "Soichi Terada",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_hoshina_anniversary",
+      "type": "artist",
+      "en": "Hoshina Anniversary",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_daito_manabe",
+      "type": "artist",
+      "en": "Daito Manabe",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_masayoshi_iimori",
+      "type": "artist",
+      "en": "Masayoshi Iimori",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_okadada",
+      "type": "artist",
+      "en": "okadada",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_seiho",
+      "type": "artist",
+      "en": "Seiho",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_tofubeats",
+      "type": "artist",
+      "en": "tofubeats",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_pa_s_lam_system",
+      "type": "artist",
+      "en": "Pa's Lam System",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_carpainter",
+      "type": "artist",
+      "en": "Carpainter",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_yuc_e",
+      "type": "artist",
+      "en": "YUC'e",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_taku_inoue",
+      "type": "artist",
+      "en": "Taku Inoue",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_de_de_mouse",
+      "type": "artist",
+      "en": "DÉ DÉ MOUSE",
+      "aliases_en": [
+        "De De Mouse"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_ko3",
+      "type": "artist",
+      "en": "KO3",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_kors_k",
+      "type": "artist",
+      "en": "kors k",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_dj_shimamura",
+      "type": "artist",
+      "en": "DJ Shimamura",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_redalice",
+      "type": "artist",
+      "en": "REDALiCE",
+      "aliases_en": [
+        "Redalice"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_camellia",
+      "type": "artist",
+      "en": "Camellia",
+      "aliases_en": [
+        "かめりあ"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_usao",
+      "type": "artist",
+      "en": "USAO",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_t_pazolite",
+      "type": "artist",
+      "en": "t+pazolite",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_nhato",
+      "type": "artist",
+      "en": "Nhato",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_mameyudoufu",
+      "type": "artist",
+      "en": "Mameyudoufu",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_sugiurumn",
+      "type": "artist",
+      "en": "Sugiurumn",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_80kidz",
+      "type": "artist",
+      "en": "80KIDZ",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_risa_taniguchi",
+      "type": "artist",
+      "en": "Risa Taniguchi",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_yamato",
+      "type": "artist",
+      "en": "Yamato",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_yaeji",
+      "type": "artist",
+      "en": "Yaeji",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "artist_park_hye_jin",
+      "type": "artist",
+      "en": "Park Hye Jin",
+      "aliases_en": [
+        "박혜진"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_didi_han",
+      "type": "artist",
+      "en": "Didi Han",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_marcus_l",
+      "type": "artist",
+      "en": "Marcus L",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_closet_yi",
+      "type": "artist",
+      "en": "Closet Yi",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_damie",
+      "type": "artist",
+      "en": "DAMIE",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_suman",
+      "type": "artist",
+      "en": "SUMAN",
+      "aliases_en": [
+        "Suman"
+      ],
+      "ko": "수만",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": {
+        "name": "DJ Mag Asia 울트라 코리아 2019 최종 라인업",
+        "url": "https://djmagasia.com/?p=4033"
+      }
+    },
+    {
+      "id": "artist_comarobot",
+      "type": "artist",
+      "en": "ComaRobot",
+      "aliases_en": [
+        "Comarobot"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_bagagee_viphex13",
+      "type": "artist",
+      "en": "Bagagee Viphex13",
+      "aliases_en": [
+        "Bagagee"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_unjin",
+      "type": "artist",
+      "en": "Unjin",
+      "aliases_en": [
+        "Rainjacket"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_polarfront",
+      "type": "artist",
+      "en": "Polarfront",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_xanexx",
+      "type": "artist",
+      "en": "Xanexx",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_sun_gin",
+      "type": "artist",
+      "en": "Sun Gin",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_taelyn",
+      "type": "artist",
+      "en": "Taelyn",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_better",
+      "type": "artist",
+      "en": "Better",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_two_tone_shape",
+      "type": "artist",
+      "en": "Two Tone Shape",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_nusnoom",
+      "type": "artist",
+      "en": "NUSNOOM",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_dj_sin",
+      "type": "artist",
+      "en": "DJ SIN",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_mizae_lim",
+      "type": "artist",
+      "en": "mizae lim",
+      "aliases_en": [
+        "MIZAE"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_messiahwaits",
+      "type": "artist",
+      "en": "Messiahwaits",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_c_est_qui",
+      "type": "artist",
+      "en": "C'est Qui",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_raiden",
+      "type": "artist",
+      "en": "Raiden",
+      "aliases_en": [
+        "DJ Raiden"
+      ],
+      "ko": "레이든",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": {
+        "name": "DJ Mag Asia 울트라 코리아 2019 최종 라인업",
+        "url": "https://djmagasia.com/?p=4033"
+      }
+    },
+    {
+      "id": "artist_dj_koo",
+      "type": "artist",
+      "en": "DJ Koo",
+      "aliases_en": [
+        "KOO",
+        "구준엽"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_g_park",
+      "type": "artist",
+      "en": "G-Park",
+      "aliases_en": [
+        "G Park",
+        "박명수"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_justin_oh",
+      "type": "artist",
+      "en": "Justin Oh",
+      "aliases_en": [
+        "Justin OH"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_juncoco",
+      "type": "artist",
+      "en": "JUNCOCO",
+      "aliases_en": [
+        "Juncoco"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_aster",
+      "type": "artist",
+      "en": "ASTER",
+      "aliases_en": [
+        "Aster"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_vandal_rock",
+      "type": "artist",
+      "en": "Vandal Rock",
+      "aliases_en": [
+        "VANDAL ROCK"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_epiik",
+      "type": "artist",
+      "en": "EPIIK",
+      "aliases_en": [
+        "Epiik"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_sixthema",
+      "type": "artist",
+      "en": "SIXTHEMA",
+      "aliases_en": [
+        "Sixthema"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_dj_hyo",
+      "type": "artist",
+      "en": "DJ HYO",
+      "aliases_en": [
+        "HYO",
+        "Hyoyeon",
+        "효연"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_blosso",
+      "type": "artist",
+      "en": "Blosso",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_kago_pengchi",
+      "type": "artist",
+      "en": "Kago Pengchi",
+      "aliases_en": [
+        "KAGO PENGCHI"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_paul_eun",
+      "type": "artist",
+      "en": "Paul Eun",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_spect",
+      "type": "artist",
+      "en": "Spect",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_ssombo",
+      "type": "artist",
+      "en": "SSOMbo",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_sungyoo",
+      "type": "artist",
+      "en": "Sungyoo",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_youna",
+      "type": "artist",
+      "en": "Youna",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_zena",
+      "type": "artist",
+      "en": "ZENA",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_dj_soda",
+      "type": "artist",
+      "en": "DJ SODA",
+      "aliases_en": [
+        "SODA"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_hitchhiker",
+      "type": "artist",
+      "en": "Hitchhiker",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_mushxxx",
+      "type": "artist",
+      "en": "Mushxxx",
+      "aliases_en": [
+        "Mush"
+      ],
+      "ko": "무쉬",
+      "ko_status": "established",
+      "ko_avoid": [
+        "머쉬트리플엑스"
+      ],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": {
+        "name": "DJ Mag Asia 울트라 코리아 2019 최종 라인업",
+        "url": "https://djmagasia.com/?p=4033"
+      }
+    },
+    {
+      "id": "artist_inside_core",
+      "type": "artist",
+      "en": "Inside Core",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_shaun",
+      "type": "artist",
+      "en": "SHAUN",
+      "aliases_en": [
+        "DJ SHAUN"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_advanced",
+      "type": "artist",
+      "en": "ADVANCED",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_jeong_hyeon",
+      "type": "artist",
+      "en": "JEONG HYEON",
+      "aliases_en": [
+        "Jeonghyeon"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_pure_100",
+      "type": "artist",
+      "en": "PURE 100%",
+      "aliases_en": [
+        "Pure 100%"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_j_e_b",
+      "type": "artist",
+      "en": "J.E.B",
+      "aliases_en": [
+        "JEB"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_vandi",
+      "type": "artist",
+      "en": "VANDI",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_dj_tezz",
+      "type": "artist",
+      "en": "DJ TEZZ",
+      "aliases_en": [
+        "TEZZ"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_breakson",
+      "type": "artist",
+      "en": "BREAKSON",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_dj_ara",
+      "type": "artist",
+      "en": "DJ Ara",
+      "aliases_en": [
+        "DJ ARA"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_dj_junior",
+      "type": "artist",
+      "en": "DJ Junior",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_ksk",
+      "type": "artist",
+      "en": "KSK",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_kusic",
+      "type": "artist",
+      "en": "Kusic",
+      "aliases_en": [],
+      "ko": "쿠식",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": {
+        "name": "DJ Mag Asia 울트라 코리아 2019 최종 라인업",
+        "url": "https://djmagasia.com/?p=4033"
+      }
+    },
+    {
+      "id": "artist_g_flow",
+      "type": "artist",
+      "en": "G-Flow",
+      "aliases_en": [
+        "G Flow"
+      ],
+      "ko": "지플로우",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": {
+        "name": "DJ Mag Asia 울트라 코리아 2019 최종 라인업",
+        "url": "https://djmagasia.com/?p=4033"
+      }
+    },
+    {
+      "id": "artist_dj_milky",
+      "type": "artist",
+      "en": "DJ Milky",
+      "aliases_en": [],
+      "ko": "디제이 밀키",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": {
+        "name": "DJ Mag Asia 울트라 코리아 2019 최종 라인업",
+        "url": "https://djmagasia.com/?p=4033"
+      }
+    },
+    {
+      "id": "artist_lumen",
+      "type": "artist",
+      "en": "Lumen",
+      "aliases_en": [],
+      "ko": "루멘",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": {
+        "name": "DJ Mag Asia 울트라 코리아 2019 최종 라인업",
+        "url": "https://djmagasia.com/?p=4033"
+      }
+    },
+    {
+      "id": "artist_leona",
+      "type": "artist",
+      "en": "Leona",
+      "aliases_en": [],
+      "ko": "레오나",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": {
+        "name": "DJ Mag Asia 울트라 코리아 2019 최종 라인업",
+        "url": "https://djmagasia.com/?p=4033"
+      }
+    },
+    {
+      "id": "artist_s2",
+      "type": "artist",
+      "en": "S2",
+      "aliases_en": [],
+      "ko": "에스투",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": {
+        "name": "DJ Mag Asia 울트라 코리아 2019 최종 라인업",
+        "url": "https://djmagasia.com/?p=4033"
+      }
+    },
+    {
+      "id": "artist_showmain",
+      "type": "artist",
+      "en": "Showmain",
+      "aliases_en": [],
+      "ko": "쇼메인",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": {
+        "name": "DJ Mag Asia 울트라 코리아 2019 최종 라인업",
+        "url": "https://djmagasia.com/?p=4033"
+      }
+    },
+    {
+      "id": "artist_u1",
+      "type": "artist",
+      "en": "U1",
+      "aliases_en": [],
+      "ko": "유원",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": {
+        "name": "DJ Mag Asia 울트라 코리아 2019 최종 라인업",
+        "url": "https://djmagasia.com/?p=4033"
+      }
+    },
+    {
+      "id": "artist_yoseek",
+      "type": "artist",
+      "en": "Yoseek",
+      "aliases_en": [],
+      "ko": "요식",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": {
+        "name": "DJ Mag Asia 울트라 코리아 2019 최종 라인업",
+        "url": "https://djmagasia.com/?p=4033"
+      }
+    },
+    {
+      "id": "artist_yul",
+      "type": "artist",
+      "en": "Yul",
+      "aliases_en": [],
+      "ko": "율",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": {
+        "name": "DJ Mag Asia 울트라 코리아 2019 최종 라인업",
+        "url": "https://djmagasia.com/?p=4033"
+      }
+    },
+    {
+      "id": "artist_zin",
+      "type": "artist",
+      "en": "Zin",
+      "aliases_en": [],
+      "ko": "진",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": {
+        "name": "DJ Mag Asia 울트라 코리아 2019 최종 라인업",
+        "url": "https://djmagasia.com/?p=4033"
+      }
+    },
+    {
+      "id": "artist_aec",
+      "type": "artist",
+      "en": "AEC",
+      "aliases_en": [],
+      "ko": "에이이씨",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": {
+        "name": "DJ Mag Asia 울트라 코리아 2019 최종 라인업",
+        "url": "https://djmagasia.com/?p=4033"
+      }
+    },
+    {
+      "id": "artist_doha",
+      "type": "artist",
+      "en": "DOHA",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_seanxxx",
+      "type": "artist",
+      "en": "SEANXXX",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "festival_tomorrowland",
+      "type": "festival",
+      "en": "Tomorrowland",
+      "aliases_en": [],
+      "ko": "투모로우랜드",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "BE",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커, lib/prompts.ts)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "festival_tomorrowland_winter",
+      "type": "festival",
+      "en": "Tomorrowland Winter",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "FR",
+      "ko_source": null
+    },
+    {
+      "id": "festival_ultra_music_festival",
+      "type": "festival",
+      "en": "Ultra Music Festival",
+      "aliases_en": [
+        "UMF"
+      ],
+      "ko": "울트라 뮤직 페스티벌",
+      "ko_status": "established",
+      "ko_avoid": [
+        "울트라뮤직페스티벌"
+      ],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "US",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커, lib/prompts.ts)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "festival_ultra_europe",
+      "type": "festival",
+      "en": "Ultra Europe",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "HR",
+      "ko_source": null
+    },
+    {
+      "id": "festival_electric_daisy_carnival",
+      "type": "festival",
+      "en": "Electric Daisy Carnival",
+      "aliases_en": [
+        "EDC"
+      ],
+      "ko": "일렉트릭 데이지 카니발",
+      "ko_status": "established",
+      "ko_avoid": [
+        "EDC"
+      ],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "US",
+      "ko_source": {
+        "name": "나무위키 EDC Korea 문서",
+        "url": "https://namu.wiki/w/Electric%20Daisy%20Carnival%20Korea"
+      }
+    },
+    {
+      "id": "festival_coachella",
+      "type": "festival",
+      "en": "Coachella",
+      "aliases_en": [
+        "Coachella Valley Music and Arts Festival"
+      ],
+      "ko": "코첼라",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "US",
+      "ko_source": {
+        "name": "기존 확정 표기(앵커, lib/prompts.ts)",
+        "url": "anchor"
+      }
+    },
+    {
+      "id": "festival_creamfields",
+      "type": "festival",
+      "en": "Creamfields",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "festival_sonar",
+      "type": "festival",
+      "en": "Sónar",
+      "aliases_en": [
+        "Sonar"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "ES",
+      "ko_source": null
+    },
+    {
+      "id": "festival_awakenings_festival",
+      "type": "festival",
+      "en": "Awakenings Festival",
+      "aliases_en": [
+        "Awakenings"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "NL",
+      "ko_source": null
+    },
+    {
+      "id": "festival_time_warp",
+      "type": "festival",
+      "en": "Time Warp",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "festival_amsterdam_dance_event",
+      "type": "festival",
+      "en": "Amsterdam Dance Event",
+      "aliases_en": [
+        "ADE"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "NL",
+      "ko_source": null
+    },
+    {
+      "id": "festival_movement_detroit",
+      "type": "festival",
+      "en": "Movement Detroit",
+      "aliases_en": [
+        "Movement Electronic Music Festival"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "festival_exit_festival",
+      "type": "festival",
+      "en": "EXIT Festival",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "RS",
+      "ko_source": null
+    },
+    {
+      "id": "festival_untold_festival",
+      "type": "festival",
+      "en": "Untold Festival",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "RO",
+      "ko_source": null
+    },
+    {
+      "id": "festival_parookaville",
+      "type": "festival",
+      "en": "Parookaville",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "festival_defqon_1",
+      "type": "festival",
+      "en": "Defqon.1",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "NL",
+      "ko_source": null
+    },
+    {
+      "id": "festival_mysteryland",
+      "type": "festival",
+      "en": "Mysteryland",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "NL",
+      "ko_source": null
+    },
+    {
+      "id": "festival_electric_zoo",
+      "type": "festival",
+      "en": "Electric Zoo",
+      "aliases_en": [
+        "Electric Zoo Festival"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "festival_beyond_wonderland",
+      "type": "festival",
+      "en": "Beyond Wonderland",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "festival_hard_summer",
+      "type": "festival",
+      "en": "HARD Summer",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "festival_crssd_festival",
+      "type": "festival",
+      "en": "CRSSD Festival",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "festival_lightning_in_a_bottle",
+      "type": "festival",
+      "en": "Lightning in a Bottle",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "festival_shambhala_music_festival",
+      "type": "festival",
+      "en": "Shambhala Music Festival",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "CA",
+      "ko_source": null
+    },
+    {
+      "id": "festival_bass_canyon",
+      "type": "festival",
+      "en": "Bass Canyon",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "festival_lost_lands",
+      "type": "festival",
+      "en": "Lost Lands",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "festival_burning_man",
+      "type": "festival",
+      "en": "Burning Man",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "festival_kappa_futurfestival",
+      "type": "festival",
+      "en": "Kappa FuturFestival",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "IT",
+      "ko_source": null
+    },
+    {
+      "id": "festival_dekmantel_festival",
+      "type": "festival",
+      "en": "Dekmantel Festival",
+      "aliases_en": [
+        "Dekmantel"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "NL",
+      "ko_source": null
+    },
+    {
+      "id": "festival_sonus_festival",
+      "type": "festival",
+      "en": "Sonus Festival",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "HR",
+      "ko_source": null
+    },
+    {
+      "id": "festival_melt_festival",
+      "type": "festival",
+      "en": "Melt Festival",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "festival_let_it_roll",
+      "type": "festival",
+      "en": "Let It Roll",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "CZ",
+      "ko_source": null
+    },
+    {
+      "id": "festival_junction_2",
+      "type": "festival",
+      "en": "Junction 2",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "festival_nuits_sonores",
+      "type": "festival",
+      "en": "Nuits Sonores",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "FR",
+      "ko_source": null
+    },
+    {
+      "id": "festival_monegros_desert_festival",
+      "type": "festival",
+      "en": "Monegros Desert Festival",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "ES",
+      "ko_source": null
+    },
+    {
+      "id": "festival_dour_festival",
+      "type": "festival",
+      "en": "Dour Festival",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "BE",
+      "ko_source": null
+    },
+    {
+      "id": "festival_snowbombing",
+      "type": "festival",
+      "en": "Snowbombing",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "AT",
+      "ko_source": null
+    },
+    {
+      "id": "festival_balaton_sound",
+      "type": "festival",
+      "en": "Balaton Sound",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "HU",
+      "ko_source": null
+    },
+    {
+      "id": "festival_sziget_festival",
+      "type": "festival",
+      "en": "Sziget Festival",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "HU",
+      "ko_source": null
+    },
+    {
+      "id": "festival_dgtl_festival",
+      "type": "festival",
+      "en": "DGTL Festival",
+      "aliases_en": [
+        "DGTL"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "NL",
+      "ko_source": null
+    },
+    {
+      "id": "festival_love_international",
+      "type": "festival",
+      "en": "Love International",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "HR",
+      "ko_source": null
+    },
+    {
+      "id": "festival_dimensions_festival",
+      "type": "festival",
+      "en": "Dimensions Festival",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "HR",
+      "ko_source": null
+    },
+    {
+      "id": "festival_field_day",
+      "type": "festival",
+      "en": "Field Day",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "festival_ava_festival",
+      "type": "festival",
+      "en": "AVA Festival",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "festival_terminal_v",
+      "type": "festival",
+      "en": "Terminal V",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "festival_airbeat_one",
+      "type": "festival",
+      "en": "Airbeat One",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "festival_ultra_japan",
+      "type": "festival",
+      "en": "Ultra Japan",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "festival_rainbow_disco_club",
+      "type": "festival",
+      "en": "Rainbow Disco Club",
+      "aliases_en": [
+        "RDC"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "festival_wire",
+      "type": "festival",
+      "en": "WIRE",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "festival_edc_japan",
+      "type": "festival",
+      "en": "EDC Japan",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "festival_sonicmania",
+      "type": "festival",
+      "en": "Sonicmania",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "festival_gmo_sonic",
+      "type": "festival",
+      "en": "GMO SONIC",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "festival_the_beach",
+      "type": "festival",
+      "en": "THE BEACH",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "festival_fuji_rock_festival",
+      "type": "festival",
+      "en": "Fuji Rock Festival",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "festival_summer_sonic",
+      "type": "festival",
+      "en": "Summer Sonic",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "festival_ultra_korea",
+      "type": "festival",
+      "en": "Ultra Korea",
+      "aliases_en": [
+        "UMF Korea",
+        "Ultra Music Festival Korea"
+      ],
+      "ko": "울트라 코리아",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "KR",
+      "ko_source": {
+        "name": "나무위키 문서명 + DJ Mag Asia 라인업 기사",
+        "url": "https://namu.wiki/w/%EC%9A%B8%ED%8A%B8%EB%9D%BC%20%EC%BD%94%EB%A6%AC%EC%95%84"
+      }
+    },
+    {
+      "id": "festival_world_dj_festival",
+      "type": "festival",
+      "en": "World DJ Festival",
+      "aliases_en": [
+        "WDF"
+      ],
+      "ko": "월드 디제이 페스티벌",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 1.5,
+      "region": "KR",
+      "ko_source": {
+        "name": "나무위키 EDC Korea 문서",
+        "url": "https://namu.wiki/w/Electric%20Daisy%20Carnival%20Korea"
+      }
+    },
+    {
+      "id": "festival_s2o_korea_songkran_music_festival",
+      "type": "festival",
+      "en": "S2O Korea Songkran Music Festival",
+      "aliases_en": [
+        "S2O Korea"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "festival_5tardium",
+      "type": "festival",
+      "en": "5TARDIUM",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "festival_spectrum_dance_music_festival",
+      "type": "festival",
+      "en": "Spectrum Dance Music Festival",
+      "aliases_en": [
+        "Spectrum"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "festival_edc_korea",
+      "type": "festival",
+      "en": "EDC Korea",
+      "aliases_en": [
+        "Electric Daisy Carnival Korea"
+      ],
+      "ko": "EDC 코리아",
+      "ko_status": "established",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": {
+        "name": "스포츠경향 EDC Korea 2026 개최 기사",
+        "url": "https://v.daum.net/v/20260210165942640"
+      }
+    },
+    {
+      "id": "venue_berghain",
+      "type": "venue",
+      "en": "Berghain",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 0.8,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "venue_tresor",
+      "type": "venue",
+      "en": "Tresor",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "venue_fabric",
+      "type": "venue",
+      "en": "fabric",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 0.8,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "venue_printworks_london",
+      "type": "venue",
+      "en": "Printworks London",
+      "aliases_en": [
+        "Printworks"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "venue_ministry_of_sound",
+      "type": "venue",
+      "en": "Ministry of Sound",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 0.8,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "venue_dc_10",
+      "type": "venue",
+      "en": "DC-10",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "ES",
+      "ko_source": null
+    },
+    {
+      "id": "venue_pacha_ibiza",
+      "type": "venue",
+      "en": "Pacha Ibiza",
+      "aliases_en": [
+        "Pacha"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 0.8,
+      "region": "ES",
+      "ko_source": null
+    },
+    {
+      "id": "venue_hi_ibiza",
+      "type": "venue",
+      "en": "Hï Ibiza",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 0.8,
+      "region": "ES",
+      "ko_source": null
+    },
+    {
+      "id": "venue_amnesia_ibiza",
+      "type": "venue",
+      "en": "Amnesia Ibiza",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 0.8,
+      "region": "ES",
+      "ko_source": null
+    },
+    {
+      "id": "venue_ushuaia_ibiza",
+      "type": "venue",
+      "en": "Ushuaïa Ibiza",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 0.8,
+      "region": "ES",
+      "ko_source": null
+    },
+    {
+      "id": "venue_club_space",
+      "type": "venue",
+      "en": "Club Space",
+      "aliases_en": [
+        "Space Miami"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 0.8,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "venue_the_brooklyn_mirage",
+      "type": "venue",
+      "en": "The Brooklyn Mirage",
+      "aliases_en": [
+        "Brooklyn Mirage"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "venue_the_warehouse_project",
+      "type": "venue",
+      "en": "The Warehouse Project",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "venue_de_school",
+      "type": "venue",
+      "en": "De School",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "NL",
+      "ko_source": null
+    },
+    {
+      "id": "venue_rso_berlin",
+      "type": "venue",
+      "en": "RSO.BERLIN",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "venue_bassiani",
+      "type": "venue",
+      "en": "Bassiani",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "GE",
+      "ko_source": null
+    },
+    {
+      "id": "venue_robert_johnson",
+      "type": "venue",
+      "en": "Robert Johnson",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "venue_club_chinois_ibiza",
+      "type": "venue",
+      "en": "Club Chinois Ibiza",
+      "aliases_en": [
+        "Club Chinois"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "ES",
+      "ko_source": null
+    },
+    {
+      "id": "venue_smartbar",
+      "type": "venue",
+      "en": "Smartbar",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "venue_stereo_montreal",
+      "type": "venue",
+      "en": "Stereo Montreal",
+      "aliases_en": [
+        "Stereo"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "CA",
+      "ko_source": null
+    },
+    {
+      "id": "venue_sound_nightclub",
+      "type": "venue",
+      "en": "Sound Nightclub",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "venue_exchange_la",
+      "type": "venue",
+      "en": "Exchange LA",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "venue_1015_folsom",
+      "type": "venue",
+      "en": "1015 Folsom",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "venue_zouk_singapore",
+      "type": "venue",
+      "en": "Zouk Singapore",
+      "aliases_en": [
+        "Zouk"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "SG",
+      "ko_source": null
+    },
+    {
+      "id": "venue_marquee_singapore",
+      "type": "venue",
+      "en": "Marquee Singapore",
+      "aliases_en": [
+        "Marquee"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "SG",
+      "ko_source": null
+    },
+    {
+      "id": "venue_liv_nightclub",
+      "type": "venue",
+      "en": "LIV Nightclub",
+      "aliases_en": [
+        "LIV"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "venue_avant_gardner",
+      "type": "venue",
+      "en": "Avant Gardner",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "venue_sisyphos",
+      "type": "venue",
+      "en": "Sisyphos",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "venue_womb",
+      "type": "venue",
+      "en": "WOMB",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "venue_vent",
+      "type": "venue",
+      "en": "VENT",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "venue_zerotokyo",
+      "type": "venue",
+      "en": "ZEROTOKYO",
+      "aliases_en": [
+        "ZERO TOKYO"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "venue_club_asia",
+      "type": "venue",
+      "en": "club asia",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "venue_contact_tokyo",
+      "type": "venue",
+      "en": "Contact Tokyo",
+      "aliases_en": [
+        "Contact"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "venue_ageha",
+      "type": "venue",
+      "en": "ageHa",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "venue_cakeshop",
+      "type": "venue",
+      "en": "Cakeshop",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "venue_volnost",
+      "type": "venue",
+      "en": "VOLNOST",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "venue_faust_seoul",
+      "type": "venue",
+      "en": "Faust Seoul",
+      "aliases_en": [
+        "Faust"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "venue_soap_seoul",
+      "type": "venue",
+      "en": "Soap Seoul",
+      "aliases_en": [
+        "Soap"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "venue_cercle",
+      "type": "venue",
+      "en": "Cercle",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.8,
+      "region": "FR",
+      "ko_source": null
+    },
+    {
+      "id": "label_spinnin_records",
+      "type": "label",
+      "en": "Spinnin' Records",
+      "aliases_en": [
+        "Spinnin Records"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 0.6,
+      "region": "NL",
+      "ko_source": null
+    },
+    {
+      "id": "label_armada_music",
+      "type": "label",
+      "en": "Armada Music",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 0.6,
+      "region": "NL",
+      "ko_source": null
+    },
+    {
+      "id": "label_anjunabeats",
+      "type": "label",
+      "en": "Anjunabeats",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 0.6,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "label_anjunadeep",
+      "type": "label",
+      "en": "Anjunadeep",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "label_ultra_records",
+      "type": "label",
+      "en": "Ultra Records",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 0.6,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "label_astralwerks",
+      "type": "label",
+      "en": "Astralwerks",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "label_owsla",
+      "type": "label",
+      "en": "OWSLA",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "label_monstercat",
+      "type": "label",
+      "en": "Monstercat",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 0.6,
+      "region": "CA",
+      "ko_source": null
+    },
+    {
+      "id": "label_mad_decent",
+      "type": "label",
+      "en": "Mad Decent",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "label_dim_mak",
+      "type": "label",
+      "en": "Dim Mak",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "label_defected_records",
+      "type": "label",
+      "en": "Defected Records",
+      "aliases_en": [
+        "Defected"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 0.6,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "label_toolroom",
+      "type": "label",
+      "en": "Toolroom",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "label_drumcode",
+      "type": "label",
+      "en": "Drumcode",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 0.6,
+      "region": "SE",
+      "ko_source": null
+    },
+    {
+      "id": "label_afterlife",
+      "type": "label",
+      "en": "Afterlife",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 0.6,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "label_kompakt",
+      "type": "label",
+      "en": "Kompakt",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "label_cocoon_recordings",
+      "type": "label",
+      "en": "Cocoon Recordings",
+      "aliases_en": [
+        "Cocoon"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "label_innervisions",
+      "type": "label",
+      "en": "Innervisions",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 0.6,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "label_permanent_vacation",
+      "type": "label",
+      "en": "Permanent Vacation",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "label_ninja_tune",
+      "type": "label",
+      "en": "Ninja Tune",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 0.6,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "label_warp_records",
+      "type": "label",
+      "en": "Warp Records",
+      "aliases_en": [
+        "Warp"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 0.6,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "label_r_s_records",
+      "type": "label",
+      "en": "R&S Records",
+      "aliases_en": [
+        "R&S"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "BE",
+      "ko_source": null
+    },
+    {
+      "id": "label_dirtybird",
+      "type": "label",
+      "en": "Dirtybird",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "label_hot_creations",
+      "type": "label",
+      "en": "Hot Creations",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "label_crosstown_rebels",
+      "type": "label",
+      "en": "Crosstown Rebels",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "label_saved_records",
+      "type": "label",
+      "en": "Saved Records",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "label_solid_grooves",
+      "type": "label",
+      "en": "Solid Grooves",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "label_black_book_records",
+      "type": "label",
+      "en": "Black Book Records",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "label_insomniac_records",
+      "type": "label",
+      "en": "Insomniac Records",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "label_mau5trap",
+      "type": "label",
+      "en": "mau5trap",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "CA",
+      "ko_source": null
+    },
+    {
+      "id": "label_revealed_recordings",
+      "type": "label",
+      "en": "Revealed Recordings",
+      "aliases_en": [
+        "Revealed"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "NL",
+      "ko_source": null
+    },
+    {
+      "id": "label_stmpd_rcrds",
+      "type": "label",
+      "en": "STMPD RCRDS",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "NL",
+      "ko_source": null
+    },
+    {
+      "id": "label_musical_freedom",
+      "type": "label",
+      "en": "Musical Freedom",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "NL",
+      "ko_source": null
+    },
+    {
+      "id": "label_protocol_recordings",
+      "type": "label",
+      "en": "Protocol Recordings",
+      "aliases_en": [
+        "Protocol"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "label_hexagon",
+      "type": "label",
+      "en": "Hexagon",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "NL",
+      "ko_source": null
+    },
+    {
+      "id": "label_confession",
+      "type": "label",
+      "en": "Confession",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "FR",
+      "ko_source": null
+    },
+    {
+      "id": "label_ministry_of_sound_recordings",
+      "type": "label",
+      "en": "Ministry of Sound Recordings",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "label_hospital_records",
+      "type": "label",
+      "en": "Hospital Records",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "label_metalheadz",
+      "type": "label",
+      "en": "Metalheadz",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "label_ram_records",
+      "type": "label",
+      "en": "RAM Records",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "label_critical_music",
+      "type": "label",
+      "en": "Critical Music",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "label_vision_recordings",
+      "type": "label",
+      "en": "VISION Recordings",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "NL",
+      "ko_source": null
+    },
+    {
+      "id": "label_ophelia_records",
+      "type": "label",
+      "en": "Ophelia Records",
+      "aliases_en": [
+        "Ophelia"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "label_never_say_die_records",
+      "type": "label",
+      "en": "Never Say Die Records",
+      "aliases_en": [
+        "Never Say Die"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "label_avex_trax",
+      "type": "label",
+      "en": "avex trax",
+      "aliases_en": [
+        "Avex Trax"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 0.6,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "label_tcy_recordings",
+      "type": "label",
+      "en": "TCY Recordings",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "label_trekkie_trax",
+      "type": "label",
+      "en": "TREKKIE TRAX",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "label_maltine_records",
+      "type": "label",
+      "en": "Maltine Records",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "label_daze_alive",
+      "type": "label",
+      "en": "DAZE ALIVE",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "label_scream_records",
+      "type": "label",
+      "en": "ScreaM Records",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_native_instruments",
+      "type": "equipment",
+      "en": "Native Instruments",
+      "aliases_en": [
+        "NI",
+        "Traktor",
+        "Kontakt",
+        "Maschine"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_pioneer_dj",
+      "type": "equipment",
+      "en": "Pioneer DJ",
+      "aliases_en": [
+        "Pioneer"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 0.6,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_ableton",
+      "type": "equipment",
+      "en": "Ableton",
+      "aliases_en": [
+        "Ableton Live"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 0.6,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_serato",
+      "type": "equipment",
+      "en": "Serato",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "NZ",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_roland",
+      "type": "equipment",
+      "en": "Roland",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 0.6,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_korg",
+      "type": "equipment",
+      "en": "Korg",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_moog",
+      "type": "equipment",
+      "en": "Moog",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_elektron",
+      "type": "equipment",
+      "en": "Elektron",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "SE",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_arturia",
+      "type": "equipment",
+      "en": "Arturia",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "FR",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_denon_dj",
+      "type": "equipment",
+      "en": "Denon DJ",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_rane",
+      "type": "equipment",
+      "en": "Rane",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_allen_heath",
+      "type": "equipment",
+      "en": "Allen & Heath",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_numark",
+      "type": "equipment",
+      "en": "Numark",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_traktor",
+      "type": "equipment",
+      "en": "Traktor",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_rekordbox",
+      "type": "equipment",
+      "en": "rekordbox",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 0.6,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_fl_studio",
+      "type": "equipment",
+      "en": "FL Studio",
+      "aliases_en": [
+        "FruityLoops"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 0.6,
+      "region": "BE",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_logic_pro",
+      "type": "equipment",
+      "en": "Logic Pro",
+      "aliases_en": [
+        "Logic"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 0.6,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_cubase",
+      "type": "equipment",
+      "en": "Cubase",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 0.6,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_bitwig",
+      "type": "equipment",
+      "en": "Bitwig",
+      "aliases_en": [
+        "Bitwig Studio"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_reason",
+      "type": "equipment",
+      "en": "Reason",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "SE",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_akai",
+      "type": "equipment",
+      "en": "Akai",
+      "aliases_en": [
+        "Akai Professional"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_novation",
+      "type": "equipment",
+      "en": "Novation",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_behringer",
+      "type": "equipment",
+      "en": "Behringer",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_focusrite",
+      "type": "equipment",
+      "en": "Focusrite",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_universal_audio",
+      "type": "equipment",
+      "en": "Universal Audio",
+      "aliases_en": [
+        "UAD"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_waves",
+      "type": "equipment",
+      "en": "Waves",
+      "aliases_en": [
+        "Waves Audio"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_izotope",
+      "type": "equipment",
+      "en": "iZotope",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_splice",
+      "type": "equipment",
+      "en": "Splice",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_beatport",
+      "type": "equipment",
+      "en": "Beatport",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_soundcloud",
+      "type": "equipment",
+      "en": "SoundCloud",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "S",
+      "weight": 0.6,
+      "region": "DE",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_bandcamp",
+      "type": "equipment",
+      "en": "Bandcamp",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "US",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_mixcloud",
+      "type": "equipment",
+      "en": "Mixcloud",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "equipment_boiler_room",
+      "type": "equipment",
+      "en": "Boiler Room",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 0.6,
+      "region": "UK",
+      "ko_source": null
+    }
+  ]
+}

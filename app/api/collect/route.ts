@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin'
 import { extractArticleText, extractArticleTitle, extractImageUrl, isUrlLikeTitle, titleFromUrl } from '@/lib/article-extraction'
 import Parser from 'rss-parser'
+import { syncArticleViews } from '@/lib/article-views'
 
 const parser = new Parser()
 const RSS_TIMEOUT_MS = 12000
@@ -257,11 +258,21 @@ export async function POST(req: NextRequest) {
     }
 
     console.log('수집 완료:', result.collected)
+    let viewsSynced = 0
+    try {
+      const viewResult = await syncArticleViews()
+      viewsSynced = viewResult.synced
+      console.log('조회수 동기화 완료:', viewResult)
+    } catch (viewsError) {
+      console.error('조회수 동기화 실패 (기사 수집 결과에는 영향 없음):', viewsError)
+    }
+
     return NextResponse.json({ 
       success: true, 
       collected: result.collected, 
       failures: result.failures,
-      diagnostics: result.diagnostics
+      diagnostics: result.diagnostics,
+      viewsSynced,
     })
   } catch (err) {
     console.error('collect API 에러:', err)

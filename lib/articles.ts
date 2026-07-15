@@ -46,6 +46,11 @@ type LoadArticlesOptions = {
   genre?: string
 }
 
+type ArticleViewRow = {
+  slug: string
+  views_30d: number
+}
+
 export async function loadPublishedArticles(
   options: LoadArticlesOptions = {}
 ): Promise<{ articles: ArticleListItem[]; error: string | null }> {
@@ -86,6 +91,75 @@ export async function loadPublishedArticles(
   }))
 
   return { articles, error: null }
+}
+
+export async function loadPopularArticles(
+  latestArticles: ArticleListItem[],
+  limit = 5
+): Promise<ArticleListItem[]> {
+  const fallback = latestArticles.slice(0, limit)
+  const { data: viewData, error: viewError } = await supabase
+    .from('article_views')
+    .select('slug, views_30d')
+    .order('views_30d', { ascending: false })
+    .limit(limit)
+
+  if (viewError) {
+    console.warn('[Popular Articles] article_views 조회 실패, 최신 기사로 대체:', viewError.message)
+    return fallback
+  }
+
+  const rankedViews = ((viewData ?? []) as ArticleViewRow[])
+    .filter((row) => row.views_30d > 0)
+  if (rankedViews.length === 0) return fallback
+
+  const rankedSlugs = rankedViews.map((row) => row.slug)
+  const { data: articleData, error: articleError } = await supabase
+    .from('articles')
+    .select('id, slug, title, content, published_at, cluster_id, image_url, category, genre')
+    .eq('published', true)
+    .in('slug', rankedSlugs)
+
+  if (articleError) {
+    console.warn('[Popular Articles] 발행 기사 매칭 실패, 최신 기사로 대체:', articleError.message)
+    return fallback
+  }
+
+  const articleBySlug = new Map<string, ArticleRow>(
+    ((articleData ?? []) as ArticleRow[])
+      .filter((row): row is ArticleRow & { slug: string } => Boolean(row.slug))
+      .map((row) => [row.slug, row])
+  )
+  const rankedRows = rankedSlugs
+    .map((slug) => articleBySlug.get(slug))
+    .filter((row): row is ArticleRow => Boolean(row))
+  const imageByCluster = await loadImagesByCluster(rankedRows)
+  const popular: ArticleListItem[] = rankedRows.map((row) => ({
+    id: row.id,
+    slug: row.slug,
+    title: row.title,
+    content: row.content,
+    published_at: row.published_at,
+    cluster_id: row.cluster_id,
+    article_image_url: isUsableImageUrl(row.image_url) ? row.image_url : null,
+    imageUrl: isUsableImageUrl(row.image_url)
+      ? row.image_url
+      : row.cluster_id
+        ? imageByCluster.get(row.cluster_id) ?? null
+        : null,
+    category: row.category,
+    genre: row.genre,
+  }))
+  const usedIds = new Set(popular.map((article) => article.id))
+
+  for (const article of latestArticles) {
+    if (popular.length >= limit) break
+    if (usedIds.has(article.id)) continue
+    popular.push(article)
+    usedIds.add(article.id)
+  }
+
+  return popular
 }
 
 export async function loadTaxonomyParams(): Promise<{

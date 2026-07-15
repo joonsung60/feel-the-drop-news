@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { loadPublishedArticles } from "@/lib/articles";
+import { loadPopularArticles, loadPublishedArticles } from "@/lib/articles";
 import type { ArticleListItem } from "@/lib/articles";
 import { ArticleCard } from "@/components/ArticleCard";
 
@@ -136,7 +136,7 @@ export default async function Home() {
   // 기존 시그니처 그대로 유지
   const { articles, error } = await loadPublishedArticles({ limit: 20 });
 
-  const popular = articles.slice(0, 5);
+  const popular = await loadPopularArticles(articles, 5);
   const [hero, ...rest] = articles;
 
   return (
