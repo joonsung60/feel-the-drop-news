@@ -248,6 +248,7 @@ async function generateArticle(source: ImageSourceRow): Promise<GeneratedImageAr
       system: SYSTEM_PROMPT_A,
       prompt: buildPrompt(source),
       format: 'json',
+      options: { num_ctx: 32768, num_predict: 4096 },
       stream: false,
       think: false,
     }),

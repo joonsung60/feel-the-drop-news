@@ -109,10 +109,37 @@ async function loadArticle(key: string): Promise<{
   return { data: null, errorMessage: null };
 }
 
-// 아래 헬퍼들은 원본에서 변경 없음
+// ── 본문 블록 파싱 ─────────────────────────────────────
 type ArticleBlock =
   | { type: "paragraph"; text: string }
+  | {
+      type: "attribution";
+      textBeforeLink: string;
+      linkText: string;
+      href: string;
+      textAfterLink: string;
+    }
   | { type: "image"; alt: string; src: string };
+
+function splitTextBlocks(text: string): ArticleBlock[] {
+  return text.split('\n\n').map((s) => s.trim()).filter(Boolean).map((paragraph) => {
+    const attributionMatch = paragraph.match(
+      /^\*([^\n]*?)\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)([^\n]*?)\*$/
+    );
+
+    if (attributionMatch) {
+      return {
+        type: "attribution" as const,
+        textBeforeLink: attributionMatch[1],
+        linkText: attributionMatch[2],
+        href: attributionMatch[3],
+        textAfterLink: attributionMatch[4],
+      };
+    }
+
+    return { type: "paragraph" as const, text: paragraph };
+  });
+}
 
 function splitArticleBlocks(
   text: string,
@@ -135,12 +162,7 @@ function splitArticleBlocks(
   for (const match of text.matchAll(imagePattern)) {
     const index = match.index ?? 0;
     const before = text.slice(cursor, index);
-    blocks.push(
-      ...before.split('\n\n').map((s) => s.trim()).filter(Boolean).map((sentence) => ({
-        type: "paragraph" as const,
-        text: sentence,
-      }))
-    );
+    blocks.push(...splitTextBlocks(before));
     blocks.push({
       type: "image",
       alt: match[1].trim(),
@@ -149,12 +171,7 @@ function splitArticleBlocks(
     cursor = index + match[0].length;
   }
 
-  blocks.push(
-    ...text.slice(cursor).split('\n\n').map((s) => s.trim()).filter(Boolean).map((sentence) => ({
-      type: "paragraph" as const,
-      text: sentence,
-    }))
-  );
+  blocks.push(...splitTextBlocks(text.slice(cursor)));
 
   return blocks;
 }
@@ -319,6 +336,24 @@ export default async function ArticlePage({
                     </figcaption>
                   )}
                 </figure>
+              );
+            }
+            if (block.type === "attribution") {
+              return (
+                <p key={idx}>
+                  <em>
+                    {block.textBeforeLink}
+                    <a
+                      href={block.href}
+                      target="_blank"
+                      rel="noopener noreferrer nofollow"
+                      className="underline underline-offset-2"
+                    >
+                      {block.linkText}
+                    </a>
+                    {block.textAfterLink}
+                  </em>
+                </p>
               );
             }
             return <p key={idx}>{block.text}</p>;

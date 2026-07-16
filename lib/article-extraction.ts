@@ -51,7 +51,15 @@ function stripHtmlToText(html: string): string {
     .trim()
 }
 
-export function cleanArticleText(text: string, maxLength = 10000): string {
+type CleanArticleTextOptions = {
+  preserveParagraphBreaks?: boolean
+}
+
+export function cleanArticleText(
+  text: string,
+  maxLength = 10000,
+  options: CleanArticleTextOptions = {}
+): string {
   const stopIndex = STOP_SECTION_PATTERNS
     .map((pattern) => text.search(pattern))
     .filter((index) => index >= 0)
@@ -69,12 +77,16 @@ export function cleanArticleText(text: string, maxLength = 10000): string {
     cleaned = cleaned.replace(pattern, ' ')
   }
 
-  return cleaned
+  const normalizedLines = cleaned
     .split('\n')
     .map((line) => line.trim())
-    .filter((line) => line.length > 0)
     .filter((line) => !/^(news|tracks|features|mixes|events|genres)$/i.test(line))
-    .join('\n')
+
+  const normalized = options.preserveParagraphBreaks
+    ? normalizedLines.join('\n').replace(/\n{3,}/g, '\n\n')
+    : normalizedLines.filter((line) => line.length > 0).join('\n')
+
+  return normalized
     .replace(/[ \t\f\v]+/g, ' ')
     .slice(0, maxLength)
     .trim()
