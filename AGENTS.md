@@ -80,7 +80,7 @@ SUPABASE_ACCESS_TOKEN    # Claude Code Supabase MCP용
 
 ## LLM / 프롬프트
 
-- `lib/display-names.json` 기반 고유명사 매핑과 사후 치환(post-processing)은 핵심 방어막이다. 건드리지 마라.
+- `lib/display-names.json` 기반 고유명사 매핑과 사후 치환(post-processing)은 핵심 방어막이다. 건드리지 마라. 단, `generate-from-cluster`는 `lib/edm-entities-v2.json`의 `established` 표기를 사용한다.
 - `validateKoreanArticle` 검증 로직(한글 비율 30% 이상, 잡음 패턴 필터)과 1회 재시도 구조를 훼손하지 마라.
 - 기사 생성 프롬프트, 출력 스키마, 분류 규칙은 명시적 요청 없이 수정하지 마라.
 - Ollama 모델 선택은 환경변수로 제어한다. 하드코딩하지 마라.

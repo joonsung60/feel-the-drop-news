@@ -221,7 +221,11 @@ lib/taxonomy.ts
 
 lib/display-names.json
   EDM 아티스트들의 고유명사 한글화/영문 유지 매핑 규칙 데이터 (Top 200 수준).
-  LLM 생성 시 프롬프트 주입 및 사후 치환(Post-processing) 기준으로 사용됨.
+  interview-translate와 generate-from-text-source의 표기 규칙 데이터로 계속 사용됨.
+
+lib/edm-entities-v2.json
+  EDM 엔티티 단일 진실 공급원(SOT). 토픽 제안 엔티티 매칭과
+  generate-from-cluster의 established 한국어 표기 규칙에 사용됨.
 ```
 
 ### 어드민
@@ -257,7 +261,7 @@ app/api/cluster/route.ts
 
 app/api/generate/route.ts
   클러스터 기반 한국어 기사 생성.
-  *최근 업데이트*: display-names.json을 읽어 프롬프트에 표기 규칙을 주입하고, LLM 응답에 대해 applyDisplayNameMapping 함수로 사후 교정(치환) 수행.
+  *최근 업데이트*: generate-from-cluster가 edm-entities-v2.json의 established 표기를 읽어 프롬프트에 규칙을 주입하고, LLM 응답 제목에 대해 applyDisplayNameMapping 함수로 사후 교정(치환) 수행. interview-translate와 generate-from-text-source는 계속 display-names.json을 사용함.
 ```
 
 ### 이미지/SNS 파이프라인
@@ -317,9 +321,10 @@ lib/jobs/
 - 상대 날짜 표현 금지
 - **고유명사 표기 규칙**:
   - 영어 아티스트명은 기본적으로 영문 유지. 임의 한글 음역 절대 금지.
-  - 예외적으로 `lib/display-names.json`에 정의된 정착된 표기(마틴 게릭스 등)만 한글화.
+  - 클러스터 기반 생성은 예외적으로 `lib/edm-entities-v2.json`의 `established` 표기(마틴 게릭스 등)만 한글화.
+  - 인터뷰 번역과 텍스트 소스 생성은 아직 `lib/display-names.json`의 정착된 표기를 사용.
   - 도시명 단독 등장 시 한글 표기, 그 외 고유명사 일부일 땐 영문 유지.
-  - 이 규칙은 `app/api/generate/route.ts`에서 LLM 프롬프트에 직접 주입되며, 생성 완료 후 텍스트에도 사후 치환(Post-processing)을 통해 강제 적용됨.
+  - 클러스터 기반 생성에서는 이 규칙을 LLM 프롬프트에 직접 주입하며, 생성 완료 후 제목에만 사후 치환(Post-processing)을 적용함.
 - **분류 규칙**:
   - category: `페스티벌` / `릴리즈` / `뉴스`
   - genre: `릴리즈`일 때만 세부 장르 허용, 나머지는 무조건 `edm`
@@ -351,7 +356,7 @@ lib/jobs/
 - 정적 배포 및 Deploy Hook 연동
 - SEO (slug URL, sitemap, llms.txt 등)
 - 텔레그램 봇 기반 원격 어드민 제어 (grammy)
-- **아티스트 고유명사 한글/영문 매핑 (`lib/display-names.json`) 사전 프롬프트 주입 및 사후 교정(Post-processing) 적용**
+- **클러스터 생성은 `lib/edm-entities-v2.json`, 인터뷰 번역·텍스트 소스 생성은 `lib/display-names.json` 기반으로 고유명사 규칙 적용**
 - Supabase `job_queue` 기반 비동기 작업 큐 (기사 생성, 텍스트 소스 생성)
 - `worker/` 독립 프로세스 분리 및 `dev:all` 스크립트
 

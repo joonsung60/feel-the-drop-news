@@ -3,6 +3,7 @@ import path from 'node:path'
 import { EntityDataset, EntityEntry, RawArticle } from './types'
 
 export const ENTITY_DICT_CANDIDATE_PATHS = [
+  'lib/edm-entities-v2.json',
   'lib/edm-entities.json',
 ]
 
@@ -13,8 +14,23 @@ export function loadEntityDictionary(): EntityEntry[] | null {
     const abs = path.join(process.cwd(), rel)
     try {
       const raw = fs.readFileSync(abs, 'utf-8')
-      const data = JSON.parse(raw) as EntityDataset
+      const data = JSON.parse(raw) as EntityDataset & {
+        entities?: Array<{ en?: string; aliases_en?: string[]; weight: number }>
+      }
       const entries: EntityEntry[] = []
+      if (Array.isArray(data.entities)) {
+        for (const entity of data.entities) {
+          const name = entity?.en
+          if (!name) continue
+          const surfaces = [name, ...(entity.aliases_en ?? [])]
+            .map((s) => (typeof s === 'string' ? s.toLowerCase() : ''))
+            .filter((s) => s.length >= 2)
+          if (surfaces.length === 0) continue
+          entries.push({ canonical: name, surfaces, weight: entity.weight })
+        }
+        console.log(`[suggest-clusters] entity dict loaded from ${rel}: ${entries.length} entries`)
+        return entries
+      }
       for (const artist of data.artists_top500_relevance_2024_2025 ?? []) {
         const name = artist?.name
         if (!name) continue

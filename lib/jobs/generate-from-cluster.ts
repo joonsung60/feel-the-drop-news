@@ -1,6 +1,6 @@
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin'
 import { cleanArticleText, extractArticleText } from '@/lib/article-extraction'
-import displayNames from '@/lib/display-names.json'
+import entityDict from '@/lib/edm-entities-v2.json'
 import { SYSTEM_PROMPT_A } from '@/lib/prompts'
 import { findGenre } from '@/lib/taxonomy'
 
@@ -16,18 +16,78 @@ const ARTICLE_RESPONSE_FORMAT = {
   required: ['title', 'content', 'slug', 'category', 'genre'],
 }
 
-const displayNameRules = Object.entries(displayNames as Record<string, string>)
+type EstablishedEntity = {
+  en: string
+  ko: string
+  koAvoid: string[]
+}
+
+const establishedEntities: EstablishedEntity[] = entityDict.entities.flatMap((entity) => {
+  if (entity.ko_status !== 'established' || typeof entity.ko !== 'string' || !entity.ko.trim()) {
+    return []
+  }
+  return [{ en: entity.en, ko: entity.ko, koAvoid: entity.ko_avoid }]
+})
+
+const displayNames: Record<string, string> = Object.fromEntries(
+  establishedEntities.map(({ en, ko }) => [en, ko])
+)
+
+const displayNameRules = Object.entries(displayNames)
   .map(([en, ko]) => `- ${en} → ${ko}`)
   .join('\n')
 
-const displayNameReplacements = Object.entries(displayNames as Record<string, string>)
-  .filter(([en, ko]) => en !== ko)
+function isHighRiskAbbreviation(en: string): boolean {
+  if (en.length >= 4) return false
+  const letters = [...en].filter((char) => /[A-Za-z]/.test(char))
+  const allLettersUppercase = letters.length > 0
+    && letters.every((char) => char === char.toUpperCase())
+  const onlyNumbersOrSymbols = letters.length === 0
+  return allLettersUppercase || onlyNumbersOrSymbols
+}
+
+const displayNameReplacements = establishedEntities
+  .filter(({ en, ko }) => en !== ko && !isHighRiskAbbreviation(en))
+  .map(({ en, ko }) => [en, ko] as const)
   .sort((a, b) => b[0].length - a[0].length)
+
+const displayNameCorrections = establishedEntities
+  .flatMap(({ ko, koAvoid }) => koAvoid
+    .filter((avoid) => avoid && avoid !== ko)
+    .map((avoid) => [avoid, ko] as const))
+  .sort((a, b) => b[0].length - a[0].length)
+
+function replaceWithAsciiBoundaries(text: string, from: string, to: string): string {
+  let result = ''
+  let copiedThrough = 0
+  let searchFrom = 0
+
+  while (searchFrom < text.length) {
+    const index = text.indexOf(from, searchFrom)
+    if (index < 0) break
+
+    const before = index === 0 ? '' : text[index - 1]
+    const afterIndex = index + from.length
+    const after = afterIndex >= text.length ? '' : text[afterIndex]
+    if (!/[A-Za-z0-9]/.test(before) && !/[A-Za-z0-9]/.test(after)) {
+      result += text.slice(copiedThrough, index) + to
+      copiedThrough = afterIndex
+      searchFrom = afterIndex
+    } else {
+      searchFrom = index + 1
+    }
+  }
+
+  return result + text.slice(copiedThrough)
+}
 
 function applyDisplayNameMapping(text: string): string {
   let result = text
   for (const [en, ko] of displayNameReplacements) {
-    result = result.replaceAll(en, ko)
+    result = replaceWithAsciiBoundaries(result, en, ko)
+  }
+  for (const [avoid, ko] of displayNameCorrections) {
+    result = replaceWithAsciiBoundaries(result, avoid, ko)
   }
   return result
 }
