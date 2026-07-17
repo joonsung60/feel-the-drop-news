@@ -23,6 +23,7 @@
 
 # misc
 .DS_Store
+*Zone.Identifier
 *.pem
 supabasepassword.txt
 
