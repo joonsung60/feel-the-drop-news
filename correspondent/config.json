@@ -1,0 +1,23 @@
+{
+  "tracking_query_denylist": [
+    "utm_*",
+    "fbclid",
+    "gclid",
+    "msclkid",
+    "yclid",
+    "dclid",
+    "ref",
+    "ref_src",
+    "igshid",
+    "mc_cid",
+    "mc_eid",
+    "spm"
+  ],
+  "max_index_items": 20,
+  "crawl_timeout_ms": 90000,
+  "ollama_timeout_seconds": 300,
+  "markdown_max_chars": 120000,
+  "content_stop_markers": [
+    "\nMost Popular\n"
+  ]
+}

@@ -2,6 +2,7 @@
 
 # dependencies
 **/node_modules
+**/.venv
 /.pnp
 .pnp.*
 .yarn/*
@@ -32,6 +33,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+correspondent/logs/
+correspondent/.crawl4ai/
+correspondent/.playwright/
 
 # env files (can opt-in for committing if needed)
 .env*
