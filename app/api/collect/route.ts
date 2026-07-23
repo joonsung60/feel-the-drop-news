@@ -3,6 +3,7 @@ import { supabaseAdmin as supabase } from '@/lib/supabase-admin'
 import { extractArticleText, extractArticleTitle, extractImageUrl, isUrlLikeTitle, titleFromUrl } from '@/lib/article-extraction'
 import Parser from 'rss-parser'
 import { syncArticleViews } from '@/lib/article-views'
+import { PipelineObserver } from '@/lib/pipeline-observer'
 
 const parser = new Parser()
 const RSS_TIMEOUT_MS = 12000
@@ -56,18 +57,44 @@ function parsePublishedAt(value: unknown): string | null {
   return Number.isNaN(date.getTime()) ? null : date.toISOString()
 }
 
+class FeedFetchError extends Error {
+  constructor(
+    error: unknown,
+    readonly kind: 'http_error' | 'parse_error' | 'timeout',
+    readonly status: number | null = null,
+  ) {
+    super(error instanceof Error ? error.message : String(error))
+    this.name = error instanceof Error ? error.name : 'Error'
+  }
+}
+
 async function fetchFeed(url: string) {
-  const res = await fetch(url, {
-    headers: REQUEST_HEADERS,
-    signal: AbortSignal.timeout(RSS_TIMEOUT_MS),
-  })
+  let res: Response
+  try {
+    res = await fetch(url, {
+      headers: REQUEST_HEADERS,
+      signal: AbortSignal.timeout(RSS_TIMEOUT_MS),
+    })
+  } catch (error) {
+    const isTimeout = error instanceof Error
+      && (error.name === 'TimeoutError' || error.name === 'AbortError')
+    throw new FeedFetchError(error, isTimeout ? 'timeout' : 'http_error')
+  }
   const text = await res.text()
 
   if (!res.ok) {
-    throw new Error(`HTTP ${res.status}: ${text.slice(0, 120).replace(/\s+/g, ' ')}`)
+    throw new FeedFetchError(
+      new Error(`HTTP ${res.status}: ${text.slice(0, 120).replace(/\s+/g, ' ')}`),
+      'http_error',
+      res.status,
+    )
   }
 
-  return parser.parseString(text)
+  try {
+    return { feed: await parser.parseString(text), status: res.status }
+  } catch (error) {
+    throw new FeedFetchError(error, 'parse_error', res.status)
+  }
 }
 
 async function fetchArticleContent(url: string): Promise<{ content: string; imageUrl: string | null; title: string | null }> {
@@ -86,7 +113,7 @@ async function fetchArticleContent(url: string): Promise<{ content: string; imag
 }
 
 // RSS 자동 수집
-async function collectFromRSS(): Promise<{ collected: number; failures: CollectFailure[]; diagnostics: RssDiagnostics }> {
+async function collectFromRSS(observer: PipelineObserver): Promise<{ collected: number; failures: CollectFailure[]; diagnostics: RssDiagnostics }> {
   const diagnostics: RssDiagnostics = {
     sourceCount: 0,
     parsedSourceCount: 0,
@@ -117,7 +144,11 @@ async function collectFromRSS(): Promise<{ collected: number; failures: CollectF
   for (const source of sources as RssSource[]) {
     try {
       console.log(`파싱 시도: ${source.name} - ${source.url}`)
-      const feed = await fetchFeed(source.url)
+      const { feed, status } = await fetchFeed(source.url)
+      observer.event({
+        stage: 'source_fetch', reason: 'ok', source: source.name, item_url: source.url, title: null,
+        detail: { status_code: status, feed_item_count: feed.items.length },
+      })
       diagnostics.parsedSourceCount++
       diagnostics.totalFeedItems += feed.items.length
       
@@ -130,6 +161,12 @@ async function collectFromRSS(): Promise<{ collected: number; failures: CollectF
       let sourceNoLink = 0
 
       for (const item of itemsToProcess) {
+        const publishedAt = parsePublishedAt(item.pubDate || item.isoDate)
+        observer.event({
+          stage: 'item_seen', reason: null, source: source.name, item_url: item.link ?? null,
+          title: typeof item.title === 'string' ? item.title : null,
+          detail: { published_at: publishedAt },
+        })
         if (!item.link) {
           diagnostics.skippedNoLinkCount++
           sourceNoLink++
@@ -145,6 +182,10 @@ async function collectFromRSS(): Promise<{ collected: number; failures: CollectF
         if (existing) {
           diagnostics.duplicateSkippedCount++
           sourceDuplicates++
+          observer.event({
+            stage: 'item_dup', reason: 'url_exists', source: source.name, item_url: item.link,
+            title: typeof item.title === 'string' ? item.title : null, detail: {},
+          })
           continue
         }
 
@@ -161,17 +202,27 @@ async function collectFromRSS(): Promise<{ collected: number; failures: CollectF
           url: item.link,
           image_url: imageUrl,
           author: item.creator || null,
-          published_at: parsePublishedAt(item.pubDate || item.isoDate),
+          published_at: publishedAt,
         })
 
         if (insertError) {
           diagnostics.failedItemCount++
           failures.push({ source: source.name, url: item.link, error: String(insertError.message || insertError) })
           console.error(`Insert 실패: ${item.link}`, insertError)
+          observer.event({
+            stage: insertError.code === '23505' ? 'item_dup' : 'error',
+            reason: insertError.code === '23505' ? 'url_unique_conflict' : 'insert_error',
+            source: source.name, item_url: item.link, title,
+            detail: { code: insertError.code ?? null, error: insertError.message },
+          })
         } else {
           diagnostics.insertedCount++
           sourceInserted++
           collected++
+          observer.event({
+            stage: 'item_inserted', reason: 'ok', source: source.name, item_url: item.link,
+            title, detail: { published_at: publishedAt },
+          })
         }
       }
 
@@ -186,6 +237,12 @@ async function collectFromRSS(): Promise<{ collected: number; failures: CollectF
       diagnostics.failedSourceCount++
       console.error(`RSS 실패: ${source.name}`, err)
       failures.push({ source: source.name, url: source.url, error: String(err) })
+      const fetchError = err instanceof FeedFetchError ? err : null
+      observer.event({
+        stage: 'source_fetch', reason: fetchError?.kind ?? 'parse_error', source: source.name,
+        item_url: source.url, title: null,
+        detail: { status_code: fetchError?.status ?? null, error: String(err) },
+      })
     }
   }
 
@@ -193,7 +250,7 @@ async function collectFromRSS(): Promise<{ collected: number; failures: CollectF
 }
 
 // URL 직접 추가
-async function collectFromUrls(urls: string[]): Promise<{ collected: number; diagnostics: UrlDiagnostics }> {
+async function collectFromUrls(urls: string[], observer: PipelineObserver): Promise<{ collected: number; diagnostics: UrlDiagnostics }> {
   let collected = 0
   const diagnostics: UrlDiagnostics = {
     urlCount: urls.length,
@@ -204,6 +261,10 @@ async function collectFromUrls(urls: string[]): Promise<{ collected: number; dia
 
   for (const url of urls) {
     try {
+      observer.event({
+        stage: 'item_seen', reason: null, source: 'direct_url', item_url: url, title: null,
+        detail: { published_at: null },
+      })
       const { data: existing } = await supabase
         .from('raw_articles')
         .select('id')
@@ -212,6 +273,10 @@ async function collectFromUrls(urls: string[]): Promise<{ collected: number; dia
 
       if (existing) {
         diagnostics.duplicateSkippedCount++
+        observer.event({
+          stage: 'item_dup', reason: 'url_exists', source: 'direct_url', item_url: url,
+          title: null, detail: {},
+        })
         continue
       }
 
@@ -229,13 +294,27 @@ async function collectFromUrls(urls: string[]): Promise<{ collected: number; dia
       if (insertError) {
         diagnostics.failedItemCount++
         console.error(`Insert 실패: ${url}`, insertError)
+        observer.event({
+          stage: insertError.code === '23505' ? 'item_dup' : 'error',
+          reason: insertError.code === '23505' ? 'url_unique_conflict' : 'insert_error',
+          source: 'direct_url', item_url: url, title,
+          detail: { code: insertError.code ?? null, error: insertError.message },
+        })
       } else {
         diagnostics.insertedCount++
         collected++
+        observer.event({
+          stage: 'item_inserted', reason: 'ok', source: 'direct_url', item_url: url,
+          title, detail: { published_at: null },
+        })
       }
     } catch (err) {
       diagnostics.failedItemCount++
       console.error(`URL 추가 실패: ${url}`, err)
+      observer.event({
+        stage: 'error', reason: 'item_error', source: 'direct_url', item_url: url,
+        title: null, detail: { error: String(err) },
+      })
     }
   }
 
@@ -243,18 +322,28 @@ async function collectFromUrls(urls: string[]): Promise<{ collected: number; dia
 }
 
 export async function POST(req: NextRequest) {
+  const observer = new PipelineObserver('collect')
   try {
     const body = await req.json().catch(() => ({}))
     const { urls } = body
+
+    observer.event({
+      stage: 'run_start', reason: null, source: null, item_url: null, title: null,
+      detail: {
+        params: body,
+        model: null,
+        targets: urls && urls.length > 0 ? urls : ['active rss_sources'],
+      },
+    })
 
     console.log('수집 시작:', urls ? `URL ${urls.length}개` : 'RSS 모드')
 
     let result;
     if (urls && urls.length > 0) {
-      const { collected, diagnostics } = await collectFromUrls(urls)
+      const { collected, diagnostics } = await collectFromUrls(urls, observer)
       result = { collected, failures: [], diagnostics }
     } else {
-      result = await collectFromRSS()
+      result = await collectFromRSS(observer)
     }
 
     console.log('수집 완료:', result.collected)
@@ -267,6 +356,10 @@ export async function POST(req: NextRequest) {
       console.error('조회수 동기화 실패 (기사 수집 결과에는 영향 없음):', viewsError)
     }
 
+    observer.event({
+      stage: 'run_end', reason: 'ok', source: null, item_url: null, title: null,
+      detail: { collected: result.collected, failures: result.failures.length, diagnostics: result.diagnostics, views_synced: viewsSynced },
+    })
     return NextResponse.json({ 
       success: true, 
       collected: result.collected, 
@@ -276,6 +369,10 @@ export async function POST(req: NextRequest) {
     })
   } catch (err) {
     console.error('collect API 에러:', err)
+    observer.event({
+      stage: 'run_end', reason: 'error', source: null, item_url: null, title: null,
+      detail: { error: String(err) },
+    })
     return NextResponse.json({ success: false, error: String(err) }, { status: 500 })
   }
 }

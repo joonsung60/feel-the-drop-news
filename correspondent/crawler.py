@@ -17,14 +17,18 @@ import logging
 import os
 import re
 import sys
+import time
 from dataclasses import asdict, dataclass
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
+from html.parser import HTMLParser
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any, Callable, Iterable
 from urllib.parse import parse_qsl, urlencode, urljoin, urlsplit, urlunsplit
+from zoneinfo import ZoneInfo
 
 import requests
 from dotenv import load_dotenv
+from pipeline_observer import PipelineObserver
 
 # Keep Crawl4AI's database/cache inside the standalone process directory. This
 # also avoids assuming that the WSL home directory is writable.
@@ -75,11 +79,26 @@ MONTH_NAMES = (
     "january", "february", "march", "april", "may", "june",
     "july", "august", "september", "october", "november", "december",
 )
+MONTH_NUMBER = {
+    name: number
+    for number, name in enumerate(MONTH_NAMES, start=1)
+}
+MONTH_NUMBER.update({name[:3]: number for number, name in enumerate(MONTH_NAMES, start=1)})
+THINK_BLOCK = re.compile(r"<think\b[^>]*>.*?</think\s*>", re.IGNORECASE | re.DOTALL)
+DATE_PATTERNS = (
+    re.compile(r"(?<!\d)(?P<year>20\d{2})\s*[/.-]\s*(?P<month>\d{1,2})\s*[/.-]\s*(?P<day>\d{1,2})(?!\d)"),
+    re.compile(r"(?<!\d)(?P<year>20\d{2})\s*年\s*(?P<month>\d{1,2})\s*月\s*(?P<day>\d{1,2})\s*日?"),
+    re.compile(r"(?<!\d)(?P<month>\d{1,2})\s*月\s*(?P<day>\d{1,2})\s*日"),
+    re.compile(r"(?<!\d)(?P<month>\d{1,2})\s*[/.-]\s*(?P<day>\d{1,2})(?!\s*[/.-]\s*\d)"),
+    re.compile(r"(?<!\d)(?P<day>\d{1,2})(?:st|nd|rd|th)?\s+(?P<month_name>[A-Za-z]{3,9})(?:\s+(?P<year>20\d{2}))?", re.IGNORECASE),
+    re.compile(r"(?P<month_name>[A-Za-z]{3,9})\.?\s+(?P<day>\d{1,2})(?:st|nd|rd|th)?(?:,?\s+(?P<year>20\d{2}))?", re.IGNORECASE),
+)
 ITEM_PATH_HINT = re.compile(
     r"/(?:news|article|articles|event|events|party|schedule|lineup|posts?|topics?)/|"
     r"/\d{4}/(?:\d{1,2}/)?|/\d{4}-\d{1,2}-\d{1,2}(?:/|$)",
     re.IGNORECASE,
 )
+WORLDWIDE_NEWS_ITEM_PATH = re.compile(r"/worldwide/[^/]+/?$", re.IGNORECASE)
 SKIP_PATH = re.compile(
     r"\.(?:avif|css|gif|ico|jpe?g|js|json|mp3|mp4|pdf|png|svg|webp|xml)(?:$|\?)",
     re.IGNORECASE,
@@ -93,6 +112,7 @@ SKIP_ROUTE_SEGMENTS = {
     "about", "contact", "cookiepolicy", "create", "login", "privacy",
     "register", "search", "signup", "terms",
 }
+COLLECTION_SEGMENTS = {"article", "articles", "event", "events", "news", "post", "posts", "schedule"}
 
 
 @dataclass(frozen=True)
@@ -104,12 +124,14 @@ class Beat:
 
 @dataclass
 class BeatSummary:
+    fetch_mode: str | None = None
     fetched: int = 0
     harvested: int = 0
     gated_out: int = 0
     inserted: int = 0
-    skipped_dup: int = 0
+    dup: int = 0
     errors: int = 0
+    average_seconds_per_page: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -124,6 +146,102 @@ class RenderedPage:
     final_url: str
     markdown: str
     links: tuple[dict[str, Any], ...]
+    fetch_mode: str
+
+
+class PlainHtmlExtractor(HTMLParser):
+    """Small dependency-free HTML-to-text/link extractor for the plain path."""
+
+    BLOCK_TAGS = {"article", "br", "div", "h1", "h2", "h3", "h4", "li", "main", "p", "section"}
+    IGNORED_TAGS = {"noscript", "script", "style", "svg", "template"}
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.parts: list[str] = []
+        self.links: list[dict[str, Any]] = []
+        self.ignored_depth = 0
+        self.anchor: dict[str, Any] | None = None
+        self.json_ld_depth = 0
+        self.json_ld_parts: list[str] = []
+        self.json_ld_documents: list[str] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        tag = tag.lower()
+        values = dict(attrs)
+        if tag == "script" and str(values.get("type") or "").lower() == "application/ld+json":
+            self.json_ld_depth = 1
+            self.json_ld_parts = []
+            return
+        if tag in self.IGNORED_TAGS:
+            self.ignored_depth += 1
+            return
+        if self.ignored_depth:
+            return
+        if tag in self.BLOCK_TAGS:
+            self.parts.append("\n")
+        if tag == "a":
+            self.anchor = {"href": values.get("href"), "title": values.get("title"), "parts": []}
+
+    def handle_endtag(self, tag: str) -> None:
+        tag = tag.lower()
+        if tag == "script" and self.json_ld_depth:
+            self.json_ld_documents.append("".join(self.json_ld_parts))
+            self.json_ld_depth = 0
+            self.json_ld_parts = []
+            return
+        if tag in self.IGNORED_TAGS and self.ignored_depth:
+            self.ignored_depth -= 1
+            return
+        if self.ignored_depth:
+            return
+        if tag == "a" and self.anchor is not None:
+            text = " ".join(self.anchor.pop("parts")).strip()
+            context_before = " ".join("".join(self.parts).split()[-20:])
+            self.links.append({**self.anchor, "text": text, "context_before": context_before})
+            self.anchor = None
+        if tag in self.BLOCK_TAGS:
+            self.parts.append("\n")
+
+    def handle_data(self, data: str) -> None:
+        if self.json_ld_depth:
+            self.json_ld_parts.append(data)
+            return
+        if self.ignored_depth or not data.strip():
+            return
+        self.parts.append(data)
+        if self.anchor is not None:
+            self.anchor["parts"].append(data)
+
+    def result(self) -> tuple[str, tuple[dict[str, Any], ...]]:
+        text = re.sub(r"[ \t]+", " ", "".join(self.parts))
+        text = re.sub(r"\n\s*\n+", "\n\n", text).strip()
+        structured_dates: dict[str, str] = {}
+
+        def collect(value: Any) -> None:
+            if isinstance(value, list):
+                for child in value:
+                    collect(child)
+            elif isinstance(value, dict):
+                item_url = value.get("url")
+                start_date = value.get("startDate") or value.get("datePublished")
+                if isinstance(item_url, str) and isinstance(start_date, str):
+                    structured_dates[item_url.rstrip("/")] = start_date
+                for child in value.values():
+                    if isinstance(child, (dict, list)):
+                        collect(child)
+
+        for document in self.json_ld_documents:
+            try:
+                collect(json.loads(document))
+            except json.JSONDecodeError:
+                continue
+        for link in self.links:
+            href = link.get("href")
+            if isinstance(href, str):
+                structured_date = structured_dates.get(href.rstrip("/"))
+                if structured_date:
+                    link["structured_date"] = structured_date
+        return text, tuple(self.links)
 
 
 def utc_now() -> str:
@@ -133,11 +251,27 @@ def utc_now() -> str:
 def load_config(path: Path) -> dict[str, Any]:
     with path.open(encoding="utf-8") as handle:
         config = json.load(handle)
-    required = {"tracking_query_denylist", "max_index_items", "crawl_timeout_ms",
-                "ollama_timeout_seconds", "markdown_max_chars", "content_stop_markers"}
+    required = {
+        "tracking_query_denylist", "item_url_exclude_patterns",
+        "news_beats", "news_max_age_days", "max_index_items", "crawl_timeout_ms",
+        "plain_http_timeout_seconds", "plain_text_min_chars", "plain_http_user_agent",
+        "ollama_timeout_seconds", "markdown_max_chars", "content_stop_markers",
+    }
     missing = sorted(required - config.keys())
     if missing:
         raise ValueError(f"Missing config keys: {', '.join(missing)}")
+    for entry in config["item_url_exclude_patterns"]:
+        if not isinstance(entry, dict) or not isinstance(entry.get("reason"), str):
+            raise ValueError("item_url_exclude_patterns entries require a string reason")
+        if not isinstance(entry.get("pattern"), str):
+            raise ValueError("item_url_exclude_patterns entries require a string pattern")
+        re.compile(entry["pattern"])
+    if not isinstance(config["news_beats"], list) or not all(
+        isinstance(name, str) for name in config["news_beats"]
+    ):
+        raise ValueError("news_beats must be a list of strings")
+    if not isinstance(config["news_max_age_days"], int) or config["news_max_age_days"] < 0:
+        raise ValueError("news_max_age_days must be a non-negative integer")
     return config
 
 
@@ -220,7 +354,9 @@ def match_entities(headline: str, summary: str, entities: Iterable[EntityEntry])
 
 
 def extract_json_array(raw: str) -> list[Any]:
-    text = raw.strip()
+    # qwen3-family models may wrap analysis in one or more <think> blocks.
+    # Remove only those tagged blocks before applying the strict array parser.
+    text = THINK_BLOCK.sub("", raw).strip()
     try:
         parsed = json.loads(text)
         if isinstance(parsed, list):
@@ -326,6 +462,10 @@ def date_supported_by_source(event_date: str, markdown: str) -> bool:
     """Reject synthesized dates unless the full date is evidenced in source text."""
     if not DATE.fullmatch(event_date):
         return False
+    try:
+        date.fromisoformat(event_date)
+    except ValueError:
+        return False
     year, month_text, day_text = event_date.split("-")
     month = int(month_text)
     day = int(day_text)
@@ -343,6 +483,7 @@ def date_supported_by_source(event_date: str, markdown: str) -> bool:
     named_patterns = (
         rf"(?:{month_name}|{short_name})\.?\s+{day}(?:st|nd|rd|th)?(?:,)?\s+{escaped_year}",
         rf"{day}(?:st|nd|rd|th)?\s+(?:{month_name}|{short_name})\.?\s+{escaped_year}",
+        rf"(?:{month_name}|{short_name})\.?\s+{day}(?:st|nd|rd|th)?\b[^\n]{{0,80}}\b{escaped_year}",
     )
     return any(re.search(pattern, lowered) for pattern in named_patterns)
 
@@ -372,7 +513,104 @@ def trim_markdown(markdown: str, stop_markers: Iterable[str], max_chars: int) ->
     return markdown[:end][:max_chars]
 
 
-def select_index_links(page: RenderedPage, max_items: int, denylist: Iterable[str]) -> list[str]:
+def infer_partial_date(month: int, day: int, today: date) -> date | None:
+    """Resolve a month/day near today, allowing listings that cross New Year."""
+    candidates: list[date] = []
+    for year in (today.year - 1, today.year, today.year + 1):
+        try:
+            candidates.append(date(year, month, day))
+        except ValueError:
+            continue
+    if not candidates:
+        return None
+    return min(candidates, key=lambda value: abs((value - today).days))
+
+
+def parse_listing_date(text: str, today: date) -> date | None:
+    normalized = re.sub(r"\s+", " ", text)
+    for pattern in DATE_PATTERNS:
+        match = pattern.search(normalized)
+        if not match:
+            continue
+        groups = match.groupdict()
+        month_name = (groups.get("month_name") or "").lower().rstrip(".")
+        month = MONTH_NUMBER.get(month_name) if month_name else int(groups["month"])
+        if month is None:
+            continue
+        day = int(groups["day"])
+        year_text = groups.get("year")
+        if year_text:
+            try:
+                return date(int(year_text), month, day)
+            except ValueError:
+                continue
+        inferred = infer_partial_date(month, day, today)
+        if inferred is not None:
+            return inferred
+    return None
+
+
+def is_news_collection(url: str) -> bool:
+    segments = {segment.lower() for segment in urlsplit(url).path.split("/") if segment}
+    return bool(segments & {"news", "article", "articles", "post", "posts", "topics"})
+
+
+def is_bare_collection_path(path: str) -> bool:
+    segments = [segment.lower() for segment in path.split("/") if segment]
+    return bool(segments) and segments[-1] in COLLECTION_SEGMENTS
+
+
+def select_collection_links(page: RenderedPage, denylist: Iterable[str]) -> list[str]:
+    base_host = host_key(page.final_url)
+    found: list[str] = []
+    for link in page.links:
+        href = link.get("href")
+        if not isinstance(href, str):
+            continue
+        absolute = normalize_url(urljoin(page.final_url, href), denylist)
+        parts = urlsplit(absolute)
+        if parts.scheme not in {"http", "https"} or host_key(absolute) != base_host:
+            continue
+        if is_bare_collection_path(parts.path):
+            without_fragment = urlunsplit((parts.scheme, parts.netloc, parts.path, parts.query, ""))
+            if without_fragment not in found:
+                found.append(without_fragment)
+    return found
+
+
+def excluded_item_url_reason(
+    url: str,
+    exclude_patterns: Iterable[dict[str, str]],
+) -> str | None:
+    for entry in exclude_patterns:
+        if re.search(entry["pattern"], url, re.IGNORECASE):
+            return entry["reason"]
+    return None
+
+
+def is_stale_news_event(
+    event_date: str | None,
+    today: date,
+    max_age_days: int,
+) -> bool:
+    if event_date is None:
+        return False
+    try:
+        parsed = date.fromisoformat(event_date)
+    except ValueError:
+        return False
+    return parsed < today - timedelta(days=max_age_days)
+
+
+def select_index_links(
+    page: RenderedPage,
+    max_items: int,
+    denylist: Iterable[str],
+    today: date | None = None,
+    selection_observer: Callable[[str, date | None, str, str], None] | None = None,
+    exclude_patterns: Iterable[dict[str, str]] = (),
+) -> list[str]:
+    today = today or datetime.now(ZoneInfo("Asia/Seoul")).date()
     base_host = host_key(page.final_url)
     base_normalized = normalize_url(page.final_url, denylist)
     base_parts = urlsplit(base_normalized)
@@ -383,7 +621,7 @@ def select_index_links(page: RenderedPage, max_items: int, denylist: Iterable[st
             marker_index = base_segments.index(marker)
             collection_prefix = "/" + "/".join(base_segments[:marker_index + 1])
             break
-    candidates: list[tuple[int, int, str]] = []
+    candidates: list[tuple[int, int, str, date | None]] = []
     seen: set[str] = set()
     for position, link in enumerate(page.links):
         href = link.get("href")
@@ -394,12 +632,21 @@ def select_index_links(page: RenderedPage, max_items: int, denylist: Iterable[st
         if parts.scheme not in {"http", "https"} or host_key(absolute) != base_host:
             continue
         without_fragment = urlunsplit((parts.scheme, parts.netloc, parts.path, parts.query, ""))
+        exclusion_reason = excluded_item_url_reason(without_fragment, exclude_patterns)
+        if exclusion_reason:
+            if selection_observer:
+                selection_observer(without_fragment, None, "excluded", exclusion_reason)
+            continue
         path_segments = [segment.lower() for segment in parts.path.split("/") if segment]
         if (
             parts.path.rstrip("/") == base_parts.path.rstrip("/")
-            or re.search(r"/\d{4}/\d{1,2}/?$", parts.path)
+            or is_bare_collection_path(parts.path)
             or any(segment in SKIP_ROUTE_SEGMENTS for segment in path_segments)
-            or (collection_prefix and not parts.path.lower().startswith(collection_prefix + "/"))
+            or (
+                collection_prefix
+                and not parts.path.lower().startswith(collection_prefix + "/")
+                and not WORLDWIDE_NEWS_ITEM_PATH.search(parts.path)
+            )
         ):
             continue
         if without_fragment in seen or SKIP_PATH.search(without_fragment):
@@ -409,16 +656,62 @@ def select_index_links(page: RenderedPage, max_items: int, denylist: Iterable[st
             continue
         seen.add(without_fragment)
         score = 0
-        if ITEM_PATH_HINT.search(parts.path + "/"):
+        if ITEM_PATH_HINT.search(parts.path + "/") or WORLDWIDE_NEWS_ITEM_PATH.search(parts.path):
             score += 5
         if len(text) >= 12:
             score += 2
         if len([part for part in parts.path.split("/") if part]) >= 2:
             score += 1
         if score >= 2:
-            candidates.append((-score, position, without_fragment))
-    candidates.sort()
-    return [url for _, _, url in candidates[:max_items]]
+            date_text = " ".join(
+                str(link.get(key) or "")
+                for key in ("structured_date", "href", "context_before", "text", "title")
+            )
+            candidates.append((-score, position, without_fragment, parse_listing_date(date_text, today)))
+
+    dated_count = sum(item_date is not None for _, _, _, item_date in candidates)
+    if dated_count == 0:
+        candidates.sort(key=lambda item: (item[0], item[1]))
+        logging.info("index date selection: no dates detected; preserving existing order")
+        selected_urls = [url for _, _, url, _ in candidates[:max_items]]
+        if selection_observer:
+            selected_set = set(selected_urls)
+            for _, _, url, item_date in candidates:
+                selection_observer(
+                    url, item_date, "unknown", "selected" if url in selected_set else "cap_exceeded",
+                )
+        return selected_urls
+
+    news_collection = is_news_collection(page.final_url)
+    future = sorted(
+        (item for item in candidates if item[3] is not None and item[3] >= today),
+        key=lambda item: (item[3], item[1]),
+    )
+    unknown = sorted((item for item in candidates if item[3] is None), key=lambda item: (item[0], item[1]))
+    past = sorted(
+        (item for item in candidates if item[3] is not None and item[3] < today),
+        key=lambda item: (-(item[3] - date.min).days, item[1]),
+    )
+    selected = [*future, *unknown, *(past if news_collection else [])][:max_items]
+    logging.info(
+        "index date selection: future=%d unknown=%d past=%d news_collection=%s selected=%d",
+        len(future), len(unknown), len(past), news_collection, len(selected),
+    )
+    selected_urls = [url for _, _, url, _ in selected]
+    if selection_observer:
+        selected_set = set(selected_urls)
+        for _, _, url, item_date in candidates:
+            classification = "unknown"
+            if item_date is not None:
+                classification = "future" if item_date >= today else "past"
+            if url in selected_set:
+                reason = "selected"
+            elif classification == "past" and not news_collection:
+                reason = "past_excluded"
+            else:
+                reason = "cap_exceeded"
+            selection_observer(url, item_date, classification, reason)
+    return selected_urls
 
 
 class SupabaseRest:
@@ -482,11 +775,18 @@ class SupabaseRest:
 
 
 class OllamaClient:
-    def __init__(self, base_url: str, model: str, timeout_seconds: int, raw_log: Path) -> None:
+    def __init__(
+        self,
+        base_url: str,
+        model: str,
+        timeout_seconds: int,
+        observer: PipelineObserver,
+    ) -> None:
         self.url = base_url.rstrip("/") + "/api/generate"
         self.model = model
         self.timeout_seconds = timeout_seconds
-        self.raw_log = raw_log
+        self.observer = observer
+        self.last_raw_path: str | None = None
 
     def harvest(self, markdown: str) -> list[dict[str, Any]]:
         response = requests.post(
@@ -502,13 +802,11 @@ class OllamaClient:
         )
         response.raise_for_status()
         raw = str(response.json().get("response") or "")
+        self.last_raw_path = self.observer.save_raw(raw)
         try:
             parsed = extract_json_array(raw)
             return [validate_harvest_item(item) for item in parsed]
         except (ValueError, json.JSONDecodeError):
-            self.raw_log.parent.mkdir(parents=True, exist_ok=True)
-            with self.raw_log.open("a", encoding="utf-8") as handle:
-                handle.write(json.dumps({"at": utc_now(), "raw": raw}, ensure_ascii=False) + "\n")
             raise
 
 
@@ -563,7 +861,59 @@ class Crawl4AIRenderer:
             links = tuple([*(raw_links.get("internal") or []), *(raw_links.get("external") or [])])
         else:
             links = tuple(raw_links)
-        return RenderedPage(url, final_url, markdown, links)
+        return RenderedPage(url, final_url, markdown, links, "browser")
+
+
+class HybridFetcher:
+    def __init__(self, renderer: Crawl4AIRenderer, config: dict[str, Any]) -> None:
+        self.renderer = renderer
+        self.timeout_seconds = int(config["plain_http_timeout_seconds"])
+        self.minimum_text_chars = int(config["plain_text_min_chars"])
+        self.user_agent = str(config["plain_http_user_agent"])
+
+    @staticmethod
+    def looks_js_dependent(html: str, text: str) -> bool:
+        lowered = html.lower()
+        signals = (
+            "enable javascript", "javascript is required", "please turn javascript on",
+            "__next_data__", "id=\"__nuxt\"", "data-reactroot",
+        )
+        return any(signal in lowered for signal in signals) and len(text) < 4000
+
+    def fetch_plain(self, url: str) -> RenderedPage:
+        response = requests.get(
+            url,
+            headers={
+                "User-Agent": self.user_agent,
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                "Accept-Language": "en-US,en;q=0.8,ko;q=0.6,ja;q=0.5",
+            },
+            timeout=self.timeout_seconds,
+            allow_redirects=True,
+        )
+        response.raise_for_status()
+        content_type = response.headers.get("content-type", "").lower()
+        if "html" not in content_type:
+            raise ValueError(f"plain response is not HTML: {content_type or 'unknown content-type'}")
+        extractor = PlainHtmlExtractor()
+        extractor.feed(response.text)
+        text, links = extractor.result()
+        if len(text) < self.minimum_text_chars:
+            raise ValueError(f"plain extracted text too short: {len(text)} < {self.minimum_text_chars}")
+        if self.looks_js_dependent(response.text, text):
+            raise ValueError("plain HTML appears to require JavaScript rendering")
+        return RenderedPage(url, response.url, text, links, "plain")
+
+    async def fetch(self, url: str, content_only: bool = False) -> RenderedPage:
+        try:
+            page = await asyncio.to_thread(self.fetch_plain, url)
+            logging.info("fetch mode=plain url=%s final_url=%s chars=%d", url, page.final_url, len(page.markdown))
+            return page
+        except Exception as error:
+            logging.info("plain fetch insufficient url=%s reason=%s; falling back to browser", url, error)
+        page = await self.renderer.render(url, content_only=content_only)
+        logging.info("fetch mode=browser url=%s final_url=%s chars=%d", url, page.final_url, len(page.markdown))
+        return page
 
 
 class CorrespondentCrawler:
@@ -571,19 +921,31 @@ class CorrespondentCrawler:
         self,
         database: SupabaseRest,
         ollama: OllamaClient,
-        renderer: Crawl4AIRenderer,
+        fetcher: HybridFetcher,
         entities: list[EntityEntry],
         config: dict[str, Any],
         dry_run: bool,
+        observer: PipelineObserver,
     ) -> None:
         self.database = database
         self.ollama = ollama
-        self.renderer = renderer
+        self.fetcher = fetcher
         self.entities = entities
         self.config = config
         self.dry_run = dry_run
+        self.observer = observer
         self.denylist = config["tracking_query_denylist"]
+        self.item_url_exclude_patterns = config["item_url_exclude_patterns"]
+        self.news_beats = set(config["news_beats"])
+        self.news_max_age_days = int(config["news_max_age_days"])
         self.seen_article_urls: set[str] = set()
+
+    @staticmethod
+    def record_fetch(summary: BeatSummary, page: RenderedPage) -> None:
+        if summary.fetch_mode is None:
+            summary.fetch_mode = page.fetch_mode
+        elif summary.fetch_mode != page.fetch_mode:
+            summary.fetch_mode = "mixed"
 
     async def mark_beat_finished(self, beat: Beat, summary: BeatSummary) -> None:
         if self.dry_run:
@@ -595,6 +957,7 @@ class CorrespondentCrawler:
             logging.error("[%s] last_crawled_at update failed: %s", beat.name, error)
 
     async def harvest_page(self, beat: Beat, page: RenderedPage, summary: BeatSummary) -> None:
+        rendered_raw_path = self.observer.save_raw(page.markdown)
         markdown = trim_markdown(
             page.markdown,
             self.config["content_stop_markers"],
@@ -605,6 +968,10 @@ class CorrespondentCrawler:
         except Exception as error:
             summary.errors += 1
             logging.error("[%s] harvest failed for %s: %s", beat.name, page.final_url, error)
+            self.observer.event(
+                "error", reason="harvest_error", source=beat.name, item_url=page.final_url,
+                detail={"error": str(error), "rendered_raw_path": rendered_raw_path},
+            )
             return
         if beat.crawl_mode == "index":
             items = select_index_harvest_item(items, page.final_url)
@@ -621,24 +988,83 @@ class CorrespondentCrawler:
                 item = {**item, "event_date": None}
             normalized_items.append(item)
         items = normalized_items
-        summary.harvested += len(items)
         if not items:
             summary.gated_out += 1
+            self.observer.event(
+                "gated_out", reason="not_news", source=beat.name, item_url=page.final_url,
+                detail={
+                    "entities_mentioned": [],
+                    "rendered_raw_path": rendered_raw_path,
+                    "llm_raw_path": self.ollama.last_raw_path,
+                },
+            )
             return
+        if beat.name in self.news_beats:
+            today = datetime.now(ZoneInfo("Asia/Seoul")).date()
+            cutoff = today - timedelta(days=self.news_max_age_days)
+            retained_items: list[dict[str, Any]] = []
+            for item in items:
+                event_date = item["event_date"]
+                if is_stale_news_event(event_date, today, self.news_max_age_days):
+                    summary.gated_out += 1
+                    logging.info(
+                        "[%s] gated out stale news (%s < %s): %s",
+                        beat.name, event_date, cutoff, item["headline_en"],
+                    )
+                    self.observer.event(
+                        "gated_out", reason="stale_news", source=beat.name,
+                        item_url=page.final_url, title=item["headline_en"],
+                        detail={
+                            "event_date": event_date,
+                            "cutoff_date": cutoff.isoformat(),
+                            "max_age_days": self.news_max_age_days,
+                            "entities_mentioned": item["entities_en"],
+                            "rendered_raw_path": rendered_raw_path,
+                            "llm_raw_path": self.ollama.last_raw_path,
+                        },
+                    )
+                    continue
+                retained_items.append(item)
+            items = retained_items
+            if not items:
+                return
+        summary.harvested += len(items)
         source_texts = source_texts_for_items(markdown, items) if len(items) > 1 else [markdown]
         base_url = normalize_url(page.final_url, self.denylist)
         for index, item in enumerate(items):
+            self.observer.event(
+                "harvested", reason="ok", source=beat.name, item_url=page.final_url,
+                title=item["headline_en"],
+                detail={
+                    "headline_en": item["headline_en"],
+                    "lang": item["source_lang"],
+                    "confidence": item["confidence"],
+                    "event_date": item["event_date"],
+                    "entities_mentioned": item["entities_en"],
+                    "rendered_raw_path": rendered_raw_path,
+                    "llm_raw_path": self.ollama.last_raw_path,
+                },
+            )
             matches = match_entities(item["headline_en"], item["summary_en"], self.entities)
             if not matches:
                 summary.gated_out += 1
                 logging.info("[%s] gated out (zero entities): %s", beat.name, item["headline_en"])
+                self.observer.event(
+                    "gated_out", reason="no_entity_match", source=beat.name,
+                    item_url=page.final_url, title=item["headline_en"],
+                    detail={"entities_mentioned": item["entities_en"]},
+                )
                 continue
             article_url = base_url
             if beat.crawl_mode == "page" and len(items) > 1:
                 article_url = f"{base_url}#ftd-{stable_text_hash(source_texts[index])}"
             if article_url in self.seen_article_urls:
-                summary.skipped_dup += 1
+                summary.dup += 1
                 logging.info("[%s] skipped duplicate URL within run: %s", beat.name, article_url)
+                self.observer.event(
+                    "dup", reason="url_seen_in_run", source=beat.name, item_url=article_url,
+                    title=item["headline_en"], detail={"entities_mentioned": item["entities_en"]},
+                )
                 continue
             self.seen_article_urls.add(article_url)
             payload = {
@@ -656,10 +1082,18 @@ class CorrespondentCrawler:
                 except Exception as error:
                     summary.errors += 1
                     logging.error("[%s] dedup check failed for %s: %s", beat.name, article_url, error)
+                    self.observer.event(
+                        "error", reason="dedup_check_error", source=beat.name,
+                        item_url=article_url, title=item["headline_en"], detail={"error": str(error)},
+                    )
                     continue
                 if exists:
-                    summary.skipped_dup += 1
+                    summary.dup += 1
                     logging.info("[%s] would skip duplicate: %s", beat.name, article_url)
+                    self.observer.event(
+                        "dup", reason="url_exists", source=beat.name, item_url=article_url,
+                        title=item["headline_en"], detail={"dry_run": True},
+                    )
                     continue
                 print(json.dumps({
                     "beat": beat.name,
@@ -668,52 +1102,137 @@ class CorrespondentCrawler:
                     "harvest": item,
                     "row": payload,
                 }, ensure_ascii=False))
+                self.observer.event(
+                    "inserted", reason="dry_run_would_insert", source=beat.name,
+                    item_url=article_url, title=item["headline_en"],
+                    detail={"dry_run": True, "matched_entities": matches},
+                )
                 continue
             try:
                 inserted = await asyncio.to_thread(self.database.insert_raw_article, payload)
             except Exception as error:
                 summary.errors += 1
                 logging.error("[%s] insert failed for %s: %s", beat.name, article_url, error)
+                self.observer.event(
+                    "error", reason="insert_error", source=beat.name, item_url=article_url,
+                    title=item["headline_en"], detail={"error": str(error)},
+                )
                 continue
             if inserted:
                 summary.inserted += 1
+                self.observer.event(
+                    "inserted", reason="ok", source=beat.name, item_url=article_url,
+                    title=item["headline_en"], detail={"matched_entities": matches},
+                )
             else:
-                summary.skipped_dup += 1
+                summary.dup += 1
+                self.observer.event(
+                    "dup", reason="url_unique_conflict", source=beat.name, item_url=article_url,
+                    title=item["headline_en"], detail={},
+                )
 
     async def run_beat(self, beat: Beat) -> BeatSummary:
         summary = BeatSummary()
+        elapsed_total = 0.0
+        timed_pages = 0
         logging.info("[%s] start mode=%s url=%s", beat.name, beat.crawl_mode, beat.url)
+        started = time.perf_counter()
         try:
-            landing = await self.renderer.render(beat.url, content_only=beat.crawl_mode == "page")
+            landing = await self.fetcher.fetch(beat.url, content_only=beat.crawl_mode == "page")
         except Exception as error:
+            summary.fetch_mode = "browser"
             summary.errors += 1
             logging.error("[%s] landing crawl failed: %s", beat.name, error)
+            self.observer.event(
+                "beat_start", reason="fetch_error", source=beat.name, item_url=beat.url,
+                detail={"url": beat.url, "crawl_mode": beat.crawl_mode, "fetch_mode": "browser", "error": str(error)},
+            )
             await self.mark_beat_finished(beat, summary)
             return summary
         summary.fetched += 1
+        self.record_fetch(summary, landing)
+        self.observer.event(
+            "beat_start", reason="ok", source=beat.name, item_url=beat.url,
+            detail={"url": beat.url, "crawl_mode": beat.crawl_mode, "fetch_mode": landing.fetch_mode},
+        )
 
         if beat.crawl_mode == "page":
+            self.observer.event(
+                "item_selected", reason="page_mode", source=beat.name, item_url=landing.final_url,
+                detail={"parsed_date": None, "date_class": "unknown", "selected": True},
+            )
             await self.harvest_page(beat, landing, summary)
+            elapsed_total += time.perf_counter() - started
+            timed_pages += 1
         else:
             item_urls = select_index_links(
                 landing,
                 int(self.config["max_index_items"]),
                 self.denylist,
+                selection_observer=lambda url, parsed_date, date_class, reason: self.observer.event(
+                    "item_selected", reason=reason, source=beat.name, item_url=url,
+                    detail={
+                        "parsed_date": parsed_date.isoformat() if parsed_date else None,
+                        "date_class": date_class,
+                        "selected": reason == "selected",
+                    },
+                ),
+                exclude_patterns=self.item_url_exclude_patterns,
             )
+            if not item_urls:
+                collection_links = select_collection_links(landing, self.denylist)
+                if collection_links:
+                    collection_url = collection_links[0]
+                    logging.info("[%s] expanding collection link %s", beat.name, collection_url)
+                    try:
+                        landing = await self.fetcher.fetch(collection_url)
+                    except Exception as error:
+                        summary.errors += 1
+                        logging.error("[%s] collection fetch failed for %s: %s", beat.name, collection_url, error)
+                    else:
+                        summary.fetched += 1
+                        self.record_fetch(summary, landing)
+                        item_urls = select_index_links(
+                            landing,
+                            int(self.config["max_index_items"]),
+                            self.denylist,
+                            selection_observer=lambda url, parsed_date, date_class, reason: self.observer.event(
+                                "item_selected", reason=reason, source=beat.name, item_url=url,
+                                detail={
+                                    "parsed_date": parsed_date.isoformat() if parsed_date else None,
+                                    "date_class": date_class,
+                                    "selected": reason == "selected",
+                                },
+                            ),
+                            exclude_patterns=self.item_url_exclude_patterns,
+                        )
             logging.info("[%s] selected %d item links", beat.name, len(item_urls))
             if not item_urls:
                 summary.errors += 1
                 logging.error("[%s] index produced no qualifying item links", beat.name)
             for item_url in item_urls:
+                started = time.perf_counter()
                 try:
-                    page = await self.renderer.render(item_url, content_only=True)
+                    page = await self.fetcher.fetch(item_url, content_only=True)
                 except Exception as error:
                     summary.errors += 1
                     logging.error("[%s] item crawl failed for %s: %s", beat.name, item_url, error)
+                    self.observer.event(
+                        "error", reason="item_fetch_error", source=beat.name,
+                        item_url=item_url, detail={"error": str(error)},
+                    )
                     continue
                 summary.fetched += 1
+                self.record_fetch(summary, page)
                 await self.harvest_page(beat, page, summary)
+                elapsed_total += time.perf_counter() - started
+                timed_pages += 1
 
+        summary.average_seconds_per_page = round(elapsed_total / timed_pages, 2) if timed_pages else 0.0
+        logging.info(
+            "[%s] fetch_mode=%s average_seconds_per_page=%.2f fetched=%d",
+            beat.name, summary.fetch_mode, summary.average_seconds_per_page, summary.fetched,
+        )
         await self.mark_beat_finished(beat, summary)
         return summary
 
@@ -724,7 +1243,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--execute", action="store_true", help="allow inserts and last_crawled_at updates")
     parser.add_argument("--beat", action="append", help="run only an exact beat name (repeatable)")
     parser.add_argument("--config", type=Path, default=Path(__file__).with_name("config.json"))
-    parser.add_argument("--model", default="gemma3:27b")
+    parser.add_argument("--model", help="override OLLAMA_CRAWLER_MODEL")
     parser.add_argument("--max-index-items", type=int)
     args = parser.parse_args()
     if args.dry_run == args.execute:
@@ -741,6 +1260,7 @@ async def async_main(args: argparse.Namespace) -> int:
         raise RuntimeError(f"Missing required environment variables: {', '.join(missing)}")
 
     config = load_config(args.config)
+    model = args.model or os.getenv("OLLAMA_CRAWLER_MODEL") or "gemma3:27b"
     if args.max_index_items is not None:
         if args.max_index_items < 1:
             raise ValueError("--max-index-items must be positive")
@@ -760,32 +1280,72 @@ async def async_main(args: argparse.Namespace) -> int:
     if not beats:
         raise RuntimeError("No active beats found")
 
+    observer = PipelineObserver("correspondent", root / "logs")
+    observer.event(
+        "run_start",
+        detail={
+            "params": {
+                "dry_run": args.dry_run,
+                "execute": args.execute,
+                "beat": args.beat,
+                "max_index_items": args.max_index_items,
+            },
+            "model": model,
+            "targets": [asdict(beat) for beat in beats],
+        },
+    )
+
     log_dir = Path(__file__).with_name("logs")
-    log_dir.mkdir(parents=True, exist_ok=True)
     run_stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    handlers: list[logging.Handler] = [logging.StreamHandler()]
+    try:
+        log_dir.mkdir(parents=True, exist_ok=True)
+        handlers.append(logging.FileHandler(log_dir / f"run-{run_stamp}.log"))
+    except Exception as error:
+        print(f"[correspondent] human-readable file logging unavailable: {error}", file=sys.stderr)
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s %(levelname)s %(message)s",
-        handlers=[logging.StreamHandler(), logging.FileHandler(log_dir / f"run-{run_stamp}.log")],
+        handlers=handlers,
     )
+    logging.info("crawler model=%s", model)
     ollama = OllamaClient(
         os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
-        args.model,
+        model,
         int(config["ollama_timeout_seconds"]),
-        log_dir / f"ollama-raw-{run_stamp}.jsonl",
+        observer,
     )
     summaries: dict[str, BeatSummary] = {}
-    async with Crawl4AIRenderer(int(config["crawl_timeout_ms"])) as renderer:
-        crawler = CorrespondentCrawler(database, ollama, renderer, entities, config, args.dry_run)
-        for beat in beats:
-            try:
-                summaries[beat.name] = await crawler.run_beat(beat)
-            except Exception as error:
-                logging.exception("[%s] unexpected beat failure: %s", beat.name, error)
-                summaries[beat.name] = BeatSummary(errors=1)
+    try:
+        async with Crawl4AIRenderer(int(config["crawl_timeout_ms"])) as renderer:
+            fetcher = HybridFetcher(renderer, config)
+            crawler = CorrespondentCrawler(
+                database, ollama, fetcher, entities, config, args.dry_run, observer,
+            )
+            for beat in beats:
+                try:
+                    summaries[beat.name] = await crawler.run_beat(beat)
+                except Exception as error:
+                    logging.exception("[%s] unexpected beat failure: %s", beat.name, error)
+                    observer.event(
+                        "error", reason="beat_error", source=beat.name,
+                        item_url=beat.url, detail={"error": str(error)},
+                    )
+                    summaries[beat.name] = BeatSummary(errors=1)
+    finally:
+        observer.event(
+            "run_end",
+            reason=(
+                "ok"
+                if len(summaries) == len(beats)
+                and all(summary.errors == 0 for summary in summaries.values())
+                else "error"
+            ),
+            detail={"dry_run": args.dry_run, "beats": {name: asdict(value) for name, value in summaries.items()}},
+        )
 
     result = {name: asdict(summary) for name, summary in summaries.items()}
-    print(json.dumps({"dry_run": args.dry_run, "beats": result}, ensure_ascii=False, indent=2))
+    print(json.dumps({"dry_run": args.dry_run, "model": model, "beats": result}, ensure_ascii=False, indent=2))
     return 0
 
 

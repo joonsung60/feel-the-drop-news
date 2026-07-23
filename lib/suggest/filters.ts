@@ -97,7 +97,8 @@ export async function loadExistingTopicKeys(): Promise<Set<string>> {
 }
 
 export async function filterDuplicateSuggestions(
-  suggestions: SuggestionWithArticles[]
+  suggestions: SuggestionWithArticles[],
+  onDropped?: (suggestion: SuggestionWithArticles, reason: 'duplicate_topic' | 'blocklist') => void,
 ): Promise<{ suggestions: SuggestionWithArticles[]; duplicateSkipCount: number }> {
   const existingTopicKeys = await loadExistingTopicKeys()
   const blockRules = await loadActiveBlockRules()
@@ -108,12 +109,14 @@ export async function filterDuplicateSuggestions(
     const topicKey = normalizeTopicKey(suggestion.topic)
     if (existingTopicKeys.has(topicKey)) {
       console.log(`skipped (duplicate): ${suggestion.topic}`)
+      onDropped?.(suggestion, 'duplicate_topic')
       duplicateSkipCount++
       continue
     }
 
     if (blockRules.some((rule) => matchesBlockRule(suggestion, rule))) {
       console.log(`skipped (blocked): ${suggestion.topic}`)
+      onDropped?.(suggestion, 'blocklist')
       continue
     }
 

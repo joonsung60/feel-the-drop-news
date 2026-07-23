@@ -93,27 +93,35 @@ export function findSurfaceInText(text: string, surface: string): boolean {
 export function buildEntityIndex(
   articles: RawArticle[],
   dict: EntityEntry[],
-): { articleEntities: Map<string, Set<string>>; entityArticles: Map<string, Set<string>> } {
+): {
+  articleEntities: Map<string, Set<string>>
+  articleMentions: Map<string, Set<string>>
+  entityArticles: Map<string, Set<string>>
+} {
   const articleEntities = new Map<string, Set<string>>()
+  const articleMentions = new Map<string, Set<string>>()
   const entityArticles = new Map<string, Set<string>>()
   for (const article of articles) {
     const haystack = `${article.title ?? ''}\n${(article.content ?? '').slice(0, ENTITY_HAYSTACK_CONTENT_LIMIT)}`.toLowerCase()
     const matched = new Set<string>()
+    const mentioned = new Set<string>()
     for (const entry of dict) {
       for (const surface of entry.surfaces) {
         if (findSurfaceInText(haystack, surface)) {
           matched.add(entry.canonical)
+          mentioned.add(surface)
           break
         }
       }
     }
     articleEntities.set(article.id, matched)
+    articleMentions.set(article.id, mentioned)
     for (const canonical of matched) {
       if (!entityArticles.has(canonical)) entityArticles.set(canonical, new Set())
       entityArticles.get(canonical)!.add(article.id)
     }
   }
-  return { articleEntities, entityArticles }
+  return { articleEntities, articleMentions, entityArticles }
 }
 
 const PAIR_SCORE_SHARED_ENTITIES_2 = 3

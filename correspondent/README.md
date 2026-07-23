@@ -19,8 +19,9 @@ TMPDIR=/tmp PLAYWRIGHT_BROWSERS_PATH="$PWD/correspondent/.playwright" \
   correspondent/.venv/bin/python -m playwright install chromium
 ```
 
-`.env.local`에 `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`,
-`OLLAMA_BASE_URL`이 있어야 한다. Ollama에는 `gemma3:27b` 모델이 준비되어야 한다.
+프로젝트 루트 `.env.local`에서 `NEXT_PUBLIC_SUPABASE_URL`,
+`SUPABASE_SERVICE_ROLE_KEY`, `OLLAMA_BASE_URL`을 읽는다. 크롤러 모델 우선순위는
+`--model` > `OLLAMA_CRAWLER_MODEL` > `gemma3:27b`이다.
 
 ## Run
 
@@ -38,5 +39,8 @@ correspondent/.venv/bin/python correspondent/crawler.py --dry-run --beat "EDC Ko
 ```
 
 실행 로그와 JSON이 아닌 Ollama 원문은 `correspondent/logs/`에 기록되며 Git에서
-제외된다. index beat는 `config.json`의 `max_index_items`만큼 최신성/상세 URL
-휴리스틱 상위 링크를 처리한다. 추적 파라미터 denylist도 같은 파일에서 관리한다.
+제외된다. 각 URL은 평문 HTTP를 먼저 시도하고 본문이 부족할 때만 브라우저로
+폴백한다. index beat는 링크 문맥의 날짜를 인식해 가까운 미래, 날짜 불명 순으로
+`config.json`의 `max_index_items`만큼 처리하며 이벤트형 목록의 과거 항목은 제외한다.
+날짜가 하나도 인식되지 않으면 기존 링크 순서를 유지한다. HTTP 본문 길이 임계값과
+추적 파라미터 denylist도 같은 파일에서 관리한다.

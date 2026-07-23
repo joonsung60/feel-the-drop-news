@@ -13,8 +13,36 @@
     "mc_eid",
     "spm"
   ],
-  "max_index_items": 20,
+  "item_url_exclude_patterns": [
+    {
+      "reason": "pagination_excluded",
+      "pattern": "(?:/page/\\d+/?$|/p/\\d+/?$|[?&](?:paged|page)=\\d+(?:&|$))"
+    },
+    {
+      "reason": "archive_excluded",
+      "pattern": "/(?:category|categories|tag|tags|archive|archives)(?:/|$)"
+    },
+    {
+      "reason": "archive_excluded",
+      "pattern": "/(?:19|20)\\d{2}[-/](?:0?[1-9]|1[0-2])(?:/(?:0?[1-9]|[12]\\d|3[01]))?/?$"
+    },
+    {
+      "reason": "collection_excluded",
+      "pattern": "/(?:news|articles?|events?|posts?|schedule)/?$"
+    }
+  ],
+  "news_beats": [
+    "DJ Mag Asia",
+    "Ultra Japan",
+    "Ultra Korea",
+    "VISLA FM"
+  ],
+  "news_max_age_days": 30,
+  "max_index_items": 4,
   "crawl_timeout_ms": 90000,
+  "plain_http_timeout_seconds": 30,
+  "plain_text_min_chars": 800,
+  "plain_http_user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
   "ollama_timeout_seconds": 300,
   "markdown_max_chars": 120000,
   "content_stop_markers": [
