@@ -21,6 +21,11 @@ from crawler import (
     trim_markdown,
     date_supported_by_source,
     stable_text_hash,
+    extract_page_image,
+    extract_page_published_at,
+    normalize_doc_type,
+    normalize_facts,
+    validate_harvest_item,
 )
 
 
@@ -77,6 +82,16 @@ class CrawlerTests(unittest.TestCase):
         )
         self.assertFalse(date_supported_by_source("2026-01-01", "World DJ Festival 2026"))
         self.assertFalse(date_supported_by_source("2026-13-40", "2026-13-40"))
+
+    def test_permalink_supplies_the_year_only_when_text_shows_month_and_day(self) -> None:
+        url = "https://www.womb.co.jp/event/2026/07/25/watermelon/"
+        self.assertTrue(date_supported_by_source("2026-07-25", "07/25 SAT WATERMELON", url))
+        self.assertTrue(date_supported_by_source("2026-07-25", "7月25日 開催", url))
+        # The permalink alone must never validate a date the page never prints.
+        self.assertFalse(date_supported_by_source("2026-07-25", "WATERMELON at WOMB", url))
+        # A different day in the permalink is not evidence either.
+        self.assertFalse(date_supported_by_source("2026-07-26", "07/26 SUN", url))
+        self.assertFalse(date_supported_by_source("2026-07-25", "07/25 SAT", ""))
 
     def test_index_links_exclude_listing_and_month_archives(self) -> None:
         page = RenderedPage(
@@ -284,6 +299,110 @@ class CrawlerTests(unittest.TestCase):
         parser.feed('''<script type="application/ld+json">{"@type":"Event","url":"https://example.com/events/show/","startDate":"2026-08-01T20:00:00+09:00"}</script><a href="https://example.com/events/show/">Show</a>''')
         _, links = parser.result()
         self.assertEqual(links[0]["structured_date"], "2026-08-01T20:00:00+09:00")
+
+    def test_og_image_wins_and_relative_paths_become_absolute(self) -> None:
+        html = '<meta property="og:image" content="/media/hero.jpg">' \
+               '<meta name="twitter:image" content="https://cdn.example/tw.jpg">' \
+               '<img src="/media/body.jpg" width="900" height="600">'
+        self.assertEqual(
+            extract_page_image(html, "https://club.example/events/show/"),
+            "https://club.example/media/hero.jpg",
+        )
+
+    def test_decorative_and_tiny_images_are_skipped_for_largest_body_image(self) -> None:
+        html = (
+            '<img src="/assets/site-logo.png" width="1200" height="1200">'
+            '<img src="/assets/photo-small.jpg" width="80" height="80">'
+            '<img src="/assets/flyer.jpg" width="640" height="960">'
+            '<img src="/assets/wide.jpg" width="400" height="300">'
+            '<img src="/assets/hero.svg" width="2000" height="2000">'
+        )
+        self.assertEqual(
+            extract_page_image(html, "https://club.example/e/1"),
+            "https://club.example/assets/flyer.jpg",
+        )
+
+    def test_twitter_image_used_when_og_absent(self) -> None:
+        html = '<meta name="twitter:image" content="https://cdn.example/tw.jpg">'
+        self.assertEqual(extract_page_image(html, "https://x.example/"), "https://cdn.example/tw.jpg")
+
+    def test_page_published_at_prefers_structured_data_and_returns_none_when_absent(self) -> None:
+        self.assertEqual(
+            extract_page_published_at(
+                '<script type="application/ld+json">'
+                '{"@type":"NewsArticle","datePublished":"2026-07-20T09:30:00+09:00"}</script>'
+            ),
+            "2026-07-20T09:30:00+09:00",
+        )
+        self.assertEqual(
+            extract_page_published_at('<meta property="article:published_time" content="2026-07-18">'),
+            "2026-07-18T00:00:00+00:00",
+        )
+        self.assertIsNone(extract_page_published_at("<html><body>no dates here</body></html>"))
+        # A bare <time> on an event page carries the event date, not a byline date.
+        self.assertIsNone(extract_page_published_at('<time datetime="2026-07-27T00:00:00.000Z"></time>'))
+        self.assertEqual(
+            extract_page_published_at('<time class="entry-date published" datetime="2026-07-05"></time>'),
+            "2026-07-05T00:00:00+00:00",
+        )
+        self.assertEqual(
+            extract_page_published_at('<time itemprop="datePublished" datetime="2026-07-06"></time>'),
+            "2026-07-06T00:00:00+00:00",
+        )
+
+    def test_doc_type_normalizes_and_rejects_unknown_values(self) -> None:
+        self.assertEqual(normalize_doc_type("Preview"), "preview")
+        self.assertEqual(normalize_doc_type("recap"), "recap")
+        self.assertIsNone(normalize_doc_type("announcement"))
+        self.assertIsNone(normalize_doc_type(None))
+
+    def test_facts_drop_blank_placeholder_and_unknown_keys(self) -> None:
+        self.assertEqual(
+            normalize_facts(
+                {
+                    "lineup": ["Skrillex", " Tiesto ", "", "TBA", "Skrillex"],
+                    "venue": "WOMB",
+                    "city": "",
+                    "open_time": "22:00",
+                    "close_time": "N/A",
+                    "ticket_price": 3500,
+                    "ticket_url": "/tickets/1",
+                    "promoter": "ignored",
+                },
+                "https://www.womb.co.jp/event/1",
+            ),
+            {
+                "lineup": ["Skrillex", "Tiesto"],
+                "venue": "WOMB",
+                "open_time": "22:00",
+                "ticket_price": "3500",
+                "ticket_url": "https://www.womb.co.jp/tickets/1",
+            },
+        )
+        self.assertIsNone(normalize_facts({"venue": "  "}))
+        self.assertIsNone(normalize_facts("not an object"))
+
+    def test_missing_or_malformed_new_fields_do_not_discard_the_item(self) -> None:
+        item = validate_harvest_item({"headline_en": "Show announced", "summary_en": "Details."})
+        self.assertIsNone(item["doc_type"])
+        self.assertIsNone(item["facts"])
+        self.assertIsNone(item["event_date"])
+        self.assertEqual(item["entities_en"], [])
+        self.assertEqual(item["image_urls"], [])
+        broken = validate_harvest_item({
+            "headline_en": "Show announced",
+            "summary_en": "Details.",
+            "doc_type": 7,
+            "facts": ["not", "an", "object"],
+            "event_date": "next friday",
+            "entities_en": "Skrillex",
+            "confidence": "high",
+        })
+        self.assertIsNone(broken["doc_type"])
+        self.assertIsNone(broken["facts"])
+        self.assertIsNone(broken["event_date"])
+        self.assertEqual(broken["entities_en"], ["Skrillex"])
+        self.assertEqual(broken["confidence"], 0.0)
 
     def test_config_requires_every_key(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

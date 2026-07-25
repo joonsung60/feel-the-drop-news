@@ -52,7 +52,32 @@ Output a JSON array. Each element is ONE distinct news item. Fields per item:
   entities_en   Array of names actually mentioned on the page (artists,
                 festivals, labels, venues, clubs), in standard English form.
   news_type     One of: festival_lineup, club_event, release, tour, award, other
-  event_date    The date the news refers to, as YYYY-MM-DD, or null.
+  event_date    The date the event is HELD or the music is RELEASED, as
+                YYYY-MM-DD, or null. If it runs over several days, use the
+                FIRST day. This is NOT the date the page was published.
+  doc_type      One of: preview, recap, report, or null.
+                  preview — the event or release has not happened yet
+                            (announcement, lineup reveal, ticket on-sale,
+                            upcoming schedule entry).
+                  recap   — the event is already over (review, report-back,
+                            photo recap, archive entry).
+                  report  — any other general news report.
+                Use null if the page does not let you tell.
+  facts         Object holding only facts printed literally on the page:
+                  lineup       Array of the acts actually BOOKED to perform —
+                               every DJ / live-act name printed on the bill,
+                               including ones you left out of summary_en. Do
+                               NOT list artists whose records are merely played
+                               or referenced, and do not list the venue.
+                  venue        Venue or club name.
+                  city         City name.
+                  open_time    Doors / 開場 time exactly as written, e.g. "22:00".
+                  close_time   Close / 終演 time exactly as written.
+                  ticket_price Ticket price exactly as written, e.g. "3500 JPY ADV".
+                  ticket_url   Ticket purchase URL.
+                OMIT any key the page does not state. Never emit an empty
+                string, "N/A", "TBA", "unknown", or a guessed value. If the
+                page states none of these, output {}.
   image_urls    Array of image URLs on the page belonging to this item. [] if none.
   source_lang   Language of the original page content: ko, ja, en, or other.
   confidence    0.0 to 1.0 — how confident you understood the page.
@@ -72,6 +97,13 @@ before or after."""
 
 NEWS_TYPES = {"festival_lineup", "club_event", "release", "tour", "award", "other"}
 SOURCE_LANGS = {"ko", "ja", "en", "other"}
+DOC_TYPES = {"preview", "recap", "report"}
+FACT_STRING_KEYS = ("venue", "city", "open_time", "close_time", "ticket_price", "ticket_url")
+# Values models emit instead of omitting a key. They carry no fact, so they are dropped.
+FACT_PLACEHOLDERS = {
+    "", "-", "--", "n/a", "na", "none", "null", "nil", "unknown", "undisclosed",
+    "tba", "tbd", "tbc", "미정", "미정입니다", "未定", "なし", "없음",
+}
 ASCII_ALNUM = re.compile(r"[a-z0-9]")
 WORD = re.compile(r"[a-z0-9]{2,}")
 DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
@@ -113,6 +145,27 @@ SKIP_ROUTE_SEGMENTS = {
     "register", "search", "signup", "terms",
 }
 COLLECTION_SEGMENTS = {"article", "articles", "event", "events", "news", "post", "posts", "schedule"}
+DECORATIVE_IMAGE = re.compile(
+    r"(?:^|[/_\-.])(?:logo|logos|icon|icons|favicon|sprite|sprites|avatar|placeholder|"
+    r"blank|spacer|pixel|watermark|loading|loader|arrow|btn|button|social|share|"
+    r"noimage|no-image|dummy|default-thumb)(?:[/_\-.]|$)",
+    re.IGNORECASE,
+)
+DECORATIVE_IMAGE_ATTR = re.compile(r"\b(?:logo|icon|sprite|avatar|favicon|badge)\b", re.IGNORECASE)
+NON_PHOTO_EXTENSION = re.compile(r"\.(?:svg|ico|gif)$", re.IGNORECASE)
+FILENAME_SIZE = re.compile(r"(?<!\d)(\d{2,4})x(\d{2,4})(?!\d)")
+SRCSET_DESCRIPTOR = re.compile(r"^(\d+)(w|x)$", re.IGNORECASE)
+# Smallest image we accept as an article photo when the markup declares a size.
+MIN_IMAGE_EDGE = 200
+PUBLISHED_META_KEYS = (
+    "article:published_time", "article:modified_time", "og:published_time", "og:updated_time",
+    "datepublished", "datemodified", "date", "pubdate", "publishdate", "publish_date",
+    "dc.date", "dc.date.issued", "dcterms.date", "dcterms.created",
+    "parsely-pub-date", "sailthru.date",
+)
+PUBLISHED_TIME_ATTR = re.compile(
+    r"(?:published|pubdate|post-date|posted|entry-date|article-date)", re.IGNORECASE,
+)
 
 
 @dataclass(frozen=True)
@@ -147,6 +200,9 @@ class RenderedPage:
     markdown: str
     links: tuple[dict[str, Any], ...]
     fetch_mode: str
+    # Raw HTML as already downloaded by the fetcher. Image and publication-date
+    # extraction read this; neither ever issues an additional HTTP request.
+    html: str = ""
 
 
 class PlainHtmlExtractor(HTMLParser):
@@ -242,6 +298,307 @@ class PlainHtmlExtractor(HTMLParser):
                 if structured_date:
                     link["structured_date"] = structured_date
         return text, tuple(self.links)
+
+
+class PageAssetExtractor(HTMLParser):
+    """Collect meta tags, images and JSON-LD from HTML the fetcher already has."""
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.meta: dict[str, str] = {}
+        self.images: list[dict[str, str | int]] = []
+        self.times: list[str] = []
+        self.json_ld_documents: list[str] = []
+        self._json_ld_depth = 0
+        self._json_ld_parts: list[str] = []
+        self._order = 0
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        tag = tag.lower()
+        values = {key.lower(): (value or "") for key, value in attrs}
+        if tag == "script" and values.get("type", "").strip().lower() == "application/ld+json":
+            self._json_ld_depth = 1
+            self._json_ld_parts = []
+            return
+        if tag == "meta":
+            key = (
+                values.get("property") or values.get("name") or values.get("itemprop") or ""
+            ).strip().lower()
+            content = values.get("content", "").strip()
+            if key and content:
+                self.meta.setdefault(key, content)
+        elif tag == "link":
+            rel = values.get("rel", "").strip().lower()
+            href = values.get("href", "").strip()
+            if rel == "image_src" and href:
+                self.meta.setdefault("link:image_src", href)
+        elif tag in {"img", "source"}:
+            self._order += 1
+            self.images.append({
+                "src": (
+                    values.get("src")
+                    or values.get("data-src")
+                    or values.get("data-lazy-src")
+                    or values.get("data-original")
+                    or ""
+                ).strip(),
+                "srcset": (values.get("srcset") or values.get("data-srcset") or "").strip(),
+                "width": values.get("width", "").strip(),
+                "height": values.get("height", "").strip(),
+                "attrs": " ".join(
+                    values.get(name, "") for name in ("class", "id", "alt", "role")
+                ),
+                "order": self._order,
+            })
+        elif tag == "time":
+            stamp = values.get("datetime", "").strip()
+            # A bare <time> on an event page holds the event date, not the
+            # publication date, so only explicitly labelled ones are kept.
+            labelled = (
+                "pubdate" in values
+                or values.get("itemprop", "").strip().lower() in {"datepublished", "datemodified"}
+                or PUBLISHED_TIME_ATTR.search(
+                    " ".join(values.get(name, "") for name in ("class", "id", "rel"))
+                )
+            )
+            if stamp and labelled:
+                self.times.append(stamp)
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag.lower() == "script" and self._json_ld_depth:
+            self.json_ld_documents.append("".join(self._json_ld_parts))
+            self._json_ld_depth = 0
+            self._json_ld_parts = []
+
+    def handle_data(self, data: str) -> None:
+        if self._json_ld_depth:
+            self._json_ld_parts.append(data)
+
+    def json_ld_values(self, keys: Iterable[str]) -> list[Any]:
+        """Depth-first collect of every value stored under any of `keys`."""
+        wanted = {key.lower() for key in keys}
+        found: list[Any] = []
+
+        def walk(node: Any) -> None:
+            if isinstance(node, list):
+                for child in node:
+                    walk(child)
+            elif isinstance(node, dict):
+                for key, value in node.items():
+                    if isinstance(key, str) and key.lower() in wanted:
+                        found.append(value)
+                    if isinstance(value, (dict, list)):
+                        walk(value)
+
+        for document in self.json_ld_documents:
+            try:
+                walk(json.loads(document))
+            except json.JSONDecodeError:
+                continue
+        return found
+
+
+def parse_page_html(html: str) -> PageAssetExtractor | None:
+    if not html or not html.strip():
+        return None
+    extractor = PageAssetExtractor()
+    try:
+        extractor.feed(html)
+    except Exception as error:  # Malformed markup must never abort a harvest.
+        logging.info("page asset parse degraded: %s", error)
+    return extractor
+
+
+def absolute_image_url(base_url: str, candidate: str) -> str | None:
+    candidate = (candidate or "").strip()
+    if not candidate or candidate.lower().startswith("data:"):
+        return None
+    absolute = urljoin(base_url, candidate)
+    parts = urlsplit(absolute)
+    if parts.scheme not in {"http", "https"} or not parts.netloc:
+        return None
+    return absolute
+
+
+def is_decorative_image(url: str) -> bool:
+    path = urlsplit(url).path
+    return bool(NON_PHOTO_EXTENSION.search(path) or DECORATIVE_IMAGE.search(path))
+
+
+def best_srcset_candidate(srcset: str) -> tuple[str | None, int]:
+    """Return the widest srcset entry and the width it declares (0 if unstated)."""
+    best_url: str | None = None
+    best_width = -1
+    for entry in srcset.split(","):
+        chunks = entry.strip().split()
+        if not chunks:
+            continue
+        descriptor = SRCSET_DESCRIPTOR.match(chunks[1]) if len(chunks) > 1 else None
+        # A "2x" density descriptor states no pixel width; treat it as unranked.
+        width = int(descriptor.group(1)) if descriptor and descriptor.group(2).lower() == "w" else 0
+        if width > best_width:
+            best_width = width
+            best_url = chunks[0]
+    return best_url, max(best_width, 0)
+
+
+def declared_dimensions(image: dict[str, Any], url: str) -> tuple[int, int]:
+    def as_pixels(value: Any) -> int:
+        digits = re.sub(r"[^0-9]", "", str(value or ""))
+        return int(digits) if digits else 0
+
+    width = as_pixels(image.get("width"))
+    height = as_pixels(image.get("height"))
+    if width and height:
+        return width, height
+    match = FILENAME_SIZE.search(urlsplit(url).path)
+    if match:
+        return int(match.group(1)), int(match.group(2))
+    return width, height
+
+
+def extract_page_image(html: str, base_url: str) -> str | None:
+    """og:image -> twitter:image -> JSON-LD image -> largest in-body photo."""
+    extractor = parse_page_html(html)
+    if extractor is None:
+        return None
+
+    for key in (
+        "og:image:secure_url", "og:image:url", "og:image",
+        "twitter:image", "twitter:image:src", "link:image_src",
+    ):
+        value = extractor.meta.get(key)
+        if not value:
+            continue
+        absolute = absolute_image_url(base_url, value)
+        if absolute and not is_decorative_image(absolute):
+            return absolute
+
+    for value in extractor.json_ld_values(["image", "thumbnailUrl"]):
+        candidates: list[Any] = value if isinstance(value, list) else [value]
+        for candidate in candidates:
+            if isinstance(candidate, dict):
+                candidate = candidate.get("url") or candidate.get("contentUrl")
+            if not isinstance(candidate, str):
+                continue
+            absolute = absolute_image_url(base_url, candidate)
+            if absolute and not is_decorative_image(absolute):
+                return absolute
+
+    best_url: str | None = None
+    best_rank: tuple[int, int] = (-1, 0)
+    for image in extractor.images:
+        source = str(image.get("src") or "")
+        srcset_area = 0
+        if image.get("srcset"):
+            candidate, width = best_srcset_candidate(str(image["srcset"]))
+            if candidate:
+                source = candidate
+                srcset_area = width * width
+        absolute = absolute_image_url(base_url, source)
+        if not absolute or is_decorative_image(absolute):
+            continue
+        if DECORATIVE_IMAGE_ATTR.search(str(image.get("attrs") or "")):
+            continue
+        width, height = declared_dimensions(image, absolute)
+        if width and height and (width < MIN_IMAGE_EDGE or height < MIN_IMAGE_EDGE):
+            continue
+        area = max(width * height, srcset_area)
+        # Ties (including "no size stated anywhere") fall back to document order.
+        rank = (area, -int(image.get("order") or 0))
+        if rank > best_rank:
+            best_rank = rank
+            best_url = absolute
+    return best_url
+
+
+def normalize_timestamp(value: Any) -> str | None:
+    if not isinstance(value, str):
+        return None
+    text = value.strip()
+    if not text:
+        return None
+    candidate = text.replace("Z", "+00:00").replace("z", "+00:00")
+    parsed: datetime | None = None
+    for attempt in (candidate, candidate.replace(" ", "T", 1), candidate[:10]):
+        try:
+            parsed = datetime.fromisoformat(attempt)
+            break
+        except ValueError:
+            continue
+    if parsed is None:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    if not 2000 <= parsed.year <= 2100:
+        return None
+    return parsed.isoformat()
+
+
+def extract_page_published_at(html: str) -> str | None:
+    """The date the page itself was published or updated. None when unstated."""
+    extractor = parse_page_html(html)
+    if extractor is None:
+        return None
+
+    for value in extractor.json_ld_values(["datePublished", "dateModified", "uploadDate"]):
+        stamp = normalize_timestamp(value)
+        if stamp:
+            return stamp
+    for key in PUBLISHED_META_KEYS:
+        stamp = normalize_timestamp(extractor.meta.get(key))
+        if stamp:
+            return stamp
+    for value in extractor.times:
+        stamp = normalize_timestamp(value)
+        if stamp:
+            return stamp
+    return None
+
+
+def normalize_doc_type(raw: Any) -> str | None:
+    if not isinstance(raw, str):
+        return None
+    value = raw.strip().lower()
+    return value if value in DOC_TYPES else None
+
+
+def normalize_facts(raw: Any, base_url: str | None = None) -> dict[str, Any] | None:
+    """Keep only stated values. Missing, blank and placeholder keys are dropped."""
+    if not isinstance(raw, dict):
+        return None
+    facts: dict[str, Any] = {}
+    lineup = raw.get("lineup")
+    if isinstance(lineup, str):
+        lineup = [lineup]
+    if isinstance(lineup, list):
+        names: list[str] = []
+        for value in lineup:
+            if isinstance(value, dict):
+                value = value.get("name")
+            if not isinstance(value, str):
+                continue
+            cleaned = value.strip()
+            if cleaned and cleaned.lower() not in FACT_PLACEHOLDERS and cleaned not in names:
+                names.append(cleaned)
+        if names:
+            facts["lineup"] = names
+    for key in FACT_STRING_KEYS:
+        value = raw.get(key)
+        if isinstance(value, (int, float)) and not isinstance(value, bool):
+            value = str(value)
+        if not isinstance(value, str):
+            continue
+        cleaned = value.strip()
+        if not cleaned or cleaned.lower() in FACT_PLACEHOLDERS:
+            continue
+        if key == "ticket_url":
+            if base_url:
+                cleaned = urljoin(base_url, cleaned)
+            if urlsplit(cleaned).scheme not in {"http", "https"}:
+                continue
+        facts[key] = cleaned
+    return facts or None
 
 
 def utc_now() -> str:
@@ -387,33 +744,39 @@ def validate_harvest_item(raw: Any) -> dict[str, Any]:
         raise ValueError("headline_en is empty")
     if not isinstance(summary, str) or not summary.strip():
         raise ValueError("summary_en is empty")
-    entities = raw.get("entities_en")
-    images = raw.get("image_urls")
-    if not isinstance(entities, list) or not all(isinstance(value, str) for value in entities):
-        raise ValueError("entities_en must be a string array")
-    if not isinstance(images, list) or not all(isinstance(value, str) for value in images):
-        raise ValueError("image_urls must be a string array")
+    # Only headline_en and summary_en decide whether the row exists at all.
+    # Every other field degrades to a safe default so one malformed or missing
+    # attribute never discards an otherwise usable news item.
+    def string_list(value: Any) -> list[str]:
+        if isinstance(value, str):
+            value = [value]
+        if not isinstance(value, list):
+            return []
+        return [entry.strip() for entry in value if isinstance(entry, str) and entry.strip()]
+
     event_date = raw.get("event_date")
-    if event_date is not None and (not isinstance(event_date, str) or not DATE.fullmatch(event_date)):
-        raise ValueError("event_date must be YYYY-MM-DD or null")
+    if not isinstance(event_date, str) or not DATE.fullmatch(event_date.strip()):
+        event_date = None
+    else:
+        event_date = event_date.strip()
     news_type = raw.get("news_type")
     source_lang = raw.get("source_lang")
     confidence = raw.get("confidence")
-    if news_type not in NEWS_TYPES:
-        raise ValueError("invalid news_type")
-    if source_lang not in SOURCE_LANGS:
-        raise ValueError("invalid source_lang")
-    if not isinstance(confidence, (int, float)) or isinstance(confidence, bool):
-        raise ValueError("confidence must be numeric")
     return {
         "headline_en": headline.strip(),
         "summary_en": summary.strip(),
-        "entities_en": entities,
-        "news_type": news_type,
+        "entities_en": string_list(raw.get("entities_en")),
+        "news_type": news_type if news_type in NEWS_TYPES else "other",
         "event_date": event_date,
-        "image_urls": images,
-        "source_lang": source_lang,
-        "confidence": float(confidence),
+        "doc_type": normalize_doc_type(raw.get("doc_type")),
+        "facts": normalize_facts(raw.get("facts")),
+        "image_urls": string_list(raw.get("image_urls")),
+        "source_lang": source_lang if source_lang in SOURCE_LANGS else "other",
+        "confidence": (
+            float(confidence)
+            if isinstance(confidence, (int, float)) and not isinstance(confidence, bool)
+            else 0.0
+        ),
     }
 
 
@@ -458,8 +821,14 @@ def source_texts_for_items(markdown: str, items: list[dict[str, Any]]) -> list[s
     return assigned
 
 
-def date_supported_by_source(event_date: str, markdown: str) -> bool:
-    """Reject synthesized dates unless the full date is evidenced in source text."""
+def date_supported_by_source(event_date: str, markdown: str, source_url: str = "") -> bool:
+    """Reject synthesized dates unless the full date is evidenced in source text.
+
+    Club calendars routinely print only "07/25 SAT" and carry the year in the
+    permalink (/event/2026/07/25/...). That pair is accepted, but the URL alone
+    never is — otherwise a news permalink's publication date would validate any
+    event date the model happened to echo back.
+    """
     if not DATE.fullmatch(event_date):
         return False
     try:
@@ -485,7 +854,19 @@ def date_supported_by_source(event_date: str, markdown: str) -> bool:
         rf"{day}(?:st|nd|rd|th)?\s+(?:{month_name}|{short_name})\.?\s+{escaped_year}",
         rf"(?:{month_name}|{short_name})\.?\s+{day}(?:st|nd|rd|th)?\b[^\n]{{0,80}}\b{escaped_year}",
     )
-    return any(re.search(pattern, lowered) for pattern in named_patterns)
+    if any(re.search(pattern, lowered) for pattern in named_patterns):
+        return True
+
+    url_path = urlsplit(source_url).path if source_url else ""
+    if not re.search(rf"(?<!\d){escaped_year}[-/]0?{month}[-/]0?{day}(?!\d)", url_path):
+        return False
+    yearless_patterns = (
+        rf"(?<!\d)0?{month}\s*[-/.]\s*0?{day}(?!\s*[-/.]?\s*\d)",
+        rf"(?<!\d)0?{month}\s*月\s*0?{day}\s*日",
+        rf"(?:{month_name}|{short_name})\.?\s+{day}(?:st|nd|rd|th)?(?!\d)",
+        rf"(?<!\d){day}(?:st|nd|rd|th)?\s+(?:{month_name}|{short_name})\b",
+    )
+    return any(re.search(pattern, lowered) for pattern in yearless_patterns)
 
 
 def select_index_harvest_item(items: list[dict[str, Any]], final_url: str) -> list[dict[str, Any]]:
@@ -787,6 +1168,7 @@ class OllamaClient:
         self.timeout_seconds = timeout_seconds
         self.observer = observer
         self.last_raw_path: str | None = None
+        self.last_dropped_items = 0
 
     def harvest(self, markdown: str) -> list[dict[str, Any]]:
         response = requests.post(
@@ -803,11 +1185,19 @@ class OllamaClient:
         response.raise_for_status()
         raw = str(response.json().get("response") or "")
         self.last_raw_path = self.observer.save_raw(raw)
-        try:
-            parsed = extract_json_array(raw)
-            return [validate_harvest_item(item) for item in parsed]
-        except (ValueError, json.JSONDecodeError):
-            raise
+        # A container-level parse failure is still fatal for the page, but one
+        # unusable element no longer takes its siblings down with it.
+        parsed = extract_json_array(raw)
+        items: list[dict[str, Any]] = []
+        dropped = 0
+        for entry in parsed:
+            try:
+                items.append(validate_harvest_item(entry))
+            except ValueError as error:
+                dropped += 1
+                logging.warning("dropped unusable harvest item: %s", error)
+        self.last_dropped_items = dropped
+        return items
 
 
 class Crawl4AIRenderer:
@@ -861,7 +1251,8 @@ class Crawl4AIRenderer:
             links = tuple([*(raw_links.get("internal") or []), *(raw_links.get("external") or [])])
         else:
             links = tuple(raw_links)
-        return RenderedPage(url, final_url, markdown, links, "browser")
+        html = str(getattr(result, "html", "") or getattr(result, "cleaned_html", "") or "")
+        return RenderedPage(url, final_url, markdown, links, "browser", html)
 
 
 class HybridFetcher:
@@ -902,7 +1293,7 @@ class HybridFetcher:
             raise ValueError(f"plain extracted text too short: {len(text)} < {self.minimum_text_chars}")
         if self.looks_js_dependent(response.text, text):
             raise ValueError("plain HTML appears to require JavaScript rendering")
-        return RenderedPage(url, response.url, text, links, "plain")
+        return RenderedPage(url, response.url, text, links, "plain", response.text)
 
     async def fetch(self, url: str, content_only: bool = False) -> RenderedPage:
         try:
@@ -978,7 +1369,7 @@ class CorrespondentCrawler:
         normalized_items: list[dict[str, Any]] = []
         for item in items:
             event_date = item["event_date"]
-            if event_date and not date_supported_by_source(event_date, markdown):
+            if event_date and not date_supported_by_source(event_date, markdown, page.final_url):
                 logging.warning(
                     "[%s] discarded unsupported event_date %s: %s",
                     beat.name,
@@ -1031,6 +1422,20 @@ class CorrespondentCrawler:
         summary.harvested += len(items)
         source_texts = source_texts_for_items(markdown, items) if len(items) > 1 else [markdown]
         base_url = normalize_url(page.final_url, self.denylist)
+        # Both derived from HTML the fetcher already downloaded — no extra requests.
+        page_published_at = extract_page_published_at(page.html)
+        page_image_url = extract_page_image(page.html, page.final_url)
+        if page_published_at is None:
+            logging.info("[%s] no page publication date on %s", beat.name, page.final_url)
+        if page_image_url is None:
+            logging.info("[%s] no page-level image on %s", beat.name, page.final_url)
+        missing_event_dates = [item["headline_en"] for item in items if not item["event_date"]]
+        if missing_event_dates:
+            logging.warning(
+                "[%s] event_date unresolved for %d/%d item(s) on %s: %s",
+                beat.name, len(missing_event_dates), len(items), page.final_url,
+                "; ".join(missing_event_dates),
+            )
         for index, item in enumerate(items):
             self.observer.event(
                 "harvested", reason="ok", source=beat.name, item_url=page.final_url,
@@ -1040,6 +1445,10 @@ class CorrespondentCrawler:
                     "lang": item["source_lang"],
                     "confidence": item["confidence"],
                     "event_date": item["event_date"],
+                    "doc_type": item["doc_type"],
+                    "facts": item["facts"],
+                    "page_published_at": page_published_at,
+                    "page_image_url": page_image_url,
                     "entities_mentioned": item["entities_en"],
                     "rendered_raw_path": rendered_raw_path,
                     "llm_raw_path": self.ollama.last_raw_path,
@@ -1067,12 +1476,30 @@ class CorrespondentCrawler:
                 )
                 continue
             self.seen_article_urls.add(article_url)
+            item_image_url = (
+                absolute_image_url(page.final_url, item["image_urls"][0])
+                if item["image_urls"]
+                else None
+            )
+            # One page carrying several items has one og:image, so a per-item
+            # image is the more specific answer there; otherwise HTML wins.
+            image_url = (
+                (item_image_url or page_image_url)
+                if len(items) > 1
+                else (page_image_url or item_image_url)
+            )
             payload = {
                 "title": item["headline_en"],
                 "content": item["summary_en"],
                 "url": article_url,
-                "image_url": urljoin(page.final_url, item["image_urls"][0]) if item["image_urls"] else None,
-                "published_at": item["event_date"] or utc_now(),
+                "image_url": image_url,
+                # published_at is the page's own publication date and nothing
+                # else; fetched_at already records when we collected it.
+                "published_at": page_published_at,
+                "event_date": item["event_date"],
+                "doc_type": item["doc_type"],
+                "facts": normalize_facts(item["facts"], page.final_url),
+                "origin": "correspondent",
                 "source_id": None,
                 "suggestion_state": "new",
             }

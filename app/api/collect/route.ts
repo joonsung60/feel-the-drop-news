@@ -203,6 +203,7 @@ async function collectFromRSS(observer: PipelineObserver): Promise<{ collected: 
           image_url: imageUrl,
           author: item.creator || null,
           published_at: publishedAt,
+          origin: 'rss',
         })
 
         if (insertError) {
@@ -289,6 +290,7 @@ async function collectFromUrls(urls: string[], observer: PipelineObserver): Prom
         url,
         image_url: imageUrl,
         published_at: new Date().toISOString(),
+        origin: 'url',
       })
 
       if (insertError) {
