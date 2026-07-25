@@ -10,7 +10,8 @@ import {
 } from '@/lib/suggest/types'
 import { SUGGEST_RESPONSE_FORMAT, SUGGEST_SYSTEM, buildClusterPrompt } from '@/lib/suggest/prompts'
 import { buildEntityIndex, loadEntityDictionary } from '@/lib/suggest/entity-index'
-import { chunkArticles, normalizeSuggestion, parseSuggestions, articleSnippet } from '@/lib/suggest/normalize'
+import { chunkArticles, normalizeSuggestion, parseSuggestions } from '@/lib/suggest/normalize'
+import { hasEventDateConflict, knownEventDates } from '@/lib/suggest/event-date'
 import { filterDuplicateSuggestions } from '@/lib/suggest/filters'
 import { mergeNormalizedSuggestions } from '@/lib/suggest/merge'
 import { rankAndTrim } from '@/lib/suggest/rank'
@@ -67,24 +68,13 @@ async function runLlmOnlyPath(
     stage: 'llm_input', reason: null, source: 'raw_articles', item_url: null, title: null,
     detail: { batch_index: 0, article_ids: rawArticles.map((article) => article.id) },
   })
-  const articlesText = rawArticles
-    .map((article) =>
-      [
-        `[${article.id}]`,
-        article.sourceName ? `매체: ${article.sourceName}` : null,
-        `제목: ${article.title}`,
-        `요약: ${articleSnippet(article) || '(본문 없음)'}`,
-      ].filter(Boolean).join('\n')
-    )
-    .join('\n---\n')
-
   const ollamaRes = await fetch(`${ollamaUrl}/api/generate`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model: suggestModel,
       system: SUGGEST_SYSTEM,
-      prompt: `다음 기사 목록(${rawArticles.length}개)을 분석해 토픽 그룹을 제안하세요.\n\n${articlesText}`,
+      prompt: buildClusterPrompt(rawArticles),
       format: SUGGEST_RESPONSE_FORMAT,
       stream: false,
     }),
@@ -111,7 +101,18 @@ async function runLlmOnlyPath(
   for (const suggestion of parsed.suggestions ?? []) {
     const normalized = normalizeSuggestion(suggestion, validIds, articleMeta, rawArticles)
     if (normalized) llmSuggestions.push(normalized)
-    else logSuggestionDropped(observer, suggestion, 'normalization_failed', { raw_path: rawPath })
+    else {
+      const articleIds = (Array.isArray(suggestion.articleIds) ? suggestion.articleIds : [])
+        .map((id) => String(id).trim())
+        .filter((id) => validIds.has(id))
+      const eventDates = knownEventDates(articleIds, rawArticles)
+      logSuggestionDropped(
+        observer,
+        suggestion,
+        hasEventDateConflict(articleIds, rawArticles) ? 'event_date_conflict' : 'normalization_failed',
+        { raw_path: rawPath, article_ids: articleIds, event_dates: eventDates },
+      )
+    }
   }
 
   if (llmSuggestions.length === 0) {
@@ -244,7 +245,7 @@ export async function POST(req: NextRequest) {
 
     const { data: articles, error } = await supabase
       .from('raw_articles')
-      .select('id, title, content, url, source_id, published_at')
+      .select('id, title, content, url, source_id, published_at, event_date')
       .or('suggestion_state.is.null,suggestion_state.eq.new')
       .order('published_at', { ascending: false })
       .limit(limit)
@@ -427,9 +428,18 @@ export async function POST(req: NextRequest) {
       for (const suggestion of suggestions) {
         const normalizedSuggestion = normalizeSuggestion(suggestion, validIds, articleMeta, rawArticles)
         if (normalizedSuggestion) normalized.push(normalizedSuggestion)
-        else logSuggestionDropped(observer, suggestion, 'normalization_failed', {
-          batch_index: batchIndex, raw_path: rawPath,
-        })
+        else {
+          const articleIds = (Array.isArray(suggestion.articleIds) ? suggestion.articleIds : [])
+            .map((id) => String(id).trim())
+            .filter((id) => validIds.has(id))
+          const eventDates = knownEventDates(articleIds, rawArticles)
+          logSuggestionDropped(
+            observer,
+            suggestion,
+            hasEventDateConflict(articleIds, rawArticles) ? 'event_date_conflict' : 'normalization_failed',
+            { batch_index: batchIndex, raw_path: rawPath, article_ids: articleIds, event_dates: eventDates },
+          )
+        }
       }
       console.log(`[batch ${batchIndex}] 종료: ${suggestions.length}개 제안 파싱 완료`)
     }

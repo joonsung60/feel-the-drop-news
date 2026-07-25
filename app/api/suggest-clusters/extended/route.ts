@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin'
 import { RawArticle, SuggestionWithArticles } from '@/lib/suggest/types'
 import { buildEntityIndex, loadEntityDictionary, buildPairClusters } from '@/lib/suggest/entity-index'
-import { articleSnippet, normalizeSuggestion } from '@/lib/suggest/normalize'
+import { normalizeSuggestion } from '@/lib/suggest/normalize'
 import { filterDuplicateSuggestions } from '@/lib/suggest/filters'
 import { attachSourceMeta, markRawArticlesSuggested } from '@/lib/suggest/db'
+import { buildSingleGroupPrompt } from '@/lib/suggest/prompts'
 
 const SUGGEST2_SYSTEM = `당신은 전세계 전자음악 씬 전반을 다루는 에디터입니다.
 주어진 기사들이 모두 "같은 사건/릴리즈/행사/인물에 대한 동일한 뉴스"를 다루는지 판단하세요.
@@ -23,25 +24,6 @@ const SUGGEST2_FORMAT = {
   required: ['approved', 'topic', 'keywords', 'reason']
 }
 
-function buildSingleGroupPrompt(batch: RawArticle[], entity: string): string {
-  const articlesText = batch
-    .map((article) =>
-      [
-        `[${article.id}]`,
-        article.sourceName ? `매체: ${article.sourceName}` : null,
-        `제목: ${article.title}`,
-        `본문: ${articleSnippet(article) || '(본문 없음)'}`,
-      ].filter(Boolean).join('\n')
-    )
-    .join('\n---\n')
-
-  return `다음은 엔터티 "${entity}"(으)로 묶인 기사 목록(${batch.length}개)입니다.
-이 기사들이 모두 정확히 동일한 단일 사건을 다루고 있는지 확인하세요.
-
-기사 목록:
-${articlesText}`
-}
-
 export async function POST(req: NextRequest) {
   const runBackground = async () => {
     try {
@@ -49,11 +31,16 @@ export async function POST(req: NextRequest) {
 
       const { data: articles, error } = await supabase
         .from('raw_articles')
-        .select('id, title, content, url, source_id, published_at')
+        .select('id, title, content, url, source_id, published_at, event_date')
         .or('suggestion_state.is.null,suggestion_state.eq.new')
         .order('published_at', { ascending: false })
 
-      if (error || !articles || articles.length === 0) {
+      if (error) {
+        console.error('[suggest-clusters/extended] raw_articles 조회 실패:', error.message)
+        return
+      }
+
+      if (!articles || articles.length === 0) {
         console.log('[suggest-clusters/extended] 처리할 기사가 없습니다.')
         return
       }

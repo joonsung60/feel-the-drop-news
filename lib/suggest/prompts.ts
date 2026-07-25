@@ -62,6 +62,7 @@ export function buildClusterPrompt(batch: RawArticle[]): string {
         `[${article.id}]`,
         article.sourceName ? `매체: ${article.sourceName}` : null,
         `제목: ${article.title}`,
+        `행사/발매일: ${article.event_date ?? '불명'}`,
         `본문: ${articleSnippet(article) || '(본문 없음)'}`,
       ].filter(Boolean).join('\n')
     )
@@ -72,9 +73,33 @@ export function buildClusterPrompt(batch: RawArticle[]): string {
 이 기사들을 읽고 같은 사건/릴리즈/행사/인물을 다루는 기사끼리 묶어서 토픽을 제안하세요.
 하나의 클러스터는 반드시 하나의 구체적 사건이어야 합니다.
 서로 다른 별개의 사건을 다루는 기사는 절대 같은 클러스터로 묶지 마세요.
+두 기사의 행사/발매일이 모두 알려져 있고 서로 다르면 절대 같은 클러스터로 묶지 마세요.
+행사/발매일이 불명인 기사는 제목과 본문을 이용해 기존 방식으로 판단하세요.
 여러 기사를 "음악산업", "페스티벌", "라이브 공연", "씬 동향" 같은 넓은 테마로 묶지 마세요.
 topic에는 구체적 고유명사나 작품명/행사명/제품명을 포함하세요.
 단독 기사도 한국어 EDM 기사로 쓸 만한 가치가 있으면 단독으로 제안하세요.
+
+기사 목록:
+${articlesText}`
+}
+
+export function buildSingleGroupPrompt(batch: RawArticle[], entity: string): string {
+  const articlesText = batch
+    .map((article) =>
+      [
+        `[${article.id}]`,
+        article.sourceName ? `매체: ${article.sourceName}` : null,
+        `제목: ${article.title}`,
+        `행사/발매일: ${article.event_date ?? '불명'}`,
+        `본문: ${articleSnippet(article) || '(본문 없음)'}`,
+      ].filter(Boolean).join('\n')
+    )
+    .join('\n---\n')
+
+  return `다음은 엔터티 "${entity}"(으)로 묶인 기사 목록(${batch.length}개)입니다.
+이 기사들이 모두 정확히 동일한 단일 사건을 다루고 있는지 확인하세요.
+두 기사의 행사/발매일이 모두 알려져 있고 서로 다르면 승인하지 마세요.
+행사/발매일이 불명인 기사는 제목과 본문을 이용해 기존 방식으로 판단하세요.
 
 기사 목록:
 ${articlesText}`

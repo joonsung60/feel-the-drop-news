@@ -1,5 +1,6 @@
 import { cleanArticleText } from '@/lib/article-extraction'
 import { MIN_COHESION_SCORE, RawArticle, Suggestion, SuggestionWithArticles } from './types'
+import { hasEventDateConflict } from './event-date'
 
 export const CATEGORY_KEYWORDS = new Set([
   'album', 'albums', 'club', 'clubs', 'dj', 'edm', 'festival', 'festivals', 'house',
@@ -188,6 +189,7 @@ export function normalizeSuggestion(
     || isSourceOrSeriesEntity(topic)
     || isLowSignalClusterText(topic)
     || articleIds.length < 1
+    || hasEventDateConflict(articleIds, rawArticles)
     || cohesionScore < MIN_COHESION_SCORE
   ) {
     return null

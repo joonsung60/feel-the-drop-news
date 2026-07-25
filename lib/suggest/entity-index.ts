@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { EntityDataset, EntityEntry, RawArticle } from './types'
+import { canMergeByEventDate } from './event-date'
 
 export const ENTITY_DICT_CANDIDATE_PATHS = [
   'lib/edm-entities-v2.json',
@@ -181,6 +182,7 @@ export function buildPairClusters(
       for (let j = i + 1; j < ids.length; j++) {
         const idA = ids[i]
         const idB = ids[j]
+        if (!canMergeByEventDate([idA], [idB], articlesMap)) continue
         
         let score = 0
         const entsA = articleEntities.get(idA) || new Set()

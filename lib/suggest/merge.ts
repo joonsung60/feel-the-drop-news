@@ -1,5 +1,6 @@
 import { RawArticle, SuggestionWithArticles } from './types'
 import { calculateCohesionScore } from './normalize'
+import { canMergeByEventDate } from './event-date'
 
 const MAX_MERGED_ARTICLES = 10
 const MAX_KEYWORDS = 6
@@ -51,6 +52,10 @@ function pairMergeScore(
   b: SuggestionWithArticles,
   articleById: Map<string, RawArticle>
 ): number | null {
+  if (!canMergeByEventDate(a.articleIds, b.articleIds, articleById)) {
+    return null
+  }
+
   const entitiesA = toKeySet(a.commonEntities)
   const entitiesB = toKeySet(b.commonEntities)
   const entityOverlap = countOverlap(entitiesA, entitiesB)

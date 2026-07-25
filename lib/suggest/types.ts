@@ -19,6 +19,7 @@ export type RawArticle = {
   source_id: string | number | null
   sourceName?: string
   published_at?: string | null
+  event_date?: string | null
 }
 
 export type SuggestionStatus = 'pending' | 'approved' | 'rejected' | 'published'
