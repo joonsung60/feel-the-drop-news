@@ -7897,6 +7897,34 @@
       "weight": 1.0,
       "region": "KR",
       "ko_source": null
+    },
+    {
+      "id": "artist_azikazin_magic_world",
+      "type": "artist",
+      "en": "Azikazin Magic World",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "C",
+      "weight": 1.0,
+      "region": "KR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_marchen_klub",
+      "type": "artist",
+      "en": "Märchen klub",
+      "aliases_en": [
+        "Marchen klub"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "C",
+      "weight": 1.0,
+      "region": "JP",
+      "ko_source": null
     }
   ]
 }
