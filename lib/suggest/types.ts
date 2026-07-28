@@ -56,6 +56,12 @@ export type TopicBlockRule = {
 export type EntityEntry = {
   canonical: string
   surfaces: string[]
+  contextualSurfaces?: Array<{
+    surface: string
+    beforeContexts: string[]
+    afterContexts: string[]
+    maxGapChars: number
+  }>
   weight: number
 }
 

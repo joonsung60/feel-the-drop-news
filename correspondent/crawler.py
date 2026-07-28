@@ -18,6 +18,7 @@ import os
 import re
 import sys
 import time
+import unicodedata
 from dataclasses import asdict, dataclass
 from datetime import date, datetime, timedelta, timezone
 from html.parser import HTMLParser
@@ -191,6 +192,18 @@ class BeatSummary:
 class EntityEntry:
     canonical: str
     surfaces: tuple[str, ...]
+    contextual_surfaces: tuple[
+        tuple[str, tuple[str, ...], tuple[str, ...], int],
+        ...
+    ] = ()
+
+
+@dataclass(frozen=True)
+class EventDateDecision:
+    event_date: str | None
+    reason: str
+    evidence: str | None
+    candidates: tuple[str, ...]
 
 
 @dataclass(frozen=True)
@@ -279,8 +292,14 @@ class PlainHtmlExtractor(HTMLParser):
                     collect(child)
             elif isinstance(value, dict):
                 item_url = value.get("url")
-                start_date = value.get("startDate") or value.get("datePublished")
-                if isinstance(item_url, str) and isinstance(start_date, str):
+                raw_type = value.get("@type")
+                types = raw_type if isinstance(raw_type, list) else [raw_type]
+                is_event = any(
+                    isinstance(candidate, str) and candidate.lower() == "event"
+                    for candidate in types
+                )
+                start_date = value.get("startDate")
+                if is_event and isinstance(item_url, str) and isinstance(start_date, str):
                     structured_dates[item_url.rstrip("/")] = start_date
                 for child in value.values():
                     if isinstance(child, (dict, list)):
@@ -664,22 +683,61 @@ def stable_text_hash(text: str) -> str:
     return hashlib.sha256(normalized.encode("utf-8")).hexdigest()[:16]
 
 
-def load_entities(path: Path) -> list[EntityEntry]:
+def load_entities(path: Path, policy_path: Path | None = None) -> list[EntityEntry]:
     with path.open(encoding="utf-8") as handle:
         data = json.load(handle)
+    resolved_policy_path = policy_path or path.with_name("entity-surface-policy.json")
+    with resolved_policy_path.open(encoding="utf-8") as handle:
+        policy = json.load(handle)
+    policy_entities = policy.get("entities", {}) if isinstance(policy, dict) else {}
     entries: list[EntityEntry] = []
     for raw in data.get("entities", []):
         name = raw.get("en")
         if not isinstance(name, str) or not name:
             continue
+        entity_policy = policy_entities.get(name, {}) if isinstance(policy_entities, dict) else {}
+        contextual_policy = (
+            entity_policy.get("contextual_surfaces", {})
+            if isinstance(entity_policy, dict)
+            else {}
+        )
+        contextual_keys = {
+            value.lower()
+            for value in contextual_policy
+            if isinstance(value, str)
+        }
         raw_surfaces = [name, *(raw.get("aliases_en") or [])]
         surfaces = tuple(
             value.lower()
             for value in raw_surfaces
-            if isinstance(value, str) and len(value) >= 2
+            if isinstance(value, str)
+            and len(value) >= 2
+            and value.lower() not in contextual_keys
         )
-        if surfaces:
-            entries.append(EntityEntry(canonical=name, surfaces=surfaces))
+        contextual_surfaces = tuple(
+            (
+                surface.lower(),
+                tuple(
+                    context.lower()
+                    for context in rule.get("before", [])
+                    if isinstance(context, str)
+                ),
+                tuple(
+                    context.lower()
+                    for context in rule.get("after", [])
+                    if isinstance(context, str)
+                ),
+                int(rule.get("max_gap_chars", 12)),
+            )
+            for surface, rule in contextual_policy.items()
+            if isinstance(surface, str) and isinstance(rule, dict)
+        )
+        if surfaces or contextual_surfaces:
+            entries.append(EntityEntry(
+                canonical=name,
+                surfaces=surfaces,
+                contextual_surfaces=contextual_surfaces,
+            ))
     return entries
 
 
@@ -700,12 +758,87 @@ def find_surface_in_text(text: str, surface: str) -> bool:
         start = index + 1
 
 
+def find_contextual_surface_in_text(
+    text: str,
+    surface: str,
+    before_contexts: Iterable[str],
+    after_contexts: Iterable[str],
+    max_gap_chars: int,
+) -> bool:
+    def has_boundary(index: int, value: str) -> bool:
+        before = " " if index == 0 else text[index - 1]
+        end = index + len(value)
+        after = " " if end >= len(text) else text[end]
+        return not ASCII_ALNUM.search(before) and not ASCII_ALNUM.search(after)
+
+    def allowed_gap(gap: str) -> bool:
+        if len(gap) > max_gap_chars:
+            return False
+        without_article = re.sub(r"\bthe\b", "", gap)
+        return bool(re.fullmatch(r"""[\s,.:;()'"\[\]\-–—]*""", without_article))
+
+    def context_matches(
+        contexts: Iterable[str],
+        context_before_surface: bool,
+        surface_index: int,
+        surface_end: int,
+    ) -> bool:
+        for context in contexts:
+            context_index = text.find(context)
+            while context_index >= 0:
+                if has_boundary(context_index, context):
+                    context_end = context_index + len(context)
+                    gap = (
+                        text[context_end:surface_index]
+                        if context_before_surface
+                        else text[surface_end:context_index]
+                    )
+                    correctly_ordered = (
+                        context_end <= surface_index
+                        if context_before_surface
+                        else context_index >= surface_end
+                    )
+                    if correctly_ordered and allowed_gap(gap):
+                        return True
+                context_index = text.find(context, context_index + 1)
+        return False
+
+    start = 0
+    while True:
+        index = text.find(surface, start)
+        if index < 0:
+            return False
+        end = index + len(surface)
+        if has_boundary(index, surface) and (
+            context_matches(before_contexts, True, index, end)
+            or context_matches(after_contexts, False, index, end)
+        ):
+            return True
+        start = index + 1
+
+
 def match_entities(headline: str, summary: str, entities: Iterable[EntityEntry]) -> list[str]:
     # The TS matcher limits raw article content to 500 characters.
     haystack = f"{headline}\n{summary[:500]}".lower()
     matches: list[str] = []
     for entry in entities:
-        if any(find_surface_in_text(haystack, surface) for surface in entry.surfaces):
+        strong_match = any(find_surface_in_text(haystack, surface) for surface in entry.surfaces)
+        contextual_match = any(
+            find_contextual_surface_in_text(
+                haystack,
+                surface,
+                before_contexts,
+                after_contexts,
+                max_gap_chars,
+            )
+            for (
+                surface,
+                before_contexts,
+                after_contexts,
+                max_gap_chars,
+            ) in entry.contextual_surfaces
+        )
+        if strong_match or contextual_match:
             matches.append(entry.canonical)
     return matches
 
@@ -821,52 +954,224 @@ def source_texts_for_items(markdown: str, items: list[dict[str, Any]]) -> list[s
     return assigned
 
 
-def date_supported_by_source(event_date: str, markdown: str, source_url: str = "") -> bool:
-    """Reject synthesized dates unless the full date is evidenced in source text.
+def normalize_date_text(value: str) -> str:
+    """Normalize full-width and compatibility/decorative Unicode characters."""
+    return unicodedata.normalize("NFKC", value)
 
-    Club calendars routinely print only "07/25 SAT" and carry the year in the
-    permalink (/event/2026/07/25/...). That pair is accepted, but the URL alone
-    never is — otherwise a news permalink's publication date would validate any
-    event date the model happened to echo back.
-    """
-    if not DATE.fullmatch(event_date):
-        return False
+
+def _iso_date(year: int, month: int, day: int) -> str | None:
     try:
-        date.fromisoformat(event_date)
+        return date(year, month, day).isoformat()
     except ValueError:
-        return False
-    year, month_text, day_text = event_date.split("-")
-    month = int(month_text)
-    day = int(day_text)
-    escaped_year = re.escape(year)
-    numeric_patterns = (
-        rf"{escaped_year}\s*[-/.]\s*0?{month}\s*[-/.]\s*0?{day}(?!\d)",
-        rf"{escaped_year}\s*年\s*0?{month}\s*月\s*0?{day}\s*日",
-        rf"(?<!\d)0?{month}\s*[-/.]\s*0?{day}\s*[-/.]\s*{escaped_year}",
+        return None
+
+
+def _month_number(value: str) -> int | None:
+    return MONTH_NUMBER.get(value.lower().rstrip("."))
+
+
+def extract_explicit_event_dates(text: str) -> list[str]:
+    """Extract fully stated source dates, preserving first-day range semantics."""
+    normalized = normalize_date_text(text)
+    candidates: list[str] = []
+    ignored_spans: list[tuple[int, int]] = []
+
+    def add(candidate: str | None) -> None:
+        if candidate and candidate not in candidates:
+            candidates.append(candidate)
+
+    range_patterns = (
+        re.compile(
+            r"(?P<year>20\d{2})\s*[年년]\s*(?P<month>\d{1,2})\s*[月월]\s*"
+            r"(?P<day>\d{1,2})\s*[日일]?\s*(?:[-–—~〜～]|부터|から)\s*"
+            r"(?:20\d{2}\s*[年년]\s*)?\d{1,2}\s*[月월]\s*\d{1,2}\s*[日일]?"
+        ),
+        re.compile(
+            r"(?:(?:mon|tue|wed|thu|fri|sat|sun)[a-z]*,?\s+)?"
+            r"(?P<month_name>[A-Za-z]{3,9})\.?\s+(?P<day>\d{1,2})(?:st|nd|rd|th)?"
+            r"(?:,?\s+(?P<year>20\d{2}))?\s*[-–—~]\s*"
+            r"(?:(?:mon|tue|wed|thu|fri|sat|sun)[a-z]*,?\s+)?"
+            r"[A-Za-z]{3,9}\.?\s+\d{1,2}(?:st|nd|rd|th)?,?\s+(?P<end_year>20\d{2})",
+            re.IGNORECASE,
+        ),
+        re.compile(
+            r"(?P<day>\d{1,2})(?:st|nd|rd|th)?\s+"
+            r"(?P<month_name>[A-Za-z]{3,9})\.?\s*(?P<year>20\d{2})?\s*[-–—~]\s*"
+            r"\d{1,2}(?:st|nd|rd|th)?\s+[A-Za-z]{3,9}\.?\s+(?P<end_year>20\d{2})",
+            re.IGNORECASE,
+        ),
     )
-    lowered = markdown.lower()
-    if any(re.search(pattern, lowered) for pattern in numeric_patterns):
-        return True
+    for pattern in range_patterns:
+        for match in pattern.finditer(normalized):
+            year = int(match.groupdict().get("year") or match.groupdict().get("end_year") or 0)
+            month_text = match.groupdict().get("month")
+            month = int(month_text) if month_text else _month_number(match.group("month_name"))
+            if month:
+                add(_iso_date(year, month, int(match.group("day"))))
+                ignored_spans.append(match.span())
+
+    patterns = (
+        re.compile(r"(?<!\d)(?P<year>20\d{2})\s*[年년]\s*(?P<month>\d{1,2})\s*[月월]\s*(?P<day>\d{1,2})\s*[日일]?"),
+        re.compile(r"(?<!\d)(?P<year>20\d{2})\s*[/.-]\s*(?P<month>\d{1,2})\s*[/.-]\s*(?P<day>\d{1,2})(?!\d)"),
+        re.compile(r"(?:[月火水木金土日]\s*)?(?P<day>\d{1,2})\s+(?P<month>\d{1,2})\s*月\s+(?P<year>20\d{2})"),
+        re.compile(r"(?P<day>\d{1,2})(?:st|nd|rd|th)?\s+(?P<month_name>[A-Za-z]{3,9})\.?\s+(?P<year>20\d{2})", re.IGNORECASE),
+        re.compile(r"(?P<month_name>[A-Za-z]{3,9})\.?\s+(?P<day>\d{1,2})(?:st|nd|rd|th)?,?\s+(?P<year>20\d{2})", re.IGNORECASE),
+    )
+    for pattern in patterns:
+        for match in pattern.finditer(normalized):
+            if any(start <= match.start() and match.end() <= end for start, end in ignored_spans):
+                continue
+            month_text = match.groupdict().get("month")
+            month = int(month_text) if month_text else _month_number(match.group("month_name"))
+            if month:
+                add(_iso_date(int(match.group("year")), month, int(match.group("day"))))
+    return candidates
+
+
+def extract_event_json_ld_dates(html: str) -> list[str]:
+    """Read startDate only from JSON-LD objects explicitly typed as Event."""
+    extractor = parse_page_html(html)
+    if extractor is None:
+        return []
+    candidates: list[str] = []
+
+    def walk(node: Any) -> None:
+        if isinstance(node, list):
+            for child in node:
+                walk(child)
+            return
+        if not isinstance(node, dict):
+            return
+        raw_type = node.get("@type")
+        types = raw_type if isinstance(raw_type, list) else [raw_type]
+        if any(isinstance(value, str) and value.lower() == "event" for value in types):
+            start_date = node.get("startDate")
+            if isinstance(start_date, str):
+                parsed = extract_explicit_event_dates(start_date)
+                if not parsed:
+                    match = re.match(r"^\s*(20\d{2})-(\d{2})-(\d{2})", normalize_date_text(start_date))
+                    if match:
+                        candidate = _iso_date(*(int(value) for value in match.groups()))
+                        parsed = [candidate] if candidate else []
+                for candidate in parsed:
+                    if candidate not in candidates:
+                        candidates.append(candidate)
+        for child in node.values():
+            if isinstance(child, (dict, list)):
+                walk(child)
+
+    for document in extractor.json_ld_documents:
+        try:
+            walk(json.loads(document))
+        except json.JSONDecodeError:
+            continue
+    return candidates
+
+
+def extract_url_event_date(source_url: str) -> str | None:
+    path = normalize_date_text(urlsplit(source_url).path)
+    match = re.search(r"(?<!\d)(20\d{2})[-/](\d{1,2})[-/](\d{1,2})(?!\d)", path)
+    return _iso_date(*(int(value) for value in match.groups())) if match else None
+
+
+def source_contains_month_day(text: str, month: int, day: int) -> bool:
+    normalized = normalize_date_text(text).lower()
     month_name = MONTH_NAMES[month - 1]
     short_name = month_name[:3]
-    named_patterns = (
-        rf"(?:{month_name}|{short_name})\.?\s+{day}(?:st|nd|rd|th)?(?:,)?\s+{escaped_year}",
-        rf"{day}(?:st|nd|rd|th)?\s+(?:{month_name}|{short_name})\.?\s+{escaped_year}",
-        rf"(?:{month_name}|{short_name})\.?\s+{day}(?:st|nd|rd|th)?\b[^\n]{{0,80}}\b{escaped_year}",
-    )
-    if any(re.search(pattern, lowered) for pattern in named_patterns):
-        return True
-
-    url_path = urlsplit(source_url).path if source_url else ""
-    if not re.search(rf"(?<!\d){escaped_year}[-/]0?{month}[-/]0?{day}(?!\d)", url_path):
-        return False
-    yearless_patterns = (
-        rf"(?<!\d)0?{month}\s*[-/.]\s*0?{day}(?!\s*[-/.]?\s*\d)",
-        rf"(?<!\d)0?{month}\s*月\s*0?{day}\s*日",
-        rf"(?:{month_name}|{short_name})\.?\s+{day}(?:st|nd|rd|th)?(?!\d)",
+    patterns = (
+        rf"(?<!\d)0?{month}\s*[-/.]\s*0?{day}(?!\d)",
+        rf"(?<!\d)0?{month}\s*[月월]\s*0?{day}\s*[日일]?",
+        rf"(?:{month_name}|{short_name})\.?\s+{day}(?:st|nd|rd|th)?\b",
         rf"(?<!\d){day}(?:st|nd|rd|th)?\s+(?:{month_name}|{short_name})\b",
     )
-    return any(re.search(pattern, lowered) for pattern in yearless_patterns)
+    return any(re.search(pattern, normalized) for pattern in patterns)
+
+
+def resolve_event_date(
+    llm_event_date: str | None,
+    markdown: str,
+    source_url: str = "",
+    html: str = "",
+) -> EventDateDecision:
+    llm_date = None
+    if isinstance(llm_event_date, str) and DATE.fullmatch(llm_event_date.strip()):
+        try:
+            llm_date = date.fromisoformat(llm_event_date.strip()).isoformat()
+        except ValueError:
+            pass
+
+    json_ld_dates = extract_event_json_ld_dates(html)
+    body_dates = extract_explicit_event_dates(markdown)
+    url_date = extract_url_event_date(source_url)
+    url_supported = False
+    if url_date:
+        parsed_url_date = date.fromisoformat(url_date)
+        url_supported = source_contains_month_day(markdown, parsed_url_date.month, parsed_url_date.day)
+
+    all_candidates = tuple(dict.fromkeys([
+        *json_ld_dates,
+        *body_dates,
+        *([url_date] if url_date and url_supported else []),
+    ]))
+
+    def decide_inferable_tier(tier: list[str], evidence: str) -> EventDateDecision | None:
+        if llm_date and llm_date in tier:
+            return EventDateDecision(
+                llm_date,
+                "llm_date_supported",
+                evidence,
+                all_candidates,
+            )
+        if len(tier) == 1:
+            reason = "source_date_inferred" if llm_date is None else "llm_date_corrected"
+            return EventDateDecision(tier[0], reason, evidence, all_candidates)
+        return None
+
+    json_ld_decision = decide_inferable_tier(json_ld_dates, "json_ld_event_start_date")
+    if json_ld_decision:
+        return json_ld_decision
+    if url_date and url_supported:
+        reason = "source_date_inferred" if llm_date is None else "llm_date_corrected"
+        return EventDateDecision(
+            url_date,
+            reason,
+            "url_date_with_body_month_day",
+            all_candidates,
+        )
+    if llm_date and llm_date in body_dates:
+        return EventDateDecision(
+            llm_date,
+            "llm_date_supported",
+            "body_full_date",
+            all_candidates,
+        )
+    if len(json_ld_dates) > 1 or len(body_dates) > 1:
+        return EventDateDecision(
+            None,
+            "ambiguous_source_dates",
+            "body_full_date" if body_dates else "json_ld_event_start_date",
+            all_candidates,
+        )
+    if body_dates:
+        return EventDateDecision(
+            None,
+            "body_date_unconfirmed",
+            "body_full_date",
+            all_candidates,
+        )
+    if url_date and not url_supported:
+        return EventDateDecision(
+            None,
+            "url_date_without_body_month_day",
+            None,
+            all_candidates,
+        )
+    return EventDateDecision(None, "unsupported_event_date", None, ())
+
+
+def date_supported_by_source(event_date: str, markdown: str, source_url: str = "") -> bool:
+    """Compatibility wrapper for callers that only need validation."""
+    return resolve_event_date(event_date, markdown, source_url).event_date == event_date
 
 
 def select_index_harvest_item(items: list[dict[str, Any]], final_url: str) -> list[dict[str, Any]]:
@@ -1368,15 +1673,38 @@ class CorrespondentCrawler:
             items = select_index_harvest_item(items, page.final_url)
         normalized_items: list[dict[str, Any]] = []
         for item in items:
-            event_date = item["event_date"]
-            if event_date and not date_supported_by_source(event_date, markdown, page.final_url):
+            original_event_date = item["event_date"]
+            decision = resolve_event_date(
+                original_event_date,
+                markdown,
+                page.final_url,
+                page.html,
+            )
+            if original_event_date != decision.event_date:
                 logging.warning(
-                    "[%s] discarded unsupported event_date %s: %s",
+                    "[%s] event_date %s -> %s (%s): %s",
                     beat.name,
-                    event_date,
+                    original_event_date,
+                    decision.event_date,
+                    decision.reason,
                     item["headline_en"],
                 )
-                item = {**item, "event_date": None}
+            item = {**item, "event_date": decision.event_date}
+            self.observer.event(
+                "event_date_resolved",
+                reason=decision.reason,
+                source=beat.name,
+                item_url=page.final_url,
+                title=item["headline_en"],
+                detail={
+                    "llm_event_date": original_event_date,
+                    "event_date": decision.event_date,
+                    "evidence": decision.evidence,
+                    "candidates": list(decision.candidates),
+                    "rendered_raw_path": rendered_raw_path,
+                    "llm_raw_path": self.ollama.last_raw_path,
+                },
+            )
             normalized_items.append(item)
         items = normalized_items
         if not items:

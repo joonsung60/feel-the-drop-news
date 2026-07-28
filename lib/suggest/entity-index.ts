@@ -10,7 +10,26 @@ export const ENTITY_DICT_CANDIDATE_PATHS = [
 
 export const ENTITY_HAYSTACK_CONTENT_LIMIT = 500
 
+type EntitySurfacePolicy = {
+  entities?: Record<string, {
+    contextual_surfaces?: Record<string, {
+      before?: string[]
+      after?: string[]
+      max_gap_chars?: number
+    }>
+  }>
+}
+
+function loadEntitySurfacePolicy(): EntitySurfacePolicy {
+  const raw = fs.readFileSync(
+    path.join(process.cwd(), 'lib/entity-surface-policy.json'),
+    'utf-8',
+  )
+  return JSON.parse(raw) as EntitySurfacePolicy
+}
+
 export function loadEntityDictionary(): EntityEntry[] | null {
+  const policy = loadEntitySurfacePolicy()
   for (const rel of ENTITY_DICT_CANDIDATE_PATHS) {
     const abs = path.join(process.cwd(), rel)
     try {
@@ -23,11 +42,22 @@ export function loadEntityDictionary(): EntityEntry[] | null {
         for (const entity of data.entities) {
           const name = entity?.en
           if (!name) continue
+          const contextualPolicy = policy.entities?.[name]?.contextual_surfaces ?? {}
+          const contextualKeys = new Set(
+            Object.keys(contextualPolicy).map((surface) => surface.toLowerCase()),
+          )
           const surfaces = [name, ...(entity.aliases_en ?? [])]
             .map((s) => (typeof s === 'string' ? s.toLowerCase() : ''))
             .filter((s) => s.length >= 2)
+            .filter((s) => !contextualKeys.has(s))
           if (surfaces.length === 0) continue
-          entries.push({ canonical: name, surfaces, weight: entity.weight })
+          const contextualSurfaces = Object.entries(contextualPolicy).map(([surface, rule]) => ({
+            surface: surface.toLowerCase(),
+            beforeContexts: (rule.before ?? []).map((context) => context.toLowerCase()),
+            afterContexts: (rule.after ?? []).map((context) => context.toLowerCase()),
+            maxGapChars: rule.max_gap_chars ?? 12,
+          }))
+          entries.push({ canonical: name, surfaces, contextualSurfaces, weight: entity.weight })
         }
         console.log(`[suggest-clusters] entity dict loaded from ${rel}: ${entries.length} entries`)
         return entries
@@ -91,6 +121,66 @@ export function findSurfaceInText(text: string, surface: string): boolean {
   }
 }
 
+export function findContextualSurfaceInText(
+  text: string,
+  surface: string,
+  beforeContexts: string[],
+  afterContexts: string[],
+  maxGapChars: number,
+): boolean {
+  const hasBoundary = (index: number, value: string): boolean => {
+    const before = index === 0 ? ' ' : text[index - 1]
+    const end = index + value.length
+    const after = end >= text.length ? ' ' : text[end]
+    return !/[a-z0-9]/.test(before) && !/[a-z0-9]/.test(after)
+  }
+  const allowedGap = (gap: string): boolean => {
+    if (gap.length > maxGapChars) return false
+    return /^[\s,.:;()'"\[\]\-–—]*$/.test(gap.replace(/\bthe\b/g, ''))
+  }
+  const contextMatches = (
+    contexts: string[],
+    contextBeforeSurface: boolean,
+    surfaceIndex: number,
+    surfaceEnd: number,
+  ): boolean => contexts.some((context) => {
+    let contextIndex = text.indexOf(context)
+    while (contextIndex >= 0) {
+      if (hasBoundary(contextIndex, context)) {
+        const contextEnd = contextIndex + context.length
+        const gap = contextBeforeSurface
+          ? text.slice(contextEnd, surfaceIndex)
+          : text.slice(surfaceEnd, contextIndex)
+        if (
+          (contextBeforeSurface ? contextEnd <= surfaceIndex : contextIndex >= surfaceEnd)
+          && allowedGap(gap)
+        ) {
+          return true
+        }
+      }
+      contextIndex = text.indexOf(context, contextIndex + 1)
+    }
+    return false
+  })
+
+  let from = 0
+  while (true) {
+    const index = text.indexOf(surface, from)
+    if (index < 0) return false
+    const end = index + surface.length
+    if (
+      hasBoundary(index, surface)
+      && (
+        contextMatches(beforeContexts, true, index, end)
+        || contextMatches(afterContexts, false, index, end)
+      )
+    ) {
+      return true
+    }
+    from = index + 1
+  }
+}
+
 export function buildEntityIndex(
   articles: RawArticle[],
   dict: EntityEntry[],
@@ -107,12 +197,21 @@ export function buildEntityIndex(
     const matched = new Set<string>()
     const mentioned = new Set<string>()
     for (const entry of dict) {
-      for (const surface of entry.surfaces) {
-        if (findSurfaceInText(haystack, surface)) {
-          matched.add(entry.canonical)
-          mentioned.add(surface)
-          break
-        }
+      const strongSurface = entry.surfaces.find((surface) => findSurfaceInText(haystack, surface))
+      const contextualSurface = entry.contextualSurfaces?.find(({
+        surface, beforeContexts, afterContexts, maxGapChars,
+      }) =>
+        findContextualSurfaceInText(
+          haystack,
+          surface,
+          beforeContexts,
+          afterContexts,
+          maxGapChars,
+        )
+      )
+      if (strongSurface || contextualSurface) {
+        matched.add(entry.canonical)
+        mentioned.add(strongSurface ?? contextualSurface!.surface)
       }
     }
     articleEntities.set(article.id, matched)

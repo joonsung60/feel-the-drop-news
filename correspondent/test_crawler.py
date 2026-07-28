@@ -8,9 +8,12 @@ from crawler import (
     PlainHtmlExtractor,
     excluded_item_url_reason,
     extract_json_array,
+    extract_explicit_event_dates,
+    extract_event_json_ld_dates,
     find_surface_in_text,
     is_stale_news_event,
     load_config,
+    load_entities,
     match_entities,
     normalize_url,
     parse_listing_date,
@@ -20,6 +23,7 @@ from crawler import (
     select_index_harvest_item,
     trim_markdown,
     date_supported_by_source,
+    resolve_event_date,
     stable_text_hash,
     extract_page_image,
     extract_page_published_at,
@@ -92,6 +96,148 @@ class CrawlerTests(unittest.TestCase):
         # A different day in the permalink is not evidence either.
         self.assertFalse(date_supported_by_source("2026-07-26", "07/26 SUN", url))
         self.assertFalse(date_supported_by_source("2026-07-25", "07/25 SAT", ""))
+
+    def test_multilingual_explicit_event_date_formats(self) -> None:
+        cases = {
+            "2026년 8월 29일": ["2026-08-29"],
+            "2026年8月29日": ["2026-08-29"],
+            "水29 7月 2026": ["2026-07-29"],
+            "29 7月 2026": ["2026-07-29"],
+            "29 July 2026": ["2026-07-29"],
+            "July 29, 2026": ["2026-07-29"],
+            "2026/08/29": ["2026-08-29"],
+            "2026.08.29": ["2026-08-29"],
+            "2026-08-29": ["2026-08-29"],
+            "２０２６年８月２９日": ["2026-08-29"],
+        }
+        for source, expected in cases.items():
+            with self.subTest(source=source):
+                self.assertEqual(extract_explicit_event_dates(source), expected)
+
+    def test_date_range_uses_first_day(self) -> None:
+        self.assertEqual(
+            extract_explicit_event_dates(
+                "Friday, May 3 – Saturday, May 4, 2024 at M2 Miami",
+            ),
+            ["2024-05-03"],
+        )
+
+    def test_url_date_corrects_llm_year_only_with_body_month_day(self) -> None:
+        url = "https://www.womb.co.jp/event/2026/07/29/show/"
+        corrected = resolve_event_date("2023-07-29", "07/29 WED at WOMB", url)
+        self.assertEqual(corrected.event_date, "2026-07-29")
+        self.assertEqual(corrected.reason, "llm_date_corrected")
+        self.assertEqual(corrected.evidence, "url_date_with_body_month_day")
+        corrected_with_publication_date = resolve_event_date(
+            "2023-07-29",
+            "Published July 27, 2026. Event date: 07/29 WED at WOMB",
+            url,
+        )
+        self.assertEqual(corrected_with_publication_date.event_date, "2026-07-29")
+        self.assertEqual(corrected_with_publication_date.reason, "llm_date_corrected")
+        rejected = resolve_event_date("2026-07-29", "WOMB announces a show", url)
+        self.assertIsNone(rejected.event_date)
+        self.assertEqual(rejected.reason, "url_date_without_body_month_day")
+
+    def test_ambiguous_body_dates_require_exact_llm_choice(self) -> None:
+        markdown = "Event A: July 29, 2026. Event B: August 1, 2026."
+        ambiguous = resolve_event_date(None, markdown)
+        self.assertIsNone(ambiguous.event_date)
+        self.assertEqual(ambiguous.reason, "ambiguous_source_dates")
+        selected = resolve_event_date("2026-08-01", markdown)
+        self.assertEqual(selected.event_date, "2026-08-01")
+        self.assertEqual(selected.reason, "llm_date_supported")
+
+    def test_body_full_date_only_validates_matching_llm_date(self) -> None:
+        missing = resolve_event_date(None, "Published July 27, 2026")
+        self.assertIsNone(missing.event_date)
+        self.assertEqual(missing.reason, "body_date_unconfirmed")
+        self.assertEqual(missing.candidates, ("2026-07-27",))
+
+        mismatched = resolve_event_date("2026-07-26", "Published July 27, 2026")
+        self.assertIsNone(mismatched.event_date)
+        self.assertEqual(mismatched.reason, "body_date_unconfirmed")
+        self.assertEqual(mismatched.candidates, ("2026-07-27",))
+
+    def test_json_ld_uses_only_event_start_date(self) -> None:
+        html = (
+            '<script type="application/ld+json">'
+            '[{"@type":"NewsArticle","datePublished":"2026-07-20"},'
+            '{"@type":"Event","startDate":"2026-08-29T20:00:00+09:00"}]'
+            "</script>"
+        )
+        self.assertEqual(extract_event_json_ld_dates(html), ["2026-08-29"])
+        decision = resolve_event_date(None, "No printed date", html=html)
+        self.assertEqual(decision.event_date, "2026-08-29")
+        preferred = resolve_event_date(None, "Article updated July 20, 2026", html=html)
+        self.assertEqual(preferred.event_date, "2026-08-29")
+        self.assertEqual(preferred.evidence, "json_ld_event_start_date")
+        news_only = (
+            '<script type="application/ld+json">'
+            '{"@type":"NewsArticle","datePublished":"2026-07-20"}'
+            "</script>"
+        )
+        self.assertEqual(extract_event_json_ld_dates(news_only), [])
+        self.assertIsNone(resolve_event_date(None, "No event date", html=news_only).event_date)
+
+    def test_azikazin_and_enter_shibuya_dates_are_preserved(self) -> None:
+        self.assertEqual(
+            resolve_event_date("2026-08-29", "開催日は2026년 8월 29일입니다").event_date,
+            "2026-08-29",
+        )
+        self.assertEqual(
+            resolve_event_date("2026-07-29", "ENTER SHIBUYA 水29 7月 2026").event_date,
+            "2026-07-29",
+        )
+
+    def test_contextual_entity_policy_blocks_plain_verb_and_allows_music_context(self) -> None:
+        root = Path(__file__).resolve().parents[1]
+        entities = load_entities(root / "lib" / "edm-entities-v2.json")
+        self.assertEqual(
+            match_entities("The festival has revealed its lineup", "", entities),
+            [],
+        )
+        self.assertEqual(
+            match_entities("They revealed a new schedule", "", entities),
+            [],
+        )
+        for headline in (
+            "The label has revealed its lineup",
+            "The record label revealed the festival schedule",
+            "The label revealed dates yesterday",
+            "Dates were revealed by the label",
+        ):
+            with self.subTest(headline=headline):
+                self.assertNotIn(
+                    "Revealed Recordings",
+                    match_entities(headline, "", entities),
+                )
+        for headline in (
+            "Released on Revealed",
+            "Released via the Revealed label",
+            "Signed to the Revealed label",
+            "Revealed label announces a release",
+            "Revealed Records announces a release",
+            "Revealed Recordings announces a release",
+        ):
+            with self.subTest(headline=headline):
+                self.assertIn(
+                    "Revealed Recordings",
+                    match_entities(headline, "", entities),
+                )
+        self.assertIn(
+            "Revealed Recordings",
+            match_entities("Released on Revealed Recordings", "", entities),
+        )
+        self.assertIn(
+            "Revealed Recordings",
+            match_entities("Signed to the Revealed label", "", entities),
+        )
+        self.assertIn(
+            "Revealed Recordings",
+            match_entities("Revealed Records announces a new release", "", entities),
+        )
+        self.assertIn("Skrillex", match_entities("Skrillex announces a show", "", entities))
 
     def test_index_links_exclude_listing_and_month_archives(self) -> None:
         page = RenderedPage(
@@ -299,6 +445,12 @@ class CrawlerTests(unittest.TestCase):
         parser.feed('''<script type="application/ld+json">{"@type":"Event","url":"https://example.com/events/show/","startDate":"2026-08-01T20:00:00+09:00"}</script><a href="https://example.com/events/show/">Show</a>''')
         _, links = parser.result()
         self.assertEqual(links[0]["structured_date"], "2026-08-01T20:00:00+09:00")
+
+    def test_json_ld_news_publication_date_is_not_attached_as_event_date(self) -> None:
+        parser = PlainHtmlExtractor()
+        parser.feed('''<script type="application/ld+json">{"@type":"NewsArticle","url":"https://example.com/news/show/","datePublished":"2026-08-01"}</script><a href="https://example.com/news/show/">Show</a>''')
+        _, links = parser.result()
+        self.assertNotIn("structured_date", links[0])
 
     def test_og_image_wins_and_relative_paths_become_absolute(self) -> None:
         html = '<meta property="og:image" content="/media/hero.jpg">' \

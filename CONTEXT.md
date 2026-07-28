@@ -384,5 +384,6 @@ lib/jobs/
 
 ## 15. 명령어 요약
 
-- npm run dev:all
-- cd bot && npx tsx index.ts
+npm run dev:all
+cd bot && npx tsx index.ts
+correspondent/.venv/bin/python correspondent/crawler.py --execute
