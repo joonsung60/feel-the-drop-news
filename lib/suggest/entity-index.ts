@@ -1,17 +1,18 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { EntityDataset, EntityEntry, RawArticle } from './types'
+import { EntityEntry, RawArticle } from './types'
 import { canMergeByEventDate } from './event-date'
 
-export const ENTITY_DICT_CANDIDATE_PATHS = [
-  'lib/edm-entities-v2.json',
-  'lib/edm-entities.json',
-]
+export const ENTITY_DICTIONARY_PATH = 'lib/edm-entities-v2.json'
+export const ENTITY_SURFACE_POLICY_PATH = 'lib/entity-surface-policy.json'
+const SUPPORTED_POLICY_VERSION = 2
 
 export const ENTITY_HAYSTACK_CONTENT_LIMIT = 500
 
 type EntitySurfacePolicy = {
-  entities?: Record<string, {
+  version: number
+  entities: Record<string, {
+    role?: 'qualifying' | 'supporting'
     contextual_surfaces?: Record<string, {
       before?: string[]
       after?: string[]
@@ -20,92 +21,154 @@ type EntitySurfacePolicy = {
   }>
 }
 
-function loadEntitySurfacePolicy(): EntitySurfacePolicy {
-  const raw = fs.readFileSync(
-    path.join(process.cwd(), 'lib/entity-surface-policy.json'),
-    'utf-8',
-  )
-  return JSON.parse(raw) as EntitySurfacePolicy
+type V2Entity = {
+  en: string
+  aliases_en: string[]
+  weight: number
 }
 
-export function loadEntityDictionary(): EntityEntry[] | null {
-  const policy = loadEntitySurfacePolicy()
-  for (const rel of ENTITY_DICT_CANDIDATE_PATHS) {
-    const abs = path.join(process.cwd(), rel)
-    try {
-      const raw = fs.readFileSync(abs, 'utf-8')
-      const data = JSON.parse(raw) as EntityDataset & {
-        entities?: Array<{ en?: string; aliases_en?: string[]; weight: number }>
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
+function parseJson(raw: string, label: string): unknown {
+  try {
+    return JSON.parse(raw)
+  } catch (error) {
+    throw new Error(`${label} JSON parse failed: ${String(error)}`)
+  }
+}
+
+function validateContextArray(value: unknown, label: string): string[] {
+  if (value === undefined) return []
+  if (!Array.isArray(value) || !value.every((item) => typeof item === 'string' && item.trim())) {
+    throw new Error(`${label} must be an array of non-empty strings`)
+  }
+  return value
+}
+
+function validatePolicy(raw: unknown): EntitySurfacePolicy {
+  if (!isPlainObject(raw)) throw new Error('entity surface policy root must be an object')
+  if (raw.version !== SUPPORTED_POLICY_VERSION) {
+    throw new Error(`unsupported entity surface policy version: ${String(raw.version)}`)
+  }
+  if (!isPlainObject(raw.entities)) {
+    throw new Error('entity surface policy entities must be an object')
+  }
+  for (const [canonical, config] of Object.entries(raw.entities)) {
+    if (!canonical || !isPlainObject(config)) {
+      throw new Error(`invalid entity surface policy for ${canonical}`)
+    }
+    if (config.role !== undefined && config.role !== 'qualifying' && config.role !== 'supporting') {
+      throw new Error(`invalid entity role for ${canonical}: ${String(config.role)}`)
+    }
+    if (config.contextual_surfaces !== undefined && !isPlainObject(config.contextual_surfaces)) {
+      throw new Error(`contextual_surfaces for ${canonical} must be an object`)
+    }
+    for (const [surface, rule] of Object.entries(config.contextual_surfaces ?? {})) {
+      if (!surface || !isPlainObject(rule)) {
+        throw new Error(`invalid contextual rule for ${canonical}/${surface}`)
       }
-      const entries: EntityEntry[] = []
-      if (Array.isArray(data.entities)) {
-        for (const entity of data.entities) {
-          const name = entity?.en
-          if (!name) continue
-          const contextualPolicy = policy.entities?.[name]?.contextual_surfaces ?? {}
-          const contextualKeys = new Set(
-            Object.keys(contextualPolicy).map((surface) => surface.toLowerCase()),
-          )
-          const surfaces = [name, ...(entity.aliases_en ?? [])]
-            .map((s) => (typeof s === 'string' ? s.toLowerCase() : ''))
-            .filter((s) => s.length >= 2)
-            .filter((s) => !contextualKeys.has(s))
-          if (surfaces.length === 0) continue
-          const contextualSurfaces = Object.entries(contextualPolicy).map(([surface, rule]) => ({
-            surface: surface.toLowerCase(),
-            beforeContexts: (rule.before ?? []).map((context) => context.toLowerCase()),
-            afterContexts: (rule.after ?? []).map((context) => context.toLowerCase()),
-            maxGapChars: rule.max_gap_chars ?? 12,
-          }))
-          entries.push({ canonical: name, surfaces, contextualSurfaces, weight: entity.weight })
-        }
-        console.log(`[suggest-clusters] entity dict loaded from ${rel}: ${entries.length} entries`)
-        return entries
+      const before = validateContextArray(rule.before, `${canonical}/${surface}.before`)
+      const after = validateContextArray(rule.after, `${canonical}/${surface}.after`)
+      if (before.length === 0 && after.length === 0) {
+        throw new Error(`contextual rule for ${canonical}/${surface} requires before or after`)
       }
-      for (const artist of data.artists_top500_relevance_2024_2025 ?? []) {
-        const name = artist?.name
-        if (!name) continue
-        const surfaces = [name, ...(artist.aliases ?? [])]
-          .map((s) => (typeof s === 'string' ? s.toLowerCase() : ''))
-          .filter((s) => s.length >= 2)
-        if (surfaces.length === 0) continue
-        entries.push({ canonical: name, surfaces, weight: artist.weight ?? 0.8 })
+      if (
+        rule.max_gap_chars !== undefined
+        && (!Number.isInteger(rule.max_gap_chars) || (rule.max_gap_chars as number) < 0)
+      ) {
+        throw new Error(`${canonical}/${surface}.max_gap_chars must be a non-negative integer`)
       }
-      for (const festival of data.major_edm_festivals_worldwide ?? []) {
-        const name = festival?.name
-        if (!name || name.length < 2) continue
-        entries.push({ canonical: name, surfaces: [name.toLowerCase()], weight: 1.0 })
-      }
-      for (const label of data.edm_labels_key_artists ?? []) {
-        const name = label?.name
-        if (!name || name.length < 2) continue
-        entries.push({ canonical: name, surfaces: [name.toLowerCase()], weight: 0.6 })
-      }
-      for (const club of data.club_venues ?? []) {
-        const name = club?.name
-        if (!name) continue
-        const surfaces = [name, ...(club.aliases ?? [])]
-          .map((s) => (typeof s === 'string' ? s.toLowerCase() : ''))
-          .filter((s) => s.length >= 2)
-        if (surfaces.length === 0) continue
-        entries.push({ canonical: name, surfaces, weight: 0.8 })
-      }
-      for (const brand of data.equipment_software_brands ?? []) {
-        const name = brand?.name
-        if (!name) continue
-        const surfaces = [name, ...(brand.aliases ?? [])]
-          .map((s) => (typeof s === 'string' ? s.toLowerCase() : ''))
-          .filter((s) => s.length >= 2)
-        if (surfaces.length === 0) continue
-        entries.push({ canonical: name, surfaces, weight: 0.6 })
-      }
-      console.log(`[suggest-clusters] entity dict loaded from ${rel}: ${entries.length} entries`)
-      return entries
-    } catch {
-      // 다음 후보 경로 시도
     }
   }
-  return null
+  return raw as EntitySurfacePolicy
+}
+
+function validateDictionary(raw: unknown): V2Entity[] {
+  if (!isPlainObject(raw)) throw new Error('v2 entity dictionary root must be an object')
+  if (!Array.isArray(raw.entities)) throw new Error('v2 entity dictionary entities must be an array')
+  return raw.entities.map((entity, index) => {
+    if (!isPlainObject(entity)) throw new Error(`v2 entity at index ${index} must be an object`)
+    if (typeof entity.en !== 'string' || !entity.en.trim()) {
+      throw new Error(`v2 entity at index ${index} requires a non-empty en`)
+    }
+    if (
+      !Array.isArray(entity.aliases_en)
+      || !entity.aliases_en.every((alias) => typeof alias === 'string' && alias.trim())
+    ) {
+      throw new Error(`v2 entity ${entity.en} aliases_en must be an array of non-empty strings`)
+    }
+    if (typeof entity.weight !== 'number' || !Number.isFinite(entity.weight)) {
+      throw new Error(`v2 entity ${entity.en} requires a finite weight`)
+    }
+    return { en: entity.en, aliases_en: entity.aliases_en, weight: entity.weight }
+  })
+}
+
+export function parseEntityDictionary(
+  dictionaryRaw: string,
+  policyRaw: string,
+): EntityEntry[] {
+  const entities = validateDictionary(parseJson(dictionaryRaw, 'v2 entity dictionary'))
+  const policy = validatePolicy(parseJson(policyRaw, 'entity surface policy'))
+  const entitiesByName = new Map(entities.map((entity) => [entity.en, entity]))
+
+  for (const [canonical, config] of Object.entries(policy.entities)) {
+    const entity = entitiesByName.get(canonical)
+    if (!entity) throw new Error(`policy canonical not found in v2 dictionary: ${canonical}`)
+    const knownSurfaces = new Set([entity.en, ...entity.aliases_en].map((surface) => surface.toLowerCase()))
+    for (const surface of Object.keys(config.contextual_surfaces ?? {})) {
+      if (!knownSurfaces.has(surface.toLowerCase())) {
+        throw new Error(`policy contextual surface not found for ${canonical}: ${surface}`)
+      }
+    }
+  }
+
+  return entities.map((entity) => {
+    const config = policy.entities[entity.en] ?? {}
+    const contextualPolicy = config.contextual_surfaces ?? {}
+    const contextualKeys = new Set(
+      Object.keys(contextualPolicy).map((surface) => surface.toLowerCase()),
+    )
+    const surfaces = [entity.en, ...entity.aliases_en]
+      .map((surface) => surface.toLowerCase())
+      .filter((surface) => surface.length >= 2 && !contextualKeys.has(surface))
+    const contextualSurfaces = Object.entries(contextualPolicy).map(([surface, rule]) => ({
+      surface: surface.toLowerCase(),
+      beforeContexts: (rule.before ?? []).map((context) => context.toLowerCase()),
+      afterContexts: (rule.after ?? []).map((context) => context.toLowerCase()),
+      maxGapChars: rule.max_gap_chars ?? 12,
+    }))
+    if (surfaces.length === 0 && contextualSurfaces.length === 0) {
+      throw new Error(`v2 entity has no usable surfaces: ${entity.en}`)
+    }
+    return {
+      canonical: entity.en,
+      role: config.role ?? 'qualifying',
+      surfaces,
+      contextualSurfaces,
+      weight: entity.weight,
+    }
+  })
+}
+
+export function loadEntityDictionaryFromFiles(
+  dictionaryPath: string,
+  policyPath: string,
+): EntityEntry[] {
+  return parseEntityDictionary(
+    fs.readFileSync(dictionaryPath, 'utf-8'),
+    fs.readFileSync(policyPath, 'utf-8'),
+  )
+}
+
+export function loadEntityDictionary(): EntityEntry[] {
+  const dictionaryPath = path.join(process.cwd(), ENTITY_DICTIONARY_PATH)
+  const policyPath = path.join(process.cwd(), ENTITY_SURFACE_POLICY_PATH)
+  const entries = loadEntityDictionaryFromFiles(dictionaryPath, policyPath)
+  console.log(`[suggest-clusters] entity dict loaded from ${ENTITY_DICTIONARY_PATH}: ${entries.length} entries`)
+  return entries
 }
 
 export function findSurfaceInText(text: string, surface: string): boolean {
@@ -187,15 +250,21 @@ export function buildEntityIndex(
 ): {
   articleEntities: Map<string, Set<string>>
   articleMentions: Map<string, Set<string>>
+  articleSupportingEntities: Map<string, Set<string>>
+  articleSupportingMentions: Map<string, Set<string>>
   entityArticles: Map<string, Set<string>>
 } {
   const articleEntities = new Map<string, Set<string>>()
   const articleMentions = new Map<string, Set<string>>()
+  const articleSupportingEntities = new Map<string, Set<string>>()
+  const articleSupportingMentions = new Map<string, Set<string>>()
   const entityArticles = new Map<string, Set<string>>()
   for (const article of articles) {
     const haystack = `${article.title ?? ''}\n${(article.content ?? '').slice(0, ENTITY_HAYSTACK_CONTENT_LIMIT)}`.toLowerCase()
     const matched = new Set<string>()
     const mentioned = new Set<string>()
+    const supporting = new Set<string>()
+    const supportingMentioned = new Set<string>()
     for (const entry of dict) {
       const strongSurface = entry.surfaces.find((surface) => findSurfaceInText(haystack, surface))
       const contextualSurface = entry.contextualSurfaces?.find(({
@@ -210,18 +279,32 @@ export function buildEntityIndex(
         )
       )
       if (strongSurface || contextualSurface) {
-        matched.add(entry.canonical)
-        mentioned.add(strongSurface ?? contextualSurface!.surface)
+        const surface = strongSurface ?? contextualSurface!.surface
+        if (entry.role === 'supporting') {
+          supporting.add(entry.canonical)
+          supportingMentioned.add(surface)
+        } else {
+          matched.add(entry.canonical)
+          mentioned.add(surface)
+        }
       }
     }
     articleEntities.set(article.id, matched)
     articleMentions.set(article.id, mentioned)
+    articleSupportingEntities.set(article.id, supporting)
+    articleSupportingMentions.set(article.id, supportingMentioned)
     for (const canonical of matched) {
       if (!entityArticles.has(canonical)) entityArticles.set(canonical, new Set())
       entityArticles.get(canonical)!.add(article.id)
     }
   }
-  return { articleEntities, articleMentions, entityArticles }
+  return {
+    articleEntities,
+    articleMentions,
+    articleSupportingEntities,
+    articleSupportingMentions,
+    entityArticles,
+  }
 }
 
 const PAIR_SCORE_SHARED_ENTITIES_2 = 3
@@ -255,10 +338,14 @@ export function buildPairClusters(
 ): { entity: string, articleIds: string[], weightSum: number }[] {
   const articlesMap = new Map(rawArticles.map(a => [a.id, a]))
   const titleWordsMap = new Map(rawArticles.map(a => [a.id, getTitleWords(a.title)]))
+  const qualifyingEntities = new Set(
+    dict.filter((entry) => entry.role !== 'supporting').map((entry) => entry.canonical)
+  )
   
   // 엔터티당 기사 최대 15개로 제한
   const filteredEntityArticles = new Map<string, string[]>()
   for (const [entity, articleIdSet] of entityArticles.entries()) {
+    if (!qualifyingEntities.has(entity)) continue
     let ids = Array.from(articleIdSet)
     if (ids.length > 15) {
       ids.sort((a, b) => {
@@ -289,7 +376,7 @@ export function buildPairClusters(
         
         let sharedEntsCount = 0
         for (const e of entsA) {
-          if (entsB.has(e)) sharedEntsCount++
+          if (qualifyingEntities.has(e) && entsB.has(e)) sharedEntsCount++
         }
         
         if (sharedEntsCount >= 2) score += PAIR_SCORE_SHARED_ENTITIES_2
@@ -386,6 +473,7 @@ export function buildPairClusters(
     for (const id of finalIds) {
       const ents = articleEntities.get(id) || new Set()
       for (const e of ents) {
+        if (!qualifyingEntities.has(e)) continue
         entityCounts.set(e, (entityCounts.get(e) || 0) + 1)
       }
     }

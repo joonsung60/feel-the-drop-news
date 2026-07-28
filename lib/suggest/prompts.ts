@@ -9,6 +9,9 @@ export const SUGGEST_SYSTEM = `당신은 전세계 전자음악 씬 전반을 �
   * 클럽 문화, 씬 소식, 업계 동향
   * 레이블, 스트리밍 플랫폼 관련 소식
 - 거절 기준을 높이세요. 전자음악과 완전히 무관한 경우(예: 순수 팝/록 기사, 스포츠, 정치 등)에만 거절하세요.
+- festival, fair, event, house, club, venue라는 단어 자체는 전자음악 근거가 아닙니다. house가 집을 뜻하는 문맥과 house music을 구분하세요.
+- 라이프스타일 박람회, 홈·인테리어 행사, 브랜드·패션·푸드 전시, 무역 박람회, 일반 컨퍼런스는 명시적 전자음악 공연·아티스트·릴리즈 근거가 없으면 거절하세요.
+- 범용 venue 이름만으로 승인하지 마세요. "HOME DIGGING FAIR at COEX THE PLATZ"는 거절해야 합니다.
 - 거절 시 반드시 이유를 reason 필드에 넣으세요.
 - 모든 소스를 동등하게 취급하세요. 특정 매체의 등급이나 권위를 기준으로 거르지 마세요.
 - 연도 단독(2025, 2026 등), 매체명, 사이트명, 시리즈명, 인터뷰 형식 표현(catches up with, chats to, talks to 등), 연말 결산/차트/베스트 목록 문구는 절대 승인 기준으로 사용하지 마세요.
@@ -78,6 +81,9 @@ export function buildClusterPrompt(batch: RawArticle[]): string {
 여러 기사를 "음악산업", "페스티벌", "라이브 공연", "씬 동향" 같은 넓은 테마로 묶지 마세요.
 topic에는 구체적 고유명사나 작품명/행사명/제품명을 포함하세요.
 단독 기사도 한국어 EDM 기사로 쓸 만한 가치가 있으면 단독으로 제안하세요.
+festival, fair, event, house, club, venue라는 일반 단어 또는 범용 장소명만으로 승인하지 마세요.
+홈·인테리어·라이프스타일·브랜드·패션·푸드 전시, 무역 박람회, 일반 컨퍼런스는 명시적 전자음악 근거가 없으면 거절하세요.
+"HOME DIGGING FAIR at COEX THE PLATZ"는 거절 예시입니다. house가 집인지 house music인지 문맥으로 구분하세요.
 
 기사 목록:
 ${articlesText}`
@@ -98,6 +104,9 @@ export function buildSingleGroupPrompt(batch: RawArticle[], entity: string): str
 
   return `다음은 엔터티 "${entity}"(으)로 묶인 기사 목록(${batch.length}개)입니다.
 이 기사들이 모두 정확히 동일한 단일 사건을 다루고 있는지 확인하세요.
+festival, fair, event, house, club, venue라는 단어 또는 범용 장소명만으로 전자음악 행사라고 판단하지 마세요.
+홈·인테리어·라이프스타일·브랜드 전시는 명시적 전자음악 근거가 없으면 거절하세요.
+"HOME DIGGING FAIR at COEX THE PLATZ"는 거절 예시이며 house와 house music을 구분해야 합니다.
 두 기사의 행사/발매일이 모두 알려져 있고 서로 다르면 승인하지 마세요.
 행사/발매일이 불명인 기사는 제목과 본문을 이용해 기존 방식으로 판단하세요.
 

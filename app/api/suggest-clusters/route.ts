@@ -15,6 +15,7 @@ import { hasEventDateConflict, knownEventDates } from '@/lib/suggest/event-date'
 import { filterDuplicateSuggestions } from '@/lib/suggest/filters'
 import { mergeNormalizedSuggestions } from '@/lib/suggest/merge'
 import { rankAndTrim } from '@/lib/suggest/rank'
+import { partitionArticlesByEntityRole, selectEligibleLlmInput } from '@/lib/suggest/eligibility'
 import { attachSourceMeta, hydrateSuggestions, markRawArticlesSuggested } from '@/lib/suggest/db'
 import { PipelineObserver } from '@/lib/pipeline-observer'
 
@@ -53,138 +54,6 @@ function finishRun(
     stage: 'run_end', reason, source: null, item_url: null, title: null, detail,
   })
   return response
-}
-
-async function runLlmOnlyPath(
-  rawArticles: RawArticle[],
-  totalCount: number,
-  suggestModel: string,
-  ollamaUrl: string,
-  validIds: Set<string>,
-  articleMeta: Map<string, { id: string; title: string; url: string }>,
-  observer: PipelineObserver,
-): Promise<NextResponse> {
-  observer.event({
-    stage: 'llm_input', reason: null, source: 'raw_articles', item_url: null, title: null,
-    detail: { batch_index: 0, article_ids: rawArticles.map((article) => article.id) },
-  })
-  const ollamaRes = await fetch(`${ollamaUrl}/api/generate`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: suggestModel,
-      system: SUGGEST_SYSTEM,
-      prompt: buildClusterPrompt(rawArticles),
-      format: SUGGEST_RESPONSE_FORMAT,
-      stream: false,
-    }),
-  })
-
-  if (!ollamaRes.ok) {
-    logSuggestionDropped(observer, {}, 'llm_http_error', { status_code: ollamaRes.status })
-    return NextResponse.json({ error: `Ollama 응답 오류: ${ollamaRes.status}` }, { status: 502 })
-  }
-
-  const ollamaData = await ollamaRes.json()
-  const responseText: string = ollamaData.response ?? ''
-  const rawPath = observer.saveRaw(responseText)
-
-  let parsed: { suggestions?: Suggestion[] }
-  try {
-    parsed = parseSuggestions(responseText)
-  } catch (err) {
-    logSuggestionDropped(observer, {}, 'llm_parse_error', { raw_path: rawPath, error: String(err) })
-    return NextResponse.json({ error: String(err), raw: responseText.slice(0, 500) }, { status: 502 })
-  }
-
-  const llmSuggestions: SuggestionWithArticles[] = []
-  for (const suggestion of parsed.suggestions ?? []) {
-    const normalized = normalizeSuggestion(suggestion, validIds, articleMeta, rawArticles)
-    if (normalized) llmSuggestions.push(normalized)
-    else {
-      const articleIds = (Array.isArray(suggestion.articleIds) ? suggestion.articleIds : [])
-        .map((id) => String(id).trim())
-        .filter((id) => validIds.has(id))
-      const eventDates = knownEventDates(articleIds, rawArticles)
-      logSuggestionDropped(
-        observer,
-        suggestion,
-        hasEventDateConflict(articleIds, rawArticles) ? 'event_date_conflict' : 'normalization_failed',
-        { raw_path: rawPath, article_ids: articleIds, event_dates: eventDates },
-      )
-    }
-  }
-
-  if (llmSuggestions.length === 0) {
-    return NextResponse.json({
-      suggestions: [],
-      saved: 0,
-      total: totalCount,
-      source: 'llm',
-      model: suggestModel,
-      llmSuggestionCount: parsed.suggestions?.length ?? 0,
-      normalizedSuggestionCount: 0,
-      rawResponsePreview: responseText.slice(0, 500),
-    })
-  }
-
-  const { suggestions: saveableSuggestions, duplicateSkipCount } =
-    await filterDuplicateSuggestions(llmSuggestions, (suggestion, reason) => {
-      logSuggestionDropped(observer, suggestion, reason)
-    })
-
-  if (saveableSuggestions.length === 0) {
-    return NextResponse.json({
-      suggestions: [],
-      saved: 0,
-      total: totalCount,
-      source: 'llm',
-      model: suggestModel,
-      llmSuggestionCount: parsed.suggestions?.length ?? 0,
-      normalizedSuggestionCount: llmSuggestions.length,
-      duplicateSkipCount,
-      rawResponsePreview: responseText.slice(0, 500),
-    })
-  }
-
-  const insertPayload = saveableSuggestions.map((s) => ({
-    topic: s.topic,
-    keywords: s.keywords,
-    article_ids: s.articleIds,
-    status: 'pending' as const,
-  }))
-
-  const { data: inserted, error: insertError } = await supabase
-    .from('suggested_clusters')
-    .insert(insertPayload)
-    .select()
-
-  if (insertError) {
-    for (const suggestion of saveableSuggestions) {
-      logSuggestionDropped(observer, suggestion, 'insert_error', { error: insertError.message })
-    }
-    return NextResponse.json({ error: `제안 저장 실패: ${insertError.message}` }, { status: 500 })
-  }
-
-  await markRawArticlesSuggested(saveableSuggestions)
-
-  const persisted = await hydrateSuggestions((inserted ?? []) as DbSuggestedCluster[])
-  for (const suggestion of persisted) {
-    observer.event({
-      stage: 'suggestion_saved', reason: 'ok', source: 'suggested_clusters', item_url: null,
-      title: suggestion.topic, detail: { id: suggestion.id, article_ids: suggestion.articleIds },
-    })
-  }
-  return NextResponse.json({
-    suggestions: persisted,
-    saved: persisted.length,
-    total: totalCount,
-    source: 'llm',
-    model: suggestModel,
-    llmSuggestionCount: parsed.suggestions?.length ?? 0,
-    normalizedSuggestionCount: llmSuggestions.length,
-    duplicateSkipCount,
-  })
 }
 
 export async function GET(req: NextRequest) {
@@ -277,63 +146,81 @@ export async function POST(req: NextRequest) {
     }
 
     const rawArticles = await attachSourceMeta(articles as RawArticle[])
-    const validIds = new Set(rawArticles.map((a) => a.id))
     const articleMeta = new Map(
       rawArticles.map((a) => [a.id, { id: a.id, title: a.title, url: a.url }])
     )
 
     const dict = loadEntityDictionary()
     if (!dict) {
-      console.error('[suggest-clusters] entity dictionary 로드 실패 — 단일 LLM 경로로 fallback')
-      const response = await runLlmOnlyPath(
-        rawArticles, articles.length, suggestModel, ollamaUrl, validIds, articleMeta, observer,
-      )
-      return finishRun(observer, response, { total: articles.length, fallback: 'llm_only' })
+      throw new Error('entity dictionary unavailable; refusing unguarded LLM fallback')
     }
 
     // ───── Stage 1: 엔터티 매칭으로 LLM 투입 기사 필터링 ─────
-    const { articleEntities, articleMentions } = buildEntityIndex(rawArticles, dict)
-    const withEntities: RawArticle[] = []
-    const withoutEntities: RawArticle[] = []
+    const {
+      articleEntities,
+      articleMentions,
+      articleSupportingEntities,
+      articleSupportingMentions,
+    } = buildEntityIndex(rawArticles, dict)
+    const partition = partitionArticlesByEntityRole(
+      rawArticles,
+      articleEntities,
+      articleSupportingEntities,
+    )
     for (const article of rawArticles) {
-      const matched = articleEntities.get(article.id)
+      const qualifying = articleEntities.get(article.id) ?? new Set()
+      const supporting = articleSupportingEntities.get(article.id) ?? new Set()
+      const reason = qualifying.size > 0
+        ? 'qualifying'
+        : supporting.size > 0 ? 'supporting_only' : 'not_matched'
       observer.event({
-        stage: 'entity_match', reason: matched && matched.size > 0 ? 'matched' : 'not_matched',
+        stage: 'entity_match', reason,
         source: article.sourceName ?? null, item_url: article.url, title: article.title,
         detail: {
           article_id: article.id,
-          matched: [...(matched ?? [])],
+          qualifying: [...qualifying],
+          supporting: [...supporting],
           mentioned: [...(articleMentions.get(article.id) ?? [])],
+          supporting_mentioned: [...(articleSupportingMentions.get(article.id) ?? [])],
         },
       })
-      if (matched && matched.size > 0) {
-        withEntities.push(article)
-      } else {
-        withoutEntities.push(article)
-      }
     }
 
-    const prioritySelected = withEntities.slice(0, LLM_INPUT_MAX)
-    const remainingSlots = LLM_INPUT_MAX - prioritySelected.length
-    const noEntityMaxByRatio = Math.floor(LLM_INPUT_MAX * NO_ENTITY_RATIO_MAX)
-    const noEntitySelected = withoutEntities.slice(0, Math.min(remainingSlots, noEntityMaxByRatio))
-    const llmInput = [...prioritySelected, ...noEntitySelected]
-    for (const article of withEntities.slice(prioritySelected.length)) {
+    const { input: llmInput, noEntitySelected } = selectEligibleLlmInput(
+      partition,
+      LLM_INPUT_MAX,
+      NO_ENTITY_RATIO_MAX,
+    )
+    const prioritySelectedCount = Math.min(partition.qualifying.length, LLM_INPUT_MAX)
+    for (const article of partition.qualifying.slice(prioritySelectedCount)) {
       observer.event({
         stage: 'llm_skipped', reason: 'entity_cap', source: article.sourceName ?? null,
         item_url: article.url, title: article.title, detail: { article_id: article.id },
       })
     }
-    for (const article of withoutEntities.slice(noEntitySelected.length)) {
+    const selectedNoEntityIds = new Set(noEntitySelected.map((article) => article.id))
+    for (const article of partition.notMatched.filter((item) => !selectedNoEntityIds.has(item.id))) {
       observer.event({
         stage: 'llm_skipped', reason: 'non_entity_cap', source: article.sourceName ?? null,
         item_url: article.url, title: article.title, detail: { article_id: article.id },
       })
     }
+    for (const article of partition.supportingOnly) {
+      observer.event({
+        stage: 'llm_skipped', reason: 'supporting_entity_only',
+        source: article.sourceName ?? null, item_url: article.url, title: article.title,
+        detail: {
+          article_id: article.id,
+          supporting: [...(articleSupportingEntities.get(article.id) ?? [])],
+          supporting_mentioned: [...(articleSupportingMentions.get(article.id) ?? [])],
+        },
+      })
+    }
 
     console.log(
-      `[stage1] 전체 ${rawArticles.length}개 → 엔터티 매칭 ${withEntities.length}개`
-      + ` / 미매칭 ${withoutEntities.length}개 → LLM 투입 ${llmInput.length}개`
+      `[stage1] 전체 ${rawArticles.length}개 → qualifying ${partition.qualifying.length}개`
+      + ` / supporting-only ${partition.supportingOnly.length}개`
+      + ` / 미매칭 ${partition.notMatched.length}개 → LLM 투입 ${llmInput.length}개`
     )
 
     if (llmInput.length === 0) {
@@ -343,8 +230,9 @@ export async function POST(req: NextRequest) {
         total: articles.length,
         source: 'filter+llm',
         model: suggestModel,
-        entityMatchedCount: withEntities.length,
-        noEntityCount: withoutEntities.length,
+        entityMatchedCount: partition.qualifying.length,
+        supportingOnlyCount: partition.supportingOnly.length,
+        noEntityCount: partition.notMatched.length,
         llmInputCount: 0,
       }), { total: articles.length, saved: 0, llm_input_count: 0 })
     }
@@ -357,6 +245,7 @@ export async function POST(req: NextRequest) {
     console.log(`[suggest-clusters] 배치 루프 시작: 총 ${batches.length}개 배치`)
 
     for (const [batchIndex, batch] of batches.entries()) {
+      const batchValidIds = new Set(batch.map((article) => article.id))
       console.log(`[batch ${batchIndex}] 시작 (기사 ${batch.length}개)`)
       observer.event({
         stage: 'llm_input', reason: null, source: 'raw_articles', item_url: null, title: null,
@@ -426,17 +315,30 @@ export async function POST(req: NextRequest) {
       llmSuggestionCount += suggestions.length
       
       for (const suggestion of suggestions) {
-        const normalizedSuggestion = normalizeSuggestion(suggestion, validIds, articleMeta, rawArticles)
+        const normalizedSuggestion = normalizeSuggestion(
+          suggestion,
+          batchValidIds,
+          articleMeta,
+          rawArticles,
+          articleEntities,
+        )
         if (normalizedSuggestion) normalized.push(normalizedSuggestion)
         else {
           const articleIds = (Array.isArray(suggestion.articleIds) ? suggestion.articleIds : [])
             .map((id) => String(id).trim())
-            .filter((id) => validIds.has(id))
+            .filter((id) => batchValidIds.has(id))
+          const requestedIds = (Array.isArray(suggestion.articleIds) ? suggestion.articleIds : [])
+            .map((id) => String(id).trim())
+          const containsIneligible = requestedIds.some((id) => !batchValidIds.has(id))
           const eventDates = knownEventDates(articleIds, rawArticles)
           logSuggestionDropped(
             observer,
             suggestion,
-            hasEventDateConflict(articleIds, rawArticles) ? 'event_date_conflict' : 'normalization_failed',
+            containsIneligible
+              ? 'article_not_edm_eligible'
+              : hasEventDateConflict(articleIds, rawArticles)
+                ? 'event_date_conflict'
+                : 'normalization_failed',
             { batch_index: batchIndex, raw_path: rawPath, article_ids: articleIds, event_dates: eventDates },
           )
         }
@@ -457,8 +359,9 @@ export async function POST(req: NextRequest) {
         total: articles.length,
         source: 'filter+llm',
         model: suggestModel,
-        entityMatchedCount: withEntities.length,
-        noEntityCount: withoutEntities.length,
+        entityMatchedCount: partition.qualifying.length,
+        supportingOnlyCount: partition.supportingOnly.length,
+        noEntityCount: partition.notMatched.length,
         llmInputCount: llmInput.length,
         batchCount: batches.length,
         llmSuggestionCount,
@@ -491,8 +394,9 @@ export async function POST(req: NextRequest) {
         total: articles.length,
         source: 'filter+llm',
         model: suggestModel,
-        entityMatchedCount: withEntities.length,
-        noEntityCount: withoutEntities.length,
+        entityMatchedCount: partition.qualifying.length,
+        supportingOnlyCount: partition.supportingOnly.length,
+        noEntityCount: partition.notMatched.length,
         llmInputCount: llmInput.length,
         batchCount: batches.length,
         llmSuggestionCount,
@@ -543,8 +447,9 @@ export async function POST(req: NextRequest) {
       total: articles.length,
       source: 'filter+llm',
       model: suggestModel,
-      entityMatchedCount: withEntities.length,
-      noEntityCount: withoutEntities.length,
+      entityMatchedCount: partition.qualifying.length,
+      supportingOnlyCount: partition.supportingOnly.length,
+      noEntityCount: partition.notMatched.length,
       llmInputCount: llmInput.length,
       batchCount: batches.length,
       llmSuggestionCount,

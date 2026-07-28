@@ -1,6 +1,7 @@
 import { cleanArticleText } from '@/lib/article-extraction'
 import { MIN_COHESION_SCORE, RawArticle, Suggestion, SuggestionWithArticles } from './types'
 import { hasEventDateConflict } from './event-date'
+import { hasExplicitEdmEvidence } from './eligibility'
 
 export const CATEGORY_KEYWORDS = new Set([
   'album', 'albums', 'club', 'clubs', 'dj', 'edm', 'festival', 'festivals', 'house',
@@ -39,8 +40,6 @@ export const LOW_SIGNAL_CLUSTER_PATTERNS = [
   /전자\s*음악\s*씬\s*(?:동향|변화|흐름)/i,
   /클럽\s*문화(?:의)?\s*(?:변화|동향|흐름)/i,
 ]
-
-export const STAGE2_DEFAULT_COHESION = 50
 
 export function articleSnippet(article: RawArticle): string {
   return cleanArticleText(article.content ?? '', 500)
@@ -151,12 +150,19 @@ export function normalizeSuggestion(
   suggestion: Partial<Suggestion>,
   validIds: Set<string>,
   articleMeta: Map<string, { id: string; title: string; url: string }>,
-  rawArticles: RawArticle[]
+  rawArticles: RawArticle[],
+  qualifyingEntitiesByArticle?: Map<string, Set<string>>,
 ): SuggestionWithArticles | null {
-  const articleIds = Array.from(new Set(
+  const requestedArticleIds = Array.from(new Set(
     (Array.isArray(suggestion.articleIds) ? suggestion.articleIds : [])
       .map((id) => String(id).trim())
-      .filter((id) => validIds.has(id))
+      .filter(Boolean)
+  ))
+  if (requestedArticleIds.some((id) => !validIds.has(id))) {
+    return null
+  }
+  const articleIds = Array.from(new Set(
+    requestedArticleIds.filter((id) => validIds.has(id))
   ))
   const keywords = Array.from(new Set(
     (Array.isArray(suggestion.keywords) ? suggestion.keywords : [])
@@ -168,20 +174,45 @@ export function normalizeSuggestion(
       .filter((keyword) => !isLowSignalClusterText(keyword))
       .slice(0, 6)
   ))
-  const commonEntities = Array.from(new Set(
+  let commonEntities = Array.from(new Set(
     (Array.isArray(suggestion.commonEntities) ? suggestion.commonEntities : [])
       .map((entity) => normalizeEntity(String(entity)))
       .filter(isSpecificEntity)
       .slice(0, 5)
   ))
+  if (qualifyingEntitiesByArticle) {
+    commonEntities = commonEntities.filter((entity) =>
+      articleIds.every((id) => {
+        const deterministic = qualifyingEntitiesByArticle.get(id) ?? new Set()
+        return [...deterministic].some((canonical) =>
+          canonical.toLowerCase() === entity.toLowerCase()
+        )
+      })
+    )
+  }
   const topic = String(suggestion.topic ?? '').trim()
   const reason = String(suggestion.reason ?? '').trim()
   const cohesionScore = typeof suggestion.cohesionScore === 'number'
     ? Math.round(suggestion.cohesionScore)
-    : Math.max(
-      STAGE2_DEFAULT_COHESION,
-      calculateCohesionScore(articleIds, commonEntities.length > 0 ? commonEntities : keywords, rawArticles)
+    : articleIds.length === 1
+      ? 0
+      : calculateCohesionScore(
+        articleIds,
+        commonEntities.length > 0 ? commonEntities : keywords,
+        rawArticles
+      )
+
+  const rawArticleById = new Map(rawArticles.map((article) => [article.id, article]))
+  const singletonArticle = articleIds.length === 1 ? rawArticleById.get(articleIds[0]) : undefined
+  const singletonEligible = articleIds.length > 1 || (
+    Boolean(singletonArticle)
+    && (
+      qualifyingEntitiesByArticle
+        ? (qualifyingEntitiesByArticle.get(articleIds[0])?.size ?? 0) > 0
+          || hasExplicitEdmEvidence(singletonArticle!)
+        : hasExplicitEdmEvidence(singletonArticle!)
     )
+  )
 
   if (
     !topic
@@ -190,7 +221,8 @@ export function normalizeSuggestion(
     || isLowSignalClusterText(topic)
     || articleIds.length < 1
     || hasEventDateConflict(articleIds, rawArticles)
-    || cohesionScore < MIN_COHESION_SCORE
+    || (articleIds.length > 1 && cohesionScore < MIN_COHESION_SCORE)
+    || !singletonEligible
   ) {
     return null
   }

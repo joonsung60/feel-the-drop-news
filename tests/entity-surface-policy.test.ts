@@ -57,6 +57,26 @@ test('other strong entities keep existing matching behavior', () => {
   assert.equal(matches('Skrillex announces a show').has('Skrillex'), true)
 })
 
+test('ambiguous common-word surfaces require specific entity context', () => {
+  const cases: Array<[string, string, boolean]> = [
+    ['Detroit techno pioneer John Collins', 'Pioneer DJ', false],
+    ['Rusko is a dubstep pioneer', 'Pioneer DJ', false],
+    ['Pioneer DJ launches a controller', 'Pioneer DJ', true],
+    ['Pioneer CDJ-3000 announced', 'Pioneer DJ', true],
+    ['a broad spectrum of dance music', 'Spectrum Dance Music Festival', false],
+    ['Spectrum Dance Music Festival announces dates', 'Spectrum Dance Music Festival', true],
+    ['a party on the beach', 'THE BEACH', false],
+    ['at the beach', 'THE BEACH', false],
+    ['THE BEACH Festival announces its lineup', 'THE BEACH', true],
+    ['disclosure of the lineup', 'Disclosure', false],
+    ['Disclosure release a new single', 'Disclosure', true],
+    ['DJ duo Disclosure announces a tour', 'Disclosure', true],
+  ]
+  for (const [title, canonical, expected] of cases) {
+    assert.equal(matches(title).has(canonical), expected, title)
+  }
+})
+
 test('ambiguous surface alone cannot create a suggestion graph edge', () => {
   const articles = [
     raw('a', 'The label has revealed its lineup'),

@@ -5,6 +5,8 @@ from pathlib import Path
 
 from crawler import (
     EntityEntry,
+    decide_entity_gate,
+    entity_gate_detail,
     PlainHtmlExtractor,
     excluded_item_url_reason,
     extract_json_array,
@@ -15,6 +17,7 @@ from crawler import (
     load_config,
     load_entities,
     match_entities,
+    match_entity_details,
     normalize_url,
     parse_listing_date,
     source_texts_for_items,
@@ -238,6 +241,190 @@ class CrawlerTests(unittest.TestCase):
             match_entities("Revealed Records announces a new release", "", entities),
         )
         self.assertIn("Skrillex", match_entities("Skrillex announces a show", "", entities))
+
+    def test_entity_roles_gate_supporting_only_and_allow_qualifying(self) -> None:
+        root = Path(__file__).resolve().parents[1]
+        entities = load_entities(root / "lib" / "edm-entities-v2.json")
+
+        home_matches = match_entity_details(
+            "HOUSE ARCHIVE: Home Digging Fair",
+            "Lifestyle brands exhibit at COEX THE PLATZ.",
+            entities,
+        )
+        home_gate = decide_entity_gate(home_matches)
+        self.assertFalse(home_gate.allowed)
+        self.assertEqual(home_gate.reason, "supporting_entity_only")
+        self.assertEqual([match.canonical for match in home_gate.qualifying], [])
+        self.assertEqual(
+            [match.canonical for match in home_gate.supporting],
+            ["COEX THE PLATZ"],
+        )
+
+        mixed_gate = decide_entity_gate(match_entity_details(
+            "Carl Cox performs at COEX THE PLATZ",
+            "The DJ will headline an electronic music event.",
+            entities,
+        ))
+        self.assertTrue(mixed_gate.allowed)
+        self.assertIn("Carl Cox", [match.canonical for match in mixed_gate.qualifying])
+        self.assertIn("COEX THE PLATZ", [match.canonical for match in mixed_gate.supporting])
+
+        womb_gate = decide_entity_gate(match_entity_details(
+            "WOMB announces its next club night",
+            "",
+            entities,
+        ))
+        self.assertTrue(womb_gate.allowed)
+        self.assertIn("WOMB", [match.canonical for match in womb_gate.qualifying])
+
+    def test_supporting_only_gate_detail_is_observable(self) -> None:
+        matches = [
+            EntityEntry("COEX THE PLATZ", ("coex the platz",), role="supporting"),
+        ]
+        gate = decide_entity_gate(match_entity_details(
+            "Home Digging Fair at COEX THE PLATZ",
+            "A lifestyle exhibition.",
+            matches,
+        ))
+        detail = entity_gate_detail(
+            gate,
+            ["COEX THE PLATZ"],
+            "logs/raw/rendered.txt",
+            "logs/raw/llm.txt",
+        )
+        self.assertEqual(gate.reason, "supporting_entity_only")
+        self.assertEqual(detail["qualifying_entities"], [])
+        self.assertEqual(detail["supporting_entities"], ["COEX THE PLATZ"])
+        self.assertEqual(detail["matched_surfaces"][0]["surface"], "coex the platz")
+        self.assertEqual(detail["entities_en"], ["COEX THE PLATZ"])
+        self.assertEqual(detail["rendered_raw_path"], "logs/raw/rendered.txt")
+        self.assertEqual(detail["llm_raw_path"], "logs/raw/llm.txt")
+
+    def test_invalid_entity_role_policy_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            dictionary_path = root / "entities.json"
+            policy_path = root / "entity-surface-policy.json"
+            dictionary_path.write_text(json.dumps({
+                "entities": [{"en": "WOMB", "aliases_en": []}],
+            }), encoding="utf-8")
+            policy_path.write_text(json.dumps({
+                "version": 2,
+                "entities": {"WOMB": {"role": "strong"}},
+            }), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "invalid entity role"):
+                load_entities(dictionary_path, policy_path)
+
+    def test_entity_loader_validation_fails_closed(self) -> None:
+        dictionary = {
+            "entities": [
+                {"en": "COEX THE PLATZ", "aliases_en": ["THE PLATZ"]},
+                {"en": "Pioneer DJ", "aliases_en": ["Pioneer"]},
+                {"en": "Disclosure", "aliases_en": []},
+            ],
+        }
+        policy = {
+            "version": 2,
+            "entities": {
+                "COEX THE PLATZ": {"role": "supporting"},
+                "Disclosure": {
+                    "contextual_surfaces": {
+                        "Disclosure": {"after": ["release"], "max_gap_chars": 8},
+                    },
+                },
+            },
+        }
+        cases = (
+            ("missing entities", {}, policy, "entities must be an array"),
+            (
+                "contextual surfaces list",
+                dictionary,
+                {"version": 2, "entities": {
+                    "Disclosure": {"contextual_surfaces": []},
+                }},
+                "contextual_surfaces.*must be an object",
+            ),
+            (
+                "before string",
+                dictionary,
+                {"version": 2, "entities": {
+                    "Disclosure": {
+                        "contextual_surfaces": {
+                            "Disclosure": {"before": "DJ duo"},
+                        },
+                    },
+                }},
+                "before must be an array",
+            ),
+            (
+                "negative max gap",
+                dictionary,
+                {"version": 2, "entities": {
+                    "Disclosure": {
+                        "contextual_surfaces": {
+                            "Disclosure": {"after": ["release"], "max_gap_chars": -1},
+                        },
+                    },
+                }},
+                "max_gap_chars must be a non-negative integer",
+            ),
+            (
+                "missing canonical",
+                dictionary,
+                {"version": 2, "entities": {
+                    "COEX THE PLAZ": {"role": "supporting"},
+                }},
+                "policy canonical not found",
+            ),
+            (
+                "missing contextual surface",
+                dictionary,
+                {"version": 2, "entities": {
+                    "Pioneer DJ": {
+                        "contextual_surfaces": {
+                            "Pioner": {"after": ["DJ"]},
+                        },
+                    },
+                }},
+                "policy contextual surface not found",
+            ),
+        )
+        for name, entity_dictionary, surface_policy, expected in cases:
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                dictionary_path = root / "edm-entities-v2.json"
+                policy_path = root / "entity-surface-policy.json"
+                dictionary_path.write_text(
+                    json.dumps(entity_dictionary),
+                    encoding="utf-8",
+                )
+                policy_path.write_text(json.dumps(surface_policy), encoding="utf-8")
+                with self.assertRaisesRegex(ValueError, expected):
+                    load_entities(dictionary_path, policy_path)
+
+    def test_ambiguous_surfaces_require_specific_context(self) -> None:
+        root = Path(__file__).resolve().parents[1]
+        entities = load_entities(root / "lib" / "edm-entities-v2.json")
+        cases = (
+            ("Detroit techno pioneer John Collins", "Pioneer DJ", False),
+            ("Rusko is a dubstep pioneer", "Pioneer DJ", False),
+            ("Pioneer DJ launches a controller", "Pioneer DJ", True),
+            ("Pioneer CDJ-3000 announced", "Pioneer DJ", True),
+            ("a broad spectrum of dance music", "Spectrum Dance Music Festival", False),
+            ("Spectrum Dance Music Festival announces dates", "Spectrum Dance Music Festival", True),
+            ("a party on the beach", "THE BEACH", False),
+            ("at the beach", "THE BEACH", False),
+            ("THE BEACH Festival announces its lineup", "THE BEACH", True),
+            ("disclosure of the lineup", "Disclosure", False),
+            ("Disclosure release a new single", "Disclosure", True),
+            ("DJ duo Disclosure announces a tour", "Disclosure", True),
+        )
+        for headline, canonical, expected in cases:
+            with self.subTest(headline=headline):
+                self.assertEqual(
+                    canonical in match_entities(headline, "", entities),
+                    expected,
+                )
 
     def test_index_links_exclude_listing_and_month_archives(self) -> None:
         page = RenderedPage(

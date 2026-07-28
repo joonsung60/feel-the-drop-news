@@ -55,6 +55,7 @@ export type TopicBlockRule = {
 
 export type EntityEntry = {
   canonical: string
+  role?: 'qualifying' | 'supporting'
   surfaces: string[]
   contextualSurfaces?: Array<{
     surface: string

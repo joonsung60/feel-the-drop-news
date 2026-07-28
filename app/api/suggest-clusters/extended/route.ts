@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin'
 import { RawArticle, SuggestionWithArticles } from '@/lib/suggest/types'
 import { buildEntityIndex, loadEntityDictionary, buildPairClusters } from '@/lib/suggest/entity-index'
@@ -24,7 +24,7 @@ const SUGGEST2_FORMAT = {
   required: ['approved', 'topic', 'keywords', 'reason']
 }
 
-export async function POST(req: NextRequest) {
+export async function POST() {
   const runBackground = async () => {
     try {
       console.log('[suggest-clusters/extended] 백그라운드 작업 시작')
@@ -64,7 +64,6 @@ export async function POST(req: NextRequest) {
 
       const ollamaUrl = process.env.OLLAMA_BASE_URL || 'http://localhost:11434'
       const suggestModel = process.env.OLLAMA_SUGGEST_MODEL || process.env.OLLAMA_MODEL || 'qwen3:14b'
-      const validIds = new Set(rawArticles.map((a) => a.id))
       const articleMeta = new Map(rawArticles.map((a) => [a.id, { id: a.id, title: a.title, url: a.url }]))
       const rawArticlesMap = new Map(rawArticles.map((a) => [a.id, a]))
 
@@ -74,6 +73,7 @@ export async function POST(req: NextRequest) {
       for (const [index, group] of topGroups.entries()) {
         console.log(`[suggest-clusters/extended] 그룹 ${index + 1}/${topGroups.length} 처리 중 (엔터티: ${group.entity})`)
         const batch = group.articleIds.map(id => rawArticlesMap.get(id)).filter((a): a is RawArticle => Boolean(a))
+        const groupValidIds = new Set(batch.map((article) => article.id))
         
         try {
           const ollamaRes = await fetch(`${ollamaUrl}/api/generate`, {
@@ -115,7 +115,13 @@ export async function POST(req: NextRequest) {
               reason: typeof parsed.reason === 'string' ? parsed.reason : undefined,
               commonEntities: [group.entity]
             }
-            const norm = normalizeSuggestion(suggestion, validIds, articleMeta, rawArticles)
+            const norm = normalizeSuggestion(
+              suggestion,
+              groupValidIds,
+              articleMeta,
+              rawArticles,
+              articleEntities,
+            )
             if (norm) normalized.push(norm)
           } else {
             console.log(`[suggest-clusters/extended] 거절됨: ${parsed.reason}`)

@@ -1,6 +1,9 @@
 {
-  "version": 1,
+  "version": 2,
   "entities": {
+    "COEX THE PLATZ": {
+      "role": "supporting"
+    },
     "Revealed Recordings": {
       "contextual_surfaces": {
         "Revealed": {
@@ -17,6 +20,59 @@
             "imprint"
           ],
           "max_gap_chars": 12
+        }
+      }
+    },
+    "Pioneer DJ": {
+      "contextual_surfaces": {
+        "Pioneer": {
+          "after": [
+            "DJ",
+            "CDJ-3000",
+            "CDJ"
+          ],
+          "max_gap_chars": 4
+        }
+      }
+    },
+    "Spectrum Dance Music Festival": {
+      "contextual_surfaces": {
+        "Spectrum": {
+          "after": [
+            "Dance Music Festival"
+          ],
+          "max_gap_chars": 4
+        }
+      }
+    },
+    "THE BEACH": {
+      "contextual_surfaces": {
+        "THE BEACH": {
+          "after": [
+            "Festival"
+          ],
+          "max_gap_chars": 4
+        }
+      }
+    },
+    "Disclosure": {
+      "contextual_surfaces": {
+        "Disclosure": {
+          "before": [
+            "DJ duo",
+            "electronic duo"
+          ],
+          "after": [
+            "release",
+            "releases",
+            "released",
+            "announce",
+            "announces",
+            "perform",
+            "performs",
+            "DJ set"
+          ],
+          "max_gap_chars": 8
         }
       }
     }

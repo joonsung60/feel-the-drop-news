@@ -18,7 +18,7 @@
     "label": 49,
     "venue": 39,
     "total": 541,
-    "ko_established": 90
+    "ko_established": 91
   },
   "entities": [
     {
@@ -1040,13 +1040,18 @@
       "type": "artist",
       "en": "Carl Cox",
       "aliases_en": [],
-      "ko": null,
-      "ko_status": "none",
-      "ko_avoid": [],
+      "ko": "칼 콕스",
+      "ko_status": "established",
+      "ko_avoid": [
+        "칼빈 콕스"
+      ],
       "tier": "A",
       "weight": 1.0,
       "region": "EU",
-      "ko_source": null
+      "ko_source": {
+        "name": "기존 확정 표기(앵커)",
+        "url": "anchor"
+      }
     },
     {
       "id": "artist_richie_hawtin",

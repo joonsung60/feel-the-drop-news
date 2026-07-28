@@ -92,6 +92,15 @@ Rules:
 - entities_en contains only names that actually appear on the page.
 - One array element per distinct news event. A single lineup announcement is
   one item even if it names many artists.
+- The words festival, fair, event, house, club, and venue are not EDM evidence
+  by themselves. Distinguish a house/home context from house music.
+- Reject lifestyle fairs, home/interior events, brand exhibitions, fashion or
+  food events, trade fairs, and general conferences unless the page explicitly
+  establishes an electronic-music performance, artist, or release.
+- A generic venue name alone is never enough. "HOME DIGGING FAIR at COEX THE
+  PLATZ" is a reject example.
+- This prompt is advisory. A deterministic entity-role gate makes the final
+  save decision.
 
 Output ONLY the JSON array. No explanation, no markdown code fences, no text
 before or after."""
@@ -192,10 +201,27 @@ class BeatSummary:
 class EntityEntry:
     canonical: str
     surfaces: tuple[str, ...]
+    role: str = "qualifying"
     contextual_surfaces: tuple[
         tuple[str, tuple[str, ...], tuple[str, ...], int],
         ...
     ] = ()
+
+
+@dataclass(frozen=True)
+class EntityMatch:
+    canonical: str
+    surface: str
+    role: str
+    match_type: str
+
+
+@dataclass(frozen=True)
+class EntityGateDecision:
+    allowed: bool
+    reason: str
+    qualifying: tuple[EntityMatch, ...]
+    supporting: tuple[EntityMatch, ...]
 
 
 @dataclass(frozen=True)
@@ -689,18 +715,92 @@ def load_entities(path: Path, policy_path: Path | None = None) -> list[EntityEnt
     resolved_policy_path = policy_path or path.with_name("entity-surface-policy.json")
     with resolved_policy_path.open(encoding="utf-8") as handle:
         policy = json.load(handle)
-    policy_entities = policy.get("entities", {}) if isinstance(policy, dict) else {}
-    entries: list[EntityEntry] = []
-    for raw in data.get("entities", []):
+    if not isinstance(data, dict):
+        raise ValueError("v2 entity dictionary root must be an object")
+    raw_entities = data.get("entities")
+    if not isinstance(raw_entities, list):
+        raise ValueError("v2 entity dictionary entities must be an array")
+    if not isinstance(policy, dict):
+        raise ValueError("entity surface policy root must be an object")
+    if policy.get("version") != 2:
+        raise ValueError(f"unsupported entity surface policy version: {policy.get('version')}")
+    if not isinstance(policy.get("entities"), dict):
+        raise ValueError("entity surface policy entities must be an object")
+    policy_entities = policy["entities"]
+    for canonical, entity_policy in policy_entities.items():
+        if not isinstance(canonical, str) or not canonical or not isinstance(entity_policy, dict):
+            raise ValueError(f"invalid entity surface policy for {canonical}")
+        role = entity_policy.get("role", "qualifying")
+        if role not in {"qualifying", "supporting"}:
+            raise ValueError(f"invalid entity role for {canonical}: {role}")
+        contextual_policy = entity_policy.get("contextual_surfaces", {})
+        if not isinstance(contextual_policy, dict):
+            raise ValueError(f"contextual_surfaces for {canonical} must be an object")
+        for surface, rule in contextual_policy.items():
+            if not isinstance(surface, str) or not surface or not isinstance(rule, dict):
+                raise ValueError(f"invalid contextual rule for {canonical}/{surface}")
+            contexts: dict[str, list[str]] = {}
+            for direction in ("before", "after"):
+                value = rule.get(direction, [])
+                if (
+                    not isinstance(value, list)
+                    or not all(isinstance(item, str) and item.strip() for item in value)
+                ):
+                    raise ValueError(
+                        f"{canonical}/{surface}.{direction} must be an array of non-empty strings"
+                    )
+                contexts[direction] = value
+            if not contexts["before"] and not contexts["after"]:
+                raise ValueError(
+                    f"contextual rule for {canonical}/{surface} requires before or after"
+                )
+            max_gap_chars = rule.get("max_gap_chars", 12)
+            if (
+                not isinstance(max_gap_chars, int)
+                or isinstance(max_gap_chars, bool)
+                or max_gap_chars < 0
+            ):
+                raise ValueError(
+                    f"{canonical}/{surface}.max_gap_chars must be a non-negative integer"
+                )
+
+    entities_by_name: dict[str, dict[str, Any]] = {}
+    for index, raw in enumerate(raw_entities):
+        if not isinstance(raw, dict):
+            raise ValueError(f"v2 entity at index {index} must be an object")
         name = raw.get("en")
-        if not isinstance(name, str) or not name:
-            continue
-        entity_policy = policy_entities.get(name, {}) if isinstance(policy_entities, dict) else {}
-        contextual_policy = (
-            entity_policy.get("contextual_surfaces", {})
-            if isinstance(entity_policy, dict)
-            else {}
-        )
+        aliases = raw.get("aliases_en")
+        if not isinstance(name, str) or not name.strip():
+            raise ValueError(f"v2 entity at index {index} requires a non-empty en")
+        if (
+            not isinstance(aliases, list)
+            or not all(isinstance(alias, str) and alias.strip() for alias in aliases)
+        ):
+            raise ValueError(
+                f"v2 entity {name} aliases_en must be an array of non-empty strings"
+            )
+        entities_by_name[name] = raw
+
+    for canonical, entity_policy in policy_entities.items():
+        raw = entities_by_name.get(canonical)
+        if raw is None:
+            raise ValueError(f"policy canonical not found in v2 dictionary: {canonical}")
+        known_surfaces = {
+            surface.lower()
+            for surface in [raw["en"], *raw["aliases_en"]]
+        }
+        for surface in entity_policy.get("contextual_surfaces", {}):
+            if surface.lower() not in known_surfaces:
+                raise ValueError(
+                    f"policy contextual surface not found for {canonical}: {surface}"
+                )
+
+    entries: list[EntityEntry] = []
+    for raw in raw_entities:
+        name = raw["en"]
+        entity_policy = policy_entities.get(name, {})
+        role = entity_policy.get("role", "qualifying")
+        contextual_policy = entity_policy.get("contextual_surfaces", {})
         contextual_keys = {
             value.lower()
             for value in contextual_policy
@@ -720,24 +820,23 @@ def load_entities(path: Path, policy_path: Path | None = None) -> list[EntityEnt
                 tuple(
                     context.lower()
                     for context in rule.get("before", [])
-                    if isinstance(context, str)
                 ),
                 tuple(
                     context.lower()
                     for context in rule.get("after", [])
-                    if isinstance(context, str)
                 ),
                 int(rule.get("max_gap_chars", 12)),
             )
             for surface, rule in contextual_policy.items()
-            if isinstance(surface, str) and isinstance(rule, dict)
         )
-        if surfaces or contextual_surfaces:
-            entries.append(EntityEntry(
-                canonical=name,
-                surfaces=surfaces,
-                contextual_surfaces=contextual_surfaces,
-            ))
+        if not surfaces and not contextual_surfaces:
+            raise ValueError(f"v2 entity has no usable surfaces: {name}")
+        entries.append(EntityEntry(
+            canonical=name,
+            surfaces=surfaces,
+            role=role,
+            contextual_surfaces=contextual_surfaces,
+        ))
     return entries
 
 
@@ -818,29 +917,89 @@ def find_contextual_surface_in_text(
 
 
 def match_entities(headline: str, summary: str, entities: Iterable[EntityEntry]) -> list[str]:
+    return [
+        match.canonical
+        for match in match_entity_details(headline, summary, entities)
+    ]
+
+
+def match_entity_details(
+    headline: str,
+    summary: str,
+    entities: Iterable[EntityEntry],
+) -> list[EntityMatch]:
     # The TS matcher limits raw article content to 500 characters.
     haystack = f"{headline}\n{summary[:500]}".lower()
-    matches: list[str] = []
+    matches: list[EntityMatch] = []
     for entry in entities:
-        strong_match = any(find_surface_in_text(haystack, surface) for surface in entry.surfaces)
-        contextual_match = any(
-            find_contextual_surface_in_text(
+        strong_surface = next(
+            (surface for surface in entry.surfaces if find_surface_in_text(haystack, surface)),
+            None,
+        )
+        contextual_surface = next(
+            (
+                surface
+                for (
+                    surface,
+                    before_contexts,
+                    after_contexts,
+                    max_gap_chars,
+                ) in entry.contextual_surfaces
+                if find_contextual_surface_in_text(
                 haystack,
                 surface,
                 before_contexts,
                 after_contexts,
                 max_gap_chars,
-            )
-            for (
-                surface,
-                before_contexts,
-                after_contexts,
-                max_gap_chars,
-            ) in entry.contextual_surfaces
+                )
+            ),
+            None,
         )
-        if strong_match or contextual_match:
-            matches.append(entry.canonical)
+        surface = strong_surface or contextual_surface
+        if surface:
+            matches.append(EntityMatch(
+                canonical=entry.canonical,
+                surface=surface,
+                role=entry.role,
+                match_type="strong" if strong_surface else "contextual",
+            ))
     return matches
+
+
+def decide_entity_gate(matches: Iterable[EntityMatch]) -> EntityGateDecision:
+    all_matches = tuple(matches)
+    qualifying = tuple(match for match in all_matches if match.role == "qualifying")
+    supporting = tuple(match for match in all_matches if match.role == "supporting")
+    if qualifying:
+        return EntityGateDecision(True, "qualifying_entity", qualifying, supporting)
+    if supporting:
+        return EntityGateDecision(False, "supporting_entity_only", qualifying, supporting)
+    return EntityGateDecision(False, "no_entity_match", qualifying, supporting)
+
+
+def entity_gate_detail(
+    gate: EntityGateDecision,
+    entities_en: Iterable[str],
+    rendered_raw_path: str | None,
+    llm_raw_path: str | None,
+) -> dict[str, Any]:
+    all_matches = (*gate.qualifying, *gate.supporting)
+    return {
+        "qualifying_entities": [match.canonical for match in gate.qualifying],
+        "supporting_entities": [match.canonical for match in gate.supporting],
+        "matched_surfaces": [
+            {
+                "canonical": match.canonical,
+                "surface": match.surface,
+                "role": match.role,
+                "match_type": match.match_type,
+            }
+            for match in all_matches
+        ],
+        "entities_en": list(entities_en),
+        "rendered_raw_path": rendered_raw_path,
+        "llm_raw_path": llm_raw_path,
+    }
 
 
 def extract_json_array(raw: str) -> list[Any]:
@@ -1782,14 +1941,40 @@ class CorrespondentCrawler:
                     "llm_raw_path": self.ollama.last_raw_path,
                 },
             )
-            matches = match_entities(item["headline_en"], item["summary_en"], self.entities)
-            if not matches:
+            entity_matches = match_entity_details(
+                item["headline_en"],
+                item["summary_en"],
+                self.entities,
+            )
+            gate = decide_entity_gate(entity_matches)
+            qualifying_entities = [match.canonical for match in gate.qualifying]
+            supporting_entities = [match.canonical for match in gate.supporting]
+            matched_surfaces = [
+                {
+                    "canonical": match.canonical,
+                    "surface": match.surface,
+                    "role": match.role,
+                    "match_type": match.match_type,
+                }
+                for match in entity_matches
+            ]
+            if not gate.allowed:
                 summary.gated_out += 1
-                logging.info("[%s] gated out (zero entities): %s", beat.name, item["headline_en"])
+                logging.info(
+                    "[%s] gated out (%s): %s",
+                    beat.name,
+                    gate.reason,
+                    item["headline_en"],
+                )
                 self.observer.event(
-                    "gated_out", reason="no_entity_match", source=beat.name,
+                    "gated_out", reason=gate.reason, source=beat.name,
                     item_url=page.final_url, title=item["headline_en"],
-                    detail={"entities_mentioned": item["entities_en"]},
+                    detail=entity_gate_detail(
+                        gate,
+                        item["entities_en"],
+                        rendered_raw_path,
+                        self.ollama.last_raw_path,
+                    ),
                 )
                 continue
             article_url = base_url
@@ -1853,14 +2038,20 @@ class CorrespondentCrawler:
                 print(json.dumps({
                     "beat": beat.name,
                     "action": "would_insert",
-                    "matched_entities": matches,
+                    "matched_entities": qualifying_entities,
+                    "supporting_entities": supporting_entities,
                     "harvest": item,
                     "row": payload,
                 }, ensure_ascii=False))
                 self.observer.event(
                     "inserted", reason="dry_run_would_insert", source=beat.name,
                     item_url=article_url, title=item["headline_en"],
-                    detail={"dry_run": True, "matched_entities": matches},
+                    detail={
+                        "dry_run": True,
+                        "matched_entities": qualifying_entities,
+                        "supporting_entities": supporting_entities,
+                        "matched_surfaces": matched_surfaces,
+                    },
                 )
                 continue
             try:
@@ -1877,7 +2068,11 @@ class CorrespondentCrawler:
                 summary.inserted += 1
                 self.observer.event(
                     "inserted", reason="ok", source=beat.name, item_url=article_url,
-                    title=item["headline_en"], detail={"matched_entities": matches},
+                    title=item["headline_en"], detail={
+                        "matched_entities": qualifying_entities,
+                        "supporting_entities": supporting_entities,
+                        "matched_surfaces": matched_surfaces,
+                    },
                 )
             else:
                 summary.dup += 1

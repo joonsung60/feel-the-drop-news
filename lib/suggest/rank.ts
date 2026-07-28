@@ -9,7 +9,11 @@ function scoreSuggestion(
 
   const cohesion = s.cohesionScore ?? 0
 
-  const dictMap = new Map(dict.map((e) => [e.canonical.toLowerCase(), e.weight]))
+  const dictMap = new Map(
+    dict
+      .filter((entity) => entity.role !== 'supporting')
+      .map((entity) => [entity.canonical.toLowerCase(), entity.weight])
+  )
   const maxEntityWeight = s.commonEntities && s.commonEntities.length > 0
     ? Math.max(...s.commonEntities.map((e) => dictMap.get(e.toLowerCase()) ?? 0))
     : 0
