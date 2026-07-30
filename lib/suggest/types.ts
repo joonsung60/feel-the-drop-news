@@ -20,6 +20,14 @@ export type RawArticle = {
   sourceName?: string
   published_at?: string | null
   event_date?: string | null
+  facts?: {
+    correspondent_gate?: {
+      decision?: string
+      path?: string
+      candidate_key?: string
+    }
+    [key: string]: unknown
+  } | null
 }
 
 export type SuggestionStatus = 'pending' | 'approved' | 'rejected' | 'published'

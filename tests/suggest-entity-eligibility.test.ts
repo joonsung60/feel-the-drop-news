@@ -28,6 +28,19 @@ function article(id: string, title: string, content = ''): RawArticle {
   }
 }
 
+function danceExperienceArticle(id: string, title: string, content = ''): RawArticle {
+  return {
+    ...article(id, title, content),
+    facts: {
+      correspondent_gate: {
+        decision: 'accepted',
+        path: 'dance_experience',
+        candidate_key: `candidate-${id}`,
+      },
+    },
+  }
+}
+
 function normalizeOne(
   raw: RawArticle,
   validIds: Set<string>,
@@ -81,6 +94,44 @@ test('qualifying entities retain articles while supporting venues add no authori
   assert.deepEqual([...index.articleSupportingEntities.get('mixed')!], ['COEX THE PLATZ'])
   assert.deepEqual([...index.articleEntities.get('womb')!], ['WOMB'])
   assert.ok(normalizeOne(mixed, new Set(['mixed']), index.articleEntities))
+})
+
+test('accepted no-entity dance experiences enter LLM input without fallback quota', () => {
+  const dance = danceExperienceArticle(
+    'warehouse',
+    'Public techno warehouse party',
+    'DJ sets, an independent stage schedule, and public tickets are confirmed.',
+  )
+  const index = buildEntityIndex([dance], dictionary!)
+  const partition = partitionArticlesByEntityRole(
+    [dance],
+    index.articleEntities,
+    index.articleSupportingEntities,
+  )
+  assert.deepEqual(partition.danceExperience.map(({ id }) => id), ['warehouse'])
+  assert.deepEqual(
+    selectEligibleLlmInput(partition, 1, 0).input.map(({ id }) => id),
+    ['warehouse'],
+  )
+})
+
+test('dance approval requires persisted accepted decision and can override supporting-only venue', () => {
+  const accepted = danceExperienceArticle(
+    'coex-dance',
+    'Independent public DJ stage at COEX THE PLATZ',
+  )
+  const unverified = {
+    ...danceExperienceArticle('unverified', 'DJ performance candidate at COEX THE PLATZ'),
+    facts: { correspondent_gate: { decision: 'needs_verification', path: 'dance_experience' } },
+  } satisfies RawArticle
+  const index = buildEntityIndex([accepted, unverified], dictionary!)
+  const partition = partitionArticlesByEntityRole(
+    [accepted, unverified],
+    index.articleEntities,
+    index.articleSupportingEntities,
+  )
+  assert.deepEqual(partition.danceExperience.map(({ id }) => id), ['coex-dance'])
+  assert.deepEqual(partition.supportingOnly.map(({ id }) => id), ['unverified'])
 })
 
 test('supporting-only shared entities cannot create graph edges or weight', () => {

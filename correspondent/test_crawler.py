@@ -1,12 +1,26 @@
+import asyncio
 import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from crawler import (
     EntityEntry,
+    EntityGateDecision,
+    EntityMatch,
+    Beat,
+    BeatSummary,
+    CorrespondentCrawler,
+    SourceBinding,
+    bind_source_texts_for_items,
+    decide_unified_gate,
     decide_entity_gate,
     entity_gate_detail,
+    unified_gate_detail,
+    experience_candidate_key,
+    event_date_supported_by_binding,
+    facts_with_gate_metadata,
     PlainHtmlExtractor,
     excluded_item_url_reason,
     extract_json_array,
@@ -37,6 +51,456 @@ from crawler import (
 
 
 class CrawlerTests(unittest.TestCase):
+    def experience_item(
+        self,
+        source: str,
+        *,
+        event_date: str | None = "2026-08-15",
+        venue: str = "Dock 9 Warehouse",
+        evidence: dict[str, list[str]] | None = None,
+    ) -> dict:
+        base = {
+            "headline_en": "Public dance event",
+            "summary_en": "An independent dance program.",
+            "entities_en": [],
+            "news_type": "club_event",
+            "event_date": event_date,
+            "facts": {"venue": venue},
+            "experience_evidence": evidence or {},
+        }
+        return validate_harvest_item(base)
+
+    def test_unified_gate_keeps_qualifying_entity_path(self) -> None:
+        match = EntityMatch("Carl Cox", "carl cox", "qualifying", "strong")
+        entity_gate = EntityGateDecision(True, "qualifying_entity", (match,), ())
+        decision = decide_unified_gate(entity_gate, self.experience_item("Carl Cox at WOMB"), "")
+        self.assertEqual((decision.decision, decision.path), ("accepted", "entity"))
+
+    def test_missing_facts_are_safe_through_gate_detail_and_metadata(self) -> None:
+        item = self.experience_item(
+            "Possible rave",
+            event_date=None,
+            venue="",
+            evidence={"dance_centrality": ["rave"]},
+        )
+        self.assertIsNone(item["facts"])
+        gate = decide_unified_gate(
+            EntityGateDecision(False, "no_entity_match", (), ()), item, "Possible rave",
+        )
+        detail = unified_gate_detail(
+            gate, item, None, None, "candidate",
+            SourceBinding("Possible rave", "single_item_full_page", True),
+        )
+        self.assertIsNone(detail["venue"])
+        facts = facts_with_gate_metadata(
+            item["facts"],
+            base_url="https://example.com/event",
+            gate=gate,
+            candidate_key="candidate",
+        )
+        self.assertEqual(facts["correspondent_gate"]["candidate_key"], "candidate")
+
+    def test_event_hard_negatives_override_qualifying_entity(self) -> None:
+        match = EntityMatch("Carl Cox", "carl cox", "qualifying", "strong")
+        entity_gate = EntityGateDecision(True, "qualifying_entity", (match,), ())
+        cases = [
+            (
+                "Invitation-only Carl Cox club event.",
+                {"private_or_restricted": ["Invitation-only"]},
+                "rejected_private_event",
+            ),
+            (
+                "Brand dinner with Carl Cox as background DJ.",
+                {"incidental_dj": ["background DJ"]},
+                "rejected_incidental_dj",
+            ),
+        ]
+        for source, evidence, reason in cases:
+            with self.subTest(reason=reason):
+                item = self.experience_item(source, evidence=evidence)
+                decision = decide_unified_gate(entity_gate, item, source)
+                self.assertEqual(decision.decision, "rejected")
+                self.assertEqual(decision.reasons[-1], reason)
+
+    def test_ambiguous_hard_negative_becomes_verification(self) -> None:
+        match = EntityMatch("Carl Cox", "carl cox", "qualifying", "strong")
+        entity_gate = EntityGateDecision(True, "qualifying_entity", (match,), ())
+        item = self.experience_item(
+            "Invitation-only Carl Cox club event.",
+            evidence={"private_or_restricted": ["Invitation-only"]},
+        )
+        decision = decide_unified_gate(
+            entity_gate,
+            item,
+            "Invitation-only Carl Cox club event.",
+            source_binding_confident=False,
+        )
+        self.assertEqual(decision.decision, "needs_verification")
+        self.assertEqual(decision.reasons[-1], "needs_verification_source_binding")
+        self.assertTrue(decision.evidence["private_or_restricted"])
+
+    def test_non_event_entity_news_and_ungrounded_negatives_still_pass(self) -> None:
+        match = EntityMatch("Carl Cox", "carl cox", "qualifying", "strong")
+        entity_gate = EntityGateDecision(True, "qualifying_entity", (match,), ())
+        release = validate_harvest_item({
+            "headline_en": "Carl Cox releases a new single",
+            "summary_en": "Carl Cox releases a new single.",
+            "entities_en": ["Carl Cox"],
+            "news_type": "release",
+            "facts": {},
+            "experience_evidence": {
+                "private_or_restricted": ["invitation-only event"],
+            },
+        })
+        decision = decide_unified_gate(entity_gate, release, "Carl Cox releases a new single.")
+        self.assertEqual((decision.decision, decision.path), ("accepted", "entity"))
+        self.assertIn("ungrounded_experience_evidence", decision.reasons)
+
+        event = self.experience_item(
+            "Carl Cox headlines a public club event.",
+            evidence={"private_or_restricted": ["invitation-only"]},
+        )
+        decision = decide_unified_gate(
+            entity_gate, event, "Carl Cox headlines a public club event.",
+        )
+        self.assertEqual((decision.decision, decision.path), ("accepted", "entity"))
+
+    def test_public_unknown_warehouse_party_uses_dance_experience_path(self) -> None:
+        source = (
+            "Techno warehouse party at Dock 9 Warehouse on August 15, 2026. "
+            "DJ sets run on the Warehouse Stage from 22:00–05:00. "
+            "Tickets are available to the public."
+        )
+        item = self.experience_item(source, evidence={
+            "dance_centrality": ["DJ sets run on the Warehouse Stage"],
+            "program_independence": ["Warehouse Stage from 22:00–05:00"],
+            "public_access": ["Tickets are available to the public"],
+            "schedule": ["August 15, 2026"],
+            "venue_or_space": ["Dock 9 Warehouse"],
+        })
+        decision = decide_unified_gate(
+            EntityGateDecision(False, "no_entity_match", (), ()), item, source,
+        )
+        self.assertEqual((decision.decision, decision.path), ("accepted", "dance_experience"))
+        self.assertEqual(decision.missing_evidence, ())
+
+    def test_regional_stage_free_beach_and_small_rave_are_accepted(self) -> None:
+        cases = [
+            (
+                "Summer Festival Night DJ Stage at River Park on August 15, 2026. "
+                "DJ performance schedule 20:00–23:00. Free admission.",
+                "River Park",
+                {
+                    "dance_centrality": ["DJ performance schedule 20:00–23:00"],
+                    "program_independence": ["Night DJ Stage"],
+                    "public_access": ["Free admission"],
+                },
+            ),
+            (
+                "Beach DJ set and dance floor at Sunset Beach on August 15, 2026, "
+                "from 18:00. Free entry.",
+                "Sunset Beach",
+                {
+                    "dance_centrality": ["Beach DJ set and dance floor"],
+                    "program_independence": ["from 18:00"],
+                    "public_access": ["Free entry"],
+                },
+            ),
+            (
+                "Underground rave at Basement 12 on August 15, 2026. "
+                "Rave Session 23:00–06:00. Advance tickets on sale.",
+                "Basement 12",
+                {
+                    "dance_centrality": ["Underground rave"],
+                    "program_independence": ["Rave Session 23:00–06:00"],
+                    "public_access": ["Advance tickets on sale"],
+                },
+            ),
+        ]
+        for source, venue, evidence in cases:
+            with self.subTest(venue=venue):
+                decision = decide_unified_gate(
+                    EntityGateDecision(False, "no_entity_match", (), ()),
+                    self.experience_item(source, venue=venue, evidence=evidence),
+                    source,
+                )
+                self.assertEqual(decision.decision, "accepted")
+
+    def test_partial_dance_evidence_becomes_verification_candidate(self) -> None:
+        cases = [
+            (
+                "DJ performance at Town Festival on August 15, 2026 at Civic Park.",
+                {"dance_centrality": ["DJ performance"]},
+                {"program_independence", "public_access"},
+            ),
+            (
+                "Night DJ Stage schedule 22:00 at Civic Park on August 15, 2026.",
+                {
+                    "dance_centrality": ["DJ Stage"],
+                    "program_independence": ["Night DJ Stage schedule 22:00"],
+                },
+                {"public_access"},
+            ),
+            (
+                "Social post: techno party session. Tickets available. Dock 9 Warehouse.",
+                {
+                    "dance_centrality": ["techno party"],
+                    "program_independence": ["party session"],
+                    "public_access": ["Tickets available"],
+                },
+                {"schedule"},
+            ),
+            (
+                "DJ performance at Dock 9 Warehouse on August 15, 2026. Tickets available.",
+                {
+                    "dance_centrality": ["DJ performance"],
+                    "public_access": ["Tickets available"],
+                },
+                {"program_independence"},
+            ),
+        ]
+        for source, evidence, missing in cases:
+            with self.subTest(source=source):
+                decision = decide_unified_gate(
+                    EntityGateDecision(False, "no_entity_match", (), ()),
+                    self.experience_item(
+                        source,
+                        event_date=None if "Social post" in source else "2026-08-15",
+                        evidence=evidence,
+                    ),
+                    source,
+                )
+                self.assertEqual(decision.decision, "needs_verification")
+                self.assertTrue(missing.issubset(set(decision.missing_evidence)))
+
+    def test_incidental_private_and_non_dance_events_are_rejected(self) -> None:
+        cases = [
+            ("Restaurant dinner with background DJ at Dock 9 Warehouse.", {"incidental_dj": ["background DJ"]}, "rejected_incidental_dj"),
+            ("Invitation-only brand DJ event at Dock 9 Warehouse.", {"private_or_restricted": ["Invitation-only"]}, "rejected_private_event"),
+            ("Home and interior fair at COEX THE PLATZ.", {}, "supporting_entity_only"),
+            ("General conference with networking music.", {}, "rejected_non_dance_event"),
+            ("Interior and furniture brand exhibition at Civic Hall.", {}, "rejected_non_dance_event"),
+            ("Fashion show with an incidental after-party DJ.", {"incidental_dj": ["incidental after-party DJ"]}, "rejected_incidental_dj"),
+            ("General conference with a background networking DJ.", {"incidental_dj": ["background networking DJ"]}, "rejected_incidental_dj"),
+            ("Open House home design and architecture event.", {}, "rejected_non_dance_event"),
+        ]
+        supporting = EntityMatch("COEX THE PLATZ", "coex the platz", "supporting", "strong")
+        for source, evidence, reason in cases:
+            with self.subTest(source=source):
+                entity_gate = EntityGateDecision(
+                    False,
+                    "supporting_entity_only" if "COEX" in source else "no_entity_match",
+                    (),
+                    (supporting,) if "COEX" in source else (),
+                )
+                decision = decide_unified_gate(
+                    entity_gate,
+                    self.experience_item(source, evidence=evidence),
+                    source,
+                )
+                self.assertEqual(decision.decision, "rejected")
+                self.assertIn(reason, decision.reasons)
+
+    def test_ungrounded_quotes_cannot_approve_experience(self) -> None:
+        source = "DJ performance at Dock 9 Warehouse on August 15, 2026."
+        item = self.experience_item(source, evidence={
+            "dance_centrality": ["All-night rave and dance floor"],
+            "program_independence": ["Main Stage 22:00–05:00"],
+            "public_access": ["Tickets available to everyone"],
+        })
+        decision = decide_unified_gate(
+            EntityGateDecision(False, "no_entity_match", (), ()), item, source,
+        )
+        self.assertEqual(decision.decision, "needs_verification")
+        self.assertIn("ungrounded_experience_evidence", decision.reasons)
+
+    def test_multilingual_items_bind_by_quotes_even_in_reverse_llm_order(self) -> None:
+        markdown = (
+            "# 행사 하나\n창고 레이브 무대 22:00\n일반 티켓 판매\n장소: 제1창고\n"
+            "# イベント二\n海辺DJステージ 18:00\n入場無料\n会場: サンセットビーチ"
+        )
+        japanese = self.experience_item(markdown, evidence={
+            "dance_centrality": ["海辺DJステージ"],
+            "program_independence": ["海辺DJステージ 18:00"],
+            "public_access": ["入場無料"],
+            "venue_or_space": ["サンセットビーチ"],
+        })
+        korean = self.experience_item(markdown, evidence={
+            "dance_centrality": ["창고 레이브"],
+            "program_independence": ["창고 레이브 무대 22:00"],
+            "public_access": ["일반 티켓 판매"],
+            "venue_or_space": ["제1창고"],
+        })
+        bindings = bind_source_texts_for_items(markdown, [japanese, korean])
+        self.assertIn("サンセットビーチ", bindings[0].text)
+        self.assertIn("제1창고", bindings[1].text)
+        self.assertTrue(all(binding.confident for binding in bindings))
+
+    def test_split_event_evidence_cannot_be_combined_for_acceptance(self) -> None:
+        markdown = (
+            "# 행사 A\n창고 레이브 무대 22:00\n"
+            "# 행사 B\n일반 티켓 판매\n장소: 제1창고"
+        )
+        item = self.experience_item(markdown, venue="제1창고", evidence={
+            "dance_centrality": ["창고 레이브"],
+            "program_independence": ["창고 레이브 무대 22:00"],
+            "public_access": ["일반 티켓 판매"],
+            "venue_or_space": ["제1창고"],
+        })
+        binding = bind_source_texts_for_items(markdown, [item])[0]
+        self.assertFalse(binding.confident)
+        decision = decide_unified_gate(
+            EntityGateDecision(False, "no_entity_match", (), ()),
+            item,
+            binding.text,
+            binding.confident,
+        )
+        self.assertEqual(decision.decision, "needs_verification")
+        self.assertIn("source_binding", decision.missing_evidence)
+
+    def test_date_must_belong_to_selected_source_segment(self) -> None:
+        source_without_date = (
+            "Warehouse DJ set on the Main Stage from 22:00. "
+            "Tickets available. Venue: Dock 9 Warehouse."
+        )
+        item = self.experience_item(source_without_date, evidence={
+            "dance_centrality": ["Warehouse DJ set"],
+            "program_independence": ["Main Stage from 22:00"],
+            "public_access": ["Tickets available"],
+        })
+        decision = decide_unified_gate(
+            EntityGateDecision(False, "no_entity_match", (), ()),
+            item,
+            source_without_date,
+        )
+        self.assertEqual(decision.decision, "needs_verification")
+        self.assertIn("schedule", decision.missing_evidence)
+
+        source_with_date = f"{source_without_date} August 15, 2026."
+        decision = decide_unified_gate(
+            EntityGateDecision(False, "no_entity_match", (), ()),
+            item,
+            source_with_date,
+        )
+        self.assertEqual(decision.decision, "accepted")
+
+    def test_page_level_event_date_requires_unambiguous_provenance(self) -> None:
+        json_ld_item = self.experience_item(
+            "DJ set at Dock 9 Warehouse.",
+            evidence={},
+        )
+        json_ld_item["_event_date_evidence"] = "json_ld_event_start_date"
+        self.assertTrue(event_date_supported_by_binding(
+            json_ld_item,
+            "DJ set at Dock 9 Warehouse.",
+            "https://example.com/event",
+            page_level_date_confident=True,
+        ))
+        self.assertFalse(event_date_supported_by_binding(
+            json_ld_item,
+            "DJ set at Dock 9 Warehouse.",
+            "https://example.com/events",
+            page_level_date_confident=False,
+        ))
+
+        womb_item = self.experience_item(
+            "07/25 SAT DJ set at WOMB",
+            event_date="2026-07-25",
+            venue="WOMB",
+        )
+        womb_item["_event_date_evidence"] = "url_date_with_body_month_day"
+        self.assertTrue(event_date_supported_by_binding(
+            womb_item,
+            "07/25 SAT DJ set at WOMB",
+            "https://www.womb.co.jp/event/2026/07/25/show/",
+        ))
+
+    def test_single_item_harvest_path_does_not_bypass_ambiguous_binding(self) -> None:
+        markdown = (
+            "# 행사 A\n창고 레이브 무대 22:00\n2026년 8월 15일\n"
+            "# 행사 B\n일반 티켓 판매\n장소: 제1창고"
+        )
+        harvested_item = self.experience_item(markdown, venue="제1창고", evidence={
+            "dance_centrality": ["창고 레이브"],
+            "program_independence": ["창고 레이브 무대 22:00"],
+            "public_access": ["일반 티켓 판매"],
+            "schedule": ["2026년 8월 15일"],
+            "venue_or_space": ["제1창고"],
+        })
+
+        class OllamaStub:
+            last_raw_path = "logs/raw/llm.txt"
+
+            def harvest(self, _markdown):
+                return [harvested_item]
+
+        class ObserverStub:
+            def __init__(self):
+                self.events = []
+
+            def save_raw(self, _content):
+                return "logs/raw/rendered.txt"
+
+            def event(self, stage, **kwargs):
+                self.events.append((stage, kwargs))
+
+        class DatabaseStub:
+            def insert_raw_article(self, _payload):
+                raise AssertionError("ambiguous item must not be inserted")
+
+        observer = ObserverStub()
+        crawler = CorrespondentCrawler(
+            DatabaseStub(),
+            OllamaStub(),
+            None,
+            [],
+            {
+                "tracking_query_denylist": [],
+                "item_url_exclude_patterns": [],
+                "news_beats": [],
+                "news_max_age_days": 30,
+                "content_stop_markers": [],
+                "markdown_max_chars": 120000,
+            },
+            False,
+            observer,
+        )
+        page = RenderedPage(
+            "https://example.com/events",
+            "https://example.com/events",
+            markdown,
+            (),
+            "plain",
+            "",
+        )
+        summary = BeatSummary()
+        async def immediate_to_thread(function, *args):
+            return function(*args)
+
+        with patch("crawler.asyncio.to_thread", new=immediate_to_thread):
+            asyncio.run(crawler.harvest_page(
+                Beat("Test", page.final_url, "page"),
+                page,
+                summary,
+            ))
+        dispositions = [
+            kwargs for stage, kwargs in observer.events if stage == "verification_candidate"
+        ]
+        self.assertEqual(len(dispositions), 1)
+        self.assertEqual(
+            dispositions[0]["reason"],
+            "needs_verification_source_binding",
+        )
+        self.assertEqual(summary.gated_out, 1)
+
+    def test_candidate_key_uses_only_url_and_source_segment(self) -> None:
+        url = "https://example.com/events"
+        source_a = "창고 레이브 무대 22:00"
+        key_a = experience_candidate_key(url, source_a)
+        # LLM fields are deliberately absent from the helper and cannot affect the key.
+        self.assertEqual(key_a, experience_candidate_key(url, source_a))
+        self.assertNotEqual(key_a, experience_candidate_key(url, "해변 DJ 무대 18:00"))
+
     def test_normalize_url_removes_only_denylist(self) -> None:
         denylist = ["utm_*", "fbclid", "ref"]
         url = "https://example.com/A?keep=1&utm_source=x&Ref=y&empty=#section"

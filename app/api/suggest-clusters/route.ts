@@ -15,7 +15,11 @@ import { hasEventDateConflict, knownEventDates } from '@/lib/suggest/event-date'
 import { filterDuplicateSuggestions } from '@/lib/suggest/filters'
 import { mergeNormalizedSuggestions } from '@/lib/suggest/merge'
 import { rankAndTrim } from '@/lib/suggest/rank'
-import { partitionArticlesByEntityRole, selectEligibleLlmInput } from '@/lib/suggest/eligibility'
+import {
+  correspondentApprovalPath,
+  partitionArticlesByEntityRole,
+  selectEligibleLlmInput,
+} from '@/lib/suggest/eligibility'
 import { attachSourceMeta, hydrateSuggestions, markRawArticlesSuggested } from '@/lib/suggest/db'
 import { PipelineObserver } from '@/lib/pipeline-observer'
 
@@ -114,7 +118,7 @@ export async function POST(req: NextRequest) {
 
     const { data: articles, error } = await supabase
       .from('raw_articles')
-      .select('id, title, content, url, source_id, published_at, event_date')
+      .select('id, title, content, url, source_id, published_at, event_date, facts')
       .or('suggestion_state.is.null,suggestion_state.eq.new')
       .order('published_at', { ascending: false })
       .limit(limit)
@@ -182,6 +186,8 @@ export async function POST(req: NextRequest) {
           supporting: [...supporting],
           mentioned: [...(articleMentions.get(article.id) ?? [])],
           supporting_mentioned: [...(articleSupportingMentions.get(article.id) ?? [])],
+          approval_path: correspondentApprovalPath(article)
+            ?? (qualifying.size > 0 ? 'entity' : 'none'),
         },
       })
     }
@@ -216,9 +222,21 @@ export async function POST(req: NextRequest) {
         },
       })
     }
+    for (const article of partition.danceExperience) {
+      observer.event({
+        stage: 'experience_gate', reason: 'accepted_dance_experience',
+        source: article.sourceName ?? null, item_url: article.url, title: article.title,
+        detail: {
+          article_id: article.id,
+          approval_path: 'dance_experience',
+          candidate_key: article.facts?.correspondent_gate?.candidate_key ?? null,
+        },
+      })
+    }
 
     console.log(
       `[stage1] 전체 ${rawArticles.length}개 → qualifying ${partition.qualifying.length}개`
+      + ` / dance-experience ${partition.danceExperience.length}개`
       + ` / supporting-only ${partition.supportingOnly.length}개`
       + ` / 미매칭 ${partition.notMatched.length}개 → LLM 투입 ${llmInput.length}개`
     )
@@ -231,6 +249,7 @@ export async function POST(req: NextRequest) {
         source: 'filter+llm',
         model: suggestModel,
         entityMatchedCount: partition.qualifying.length,
+        danceExperienceCount: partition.danceExperience.length,
         supportingOnlyCount: partition.supportingOnly.length,
         noEntityCount: partition.notMatched.length,
         llmInputCount: 0,
@@ -249,7 +268,17 @@ export async function POST(req: NextRequest) {
       console.log(`[batch ${batchIndex}] 시작 (기사 ${batch.length}개)`)
       observer.event({
         stage: 'llm_input', reason: null, source: 'raw_articles', item_url: null, title: null,
-        detail: { batch_index: batchIndex, article_ids: batch.map((article) => article.id) },
+        detail: {
+          batch_index: batchIndex,
+          article_ids: batch.map((article) => article.id),
+          approval_paths: Object.fromEntries(
+            batch.map((article) => [
+              article.id,
+              correspondentApprovalPath(article)
+                ?? ((articleEntities.get(article.id)?.size ?? 0) > 0 ? 'entity' : 'legacy_fallback'),
+            ]),
+          ),
+        },
       })
 
       const controller = new AbortController()
@@ -360,6 +389,7 @@ export async function POST(req: NextRequest) {
         source: 'filter+llm',
         model: suggestModel,
         entityMatchedCount: partition.qualifying.length,
+        danceExperienceCount: partition.danceExperience.length,
         supportingOnlyCount: partition.supportingOnly.length,
         noEntityCount: partition.notMatched.length,
         llmInputCount: llmInput.length,
@@ -395,6 +425,7 @@ export async function POST(req: NextRequest) {
         source: 'filter+llm',
         model: suggestModel,
         entityMatchedCount: partition.qualifying.length,
+        danceExperienceCount: partition.danceExperience.length,
         supportingOnlyCount: partition.supportingOnly.length,
         noEntityCount: partition.notMatched.length,
         llmInputCount: llmInput.length,
@@ -448,6 +479,7 @@ export async function POST(req: NextRequest) {
       source: 'filter+llm',
       model: suggestModel,
       entityMatchedCount: partition.qualifying.length,
+      danceExperienceCount: partition.danceExperience.length,
       supportingOnlyCount: partition.supportingOnly.length,
       noEntityCount: partition.notMatched.length,
       llmInputCount: llmInput.length,

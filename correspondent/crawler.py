@@ -45,7 +45,8 @@ except ImportError:  # Give a focused setup error instead of a traceback at impo
 HARVEST_PROMPT = """You are a wire-service correspondent for an EDM news outlet covering the Asian
 music market. You are given the rendered text of ONE web page. The page may be
 written in Korean, Japanese, or English. Your job: find every genuine EDM news
-item on the page and report it, normalizing everything into English.
+item or publicly accessible dance experience on the page and report it,
+normalizing everything into English.
 
 Output a JSON array. Each element is ONE distinct news item. Fields per item:
   headline_en   Concise English headline.
@@ -79,6 +80,13 @@ Output a JSON array. Each element is ONE distinct news item. Fields per item:
                 OMIT any key the page does not state. Never emit an empty
                 string, "N/A", "TBA", "unknown", or a guessed value. If the
                 page states none of these, output {}.
+  experience_evidence
+                Object whose values are arrays of SHORT VERBATIM quotes from
+                this item's source text. Allowed keys: dance_centrality,
+                program_independence, public_access, schedule, venue_or_space,
+                production_or_atmosphere, incidental_dj,
+                private_or_restricted. Use [] when no quote exists. Quotes must
+                not be translated, paraphrased, or copied from another item.
   image_urls    Array of image URLs on the page belonging to this item. [] if none.
   source_lang   Language of the original page content: ko, ja, en, or other.
   confidence    0.0 to 1.0 — how confident you understood the page.
@@ -87,6 +95,16 @@ Rules:
 - headline_en, summary_en, entities_en MUST be in English. Translate or
   transliterate names into their commonly-used English forms.
 - Do NOT invent. If the page carries no real EDM news, return: []
+- Prefer a strong, public dance experience over artist fame or genre purity.
+  Independent DJ stages inside regional festivals, small underground raves,
+  and club nights are eligible when the page establishes their program.
+- A possible dance program with real source evidence but missing schedule,
+  public-access, or independence details may be returned for verification.
+  Do not force an event into EDM without such evidence.
+- Extract event name, date, venue, time, ticket/public-access, and independent
+  program details exactly as printed. Never infer access or atmosphere.
+- Background/incidental DJs at restaurants, hotels, brand events, exhibitions,
+  fashion shows, or conferences are not dance experiences.
 - Report only what the text states. Missing detail = null or empty array.
   Never guess a date, entity, or fact not on the page.
 - entities_en contains only names that actually appear on the page.
@@ -222,6 +240,36 @@ class EntityGateDecision:
     reason: str
     qualifying: tuple[EntityMatch, ...]
     supporting: tuple[EntityMatch, ...]
+
+
+EXPERIENCE_EVIDENCE_KEYS = (
+    "dance_centrality",
+    "program_independence",
+    "public_access",
+    "schedule",
+    "venue_or_space",
+    "production_or_atmosphere",
+    "incidental_dj",
+    "private_or_restricted",
+)
+
+
+@dataclass(frozen=True)
+class UnifiedGateDecision:
+    decision: str
+    path: str
+    reasons: tuple[str, ...]
+    qualifying: tuple[EntityMatch, ...]
+    supporting: tuple[EntityMatch, ...]
+    evidence: dict[str, tuple[str, ...]]
+    missing_evidence: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class SourceBinding:
+    text: str
+    reason: str
+    confident: bool
 
 
 @dataclass(frozen=True)
@@ -1002,6 +1050,256 @@ def entity_gate_detail(
     }
 
 
+def normalize_grounding_text(value: str) -> str:
+    return " ".join(unicodedata.normalize("NFKC", value).casefold().split())
+
+
+def ground_experience_evidence(
+    evidence: dict[str, list[str]],
+    source_text: str,
+) -> tuple[dict[str, tuple[str, ...]], bool]:
+    source = normalize_grounding_text(source_text)
+    grounded: dict[str, tuple[str, ...]] = {}
+    had_ungrounded = False
+    for key in EXPERIENCE_EVIDENCE_KEYS:
+        accepted: list[str] = []
+        for quote in evidence.get(key, []):
+            normalized = normalize_grounding_text(quote)
+            if len(normalized) >= 4 and normalized in source:
+                accepted.append(quote)
+            elif normalized:
+                had_ungrounded = True
+        grounded[key] = tuple(accepted)
+    return grounded, had_ungrounded
+
+
+def item_facts(item: dict[str, Any]) -> dict[str, Any]:
+    facts = item.get("facts")
+    return facts if isinstance(facts, dict) else {}
+
+
+def is_event_item(item: dict[str, Any]) -> bool:
+    if item.get("news_type") in {"festival_lineup", "club_event", "tour"}:
+        return True
+    if item.get("event_date"):
+        return True
+    facts = item_facts(item)
+    return any(
+        facts.get(key)
+        for key in ("venue", "open_time", "close_time", "ticket_price", "ticket_url")
+    )
+
+
+def facts_with_gate_metadata(
+    raw_facts: Any,
+    *,
+    base_url: str,
+    gate: UnifiedGateDecision,
+    candidate_key: str,
+) -> dict[str, Any]:
+    facts = normalize_facts(raw_facts, base_url) or {}
+    facts["correspondent_gate"] = {
+        "decision": gate.decision,
+        "path": gate.path,
+        "candidate_key": candidate_key,
+    }
+    return facts
+
+
+def experience_candidate_key(source_url: str, source_text: str) -> str:
+    return stable_text_hash(
+        f"{normalize_url(source_url, [])}\n{normalize_grounding_text(source_text)}"
+    )
+
+
+def event_date_supported_by_binding(
+    item: dict[str, Any],
+    source_text: str,
+    source_url: str,
+    page_level_date_confident: bool = False,
+) -> bool:
+    event_date = item.get("event_date")
+    if not isinstance(event_date, str):
+        return False
+    evidence = item.get("_event_date_evidence")
+    if evidence == "json_ld_event_start_date":
+        return page_level_date_confident
+    if evidence == "url_date_with_body_month_day":
+        return date_supported_by_source(event_date, source_text, source_url)
+    return date_supported_by_source(event_date, source_text)
+
+
+DANCE_CENTRALITY = re.compile(
+    r"\b(?:dj\s+(?:sets?|performance)|electronic\s+dance\s+(?:performance|music)|"
+    r"rave|club\s+night|dance\s*floor|dance\s+program|techno\s+(?:party|night)|"
+    r"all[- ]night\s+danc(?:e|ing))\b|DJ\s*(?:公演|ステージ|セット)|"
+    r"(?:디제이|DJ)\s*(?:공연|무대|세트)|레이브|댄스\s*플로어",
+    re.IGNORECASE,
+)
+PROGRAM_INDEPENDENCE = re.compile(
+    r"\b(?:stage|program(?:me)?|schedule|timetable|session|doors?\s+\d|"
+    r"from\s+\d{1,2}(?::\d{2})?|"
+    r"\d{1,2}(?::\d{2})?\s*(?:am|pm)\s*[-–~])\b|"
+    r"(?:무대|프로그램|시간표|세션|ステージ|プログラム|タイムテーブル)",
+    re.IGNORECASE,
+)
+PUBLIC_ACCESS = re.compile(
+    r"\b(?:tickets?|admission|entry|doors?|free\s+(?:entry|admission)|"
+    r"open\s+to\s+the\s+public|public\s+(?:event|admission)|reservation|"
+    r"advance|door\s+price)\b|(?:티켓|입장|무료\s*입장|공개\s*예약|"
+    r"一般(?:入場|発売)|チケット|入場無料|前売)",
+    re.IGNORECASE,
+)
+DANCE_POSSIBILITY = re.compile(
+    r"\b(?:dj\s+(?:sets?|performance|stage)|rave|dance\s*floor|club\s+night|"
+    r"techno\s+(?:party|night)|electronic\s+dance)\b|"
+    r"(?:디제이|DJ)\s*(?:공연|무대|세트)|레이브|댄스\s*플로어|"
+    r"DJ\s*(?:公演|ステージ|セット)",
+    re.IGNORECASE,
+)
+
+
+def decide_unified_gate(
+    entity_gate: EntityGateDecision,
+    item: dict[str, Any],
+    source_text: str,
+    source_binding_confident: bool = True,
+    source_url: str = "",
+    page_level_date_confident: bool = False,
+) -> UnifiedGateDecision:
+    raw_experience_evidence = item.get("experience_evidence")
+    experience_evidence = (
+        raw_experience_evidence if isinstance(raw_experience_evidence, dict) else {}
+    )
+    grounded, had_ungrounded = ground_experience_evidence(experience_evidence, source_text)
+    reasons: list[str] = ["ungrounded_experience_evidence"] if had_ungrounded else []
+    grounded_hard_negative = bool(
+        grounded["private_or_restricted"] or grounded["incidental_dj"]
+    )
+    if is_event_item(item) and grounded_hard_negative and not source_binding_confident:
+        return UnifiedGateDecision(
+            "needs_verification", "none",
+            tuple([*reasons, "needs_verification_source_binding"]),
+            entity_gate.qualifying, entity_gate.supporting, grounded, ("source_binding",),
+        )
+    if is_event_item(item) and grounded["private_or_restricted"]:
+        return UnifiedGateDecision(
+            "rejected", "none", tuple([*reasons, "rejected_private_event"]),
+            entity_gate.qualifying, entity_gate.supporting, grounded, (),
+        )
+    if is_event_item(item) and grounded["incidental_dj"]:
+        return UnifiedGateDecision(
+            "rejected", "none", tuple([*reasons, "rejected_incidental_dj"]),
+            entity_gate.qualifying, entity_gate.supporting, grounded, (),
+        )
+    if entity_gate.allowed:
+        return UnifiedGateDecision(
+            "accepted", "entity", tuple([*reasons, "accepted_qualifying_entity"]),
+            entity_gate.qualifying, entity_gate.supporting, grounded, (),
+        )
+
+    dance_quotes = tuple(
+        quote for quote in grounded["dance_centrality"] if DANCE_CENTRALITY.search(quote)
+    )
+    independence_quotes = tuple(
+        quote for quote in grounded["program_independence"] if PROGRAM_INDEPENDENCE.search(quote)
+    )
+    access_quotes = tuple(
+        quote for quote in grounded["public_access"] if PUBLIC_ACCESS.search(quote)
+    )
+    venue = str(item_facts(item).get("venue", "")).strip()
+    venue_grounded = bool(
+        venue and normalize_grounding_text(venue) in normalize_grounding_text(source_text)
+    )
+    date_grounded = event_date_supported_by_binding(
+        item,
+        source_text,
+        source_url,
+        page_level_date_confident,
+    )
+    missing: list[str] = []
+    if not dance_quotes:
+        missing.append("dance_centrality")
+    if not independence_quotes:
+        missing.append("program_independence")
+    if not access_quotes:
+        missing.append("public_access")
+    if not (date_grounded and venue_grounded):
+        missing.append("schedule")
+    if not source_binding_confident:
+        missing.append("source_binding")
+
+    evidence = {
+        **grounded,
+        "dance_centrality": dance_quotes,
+        "program_independence": independence_quotes,
+        "public_access": access_quotes,
+    }
+    if not missing:
+        return UnifiedGateDecision(
+            "accepted", "dance_experience",
+            tuple([*reasons, "accepted_dance_experience"]),
+            entity_gate.qualifying, entity_gate.supporting, evidence, (),
+        )
+    has_experience_claim = any(experience_evidence.values())
+    if DANCE_POSSIBILITY.search(source_text) or (not source_binding_confident and has_experience_claim):
+        reason_names = {
+            "dance_centrality": "needs_verification_dance_centrality",
+            "program_independence": "needs_verification_program_independence",
+            "public_access": "needs_verification_public_access",
+            "schedule": "needs_verification_missing_schedule",
+            "source_binding": "needs_verification_source_binding",
+        }
+        return UnifiedGateDecision(
+            "needs_verification", "dance_experience",
+            tuple([*reasons, *(reason_names[key] for key in missing)]),
+            entity_gate.qualifying, entity_gate.supporting, evidence, tuple(missing),
+        )
+    rejection = "supporting_entity_only" if entity_gate.supporting else "rejected_non_dance_event"
+    return UnifiedGateDecision(
+        "rejected", "none", tuple([*reasons, rejection]),
+        entity_gate.qualifying, entity_gate.supporting, evidence, tuple(missing),
+    )
+
+
+def unified_gate_detail(
+    gate: UnifiedGateDecision,
+    item: dict[str, Any],
+    rendered_raw_path: str | None,
+    llm_raw_path: str | None,
+    candidate_key: str,
+    source_binding: SourceBinding | None = None,
+) -> dict[str, Any]:
+    facts = item_facts(item)
+    return {
+        "decision": gate.decision,
+        "approval_path": gate.path,
+        "qualifying_entities": [match.canonical for match in gate.qualifying],
+        "supporting_entities": [match.canonical for match in gate.supporting],
+        "grounded_evidence": {key: list(value) for key, value in gate.evidence.items()},
+        "missing_evidence": list(gate.missing_evidence),
+        "reasons": list(gate.reasons),
+        "event_date": item.get("event_date"),
+        "venue": facts.get("venue"),
+        "open_time": facts.get("open_time"),
+        "close_time": facts.get("close_time"),
+        "public_access": list(gate.evidence["public_access"]),
+        "schedule": list(gate.evidence["schedule"]),
+        "ticket_url": facts.get("ticket_url"),
+        "source_binding": (
+            {
+                "reason": source_binding.reason,
+                "confident": source_binding.confident,
+                "source_hash": stable_text_hash(source_binding.text),
+            }
+            if source_binding else None
+        ),
+        "rendered_raw_path": rendered_raw_path,
+        "llm_raw_path": llm_raw_path,
+        "candidate_key": candidate_key,
+    }
+
+
 def extract_json_array(raw: str) -> list[Any]:
     # qwen3-family models may wrap analysis in one or more <think> blocks.
     # Remove only those tagged blocks before applying the strict array parser.
@@ -1054,6 +1352,13 @@ def validate_harvest_item(raw: Any) -> dict[str, Any]:
     news_type = raw.get("news_type")
     source_lang = raw.get("source_lang")
     confidence = raw.get("confidence")
+    raw_evidence = raw.get("experience_evidence")
+    experience_evidence = {
+        key: string_list(raw_evidence.get(key))
+        for key in EXPERIENCE_EVIDENCE_KEYS
+    } if isinstance(raw_evidence, dict) else {
+        key: [] for key in EXPERIENCE_EVIDENCE_KEYS
+    }
     return {
         "headline_en": headline.strip(),
         "summary_en": summary.strip(),
@@ -1069,6 +1374,7 @@ def validate_harvest_item(raw: Any) -> dict[str, Any]:
             if isinstance(confidence, (int, float)) and not isinstance(confidence, bool)
             else 0.0
         ),
+        "experience_evidence": experience_evidence,
     }
 
 
@@ -1077,29 +1383,66 @@ def markdown_blocks(markdown: str) -> list[str]:
     return blocks or [markdown]
 
 
-def source_texts_for_items(markdown: str, items: list[dict[str, Any]]) -> list[str]:
-    """Assign each page-mode result deterministic source text for anchor hashing."""
+def bind_source_texts_for_items(
+    markdown: str,
+    items: list[dict[str, Any]],
+) -> list[SourceBinding]:
+    """Bind each item to one source block, preferring its verbatim evidence."""
     blocks = markdown_blocks(markdown)
     available = set(range(len(blocks)))
-    assigned: list[str] = []
+    assigned: list[SourceBinding] = []
     used_hashes: set[str] = set()
     for ordinal, item in enumerate(items):
-        needles = set(WORD.findall(
-            " ".join([item["headline_en"], *item["entities_en"]]).lower()
-        ))
-        ranked = sorted(
-            available,
-            key=lambda index: len(needles & set(WORD.findall(blocks[index].lower()))),
-            reverse=True,
-        )
-        if ranked:
-            chosen = ranked[0]
+        quotes = [
+            normalize_grounding_text(quote)
+            for key in EXPERIENCE_EVIDENCE_KEYS
+            for quote in item.get("experience_evidence", {}).get(key, [])
+            if normalize_grounding_text(quote)
+        ]
+        quote_scores = {
+            index: sum(quote in normalize_grounding_text(blocks[index]) for quote in quotes)
+            for index in available
+        }
+        best_score = max(quote_scores.values(), default=0)
+        best_quote_blocks = [
+            index for index, score in quote_scores.items() if score == best_score and score > 0
+        ]
+        if len(best_quote_blocks) == 1:
+            chosen = best_quote_blocks[0]
             available.remove(chosen)
             source_text = blocks[chosen]
+            confident = best_score == len(quotes)
+            reason = "evidence_quotes_bound" if confident else "evidence_quotes_split"
         else:
-            # More results than headings: use a stable, non-overlapping source-page slice.
-            width = max(1, len(markdown) // len(items))
-            source_text = markdown[ordinal * width:(ordinal + 1) * width]
+            needles = set(WORD.findall(
+                " ".join([item["headline_en"], *item["entities_en"]]).lower()
+            ))
+            lexical_scores = {
+                index: len(needles & set(WORD.findall(blocks[index].lower())))
+                for index in available
+            }
+            best_lexical = max(lexical_scores.values(), default=0)
+            lexical_blocks = [
+                index for index, score in lexical_scores.items()
+                if score == best_lexical and score > 0
+            ]
+            if len(lexical_blocks) == 1:
+                chosen = lexical_blocks[0]
+                available.remove(chosen)
+                source_text = blocks[chosen]
+                confident = not quotes
+                reason = "lexical_fallback" if confident else "evidence_binding_ambiguous"
+            else:
+                remaining = sorted(available)
+                if remaining:
+                    chosen = remaining[0]
+                    available.remove(chosen)
+                    source_text = blocks[chosen]
+                else:
+                    width = max(1, len(markdown) // len(items))
+                    source_text = markdown[ordinal * width:(ordinal + 1) * width]
+                confident = False
+                reason = "evidence_binding_ambiguous" if quotes else "lexical_binding_ambiguous"
         source_hash = stable_text_hash(source_text)
         if source_hash in used_hashes:
             # Repeated cards/headings occur on some rendered pages. Add deterministic
@@ -1108,9 +1451,15 @@ def source_texts_for_items(markdown: str, items: list[dict[str, Any]]) -> list[s
             start = ordinal * width
             source_text = f"{source_text}\n{markdown[start:(ordinal + 1) * width]}"
             source_hash = stable_text_hash(source_text)
-        assigned.append(source_text)
+            confident = False
+            reason = "duplicate_source_segment"
+        assigned.append(SourceBinding(source_text, reason, confident))
         used_hashes.add(source_hash)
     return assigned
+
+
+def source_texts_for_items(markdown: str, items: list[dict[str, Any]]) -> list[str]:
+    return [binding.text for binding in bind_source_texts_for_items(markdown, items)]
 
 
 def normalize_date_text(value: str) -> str:
@@ -1849,6 +2198,7 @@ class CorrespondentCrawler:
                     item["headline_en"],
                 )
             item = {**item, "event_date": decision.event_date}
+            item["_event_date_evidence"] = decision.evidence
             self.observer.event(
                 "event_date_resolved",
                 reason=decision.reason,
@@ -1907,8 +2257,14 @@ class CorrespondentCrawler:
             if not items:
                 return
         summary.harvested += len(items)
-        source_texts = source_texts_for_items(markdown, items) if len(items) > 1 else [markdown]
+        source_bindings = bind_source_texts_for_items(markdown, items)
+        source_texts = [binding.text for binding in source_bindings]
         base_url = normalize_url(page.final_url, self.denylist)
+        page_level_date_confident = (
+            len(items) == 1
+            and len(markdown_blocks(markdown)) == 1
+            and len(extract_event_json_ld_dates(page.html)) == 1
+        )
         # Both derived from HTML the fetcher already downloaded — no extra requests.
         page_published_at = extract_page_published_at(page.html)
         page_image_url = extract_page_image(page.html, page.final_url)
@@ -1946,7 +2302,16 @@ class CorrespondentCrawler:
                 item["summary_en"],
                 self.entities,
             )
-            gate = decide_entity_gate(entity_matches)
+            entity_gate = decide_entity_gate(entity_matches)
+            gate = decide_unified_gate(
+                entity_gate,
+                item,
+                source_texts[index],
+                source_bindings[index].confident,
+                page.final_url,
+                page_level_date_confident,
+            )
+            candidate_key = experience_candidate_key(base_url, source_texts[index])
             qualifying_entities = [match.canonical for match in gate.qualifying]
             supporting_entities = [match.canonical for match in gate.supporting]
             matched_surfaces = [
@@ -1958,23 +2323,34 @@ class CorrespondentCrawler:
                 }
                 for match in entity_matches
             ]
-            if not gate.allowed:
+            gate_detail = unified_gate_detail(
+                gate,
+                item,
+                rendered_raw_path,
+                self.ollama.last_raw_path,
+                candidate_key,
+                source_bindings[index],
+            )
+            if gate.decision == "accepted":
+                self.observer.event(
+                    "gate_decision", reason=gate.reasons[-1], source=beat.name,
+                    item_url=page.final_url, title=item["headline_en"],
+                    detail=gate_detail,
+                )
+            if gate.decision != "accepted":
                 summary.gated_out += 1
                 logging.info(
                     "[%s] gated out (%s): %s",
                     beat.name,
-                    gate.reason,
+                    gate.reasons[-1],
                     item["headline_en"],
                 )
                 self.observer.event(
-                    "gated_out", reason=gate.reason, source=beat.name,
+                    "verification_candidate" if gate.decision == "needs_verification" else "gated_out",
+                    reason=gate.reasons[-1],
+                    source=beat.name,
                     item_url=page.final_url, title=item["headline_en"],
-                    detail=entity_gate_detail(
-                        gate,
-                        item["entities_en"],
-                        rendered_raw_path,
-                        self.ollama.last_raw_path,
-                    ),
+                    detail=gate_detail,
                 )
                 continue
             article_url = base_url
@@ -2001,6 +2377,12 @@ class CorrespondentCrawler:
                 if len(items) > 1
                 else (page_image_url or item_image_url)
             )
+            article_facts = facts_with_gate_metadata(
+                item["facts"],
+                base_url=page.final_url,
+                gate=gate,
+                candidate_key=candidate_key,
+            )
             payload = {
                 "title": item["headline_en"],
                 "content": item["summary_en"],
@@ -2011,7 +2393,7 @@ class CorrespondentCrawler:
                 "published_at": page_published_at,
                 "event_date": item["event_date"],
                 "doc_type": item["doc_type"],
-                "facts": normalize_facts(item["facts"], page.final_url),
+                "facts": article_facts,
                 "origin": "correspondent",
                 "source_id": None,
                 "suggestion_state": "new",
@@ -2040,6 +2422,8 @@ class CorrespondentCrawler:
                     "action": "would_insert",
                     "matched_entities": qualifying_entities,
                     "supporting_entities": supporting_entities,
+                    "approval_path": gate.path,
+                    "candidate_key": candidate_key,
                     "harvest": item,
                     "row": payload,
                 }, ensure_ascii=False))
@@ -2051,6 +2435,7 @@ class CorrespondentCrawler:
                         "matched_entities": qualifying_entities,
                         "supporting_entities": supporting_entities,
                         "matched_surfaces": matched_surfaces,
+                        **gate_detail,
                     },
                 )
                 continue
@@ -2072,6 +2457,7 @@ class CorrespondentCrawler:
                         "matched_entities": qualifying_entities,
                         "supporting_entities": supporting_entities,
                         "matched_surfaces": matched_surfaces,
+                        **gate_detail,
                     },
                 )
             else:

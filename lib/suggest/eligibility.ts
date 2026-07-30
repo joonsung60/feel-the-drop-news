@@ -2,6 +2,7 @@ import { RawArticle } from './types'
 
 export type ArticleEntityPartition = {
   qualifying: RawArticle[]
+  danceExperience: RawArticle[]
   supportingOnly: RawArticle[]
   notMatched: RawArticle[]
 }
@@ -22,6 +23,12 @@ export function hasExplicitEdmEvidence(article: RawArticle): boolean {
   return EXPLICIT_EDM_PATTERNS.some((pattern) => pattern.test(text))
 }
 
+export function correspondentApprovalPath(article: RawArticle): 'entity' | 'dance_experience' | null {
+  const gate = article.facts?.correspondent_gate
+  if (gate?.decision !== 'accepted') return null
+  return gate.path === 'entity' || gate.path === 'dance_experience' ? gate.path : null
+}
+
 export function partitionArticlesByEntityRole(
   articles: RawArticle[],
   qualifyingByArticle: Map<string, Set<string>>,
@@ -29,12 +36,15 @@ export function partitionArticlesByEntityRole(
 ): ArticleEntityPartition {
   const partition: ArticleEntityPartition = {
     qualifying: [],
+    danceExperience: [],
     supportingOnly: [],
     notMatched: [],
   }
   for (const article of articles) {
     if ((qualifyingByArticle.get(article.id)?.size ?? 0) > 0) {
       partition.qualifying.push(article)
+    } else if (correspondentApprovalPath(article) === 'dance_experience') {
+      partition.danceExperience.push(article)
     } else if ((supportingByArticle.get(article.id)?.size ?? 0) > 0) {
       partition.supportingOnly.push(article)
     } else {
@@ -50,10 +60,11 @@ export function selectEligibleLlmInput(
   noEntityRatioMax: number,
 ): { input: RawArticle[]; noEntitySelected: RawArticle[] } {
   const qualifying = partition.qualifying.slice(0, maxInput)
-  const remainingSlots = maxInput - qualifying.length
+  const danceExperience = partition.danceExperience.slice(0, maxInput - qualifying.length)
+  const remainingSlots = maxInput - qualifying.length - danceExperience.length
   const noEntityLimit = Math.min(remainingSlots, Math.floor(maxInput * noEntityRatioMax))
   const noEntitySelected = partition.notMatched
     .filter(hasExplicitEdmEvidence)
     .slice(0, noEntityLimit)
-  return { input: [...qualifying, ...noEntitySelected], noEntitySelected }
+  return { input: [...qualifying, ...danceExperience, ...noEntitySelected], noEntitySelected }
 }
