@@ -1,0 +1,31 @@
+{
+  "as_of": "2026-07-30",
+  "datasets": [
+    {
+      "name": "source_candidates",
+      "path": "source-candidates.json",
+      "sha256": "b550ac812993a1240dcd3cb3f350b03ba5b3de97ec6765665b4ad978cc72742f",
+      "record_count": 31,
+      "use": "reference_only"
+    },
+    {
+      "name": "event_gold_set",
+      "path": "event-gold-set.json",
+      "sha256": "5d7b9c3aead82f2b8a7289d071b3f74f34795df13c6e945943741e51291a0712",
+      "record_count": 36,
+      "use": "reference_only"
+    }
+  ],
+  "expected_gold_decisions": {
+    "accepted": 13,
+    "needs_verification": 12,
+    "rejected": 11
+  },
+  "excluded_inputs": [
+    {
+      "name": "combined_dataset",
+      "sha256": "468bacd15e799ca7dddec8577888e24456d3ff5c8c22b38dfa99957afa31442f",
+      "reason": "Exact aggregate of the two canonical datasets; intentionally not duplicated."
+    }
+  ]
+}

@@ -6,6 +6,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from crawler import (
+    article_url_for_item,
     EntityEntry,
     EntityGateDecision,
     EntityMatch,
@@ -32,6 +33,7 @@ from crawler import (
     load_entities,
     match_entities,
     match_entity_details,
+    normalize_event_identity,
     normalize_url,
     parse_listing_date,
     source_texts_for_items,
@@ -273,6 +275,54 @@ class CrawlerTests(unittest.TestCase):
                 self.assertEqual(decision.decision, "needs_verification")
                 self.assertTrue(missing.issubset(set(decision.missing_evidence)))
 
+    def test_parent_festival_dates_do_not_supply_edm_session_schedule(self) -> None:
+        source = (
+            "EDM 페스티벌을 포함한 다양한 프로그램이 열린다. "
+            "축제 기간 2026.07.24~07.26 장소 일산해수욕장 일원 요금 무료."
+        )
+        item = self.experience_item(
+            source,
+            event_date="2026-07-24",
+            venue="일산해수욕장 일원",
+            evidence={
+                "dance_centrality": ["EDM 페스티벌"],
+                "program_independence": ["다양한 프로그램"],
+                "public_access": ["요금 무료"],
+                "schedule": ["2026.07.24~07.26"],
+                "venue_or_space": ["일산해수욕장 일원"],
+            },
+        )
+        decision = decide_unified_gate(
+            EntityGateDecision(False, "no_entity_match", (), ()), item, source,
+        )
+        self.assertEqual(decision.decision, "needs_verification")
+        self.assertIn("session_schedule", decision.missing_evidence)
+
+    def test_exact_grounded_edm_session_schedule_can_be_accepted(self) -> None:
+        source = (
+            "EDM 페스티벌 독립 무대 20:00~21:30. "
+            "2026.07.24 일산해수욕장 일원 요금 무료."
+        )
+        item = self.experience_item(
+            source,
+            event_date="2026-07-24",
+            venue="일산해수욕장 일원",
+            evidence={
+                "dance_centrality": ["EDM 페스티벌 독립 무대 20:00~21:30"],
+                "program_independence": ["독립 무대 20:00~21:30"],
+                "public_access": ["요금 무료"],
+                "schedule": ["2026.07.24"],
+                "venue_or_space": ["일산해수욕장 일원"],
+            },
+        )
+        decision = decide_unified_gate(
+            EntityGateDecision(False, "no_entity_match", (), ()), item, source,
+        )
+        self.assertEqual(
+            (decision.decision, decision.path),
+            ("accepted", "dance_experience"),
+        )
+
     def test_incidental_private_and_non_dance_events_are_rejected(self) -> None:
         cases = [
             ("Restaurant dinner with background DJ at Dock 9 Warehouse.", {"incidental_dj": ["background DJ"]}, "rejected_incidental_dj"),
@@ -493,13 +543,104 @@ class CrawlerTests(unittest.TestCase):
         )
         self.assertEqual(summary.gated_out, 1)
 
-    def test_candidate_key_uses_only_url_and_source_segment(self) -> None:
+    def test_candidate_key_uses_normalized_title_date_and_venue(self) -> None:
         url = "https://example.com/events"
-        source_a = "창고 레이브 무대 22:00"
-        key_a = experience_candidate_key(url, source_a)
-        # LLM fields are deliberately absent from the helper and cannot affect the key.
-        self.assertEqual(key_a, experience_candidate_key(url, source_a))
-        self.assertNotEqual(key_a, experience_candidate_key(url, "해변 DJ 무대 18:00"))
+        item = self.experience_item("ignored", venue="Dock 9 Warehouse")
+        item["headline_en"] = "  Public: Dance Event! "
+        key = experience_candidate_key(item, url)
+        changed_page_copy = {
+            **item,
+            "headline_en": "public — dance event",
+            "summary_en": "Page wording changed slightly.",
+        }
+        self.assertEqual(key, experience_candidate_key(changed_page_copy, url))
+        self.assertEqual(
+            normalize_event_identity("ＤＯＣＫ 9—Warehouse!"),
+            "dock 9 warehouse",
+        )
+
+        changed_title = {**item, "headline_en": "Different Dance Event"}
+        changed_date = {**item, "event_date": "2026-08-16"}
+        changed_venue = {**item, "facts": {"venue": "Harbor Warehouse"}}
+        for changed in (changed_title, changed_date, changed_venue):
+            with self.subTest(changed=changed):
+                self.assertNotEqual(key, experience_candidate_key(changed, url))
+
+    def test_incomplete_candidate_key_is_stable_but_source_scoped(self) -> None:
+        item = self.experience_item("possible rave", event_date=None, venue="")
+        key = experience_candidate_key(item, "https://example.com/events")
+        self.assertEqual(key, experience_candidate_key(item, "https://example.com/events"))
+        self.assertNotEqual(
+            key,
+            experience_candidate_key(item, "https://other.example/events"),
+        )
+
+    def test_multi_event_article_url_uses_stable_event_candidate_key(self) -> None:
+        base_url = "https://example.com/events"
+        item = self.experience_item("ignored")
+        candidate_key = experience_candidate_key(item, base_url)
+        first = article_url_for_item(
+            base_url, "page", 2, item, candidate_key, "Original event page copy.",
+        )
+        changed = article_url_for_item(
+            base_url, "page", 2, item, candidate_key, "Slightly revised event page copy.",
+        )
+        self.assertEqual(first, changed)
+
+        changed_title = {**item, "headline_en": "Different event"}
+        changed_date = {**item, "event_date": "2026-08-16"}
+        changed_venue = {**item, "facts": {"venue": "Different venue"}}
+        urls = {
+            article_url_for_item(
+                base_url,
+                "page",
+                2,
+                changed_item,
+                experience_candidate_key(changed_item, base_url),
+                "Same page copy.",
+            )
+            for changed_item in (item, changed_title, changed_date, changed_venue)
+        }
+        self.assertEqual(len(urls), 4)
+
+    def test_multi_news_article_url_keeps_source_text_hash(self) -> None:
+        item = validate_harvest_item({
+            "headline_en": "Artist releases a single",
+            "summary_en": "Release news.",
+            "entities_en": [],
+            "news_type": "release",
+            "facts": {},
+        })
+        base_url = "https://example.com/news"
+        first = article_url_for_item(base_url, "page", 2, item, "unused", "First article")
+        second = article_url_for_item(base_url, "page", 2, item, "unused", "Second article")
+        self.assertNotEqual(first, second)
+
+    def test_official_html_gate_fixtures(self) -> None:
+        fixture_path = (
+            Path(__file__).resolve().parents[1]
+            / "research/korea-dance/fixtures/gate-cases.json"
+        )
+        cases = json.loads(fixture_path.read_text(encoding="utf-8"))
+        for case in cases:
+            with self.subTest(case=case["id"]):
+                item = validate_harvest_item({
+                    "headline_en": case["headline_en"],
+                    "summary_en": "Fixture excerpt verified from the linked primary page.",
+                    "entities_en": [],
+                    "news_type": case["news_type"],
+                    "event_date": case["event_date"],
+                    "facts": {"venue": case["venue"]},
+                    "experience_evidence": case["experience_evidence"],
+                })
+                decision = decide_unified_gate(
+                    EntityGateDecision(False, "no_entity_match", (), ()),
+                    item,
+                    case["source_text"],
+                    source_url=case["source_url"],
+                )
+                self.assertEqual(decision.decision, case["expected_decision"])
+                self.assertEqual(decision.path, case["expected_path"])
 
     def test_normalize_url_removes_only_denylist(self) -> None:
         denylist = ["utm_*", "fbclid", "ref"]

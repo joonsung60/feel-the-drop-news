@@ -1,0 +1,1261 @@
+[
+  {
+    "event_name": "2026 World DJ Festival",
+    "region": "경기 과천",
+    "date": "2026-06-13~2026-06-14",
+    "venue": "서울랜드",
+    "source_name": "World DJ Festival",
+    "discovery_url": "https://tickets.interpark.com/contents/notice/detail/10558",
+    "official_verification_urls": [
+      "https://tickets.interpark.com/contents/notice/detail/10558",
+      "https://wdjfest.com/"
+    ],
+    "decision": "accepted",
+    "approval_path": "entity",
+    "evidence": {
+      "dance_centrality": [
+        "https://tickets.interpark.com/contents/notice/detail/10558 — 장르가 EDM으로 명시됨"
+      ],
+      "program_independence": [
+        "https://tickets.interpark.com/contents/notice/detail/10558 — 양일 독립 페스티벌 티켓 상품"
+      ],
+      "public_access": [
+        "https://tickets.interpark.com/contents/notice/detail/10558 — 일반 예매 가능, 만 19세 이상"
+      ],
+      "schedule": [
+        "https://tickets.interpark.com/contents/notice/detail/10558 — 2026-06-13~14, 14:00~22:00"
+      ],
+      "venue_or_space": [
+        "https://tickets.interpark.com/contents/notice/detail/10558 — 서울랜드"
+      ],
+      "production_or_atmosphere": [],
+      "incidental_dj": [],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [],
+    "reason": "독립 EDM 페스티벌이며 공개 티켓, 일시, 장소가 모두 확인됨."
+  },
+  {
+    "event_name": "S2O Korea Songkran Music Festival 2026",
+    "region": "경기 과천",
+    "date": "2026-07-11~2026-07-12",
+    "venue": "서울랜드",
+    "source_name": "S2O Korea",
+    "discovery_url": "https://world.nol.com/en/ticket/places/23000297/products/26002152",
+    "official_verification_urls": [
+      "https://world.nol.com/en/ticket/places/23000297/products/26002152",
+      "https://www.s2okorea.com/"
+    ],
+    "decision": "accepted",
+    "approval_path": "entity",
+    "evidence": {
+      "dance_centrality": [
+        "https://www.s2okorea.com/ — EDM 기반 송크란 뮤직 페스티벌"
+      ],
+      "program_independence": [
+        "https://world.nol.com/en/ticket/places/23000297/products/26002152 — 양일권·일일권 독립 상품"
+      ],
+      "public_access": [
+        "https://world.nol.com/en/ticket/places/23000297/products/26002152 — 일반 티켓 판매, 만 19세 이상"
+      ],
+      "schedule": [
+        "https://world.nol.com/en/ticket/places/23000297/products/26002152 — 2026-07-11~12"
+      ],
+      "venue_or_space": [
+        "https://world.nol.com/en/ticket/places/23000297/products/26002152 — 서울랜드"
+      ],
+      "production_or_atmosphere": [
+        "https://www.s2okorea.com/ — 대형 워터 프로덕션과 DJ 무대"
+      ],
+      "incidental_dj": [],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [],
+    "reason": "춤·워터 프로덕션이 중심인 독립 공개 페스티벌."
+  },
+  {
+    "event_name": "EDC Korea 2026",
+    "region": "인천",
+    "date": "2026-10-03~2026-10-04",
+    "venue": "Discovery Park, Incheon",
+    "source_name": "EDC Korea",
+    "discovery_url": "https://korea.edc.com/en/",
+    "official_verification_urls": [
+      "https://korea.edc.com/en/",
+      "https://korea.edc.com/en/tickets/",
+      "https://korea.edc.com/en/travel/location/"
+    ],
+    "decision": "accepted",
+    "approval_path": "entity",
+    "evidence": {
+      "dance_centrality": [
+        "https://korea.edc.com/en/ — 전자댄스음악 페스티벌 브랜드"
+      ],
+      "program_independence": [
+        "https://korea.edc.com/en/tickets/ — GA·VIP 2일 패스가 있는 독립 행사"
+      ],
+      "public_access": [
+        "https://korea.edc.com/en/tickets/ — 일반 티켓 판매, 19+"
+      ],
+      "schedule": [
+        "https://korea.edc.com/en/tickets/ — 2026-10-03~04"
+      ],
+      "venue_or_space": [
+        "https://korea.edc.com/en/travel/location/ — Discovery Park, Incheon"
+      ],
+      "production_or_atmosphere": [
+        "https://korea.edc.com/en/tickets/ — 복수 스테이지와 댄스 공간"
+      ],
+      "incidental_dj": [],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [],
+    "reason": "일정·장소·공개 티켓·복수 전자음악 무대가 모두 공식 확인됨."
+  },
+  {
+    "event_name": "DODO MEETS NIKKI NAIR",
+    "region": "서울",
+    "date": "2026-08-01 22:00~2026-08-02 04:00",
+    "venue": "Cakeshop Seoul",
+    "source_name": "Resident Advisor South Korea Events",
+    "discovery_url": "https://ra.co/events/2466649",
+    "official_verification_urls": [
+      "https://www.instagram.com/p/DbFsbdukQRp/",
+      "https://www.instagram.com/cakeshopseoul/",
+      "https://ra.co/events/2466649"
+    ],
+    "decision": "accepted",
+    "approval_path": "dance_experience",
+    "evidence": {
+      "dance_centrality": [
+        "https://ra.co/events/2466649 — Bass/Electro 및 DJ 라인업",
+        "https://www.instagram.com/p/DbFsbdukQRp/ — Nikki Nair 포함 DJ 라인업"
+      ],
+      "program_independence": [
+        "https://www.instagram.com/p/DbFsbdukQRp/ — DODO가 주최하는 독립 클럽 나이트"
+      ],
+      "public_access": [
+        "https://www.instagram.com/p/DbIesenv49u/ — 얼리버드 20,000원, 현장 25,000원"
+      ],
+      "schedule": [
+        "https://ra.co/events/2466649 — 2026-08-01 22:00~04:00"
+      ],
+      "venue_or_space": [
+        "https://ra.co/events/2466649 — Cakeshop Seoul"
+      ],
+      "production_or_atmosphere": [],
+      "incidental_dj": [],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [],
+    "reason": "RA 발견 뒤 주최·베뉴 1차 SNS에서 일정·라인업·가격을 교차확인."
+  },
+  {
+    "event_name": "HARD TECHNO SEOUL: ARWEENN & SEORIN",
+    "region": "서울",
+    "date": "2026-08-01 23:00~2026-08-02 07:00",
+    "venue": "LUKA Seoul",
+    "source_name": "Resident Advisor South Korea Events",
+    "discovery_url": "https://ra.co/events/2498553",
+    "official_verification_urls": [
+      "https://www.instagram.com/p/DbSJUI1xidC/",
+      "https://www.instagram.com/luka.seoul/",
+      "https://ra.co/events/2498553"
+    ],
+    "decision": "accepted",
+    "approval_path": "dance_experience",
+    "evidence": {
+      "dance_centrality": [
+        "https://www.instagram.com/luka.seoul/ — HARD TECHNO / INDUSTRIAL TECHNO 명시"
+      ],
+      "program_independence": [
+        "https://www.instagram.com/p/DbSJUI1xidC/ — HARD TECHNO SEOUL 독립 나이트"
+      ],
+      "public_access": [
+        "https://ra.co/events/2498553 — 공개 티켓 페이지"
+      ],
+      "schedule": [
+        "https://www.instagram.com/p/DbSJUI1xidC/ — 2026-08-01 23:00부터",
+        "https://ra.co/events/2498553 — 종료 07:00"
+      ],
+      "venue_or_space": [
+        "https://www.instagram.com/p/DbSJUI1xidC/ — LUKA Seoul 주소 명시"
+      ],
+      "production_or_atmosphere": [],
+      "incidental_dj": [],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [],
+    "reason": "베뉴 1차 공지와 RA 티켓에서 장르·일정·장소·공개 접근을 확인."
+  },
+  {
+    "event_name": "AFTERIMAGE",
+    "region": "부산",
+    "date": "2026-08-01 22:00~2026-08-02 04:00",
+    "venue": "MELT Busan",
+    "source_name": "Resident Advisor South Korea Events",
+    "discovery_url": "https://ra.co/events/2500470",
+    "official_verification_urls": [
+      "https://www.instagram.com/p/DbW7eVCh0Dx/",
+      "https://www.instagram.com/melt_busan/",
+      "https://ra.co/events/2500470"
+    ],
+    "decision": "accepted",
+    "approval_path": "dance_experience",
+    "evidence": {
+      "dance_centrality": [
+        "https://ra.co/events/2500470 — Dub Techno/Electronica DJ 나이트"
+      ],
+      "program_independence": [
+        "https://www.instagram.com/p/DbW7eVCh0Dx/ — MELT의 AFTERIMAGE 독립 프로그램"
+      ],
+      "public_access": [
+        "https://ra.co/events/2500470 — 15,000원 공개 티켓, 20+"
+      ],
+      "schedule": [
+        "https://www.instagram.com/melt_busan/ — 2026-08-01, 22:00~04:00"
+      ],
+      "venue_or_space": [
+        "https://ra.co/events/2500470 — MELT Busan"
+      ],
+      "production_or_atmosphere": [],
+      "incidental_dj": [],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [],
+    "reason": "발견 페이지와 베뉴 1차 SNS가 일치하고 공개 입장 조건이 확인됨."
+  },
+  {
+    "event_name": "GROOVE TRAIN",
+    "region": "부산",
+    "date": "2026-07-31 22:00~2026-08-01 04:00",
+    "venue": "MELT Busan",
+    "source_name": "Resident Advisor South Korea Events",
+    "discovery_url": "https://ra.co/events/2499842",
+    "official_verification_urls": [
+      "https://www.instagram.com/melt_busan/",
+      "https://ra.co/events/2499842"
+    ],
+    "decision": "accepted",
+    "approval_path": "dance_experience",
+    "evidence": {
+      "dance_centrality": [
+        "https://ra.co/events/2499842 — Tech House DJ 라인업"
+      ],
+      "program_independence": [
+        "https://www.instagram.com/melt_busan/ — GROOVE TRAIN 프로그램명과 DJs 공지"
+      ],
+      "public_access": [
+        "https://ra.co/events/2499842 — 15,000원 공개 티켓, 20+"
+      ],
+      "schedule": [
+        "https://www.instagram.com/melt_busan/ — 2026-07-31",
+        "https://ra.co/events/2499842 — 22:00~04:00"
+      ],
+      "venue_or_space": [
+        "https://ra.co/events/2499842 — MELT Busan"
+      ],
+      "production_or_atmosphere": [],
+      "incidental_dj": [],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [],
+    "reason": "베뉴 1차 공지와 RA의 공개 티켓·시간·장르가 교차확인됨."
+  },
+  {
+    "event_name": "Club Nasub AND1",
+    "region": "부산",
+    "date": "2026-08-01 22:00~2026-08-02 04:00",
+    "venue": "Club Nasub",
+    "source_name": "Resident Advisor South Korea Events",
+    "discovery_url": "https://ra.co/events/2499675",
+    "official_verification_urls": [
+      "https://www.instagram.com/p/DbUrDMxS44Y/",
+      "https://www.instagram.com/clubnasub/",
+      "https://ra.co/events/2499675"
+    ],
+    "decision": "accepted",
+    "approval_path": "dance_experience",
+    "evidence": {
+      "dance_centrality": [
+        "https://ra.co/events/2499675 — Techno/House DJ 나이트"
+      ],
+      "program_independence": [
+        "https://www.instagram.com/p/DbUrDMxS44Y/ — AND1 all-night 프로그램과 타임테이블"
+      ],
+      "public_access": [
+        "https://ra.co/events/2499675 — 10,000원 공개 입장, 19+"
+      ],
+      "schedule": [
+        "https://ra.co/events/2499675 — 2026-08-01 22:00~04:00"
+      ],
+      "venue_or_space": [
+        "https://www.instagram.com/p/DbXNf40kh97/ — 부산진구 주소"
+      ],
+      "production_or_atmosphere": [],
+      "incidental_dj": [],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [],
+    "reason": "클럽 공식 공지에 프로그램·타임테이블이 있고 RA에 공개 입장 조건이 존재."
+  },
+  {
+    "event_name": "일산 EDM 파티",
+    "region": "울산",
+    "date": "2026-07-25 20:30~21:40",
+    "venue": "울산 동구 일산해수욕장 메인무대",
+    "source_name": "울산조선해양축제 공식",
+    "discovery_url": "https://ussf.co.kr/",
+    "official_verification_urls": [
+      "https://ussf.co.kr/",
+      "https://www.facebook.com/usdonggu/posts/1332898938967960/"
+    ],
+    "decision": "accepted",
+    "approval_path": "dance_experience",
+    "evidence": {
+      "dance_centrality": [
+        "https://ussf.co.kr/ — '일산 EDM 파티' 명시"
+      ],
+      "program_independence": [
+        "https://ussf.co.kr/ — 메인무대의 독립 프로그램명과 70분 슬롯"
+      ],
+      "public_access": [
+        "https://www.facebook.com/usdonggu/posts/1332898938967960/ — 울산 동구 공개 축제 공지",
+        "https://ussf.co.kr/ — 공개 축제 프로그램"
+      ],
+      "schedule": [
+        "https://ussf.co.kr/ — 2026-07-25 20:30~21:40"
+      ],
+      "venue_or_space": [
+        "https://ussf.co.kr/ — 일산해수욕장 메인무대"
+      ],
+      "production_or_atmosphere": [
+        "https://ussf.co.kr/ — 해변 PARTY 프로그램"
+      ],
+      "incidental_dj": [],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [],
+    "reason": "공식 프로그램표에 시간·무대가 분리된 무료 공개 해변 EDM 세션."
+  },
+  {
+    "event_name": "Water EDM DJ Show — DJ TAN & Poison",
+    "region": "대구",
+    "date": "2026-07-01 18:00~18:50",
+    "venue": "두류공원 2·28자유광장 치맥 워터그라운드",
+    "source_name": "대구치맥페스티벌 공식 프로그램",
+    "discovery_url": "https://www.chimacfestival.com/page/2026/program_schedule.php",
+    "official_verification_urls": [
+      "https://www.chimacfestival.com/page/2026/program_schedule.php",
+      "https://korean.visitkorea.or.kr/kfes/detail/fstvlDetail.do?fstvlCntntsId=fc491eba-6273-4ae0-a6bd-aee54fcac631"
+    ],
+    "decision": "accepted",
+    "approval_path": "dance_experience",
+    "evidence": {
+      "dance_centrality": [
+        "https://www.chimacfestival.com/page/2026/program_schedule.php — Water EDM DJ Show 명시"
+      ],
+      "program_independence": [
+        "https://www.chimacfestival.com/page/2026/program_schedule.php — 별도 무대·50분 슬롯"
+      ],
+      "public_access": [
+        "https://korean.visitkorea.or.kr/kfes/detail/fstvlDetail.do?fstvlCntntsId=fc491eba-6273-4ae0-a6bd-aee54fcac631 — 무료 입장(일부 유료)"
+      ],
+      "schedule": [
+        "https://www.chimacfestival.com/page/2026/program_schedule.php — 2026-07-01 18:00~18:50"
+      ],
+      "venue_or_space": [
+        "https://www.chimacfestival.com/page/2026/program_schedule.php — 치맥 워터그라운드"
+      ],
+      "production_or_atmosphere": [
+        "https://www.chimacfestival.com/page/2026/program_schedule.php — 워터 연출과 EDM"
+      ],
+      "incidental_dj": [],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [],
+    "reason": "지역축제 안에 독립 무대·시간표가 있는 워터 EDM 세션."
+  },
+  {
+    "event_name": "WATERCON EDM PARTY — DJ ANSOMI",
+    "region": "대구",
+    "date": "2026-07-02 20:00~21:00",
+    "venue": "두류공원 2·28자유광장 치맥 워터그라운드",
+    "source_name": "대구치맥페스티벌 공식 프로그램",
+    "discovery_url": "https://www.chimacfestival.com/page/2026/program_schedule.php",
+    "official_verification_urls": [
+      "https://www.chimacfestival.com/page/2026/program_schedule.php",
+      "https://korean.visitkorea.or.kr/kfes/detail/fstvlDetail.do?fstvlCntntsId=fc491eba-6273-4ae0-a6bd-aee54fcac631"
+    ],
+    "decision": "accepted",
+    "approval_path": "dance_experience",
+    "evidence": {
+      "dance_centrality": [
+        "https://www.chimacfestival.com/page/2026/program_schedule.php — EDM PARTY 명시"
+      ],
+      "program_independence": [
+        "https://www.chimacfestival.com/page/2026/program_schedule.php — 60분 독립 슬롯"
+      ],
+      "public_access": [
+        "https://korean.visitkorea.or.kr/kfes/detail/fstvlDetail.do?fstvlCntntsId=fc491eba-6273-4ae0-a6bd-aee54fcac631 — 무료 입장(일부 유료)"
+      ],
+      "schedule": [
+        "https://www.chimacfestival.com/page/2026/program_schedule.php — 2026-07-02 20:00~21:00"
+      ],
+      "venue_or_space": [
+        "https://www.chimacfestival.com/page/2026/program_schedule.php — 치맥 워터그라운드"
+      ],
+      "production_or_atmosphere": [],
+      "incidental_dj": [],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [],
+    "reason": "공식 시간표에서 EDM 중심 독립 세션으로 확인."
+  },
+  {
+    "event_name": "CASS EDM — DJ NEO",
+    "region": "대구",
+    "date": "2026-07-04 20:00~21:00",
+    "venue": "두류공원 2·28자유광장 치맥 워터그라운드",
+    "source_name": "대구치맥페스티벌 공식 프로그램",
+    "discovery_url": "https://www.chimacfestival.com/page/2026/program_schedule.php",
+    "official_verification_urls": [
+      "https://www.chimacfestival.com/page/2026/program_schedule.php",
+      "https://korean.visitkorea.or.kr/kfes/detail/fstvlDetail.do?fstvlCntntsId=fc491eba-6273-4ae0-a6bd-aee54fcac631"
+    ],
+    "decision": "accepted",
+    "approval_path": "dance_experience",
+    "evidence": {
+      "dance_centrality": [
+        "https://www.chimacfestival.com/page/2026/program_schedule.php — CASS EDM 및 DJ NEO"
+      ],
+      "program_independence": [
+        "https://www.chimacfestival.com/page/2026/program_schedule.php — 60분 단독 슬롯"
+      ],
+      "public_access": [
+        "https://korean.visitkorea.or.kr/kfes/detail/fstvlDetail.do?fstvlCntntsId=fc491eba-6273-4ae0-a6bd-aee54fcac631 — 무료 입장(일부 유료)"
+      ],
+      "schedule": [
+        "https://www.chimacfestival.com/page/2026/program_schedule.php — 2026-07-04 20:00~21:00"
+      ],
+      "venue_or_space": [
+        "https://www.chimacfestival.com/page/2026/program_schedule.php — 치맥 워터그라운드"
+      ],
+      "production_or_atmosphere": [],
+      "incidental_dj": [],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [],
+    "reason": "브랜드 협찬이 있으나 독립 EDM 무대·시간표·DJ가 명확해 부대 BGM이 아님."
+  },
+  {
+    "event_name": "WATERCON EDM PARTY — DJ G.PARK",
+    "region": "대구",
+    "date": "2026-07-05 20:10~21:00",
+    "venue": "두류공원 2·28자유광장 치맥 워터그라운드",
+    "source_name": "대구치맥페스티벌 공식 프로그램",
+    "discovery_url": "https://www.chimacfestival.com/page/2026/program_schedule.php",
+    "official_verification_urls": [
+      "https://www.chimacfestival.com/page/2026/program_schedule.php",
+      "https://korean.visitkorea.or.kr/kfes/detail/fstvlDetail.do?fstvlCntntsId=fc491eba-6273-4ae0-a6bd-aee54fcac631"
+    ],
+    "decision": "accepted",
+    "approval_path": "dance_experience",
+    "evidence": {
+      "dance_centrality": [
+        "https://www.chimacfestival.com/page/2026/program_schedule.php — WATERCON EDM 및 DJ G.PARK"
+      ],
+      "program_independence": [
+        "https://www.chimacfestival.com/page/2026/program_schedule.php — 50분 독립 슬롯"
+      ],
+      "public_access": [
+        "https://korean.visitkorea.or.kr/kfes/detail/fstvlDetail.do?fstvlCntntsId=fc491eba-6273-4ae0-a6bd-aee54fcac631 — 무료 입장(일부 유료)"
+      ],
+      "schedule": [
+        "https://www.chimacfestival.com/page/2026/program_schedule.php — 2026-07-05 20:10~21:00"
+      ],
+      "venue_or_space": [
+        "https://www.chimacfestival.com/page/2026/program_schedule.php — 치맥 워터그라운드"
+      ],
+      "production_or_atmosphere": [],
+      "incidental_dj": [],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [],
+    "reason": "공식 프로그램표로 승인 가능한 지역축제 내부 EDM 세션."
+  },
+  {
+    "event_name": "WATERBOMB SEOUL 2026",
+    "region": "서울",
+    "date": "2026-07-24~2026-07-26",
+    "venue": null,
+    "source_name": "WATERBOMB Korea",
+    "discovery_url": "https://www.waterbombfestival.com/event-details/waterbomb-seoul-2026",
+    "official_verification_urls": [
+      "https://www.waterbombfestival.com/event-details/waterbomb-seoul-2026",
+      "https://www.waterbombfestival.com/event-list"
+    ],
+    "decision": "needs_verification",
+    "approval_path": "entity",
+    "evidence": {
+      "dance_centrality": [
+        "https://www.waterbombfestival.com/event-details/waterbomb-seoul-2026 — 댄스 음악과 워터 액티비티 중심"
+      ],
+      "program_independence": [
+        "https://www.waterbombfestival.com/event-details/waterbomb-seoul-2026 — 독립 티켓 행사"
+      ],
+      "public_access": [
+        "https://www.waterbombfestival.com/event-details/waterbomb-seoul-2026 — 공개 티켓 안내, 19+"
+      ],
+      "schedule": [
+        "https://www.waterbombfestival.com/event-details/waterbomb-seoul-2026 — 2026-07-24~26"
+      ],
+      "venue_or_space": [],
+      "production_or_atmosphere": [],
+      "incidental_dj": [],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [
+      "공식 venue가 TBA 상태",
+      "최종 일별 타임테이블"
+    ],
+    "reason": "행사 성격과 티켓은 명확하지만 장소가 확정되지 않아 accepted 요건 미충족."
+  },
+  {
+    "event_name": "선셋비치클럽",
+    "region": "부산",
+    "date": "2026-08-01~2026-08-02",
+    "venue": "다대포해수욕장",
+    "source_name": "페스티벌 부산/부산축제조직위원회",
+    "discovery_url": "https://festivalbusan.com/seafestival/",
+    "official_verification_urls": [
+      "https://festivalbusan.com/seafestival/"
+    ],
+    "decision": "needs_verification",
+    "approval_path": "dance_experience",
+    "evidence": {
+      "dance_centrality": [
+        "https://festivalbusan.com/seafestival/ — 다대포 해변의 오픈 클럽 프로그램으로 소개"
+      ],
+      "program_independence": [
+        "https://festivalbusan.com/seafestival/ — '선셋비치클럽' 독립 프로그램명"
+      ],
+      "public_access": [
+        "https://festivalbusan.com/seafestival/ — 티켓예약 메뉴 존재"
+      ],
+      "schedule": [
+        "https://festivalbusan.com/seafestival/ — 2026 부산바다축제 기간 확인"
+      ],
+      "venue_or_space": [
+        "https://festivalbusan.com/seafestival/ — 다대포해수욕장"
+      ],
+      "production_or_atmosphere": [],
+      "incidental_dj": [],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [
+      "2026 세부 세션 시간",
+      "최종 DJ 라인업",
+      "예약 조건의 상세 페이지"
+    ],
+    "reason": "중심 경험은 강하지만 2026 상세 시간표와 접근 조건이 아직 완결되지 않음."
+  },
+  {
+    "event_name": "머드온더비치",
+    "region": "충남 보령",
+    "date": "2026-07-24 20:00~21:30",
+    "venue": "대천해수욕장 보령머드축제장",
+    "source_name": "보령머드축제 공식 일정",
+    "discovery_url": "https://mudfestival.or.kr/festival/schedule/view?level=2&menuNo=32",
+    "official_verification_urls": [
+      "https://mudfestival.or.kr/festival/schedule/view?level=2&menuNo=32"
+    ],
+    "decision": "needs_verification",
+    "approval_path": "dance_experience",
+    "evidence": {
+      "dance_centrality": [],
+      "program_independence": [
+        "https://mudfestival.or.kr/festival/schedule/view?level=2&menuNo=32 — 90분 독립 프로그램 슬롯"
+      ],
+      "public_access": [],
+      "schedule": [
+        "https://mudfestival.or.kr/festival/schedule/view?level=2&menuNo=32 — 2026-07-24 20:00~21:30"
+      ],
+      "venue_or_space": [
+        "https://mudfestival.or.kr/festival/schedule/view?level=2&menuNo=32 — 대천해수욕장 축제장"
+      ],
+      "production_or_atmosphere": [],
+      "incidental_dj": [],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [
+      "DJ/전자음악 여부",
+      "라인업",
+      "관객이 춤추는 프로그램이라는 공식 설명"
+    ],
+    "reason": "프로그램 독립성과 시간은 확인되지만 dance centrality가 공식 문구로 확인되지 않음."
+  },
+  {
+    "event_name": "격포 Ocean Vibe",
+    "region": "전북 부안",
+    "date": "2026-07-24~2026-08-17",
+    "venue": "격포해수욕장 광장(공식 보도 기준)",
+    "source_name": "부안군 문화관광 해변 야간 콘텐츠",
+    "discovery_url": "https://www.buan.go.kr/tour/index.buan?menuCd=DOM_000000210001015000",
+    "official_verification_urls": [
+      "https://www.buan.go.kr/tour/index.buan?menuCd=DOM_000000210001015000",
+      "https://www.buan.go.kr/board/view.buan?boardId=BBS_0000059&dataSid=366150&menuCd=DOM_000000103002001000&paging=ok&startPage=1"
+    ],
+    "decision": "needs_verification",
+    "approval_path": "dance_experience",
+    "evidence": {
+      "dance_centrality": [
+        "https://www.buan.go.kr/board/view.buan?boardId=BBS_0000059&dataSid=366150&menuCd=DOM_000000103002001000&paging=ok&startPage=1 — 야간 DJ·라이브 프로그램"
+      ],
+      "program_independence": [
+        "https://www.buan.go.kr/tour/index.buan?menuCd=DOM_000000210001015000 — Ocean Vibe 독립 콘텐츠"
+      ],
+      "public_access": [],
+      "schedule": [
+        "https://www.buan.go.kr/tour/index.buan?menuCd=DOM_000000210001015000 — 운영기간 제시"
+      ],
+      "venue_or_space": [],
+      "production_or_atmosphere": [],
+      "incidental_dj": [],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [
+      "상세 일별 시간표",
+      "일반 관객 입장 방식",
+      "페이지의 장소 표기가 모항으로 잘못 노출되는 충돌 해소"
+    ],
+    "reason": "부안군 보도와 관광 페이지 사이 장소 메타데이터 충돌이 있어 수동 확인 필요."
+  },
+  {
+    "event_name": "춤추는 변산 — 변산 비치파티",
+    "region": "전북 부안",
+    "date": "2026-07-24~2026-08-17",
+    "venue": "변산해수욕장",
+    "source_name": "부안군 문화관광 해변 야간 콘텐츠",
+    "discovery_url": "https://www.buan.go.kr/tour/index.buan?menuCd=DOM_000000210001008000",
+    "official_verification_urls": [
+      "https://www.buan.go.kr/tour/index.buan?menuCd=DOM_000000210001008000"
+    ],
+    "decision": "needs_verification",
+    "approval_path": "dance_experience",
+    "evidence": {
+      "dance_centrality": [
+        "https://www.buan.go.kr/tour/index.buan?menuCd=DOM_000000210001008000 — '춤추는 변산' 프로그램명"
+      ],
+      "program_independence": [
+        "https://www.buan.go.kr/tour/index.buan?menuCd=DOM_000000210001008000 — 변산 비치파티 독립 페이지"
+      ],
+      "public_access": [],
+      "schedule": [],
+      "venue_or_space": [
+        "https://www.buan.go.kr/tour/index.buan?menuCd=DOM_000000210001008000 — 변산해수욕장"
+      ],
+      "production_or_atmosphere": [],
+      "incidental_dj": [],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [
+      "텍스트로 추출 가능한 일별 시간표",
+      "DJ/전자음악 라인업",
+      "공개 입장 조건"
+    ],
+    "reason": "공식 페이지는 있으나 핵심 일정이 이미지 중심이라 자동 승인에는 부족."
+  },
+  {
+    "event_name": "썸머 나잇 일렉트릭",
+    "region": "강원 속초",
+    "date": "2026-07-31~2026-08-02",
+    "venue": "속초해수욕장",
+    "source_name": "대한민국 구석구석 전국축제",
+    "discovery_url": "https://korean.visitkorea.or.kr/kfes/detail/fstvlDetail.do?fstvlCntntsId=78a6a98d-d7b0-46b4-8573-5a1a9cceb126",
+    "official_verification_urls": [
+      "https://korean.visitkorea.or.kr/kfes/detail/fstvlDetail.do?fstvlCntntsId=78a6a98d-d7b0-46b4-8573-5a1a9cceb126"
+    ],
+    "decision": "needs_verification",
+    "approval_path": "dance_experience",
+    "evidence": {
+      "dance_centrality": [
+        "https://korean.visitkorea.or.kr/kfes/detail/fstvlDetail.do?fstvlCntntsId=78a6a98d-d7b0-46b4-8573-5a1a9cceb126 — 국내 DJ가 참여하는 야간 전자음악 프로그램"
+      ],
+      "program_independence": [
+        "https://korean.visitkorea.or.kr/kfes/detail/fstvlDetail.do?fstvlCntntsId=78a6a98d-d7b0-46b4-8573-5a1a9cceb126 — '썸머 나잇 일렉트릭' 프로그램명"
+      ],
+      "public_access": [],
+      "schedule": [
+        "https://korean.visitkorea.or.kr/kfes/detail/fstvlDetail.do?fstvlCntntsId=78a6a98d-d7b0-46b4-8573-5a1a9cceb126 — 축제 기간 2026-07-31~08-02"
+      ],
+      "venue_or_space": [
+        "https://korean.visitkorea.or.kr/kfes/detail/fstvlDetail.do?fstvlCntntsId=78a6a98d-d7b0-46b4-8573-5a1a9cceb126 — 속초해수욕장"
+      ],
+      "production_or_atmosphere": [],
+      "incidental_dj": [],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [
+      "해당 하위 프로그램의 정확한 날짜·시각",
+      "DJ 라인업",
+      "공식 세부 시간표"
+    ],
+    "reason": "전자음악 중심성이 확인되지만 하위 세션 시간표가 아직 부족."
+  },
+  {
+    "event_name": "K-Dream Dance Festa in JEJU",
+    "region": "제주",
+    "date": "2026-06-13, 2026-06-20",
+    "venue": "비치클리프",
+    "source_name": "VisitJeju 축제와 행사",
+    "discovery_url": "https://visitjeju.net/kr/festival/view?contentsid=CNTS_300000000014299",
+    "official_verification_urls": [
+      "https://visitjeju.net/kr/festival/view?contentsid=CNTS_300000000014299",
+      "https://www.idge.co.kr/program_events/?bmode=view&idx=171445871"
+    ],
+    "decision": "needs_verification",
+    "approval_path": "dance_experience",
+    "evidence": {
+      "dance_centrality": [
+        "https://visitjeju.net/kr/festival/view?contentsid=CNTS_300000000014299 — K-Dance 학습과 풀사이드 댄스 경험"
+      ],
+      "program_independence": [
+        "https://www.idge.co.kr/program_events/?bmode=view&idx=171445871 — 별도 페스타명과 프로그램"
+      ],
+      "public_access": [],
+      "schedule": [
+        "https://www.idge.co.kr/program_events/?bmode=view&idx=171445871 — 2026-06-13·06-20"
+      ],
+      "venue_or_space": [
+        "https://visitjeju.net/kr/festival/view?contentsid=CNTS_300000000014299 — 제주 해변 풀사이드"
+      ],
+      "production_or_atmosphere": [],
+      "incidental_dj": [],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [
+      "세션별 공개 예약 링크의 안정성",
+      "풀사이드 DJ 파티의 정확한 시간",
+      "정원·입장 조건의 1차 페이지 교차확인"
+    ],
+    "reason": "댄스 중심성은 높지만 공식 예약·세부 시간 링크가 충분히 안정적이지 않음."
+  },
+  {
+    "event_name": "2026 대전 0시 축제 야간 댄스/DJ 후보",
+    "region": "대전",
+    "date": "2026-08-07~2026-08-17",
+    "venue": "대전 중앙로·원도심",
+    "source_name": "대전관광 축제·행사",
+    "discovery_url": "https://www.daejeon.go.kr/drh/depart/board/boardNormalView.do?boardId=normal_0189&menuSeq=1632&ntatcSeq=1504555217&pageIndex=2549",
+    "official_verification_urls": [
+      "https://www.daejeon.go.kr/drh/depart/board/boardNormalView.do?boardId=normal_0189&menuSeq=1632&ntatcSeq=1504555217&pageIndex=2549"
+    ],
+    "decision": "needs_verification",
+    "approval_path": "dance_experience",
+    "evidence": {
+      "dance_centrality": [],
+      "program_independence": [
+        "https://www.daejeon.go.kr/drh/depart/board/boardNormalView.do?boardId=normal_0189&menuSeq=1632&ntatcSeq=1504555217&pageIndex=2549 — 2026 축제 구조와 특설무대 계획"
+      ],
+      "public_access": [],
+      "schedule": [
+        "https://www.daejeon.go.kr/drh/depart/board/boardNormalView.do?boardId=normal_0189&menuSeq=1632&ntatcSeq=1504555217&pageIndex=2549 — 2026 축제 기간"
+      ],
+      "venue_or_space": [
+        "https://www.daejeon.go.kr/drh/depart/board/boardNormalView.do?boardId=normal_0189&menuSeq=1632&ntatcSeq=1504555217&pageIndex=2549 — 중앙로·원도심"
+      ],
+      "production_or_atmosphere": [],
+      "incidental_dj": [],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [
+      "DJ/전자음악 독립 세션명",
+      "시간표",
+      "일반 관객 참여 방식"
+    ],
+    "reason": "전년도 야간 DJ 프로그램 전례만으로 승인할 수 없고 2026 세부 프로그램 공개를 기다려야 함."
+  },
+  {
+    "event_name": "사일런트 웨이브 — 서울썸머비치 광화문광장",
+    "region": "서울",
+    "date": "2026-07-31",
+    "venue": "광화문광장",
+    "source_name": "사일런트 디스코 코리아",
+    "discovery_url": "https://silentdisco.kr/ticket",
+    "official_verification_urls": [
+      "https://silentdisco.kr/ticket",
+      "https://silentdisco.kr/notice"
+    ],
+    "decision": "needs_verification",
+    "approval_path": "dance_experience",
+    "evidence": {
+      "dance_centrality": [
+        "https://silentdisco.kr/ticket — 성인전용 사일런트 디스코 티켓"
+      ],
+      "program_independence": [
+        "https://silentdisco.kr/ticket — '사일런트 웨이브' 별도 상품"
+      ],
+      "public_access": [
+        "https://silentdisco.kr/ticket — 0원 공개 예약"
+      ],
+      "schedule": [
+        "https://silentdisco.kr/ticket — 2026-07-31"
+      ],
+      "venue_or_space": [
+        "https://silentdisco.kr/ticket — 서울썸머비치 광화문광장"
+      ],
+      "production_or_atmosphere": [],
+      "incidental_dj": [],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [
+      "시작·종료 시각",
+      "DJ/채널 구성",
+      "서울썸머비치 공식 프로그램 페이지 교차검증"
+    ],
+    "reason": "무료 공개 사일런트 디스코이나 시간과 공식 축제 측 세부 페이지가 부족."
+  },
+  {
+    "event_name": "한강뮤직퐁당 DJ 프로그램",
+    "region": "서울",
+    "date": "2026-08-01~2026-08-02",
+    "venue": "난지한강공원 물놀이장",
+    "source_name": "서울 공식 관광정보 축제·행사",
+    "discovery_url": "https://www.instagram.com/p/DaweIpbmyn_/",
+    "official_verification_urls": [
+      "https://www.instagram.com/p/DaweIpbmyn_/"
+    ],
+    "decision": "needs_verification",
+    "approval_path": "dance_experience",
+    "evidence": {
+      "dance_centrality": [
+        "https://www.instagram.com/p/DaweIpbmyn_/ — 인피니티풀 DJ 공연"
+      ],
+      "program_independence": [
+        "https://www.instagram.com/p/DaweIpbmyn_/ — 한강뮤직퐁당 프로그램명"
+      ],
+      "public_access": [],
+      "schedule": [
+        "https://www.instagram.com/p/DaweIpbmyn_/ — 2026-08-01~02"
+      ],
+      "venue_or_space": [
+        "https://www.instagram.com/p/DaweIpbmyn_/ — 난지한강공원 물놀이장"
+      ],
+      "production_or_atmosphere": [],
+      "incidental_dj": [],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [
+      "공식 HTML 상세 페이지",
+      "DJ 세션별 시간표",
+      "입장권·물놀이장 이용 조건"
+    ],
+    "reason": "공식 SNS성 공지는 있으나 크롤러가 안정적으로 검증할 HTML 원문이 부족."
+  },
+  {
+    "event_name": "2026 시흥 써머비트페스티벌 DJ 공연",
+    "region": "경기 시흥",
+    "date": "2026-07-03~2026-07-04",
+    "venue": "거북섬",
+    "source_name": "경기관광 축제·행사안내",
+    "discovery_url": "https://www.instagram.com/reel/DZ4nwngTKSN/",
+    "official_verification_urls": [
+      "https://www.instagram.com/reel/DZ4nwngTKSN/"
+    ],
+    "decision": "needs_verification",
+    "approval_path": "dance_experience",
+    "evidence": {
+      "dance_centrality": [
+        "https://www.instagram.com/reel/DZ4nwngTKSN/ — WSL 서핑대회와 함께 DJ 공연 명시"
+      ],
+      "program_independence": [],
+      "public_access": [],
+      "schedule": [
+        "https://www.instagram.com/reel/DZ4nwngTKSN/ — 2026-07-03~04"
+      ],
+      "venue_or_space": [
+        "https://www.instagram.com/reel/DZ4nwngTKSN/ — 시흥 거북섬"
+      ],
+      "production_or_atmosphere": [],
+      "incidental_dj": [],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [
+      "독립 무대·세션명",
+      "정확한 시간표",
+      "공식 시흥시 프로그램 페이지",
+      "공개 입장 조건"
+    ],
+    "reason": "DJ 존재는 확인되지만 서핑대회의 분위기 조성용인지 독립 댄스 프로그램인지 불명확."
+  },
+  {
+    "event_name": "면천레이브",
+    "region": "충남 당진",
+    "date": "2026",
+    "venue": "면천 지역축제 공간",
+    "source_name": "충남관광 축제·행사",
+    "discovery_url": "https://www.instagram.com/p/DasJyxBmEMH/",
+    "official_verification_urls": [
+      "https://www.instagram.com/p/DasJyxBmEMH/"
+    ],
+    "decision": "needs_verification",
+    "approval_path": "dance_experience",
+    "evidence": {
+      "dance_centrality": [
+        "https://www.instagram.com/p/DasJyxBmEMH/ — DJ 공연 프로그램 '면천레이브'"
+      ],
+      "program_independence": [
+        "https://www.instagram.com/p/DasJyxBmEMH/ — 독립 프로그램명 확인"
+      ],
+      "public_access": [],
+      "schedule": [],
+      "venue_or_space": [],
+      "production_or_atmosphere": [],
+      "incidental_dj": [],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [
+      "정확한 날짜·시간",
+      "정확한 장소",
+      "일반 관객 접근 조건",
+      "지자체·축제 공식 페이지"
+    ],
+    "reason": "소규모 지역 레이브 후보로 가치가 높지만 현재 확인 가능한 근거가 SNS 한 건뿐."
+  },
+  {
+    "event_name": "2026 서울패션허브 브랜드 위크",
+    "region": "서울",
+    "date": "2026-07-04~2026-07-05",
+    "venue": "DDP 어울림광장",
+    "source_name": "서울 공식 관광정보 축제·행사",
+    "discovery_url": "https://www.instagram.com/p/Dabk5bBE9PH/",
+    "official_verification_urls": [
+      "https://www.instagram.com/p/Dabk5bBE9PH/"
+    ],
+    "decision": "rejected",
+    "approval_path": "none",
+    "evidence": {
+      "dance_centrality": [],
+      "program_independence": [],
+      "public_access": [],
+      "schedule": [
+        "https://www.instagram.com/p/Dabk5bBE9PH/ — 2026-07-04~05"
+      ],
+      "venue_or_space": [
+        "https://www.instagram.com/p/Dabk5bBE9PH/ — DDP 어울림광장"
+      ],
+      "production_or_atmosphere": [],
+      "incidental_dj": [
+        "https://www.instagram.com/p/Dabk5bBE9PH/ — 중심은 신진 디자이너 브랜드·마켓 팝업"
+      ],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [],
+    "reason": "패션 판매·브랜드 팝업이 핵심이며 독립적인 춤/클러빙 프로그램 근거가 없음."
+  },
+  {
+    "event_name": "CLASSIC MUSIC STORE at 더현대서울",
+    "region": "서울",
+    "date": "2026",
+    "venue": "더현대서울",
+    "source_name": "온오프믹스",
+    "discovery_url": "https://www.instagram.com/p/DZrNN_bmKDs/",
+    "official_verification_urls": [
+      "https://www.instagram.com/p/DZrNN_bmKDs/"
+    ],
+    "decision": "rejected",
+    "approval_path": "none",
+    "evidence": {
+      "dance_centrality": [],
+      "program_independence": [],
+      "public_access": [],
+      "schedule": [],
+      "venue_or_space": [],
+      "production_or_atmosphere": [],
+      "incidental_dj": [
+        "https://www.instagram.com/p/DZrNN_bmKDs/ — 책·클래식 뮤직 스토어와 Gin Bar에 DJ 공연이 부가됨"
+      ],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [],
+    "reason": "소매·북스토어 팝업의 부대 DJ로, 사람들이 춤추는 독립 프로그램이라는 근거가 없음."
+  },
+  {
+    "event_name": "STYLEHOUSE SEOUL 초대 전용 행사",
+    "region": "서울",
+    "date": "2026-05",
+    "venue": "서울",
+    "source_name": "온오프믹스",
+    "discovery_url": "https://www.instagram.com/p/DYejJ43iEQt/",
+    "official_verification_urls": [
+      "https://www.instagram.com/p/DYejJ43iEQt/"
+    ],
+    "decision": "rejected",
+    "approval_path": "none",
+    "evidence": {
+      "dance_centrality": [],
+      "program_independence": [],
+      "public_access": [],
+      "schedule": [],
+      "venue_or_space": [],
+      "production_or_atmosphere": [],
+      "incidental_dj": [
+        "https://www.instagram.com/p/DYejJ43iEQt/ — K-뷰티·패션·웰니스·부동산 브랜드 행사"
+      ],
+      "private_or_restricted": [
+        "https://www.instagram.com/p/DYejJ43iEQt/ — '초대 전용' 명시"
+      ]
+    },
+    "missing_evidence": [],
+    "reason": "초대 전용이며 브랜드/비즈니스 경험이 중심이라 공개 행사 게이트에서 탈락."
+  },
+  {
+    "event_name": "DDP 바캉스: 뮤직페스티벌",
+    "region": "서울",
+    "date": "2026-07-31~2026-08-02",
+    "venue": "DDP 어울림광장",
+    "source_name": "대한민국 구석구석 전국축제",
+    "discovery_url": "https://ddp.or.kr/index.html?act=view&bbsno=760&bbstopno=760&boardno=16&menuno=230&siteno=2",
+    "official_verification_urls": [
+      "https://ddp.or.kr/index.html?act=view&bbsno=760&bbstopno=760&boardno=16&menuno=230&siteno=2"
+    ],
+    "decision": "rejected",
+    "approval_path": "none",
+    "evidence": {
+      "dance_centrality": [],
+      "program_independence": [],
+      "public_access": [
+        "https://ddp.or.kr/index.html?act=view&bbsno=760&bbstopno=760&boardno=16&menuno=230&siteno=2 — 무료 공개"
+      ],
+      "schedule": [
+        "https://ddp.or.kr/index.html?act=view&bbsno=760&bbstopno=760&boardno=16&menuno=230&siteno=2 — 공연 21:00~23:00"
+      ],
+      "venue_or_space": [],
+      "production_or_atmosphere": [],
+      "incidental_dj": [
+        "https://ddp.or.kr/index.html?act=view&bbsno=760&bbstopno=760&boardno=16&menuno=230&siteno=2 — 라이브 공연·먹거리·휴식 중심, DJ/전자음악 댄스 무대 근거 없음"
+      ],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [],
+    "reason": "명칭에 '뮤직페스티벌'이 있지만 현재 공식 프로그램은 클러빙·댄스 중심으로 확인되지 않음."
+  },
+  {
+    "event_name": "한 여름밤의 유성 뮤직페스타",
+    "region": "대전",
+    "date": "2026-08-07~2026-08-08",
+    "venue": "유림공원 동편 잔디광장",
+    "source_name": "대전관광 축제·행사",
+    "discovery_url": "https://daejeontour.co.kr/festival_djt/39",
+    "official_verification_urls": [
+      "https://daejeontour.co.kr/festival_djt/39"
+    ],
+    "decision": "rejected",
+    "approval_path": "none",
+    "evidence": {
+      "dance_centrality": [],
+      "program_independence": [],
+      "public_access": [
+        "https://daejeontour.co.kr/festival_djt/39 — 지역 주민 대상 공개 행사"
+      ],
+      "schedule": [
+        "https://daejeontour.co.kr/festival_djt/39 — 날짜·장소·출연진 확인"
+      ],
+      "venue_or_space": [],
+      "production_or_atmosphere": [],
+      "incidental_dj": [
+        "https://daejeontour.co.kr/festival_djt/39 — 가수 공연과 댄스팀 관람형 무대, 관객 참여형 댄스플로어 근거 없음"
+      ],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [],
+    "reason": "댄스팀이 출연해도 일반 지역축제의 관람형 공연이며 DJ/클러빙 독립 세션이 아님."
+  },
+  {
+    "event_name": "KOREA PACK 2026",
+    "region": "경기 고양",
+    "date": "2026-03-31~2026-04-03",
+    "venue": "KINTEX",
+    "source_name": "온오프믹스",
+    "discovery_url": "https://www.koreapack.org/",
+    "official_verification_urls": [
+      "https://www.koreapack.org/"
+    ],
+    "decision": "rejected",
+    "approval_path": "none",
+    "evidence": {
+      "dance_centrality": [],
+      "program_independence": [],
+      "public_access": [],
+      "schedule": [
+        "https://www.koreapack.org/ — 2026 행사 자료와 차기 일정 안내"
+      ],
+      "venue_or_space": [
+        "https://www.koreapack.org/ — KINTEX"
+      ],
+      "production_or_atmosphere": [],
+      "incidental_dj": [
+        "https://www.koreapack.org/ — 패키징 기술·솔루션 B2B 전시회"
+      ],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [],
+    "reason": "산업 전시·컨퍼런스이며 dance experience와 무관."
+  },
+  {
+    "event_name": "Design Miami Seoul 2026",
+    "region": "서울",
+    "date": "2026-08-31~2026-09-06",
+    "venue": "DDP",
+    "source_name": "서울 공식 관광정보 축제·행사",
+    "discovery_url": "https://www.instagram.com/p/DbVz90aEpJn/",
+    "official_verification_urls": [
+      "https://www.instagram.com/p/DbVz90aEpJn/",
+      "https://designmiami.com/fair/seoul-2025"
+    ],
+    "decision": "rejected",
+    "approval_path": "none",
+    "evidence": {
+      "dance_centrality": [],
+      "program_independence": [],
+      "public_access": [],
+      "schedule": [
+        "https://www.instagram.com/p/DbVz90aEpJn/ — 2026-08-31~09-06"
+      ],
+      "venue_or_space": [
+        "https://www.instagram.com/p/DbVz90aEpJn/ — DDP"
+      ],
+      "production_or_atmosphere": [],
+      "incidental_dj": [
+        "https://designmiami.com/fair/seoul-2025 — collectible design exhibition/fair 구조"
+      ],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [],
+    "reason": "디자인 전시·페어이며 독립 DJ/댄스 프로그램 근거가 없음."
+  },
+  {
+    "event_name": "2026 서울시향 강변음악회",
+    "region": "서울",
+    "date": "2026-06-13 19:30~21:00",
+    "venue": "여의도한강공원 물빛무대 앞 광장",
+    "source_name": "서울시 문화행사 정보 Open API",
+    "discovery_url": "https://festival.seoul.go.kr/festival/main/festivalView.do?festacode=701",
+    "official_verification_urls": [
+      "https://festival.seoul.go.kr/festival/main/festivalView.do?festacode=701",
+      "https://www.seoulphil.or.kr/perf/view?perfNo=7435"
+    ],
+    "decision": "rejected",
+    "approval_path": "none",
+    "evidence": {
+      "dance_centrality": [],
+      "program_independence": [],
+      "public_access": [
+        "https://festival.seoul.go.kr/festival/main/festivalView.do?festacode=701 — 누구나, 무료"
+      ],
+      "schedule": [
+        "https://festival.seoul.go.kr/festival/main/festivalView.do?festacode=701 — 2026-06-13 19:30~21:00"
+      ],
+      "venue_or_space": [],
+      "production_or_atmosphere": [],
+      "incidental_dj": [
+        "https://www.seoulphil.or.kr/perf/view?perfNo=7435 — 지휘·피아노·바이올린·오케스트라 클래식 공연"
+      ],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [],
+    "reason": "공개 야외공연이지만 관람형 클래식 콘서트로 dance gate와 무관."
+  },
+  {
+    "event_name": "보롬왓 튤립축제 2026",
+    "region": "제주",
+    "date": "2026-03-27~2026-04-20",
+    "venue": "보롬왓",
+    "source_name": "VisitJeju 축제와 행사",
+    "discovery_url": "https://www.visitjeju.net/kr/festival/view?contentsid=CNTS_300000000014086",
+    "official_verification_urls": [
+      "https://www.visitjeju.net/kr/festival/view?contentsid=CNTS_300000000014086"
+    ],
+    "decision": "rejected",
+    "approval_path": "none",
+    "evidence": {
+      "dance_centrality": [],
+      "program_independence": [],
+      "public_access": [
+        "https://www.visitjeju.net/kr/festival/view?contentsid=CNTS_300000000014086 — 유료 일반 입장"
+      ],
+      "schedule": [
+        "https://www.visitjeju.net/kr/festival/view?contentsid=CNTS_300000000014086 — 09:00~18:00"
+      ],
+      "venue_or_space": [],
+      "production_or_atmosphere": [],
+      "incidental_dj": [
+        "https://www.visitjeju.net/kr/festival/view?contentsid=CNTS_300000000014086 — 튤립 관람 중심"
+      ],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [],
+    "reason": "꽃·관광 체험 행사이며 DJ/댄스 독립 프로그램이 없음."
+  },
+  {
+    "event_name": "제22회 삼양검은모래축제",
+    "region": "제주",
+    "date": "2026-07-03~2026-07-04",
+    "venue": "삼양검은모래해변",
+    "source_name": "VisitJeju 축제와 행사",
+    "discovery_url": "https://visitjeju.net/kr/festival/view?contentsid=CNTS_300000000014454",
+    "official_verification_urls": [
+      "https://visitjeju.net/kr/festival/view?contentsid=CNTS_300000000014454"
+    ],
+    "decision": "rejected",
+    "approval_path": "none",
+    "evidence": {
+      "dance_centrality": [],
+      "program_independence": [],
+      "public_access": [
+        "https://visitjeju.net/kr/festival/view?contentsid=CNTS_300000000014454 — 남녀노소 공개 축제"
+      ],
+      "schedule": [
+        "https://visitjeju.net/kr/festival/view?contentsid=CNTS_300000000014454 — 2026-07-03~04"
+      ],
+      "venue_or_space": [],
+      "production_or_atmosphere": [],
+      "incidental_dj": [
+        "https://visitjeju.net/kr/festival/view?contentsid=CNTS_300000000014454 — 모래찜질·용천수·비치사커·가요제·불꽃놀이 중심"
+      ],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [],
+    "reason": "해변 야간축제지만 독립 DJ/전자음악·관객 댄스 프로그램 근거가 없음."
+  },
+  {
+    "event_name": "제27회 서귀포 겨울바다 국제펭귄수영대회",
+    "region": "제주",
+    "date": "2026-01-01",
+    "venue": "중문색달해수욕장",
+    "source_name": "VisitJeju 축제와 행사",
+    "discovery_url": "https://m.visitjeju.net/kr/detail/view?contentsid=CNTS_300000000014028",
+    "official_verification_urls": [
+      "https://m.visitjeju.net/kr/detail/view?contentsid=CNTS_300000000014028"
+    ],
+    "decision": "rejected",
+    "approval_path": "none",
+    "evidence": {
+      "dance_centrality": [
+        "https://m.visitjeju.net/kr/detail/view?contentsid=CNTS_300000000014028 — DJ와 함께하는 챌린지 댄스 파티 존재"
+      ],
+      "program_independence": [],
+      "public_access": [],
+      "schedule": [],
+      "venue_or_space": [],
+      "production_or_atmosphere": [],
+      "incidental_dj": [
+        "https://m.visitjeju.net/kr/detail/view?contentsid=CNTS_300000000014028 — 본행사는 겨울바다 수영대회, DJ 댄스는 몸풀기 부대 프로그램"
+      ],
+      "private_or_restricted": []
+    },
+    "missing_evidence": [],
+    "reason": "DJ 댄스가 실제 존재하지만 수영대회의 준비·분위기 조성용 부대 세션으로 중심 경험이 아님."
+  }
+]

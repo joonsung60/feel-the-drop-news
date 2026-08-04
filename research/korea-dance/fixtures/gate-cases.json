@@ -1,0 +1,51 @@
+[
+  {
+    "id": "ulsan-official-edm-festival",
+    "source_kind": "official_primary_html",
+    "source_url": "https://webzine.ulsan.go.kr/contents/view.do?bbsId=BBSMSTR_000000000180&nttId=15919",
+    "expected_decision": "needs_verification",
+    "expected_path": "dance_experience",
+    "headline_en": "2026 Ulsan Shipbuilding and Marine Festival EDM program",
+    "news_type": "festival_lineup",
+    "event_date": "2026-07-24",
+    "venue": "일산해수욕장 일원",
+    "source_text": "축제는 지역 주민과 문화예술인이 함께하는 주제 공연과 개막식을 시작으로 일산비치 워터밤, 나이트런 일산, EDM 페스티벌, 해상 불꽃쇼 까지 다채로운 프로그램으로 이어진다. 기간 2026.07.24.(금) ~ 07.26.(일) 장소 울산 동구 해수욕장10길, 일산해수욕장 일원 요금 무료",
+    "experience_evidence": {
+      "dance_centrality": ["EDM 페스티벌"],
+      "program_independence": ["EDM 페스티벌, 해상 불꽃쇼 까지 다채로운 프로그램"],
+      "public_access": ["요금 무료"],
+      "schedule": ["2026.07.24.(금) ~ 07.26.(일)"],
+      "venue_or_space": ["일산해수욕장 일원"]
+    }
+  },
+  {
+    "id": "buan-official-reference-needs-details",
+    "source_kind": "official_primary_html",
+    "source_url": "https://www.buan.go.kr/tour/index.buan?menuCd=DOM_000000210001008000",
+    "expected_decision": "needs_verification",
+    "expected_path": "dance_experience",
+    "headline_en": "2026 Byeonsan Beach Party",
+    "news_type": "club_event",
+    "event_date": "2026-07-24",
+    "venue": "변산해수욕장 일원",
+    "source_text": "“춤추는 변산 눈부신 해변” 무더운 여름을 시원하게 날려줄 2026 변산비치파티에 놀러오세요!! 행사기간 2026. 7. 24.(금) ~ 8. 17.(월) 행사장소 변산해수욕장 일원",
+    "experience_evidence": {
+      "dance_centrality": ["춤추는 변산 눈부신 해변"],
+      "schedule": ["2026. 7. 24.(금) ~ 8. 17.(월)"],
+      "venue_or_space": ["변산해수욕장 일원"]
+    }
+  },
+  {
+    "id": "korea-pack-official-non-dance",
+    "source_kind": "official_primary_html",
+    "source_url": "https://koreapack.org/kor/seminar/2026.asp",
+    "expected_decision": "rejected",
+    "expected_path": "none",
+    "headline_en": "KOREA PACK 2026 seminars and conferences",
+    "news_type": "other",
+    "event_date": "2026-03-31",
+    "venue": "KINTEX",
+    "source_text": "2026 세미나&컨퍼런스 포장 분야 콜드체인 분야 물류 분야 제약·바이오 분야 화장품 분야 2026-03-31(화) KINTEX",
+    "experience_evidence": {}
+  }
+]

@@ -1106,10 +1106,42 @@ def facts_with_gate_metadata(
     return facts
 
 
-def experience_candidate_key(source_url: str, source_text: str) -> str:
-    return stable_text_hash(
-        f"{normalize_url(source_url, [])}\n{normalize_grounding_text(source_text)}"
+def normalize_event_identity(value: str) -> str:
+    normalized = unicodedata.normalize("NFKC", value).casefold()
+    return " ".join(
+        "".join(char if char.isalnum() else " " for char in normalized).split()
     )
+
+
+def experience_candidate_key(item: dict[str, Any], source_url: str) -> str:
+    """Identify an event without depending on mutable page prose."""
+    title = normalize_event_identity(str(item.get("headline_en") or ""))
+    has_date = bool(item.get("event_date"))
+    has_venue = bool(item_facts(item).get("venue"))
+    event_date = normalize_event_identity(str(item.get("event_date") or "missing-date"))
+    venue = normalize_event_identity(str(item_facts(item).get("venue") or "missing-venue"))
+    parts = [title, event_date, venue]
+    if not has_date or not has_venue:
+        parts.append(normalize_url(source_url, []))
+    return stable_text_hash("\n".join(parts))
+
+
+def article_url_for_item(
+    base_url: str,
+    crawl_mode: str,
+    item_count: int,
+    item: dict[str, Any],
+    candidate_key: str,
+    source_text: str,
+) -> str:
+    if crawl_mode != "page" or item_count <= 1:
+        return base_url
+    fragment_key = (
+        candidate_key
+        if is_event_item(item)
+        else stable_text_hash(source_text)
+    )
+    return f"{base_url}#ftd-{fragment_key}"
 
 
 def event_date_supported_by_binding(
@@ -1133,7 +1165,8 @@ DANCE_CENTRALITY = re.compile(
     r"\b(?:dj\s+(?:sets?|performance)|electronic\s+dance\s+(?:performance|music)|"
     r"rave|club\s+night|dance\s*floor|dance\s+program|techno\s+(?:party|night)|"
     r"all[- ]night\s+danc(?:e|ing))\b|DJ\s*(?:公演|ステージ|セット)|"
-    r"(?:디제이|DJ)\s*(?:공연|무대|세트)|레이브|댄스\s*플로어",
+    r"(?:디제이|DJ)\s*(?:공연|무대|세트)|EDM\s*(?:페스티벌|파티|무대|세션)|"
+    r"레이브|댄스\s*플로어",
     re.IGNORECASE,
 )
 PROGRAM_INDEPENDENCE = re.compile(
@@ -1143,17 +1176,23 @@ PROGRAM_INDEPENDENCE = re.compile(
     r"(?:무대|프로그램|시간표|세션|ステージ|プログラム|タイムテーブル)",
     re.IGNORECASE,
 )
+SESSION_TIME = re.compile(
+    r"(?:[01]?\d|2[0-3]):[0-5]\d(?:\s*[-–~]\s*(?:[01]?\d|2[0-3]):[0-5]\d)?|"
+    r"(?:오전|오후)?\s*\d{1,2}\s*시(?:\s*[-–~]\s*(?:오전|오후)?\s*\d{1,2}\s*시)?",
+    re.IGNORECASE,
+)
 PUBLIC_ACCESS = re.compile(
     r"\b(?:tickets?|admission|entry|doors?|free\s+(?:entry|admission)|"
     r"open\s+to\s+the\s+public|public\s+(?:event|admission)|reservation|"
-    r"advance|door\s+price)\b|(?:티켓|입장|무료\s*입장|공개\s*예약|"
+    r"advance|door\s+price)\b|(?:티켓|입장|무료\s*입장|요금\s*무료|공개\s*예약|"
     r"一般(?:入場|発売)|チケット|入場無料|前売)",
     re.IGNORECASE,
 )
 DANCE_POSSIBILITY = re.compile(
     r"\b(?:dj\s+(?:sets?|performance|stage)|rave|dance\s*floor|club\s+night|"
     r"techno\s+(?:party|night)|electronic\s+dance)\b|"
-    r"(?:디제이|DJ)\s*(?:공연|무대|세트)|레이브|댄스\s*플로어|"
+    r"(?:디제이|DJ)\s*(?:공연|무대|세트)|EDM\s*(?:페스티벌|파티|무대|세션)|"
+    r"레이브|댄스\s*플로어|춤추는|"
     r"DJ\s*(?:公演|ステージ|セット)",
     re.IGNORECASE,
 )
@@ -1204,6 +1243,9 @@ def decide_unified_gate(
     independence_quotes = tuple(
         quote for quote in grounded["program_independence"] if PROGRAM_INDEPENDENCE.search(quote)
     )
+    session_schedule_quotes = tuple(
+        quote for quote in (*dance_quotes, *independence_quotes) if SESSION_TIME.search(quote)
+    )
     access_quotes = tuple(
         quote for quote in grounded["public_access"] if PUBLIC_ACCESS.search(quote)
     )
@@ -1222,6 +1264,8 @@ def decide_unified_gate(
         missing.append("dance_centrality")
     if not independence_quotes:
         missing.append("program_independence")
+    if not session_schedule_quotes:
+        missing.append("session_schedule")
     if not access_quotes:
         missing.append("public_access")
     if not (date_grounded and venue_grounded):
@@ -1246,6 +1290,7 @@ def decide_unified_gate(
         reason_names = {
             "dance_centrality": "needs_verification_dance_centrality",
             "program_independence": "needs_verification_program_independence",
+            "session_schedule": "needs_verification_session_schedule",
             "public_access": "needs_verification_public_access",
             "schedule": "needs_verification_missing_schedule",
             "source_binding": "needs_verification_source_binding",
@@ -2311,7 +2356,13 @@ class CorrespondentCrawler:
                 page.final_url,
                 page_level_date_confident,
             )
-            candidate_key = experience_candidate_key(base_url, source_texts[index])
+            candidate_key = (
+                experience_candidate_key(item, base_url)
+                if is_event_item(item)
+                else stable_text_hash(
+                    f"{base_url}\n{normalize_grounding_text(source_texts[index])}"
+                )
+            )
             qualifying_entities = [match.canonical for match in gate.qualifying]
             supporting_entities = [match.canonical for match in gate.supporting]
             matched_surfaces = [
@@ -2353,9 +2404,14 @@ class CorrespondentCrawler:
                     detail=gate_detail,
                 )
                 continue
-            article_url = base_url
-            if beat.crawl_mode == "page" and len(items) > 1:
-                article_url = f"{base_url}#ftd-{stable_text_hash(source_texts[index])}"
+            article_url = article_url_for_item(
+                base_url,
+                beat.crawl_mode,
+                len(items),
+                item,
+                candidate_key,
+                source_texts[index],
+            )
             if article_url in self.seen_article_urls:
                 summary.dup += 1
                 logging.info("[%s] skipped duplicate URL within run: %s", beat.name, article_url)
