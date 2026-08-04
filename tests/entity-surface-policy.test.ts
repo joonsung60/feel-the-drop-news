@@ -91,3 +91,30 @@ test('ambiguous surface alone cannot create a suggestion graph edge', () => {
     [],
   )
 })
+
+test('broad Bandcamp surface is supporting-only', () => {
+  const article = raw('bandcamp', 'The Best Punk on Bandcamp, July 2026')
+  const index = buildEntityIndex([article], dictionary!)
+  assert.equal(index.articleEntities.get(article.id)?.has('Bandcamp'), false)
+  assert.equal(index.articleSupportingEntities.get(article.id)?.has('Bandcamp'), true)
+})
+
+test('Better and ADVANCED require artist context', () => {
+  for (const title of [
+    'Andrew Chow, better known as DJ Wiz, has died',
+    'Tools for better production decisions',
+    'Aventon riders develop advanced skillsets',
+    'Advanced plant-powered biotechnology',
+  ]) {
+    assert.equal(matches(title).has('Better'), false, title)
+    assert.equal(matches(title).has('ADVANCED'), false, title)
+  }
+  for (const [title, canonical] of [
+    ['DJ Better performs a new set', 'Better'],
+    ['Better DJ set announced', 'Better'],
+    ['DJ ADVANCED releases a remix', 'ADVANCED'],
+    ['ADVANCED producer announces a track', 'ADVANCED'],
+  ]) {
+    assert.equal(matches(title).has(canonical), true, title)
+  }
+})

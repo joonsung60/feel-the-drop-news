@@ -14,8 +14,12 @@ const LLM_INPUT_MAX = 120
 const NO_ENTITY_RATIO_MAX = 0.6
 const LLM_BATCH_SIZE = 20
 const EXCERPT_LIMIT = 800
-const OUTPUT_JSON = path.join(process.cwd(), 'research/suggest-replay-2026-08-04.json')
-const OUTPUT_MD = path.join(process.cwd(), 'research/suggest-replay-2026-08-04.md')
+const RUN_ID = process.env.SUGGEST_REPLAY_RUN_ID?.replace(/[^a-zA-Z0-9_-]/g, '') || ''
+const OUTPUT_STEM = RUN_ID
+  ? `suggest-replay-2026-08-04-${RUN_ID}`
+  : 'suggest-replay-2026-08-04'
+const OUTPUT_JSON = path.join(process.cwd(), `research/${OUTPUT_STEM}.json`)
+const OUTPUT_MD = path.join(process.cwd(), `research/${OUTPUT_STEM}.md`)
 
 // Compiled CommonJS research runners do not understand tsconfig's @/* mapping.
 // Install the same mapping before loading production modules dynamically.
@@ -46,6 +50,7 @@ const {
 } = require('../lib/suggest/eligibility') as typeof import('../lib/suggest/eligibility')
 const {
   chunkArticles,
+  isSingletonRawSuggestion,
   normalizeSuggestion,
   parseSuggestions,
   normalizeTopicKey,
@@ -225,6 +230,7 @@ function renderMarkdown(result: any): string {
     `| explicit fallback | ${f.explicitFallback} |`,
     `| final eligible | ${f.finalEligible} |`,
     `| LLM raw suggestions | ${f.llmRawSuggestions} |`,
+    `| raw multi-article suggestions | ${f.rawMultiArticleSuggestions} |`,
     `| normalized | ${f.normalized} |`,
     `| merged | ${f.merged} |`,
     `| ranked | ${f.ranked} |`,
@@ -247,11 +253,19 @@ function renderMarkdown(result: any): string {
       lines.push('')
     }
   }
+  lines.push('## LLM omissions', '')
+  if (result.llmOmittedArticles.length === 0) {
+    lines.push('- 없음')
+  } else {
+    for (const article of result.llmOmittedArticles) {
+      lines.push(`- ${article.id}: ${article.title}`)
+    }
+  }
+  lines.push('')
   lines.push('## Drops', '')
   for (const drop of result.drops) {
     lines.push(`- \`${drop.stage}/${drop.reason}\` — ${drop.topic ?? '(article gate)'} — ${drop.articleIds.join(', ') || '(none)'}`)
   }
-  lines.push('')
   return `${lines.join('\n')}\n`
 }
 
@@ -381,6 +395,17 @@ async function main() {
       suggestions: suggestions.map(suggestionView),
     })
     for (const suggestion of suggestions) {
+      if (!isSingletonRawSuggestion(suggestion)) {
+        drops.push({
+          stage: 'llm',
+          reason: 'raw_multi_article_not_allowed',
+          articleIds: Array.isArray(suggestion.articleIds)
+            ? suggestion.articleIds.map(String)
+            : [],
+          topic: suggestion.topic ?? null,
+        })
+        continue
+      }
       const item = normalizeSuggestion(
         suggestion,
         validIds,
@@ -488,6 +513,17 @@ async function main() {
       return { id, title: article?.title ?? null }
     }),
   }))
+  const rawSingletonArticleIds = new Set(rawLlm.flatMap((batch) =>
+    batch.suggestions
+      .filter(isSingletonRawSuggestion)
+      .flatMap((suggestion: Suggestion) => suggestion.articleIds)
+  ))
+  const llmOmittedArticles = selected.input
+    .filter((article) => !rawSingletonArticleIds.has(article.id))
+    .map((article) => ({ id: article.id, title: article.title }))
+  const rawMultiArticleSuggestionCount = drops.filter((drop) =>
+    drop.reason === 'raw_multi_article_not_allowed'
+  ).length
 
   const after = await databaseSnapshot(supabase)
   const unchanged = sameSnapshot(before, after)
@@ -519,6 +555,7 @@ async function main() {
       finalEligible: selected.input.length,
       llmBatches: batches.length,
       llmRawSuggestions: rawLlm.reduce((sum, batch) => sum + batch.suggestions.length, 0),
+      rawMultiArticleSuggestions: rawMultiArticleSuggestionCount,
       normalized: normalized.length,
       merged: merged.length,
       ranked: ranked.length,
@@ -532,6 +569,7 @@ async function main() {
     rankedSuggestions: ranked.map(suggestionView),
     duplicateFiltering: duplicateDetails,
     saveableSuggestions: saveable,
+    llmOmittedArticles,
     drops,
   }
   fs.writeFileSync(OUTPUT_JSON, `${JSON.stringify(result, null, 2)}\n`)

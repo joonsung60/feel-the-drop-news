@@ -10,7 +10,12 @@ import {
 } from '@/lib/suggest/types'
 import { SUGGEST_RESPONSE_FORMAT, SUGGEST_SYSTEM, buildClusterPrompt } from '@/lib/suggest/prompts'
 import { buildEntityIndex, loadEntityDictionary } from '@/lib/suggest/entity-index'
-import { chunkArticles, normalizeSuggestion, parseSuggestions } from '@/lib/suggest/normalize'
+import {
+  chunkArticles,
+  isSingletonRawSuggestion,
+  normalizeSuggestion,
+  parseSuggestions,
+} from '@/lib/suggest/normalize'
 import { hasEventDateConflict, knownEventDates } from '@/lib/suggest/event-date'
 import { filterDuplicateSuggestions } from '@/lib/suggest/filters'
 import { mergeNormalizedSuggestions } from '@/lib/suggest/merge'
@@ -344,6 +349,13 @@ export async function POST(req: NextRequest) {
       llmSuggestionCount += suggestions.length
       
       for (const suggestion of suggestions) {
+        if (!isSingletonRawSuggestion(suggestion)) {
+          logSuggestionDropped(observer, suggestion, 'raw_multi_article_not_allowed', {
+            batch_index: batchIndex,
+            raw_path: rawPath,
+          })
+          continue
+        }
         const normalizedSuggestion = normalizeSuggestion(
           suggestion,
           batchValidIds,

@@ -1,6 +1,43 @@
 {
   "version": 2,
   "entities": {
+    "Better": {
+      "contextual_surfaces": {
+        "Better": {
+          "before": [
+            "DJ",
+            "producer"
+          ],
+          "after": [
+            "DJ",
+            "producer",
+            "DJ set",
+            "remix"
+          ],
+          "max_gap_chars": 4
+        }
+      }
+    },
+    "ADVANCED": {
+      "contextual_surfaces": {
+        "ADVANCED": {
+          "before": [
+            "DJ",
+            "producer"
+          ],
+          "after": [
+            "DJ",
+            "producer",
+            "DJ set",
+            "remix"
+          ],
+          "max_gap_chars": 4
+        }
+      }
+    },
+    "Bandcamp": {
+      "role": "supporting"
+    },
     "O.Z.O.R.A. Festival": {
       "contextual_surfaces": {
         "Ozora": {

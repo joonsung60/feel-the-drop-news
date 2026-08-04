@@ -1,0 +1,93 @@
+{
+  "version": 1,
+  "scope": {
+    "batchStart": "2026-08-04T08:46:35Z",
+    "batchEnd": "2026-08-04T08:49:30Z",
+    "exactPool": 123,
+    "runs": 3,
+    "seedFixed": false
+  },
+  "eligibility": {
+    "qualifying": 42,
+    "danceExperience": 0,
+    "supportingOnly": 3,
+    "notMatched": 78,
+    "explicitFallback": 22,
+    "eligible": 64,
+    "aggregate401": {
+      "truePositive": 202,
+      "falsePositive": 9,
+      "falseNegative": 74,
+      "trueNegative": 89,
+      "ambiguous": 27,
+      "precision": 0.9573,
+      "recall": 0.7319
+    }
+  },
+  "runs": [
+    {
+      "id": "run-1",
+      "rawSuggestions": 60,
+      "rawMultiArticleSuggestions": 0,
+      "normalized": 57,
+      "merged": 51,
+      "ranked": 30,
+      "saveable": 30,
+      "llmOmissions": 4,
+      "requiredMergesPreserved": 4,
+      "contaminatedClusters": [],
+      "obviousNonEdmSaveable": []
+    },
+    {
+      "id": "run-2",
+      "rawSuggestions": 62,
+      "rawMultiArticleSuggestions": 0,
+      "normalized": 61,
+      "merged": 56,
+      "ranked": 30,
+      "saveable": 30,
+      "llmOmissions": 3,
+      "requiredMergesPreserved": 4,
+      "contaminatedClusters": [],
+      "obviousNonEdmSaveable": []
+    },
+    {
+      "id": "run-3",
+      "rawSuggestions": 63,
+      "rawMultiArticleSuggestions": 0,
+      "normalized": 61,
+      "merged": 55,
+      "ranked": 30,
+      "saveable": 30,
+      "llmOmissions": 1,
+      "requiredMergesPreserved": 4,
+      "contaminatedClusters": [],
+      "obviousNonEdmSaveable": []
+    }
+  ],
+  "requiredMerges": {
+    "Fred again.. / 9 months & 50 hours": [true, true, true],
+    "Kaskade / ORIGIN//": [true, true, true],
+    "Vintage Culture / Think Too Much": [true, true, true],
+    "Ozora Festival / fatalities and early termination": [true, true, true]
+  },
+  "forbiddenMerges": {
+    "Above & Beyond One Mix / Christian Hornbostel Eridanus": [false, false, false],
+    "Tomorrowland aftermovie / Cale Anderson": [false, false, false],
+    "Tomorrowland aftermovie / Aaron Hibell": [false, false, false],
+    "Tomorrowland sets / Dimitri Vegas": [false, false, false],
+    "Tomorrowland sets / aftermovie": [false, false, false],
+    "Roland JD-990 / GO:KEYS 3": [false, false, false],
+    "KAMAYA / Eastern Electrics": [false, false, false],
+    "Bandcamp punk / sachi's mirror": [false, false, false]
+  },
+  "databaseUnchanged": [true, true, true],
+  "approval": {
+    "rawMultiArticleZero": true,
+    "contaminatedClustersZero": true,
+    "requiredMergesStable": true,
+    "precisionFloorMet": true,
+    "recallFloorMet": true,
+    "obviousNonEdmSaveableZero": true
+  }
+}

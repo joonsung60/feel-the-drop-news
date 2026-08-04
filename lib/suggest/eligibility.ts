@@ -12,15 +12,24 @@ const EXPLICIT_EDM_PATTERNS = [
   /\bdance music\b/i,
   /\bhouse music\b/i,
   /\b(?:techno|trance|dubstep|drum and bass|drum & bass|dnb)\b/i,
-  /\bDJ\b/,
   /\belectronic(?:\s+music)?\s+producer\b/i,
   /전자\s*음악|일렉트로닉\s*뮤직|하우스\s*뮤직|테크노|트랜스|덥스텝|드럼\s*앤드\s*베이스|디제이/i,
-  /電子音楽|エレクトロニック(?:・|\s*)ミュージック|ハウス(?:・|\s*)ミュージック|テクノ|トランス|ダブステップ|ドラム(?:・|\s*)アンド(?:・|\s*)ベース|DJ/i,
+  /電子音楽|エレクトロニック(?:・|\s*)ミュージック|ハウス(?:・|\s*)ミュージック|テクノ|トランス|ダブステップ|ドラム(?:・|\s*)アンド(?:・|\s*)ベース/i,
 ]
+const SYNTH_EVIDENCE_PATTERN = /\b(?:synth|synthesizer|chiptune)\b/i
+const DJ_EVIDENCE_PATTERN = /\bDJ(?:s|ing)?\b/i
+const NON_EDM_DJ_CONTEXT_PATTERN = /\b(?:hip[- ]?hop|r&b|rap|turntablist)\b/i
+const NON_MUSIC_SYNTH_TITLE_PATTERN =
+  /\b(?:e-?bike|eMTB|electric (?:mountain )?bike|mountain bike|cycling)\b/i
 
 export function hasExplicitEdmEvidence(article: RawArticle): boolean {
   const text = `${article.title}\n${(article.content ?? '').slice(0, 500)}`
-  return EXPLICIT_EDM_PATTERNS.some((pattern) => pattern.test(text))
+  if (EXPLICIT_EDM_PATTERNS.some((pattern) => pattern.test(text))) return true
+  if (
+    SYNTH_EVIDENCE_PATTERN.test(text)
+    && !NON_MUSIC_SYNTH_TITLE_PATTERN.test(article.title)
+  ) return true
+  return DJ_EVIDENCE_PATTERN.test(text) && !NON_EDM_DJ_CONTEXT_PATTERN.test(article.title)
 }
 
 export function correspondentApprovalPath(article: RawArticle): 'entity' | 'dance_experience' | null {

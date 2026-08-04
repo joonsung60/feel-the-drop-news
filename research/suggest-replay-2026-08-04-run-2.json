@@ -1,8 +1,8 @@
 {
   "replayVersion": 1,
   "run": {
-    "startedAt": "2026-08-04T12:05:19.314Z",
-    "finishedAt": "2026-08-04T12:07:36.084Z",
+    "startedAt": "2026-08-04T13:25:19.720Z",
+    "finishedAt": "2026-08-04T13:27:51.755Z",
     "model": "qwen3:14b",
     "ollamaBaseUrlConfigured": true,
     "constants": {
@@ -57,12 +57,13 @@
     "danceExperience": 0,
     "supportingOnly": 3,
     "notMatched": 78,
-    "explicitFallback": 23,
-    "finalEligible": 65,
+    "explicitFallback": 22,
+    "finalEligible": 64,
     "llmBatches": 4,
-    "llmRawSuggestions": 57,
-    "normalized": 56,
-    "merged": 53,
+    "llmRawSuggestions": 62,
+    "rawMultiArticleSuggestions": 0,
+    "normalized": 61,
+    "merged": 56,
     "ranked": 30,
     "duplicateOrBlocked": 0,
     "saveable": 30
@@ -868,9 +869,9 @@
       "qualifyingSurfaces": [],
       "supportingEntities": [],
       "supportingSurfaces": [],
-      "approvalPath": "explicit_edm_fallback",
-      "explicitEdmEvidence": true,
-      "llmEligible": true
+      "approvalPath": "rejected",
+      "explicitEdmEvidence": false,
+      "llmEligible": false
     },
     {
       "id": "ef7a3c58-fdc4-489a-898d-1f888df2dbcc",
@@ -2778,160 +2779,146 @@
         "cbad5af5-65c5-40ea-a243-6b4f2b885bc9",
         "bfff6140-0da4-4d38-b518-d660995a6844"
       ],
-      "responseExcerpt": "{\"suggestions\": [{\"topic\": \"Function의 'Aeternum (Existenz)' 미니 앨범 발매\", \"keywords\": [\"Function\", \"Tresor Records\", \"Techno\", \"미니 앨범\", \"Aeternum (Existenz)\"], \"articleIds\": [\"aa53f947-d07c-4281-90a6-adeeae48cd59\"],\"reason\": \"전자음악 아티스트 Function의 신규 미니 앨범 발매 소식으로, 전자음악 씬과 직접적으로 관련된 내용입니다.\",\"commonEntities\": [\"Function\", \"Aeternum (Existenz)\", \"Tresor Records\"]}, {\"topic\": \"Tomorrowland 2026 공연 영상 공개\", \"keywords\": [\"Tomorrowland 2026\", \"Martin Garrix\", \"Hardwell\", \"Charlotte de Witte\", \"Sara Landry\"], \"articleIds\": [\"a7c024a1-7611-4c83-8f40-533334ba7eb2\", \"330b30e4-0b10-45f5-8c46-13ad6a376b19\"],\"reason\": \"Tomorrowland 2026의 공식 메인스테이지 및 스테이지 세트 영상이 공개된 것으로, 전자음악 페스티벌과 관련된 기사입니다.\",\"commonEntities\": [\"Tomorrowland 2026\", \"Martin Garrix\", \"Hardwell\", \"Charlotte de Witte\", \"Sara Landry\"]}, {\"topic\":",
-      "responseLength": 7194,
-      "responseHash": "b73c77e58077b77feb7637aa70903a342015c0931c2675348277464f4c05805c",
+      "responseExcerpt": "{\"suggestions\": [{\"topic\": \"Function의 'Aeternum (Existenz)' 앨범 발표\", \"keywords\": [\"Function\", \"Tresor Records\", \"Techno\", \"Mini Album\", \"Aeternum\"] , \"articleIds\": [\"aa53f947-d07c-4281-90a6-adeeae48cd59\"] , \"reason\": \"전자음악 관련 릴리즈 소식으로 승인됨.\" , \"commonEntities\": [\"Function\", \"Tresor Records\", \"Aeternum\"]}, {\"topic\": \"Tomorrowland 2026 주요 무대 공연 영상 공개\", \"keywords\": [\"Tomorrowland 2026\", \"Martin Garrix\", \"Hardwell\", \"Charlotte de Witte\", \"Mainstage\"] , \"articleIds\": [\"a7c024a1-7611-4c83-8f40-533334ba7eb2\"] , \"reason\": \"전자음악 페스티벌 관련 공연 소식으로 승인됨.\" , \"commonEntities\": [\"Tomorrowland 2026\", \"Martin Garrix\", \"Hardwell\"]}, {\"topic\": \"Fred again.. & LATIN MAFIA 협업 미니앨범 '9 months & 50 hours' 발표\", \"keywords\": [\"Fred again..\", \"LATIN MAFIA\", \"Mixtape\", \"Mexico City\", \"Palacio de los Deportes\"] , \"articleI",
+      "responseLength": 6063,
+      "responseHash": "33cfdfb541a7dc7d88785a30939d85085ddb73c885ca419fed348fadd6e73228",
       "suggestions": [
         {
-          "topic": "Function의 'Aeternum (Existenz)' 미니 앨범 발매",
+          "topic": "Function의 'Aeternum (Existenz)' 앨범 발표",
           "keywords": [
             "Function",
             "Tresor Records",
             "Techno",
-            "미니 앨범",
-            "Aeternum (Existenz)"
+            "Mini Album",
+            "Aeternum"
           ],
           "articleIds": [
             "aa53f947-d07c-4281-90a6-adeeae48cd59"
           ],
-          "reason": "전자음악 아티스트 Function의 신규 미니 앨범 발매 소식으로, 전자음악 씬과 직접적으로 관련된 내용입니다.",
+          "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
           "commonEntities": [
             "Function",
-            "Aeternum (Existenz)",
-            "Tresor Records"
+            "Tresor Records",
+            "Aeternum"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "Tomorrowland 2026 공연 영상 공개",
+          "topic": "Tomorrowland 2026 주요 무대 공연 영상 공개",
           "keywords": [
             "Tomorrowland 2026",
             "Martin Garrix",
             "Hardwell",
             "Charlotte de Witte",
-            "Sara Landry"
+            "Mainstage"
           ],
           "articleIds": [
-            "a7c024a1-7611-4c83-8f40-533334ba7eb2",
-            "330b30e4-0b10-45f5-8c46-13ad6a376b19"
+            "a7c024a1-7611-4c83-8f40-533334ba7eb2"
           ],
-          "reason": "Tomorrowland 2026의 공식 메인스테이지 및 스테이지 세트 영상이 공개된 것으로, 전자음악 페스티벌과 관련된 기사입니다.",
+          "reason": "전자음악 페스티벌 관련 공연 소식으로 승인됨.",
           "commonEntities": [
             "Tomorrowland 2026",
             "Martin Garrix",
-            "Hardwell",
-            "Charlotte de Witte",
-            "Sara Landry"
+            "Hardwell"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "Fred again.. & LATIN MAFIA 공동 믹스테이프 '9 months & 50 hours' 발매",
+          "topic": "Fred again.. & LATIN MAFIA 협업 미니앨범 '9 months & 50 hours' 발표",
           "keywords": [
             "Fred again..",
             "LATIN MAFIA",
-            "믹스테이프",
-            "9 months & 50 hours",
+            "Mixtape",
+            "Mexico City",
             "Palacio de los Deportes"
           ],
           "articleIds": [
             "0b59de4a-9627-4965-9010-71aa0a042589"
           ],
-          "reason": "Fred again..과 LATIN MAFIA의 공동 믹스테이프 발매 소식으로, 전자음악 씬과 직접적으로 관련된 내용입니다.",
+          "reason": "전자음악 아티스트의 협업 릴리즈 소식으로 승인됨.",
           "commonEntities": [
             "Fred again..",
             "LATIN MAFIA",
-            "9 months & 50 hours",
-            "Palacio de los Deportes"
+            "9 months & 50 hours"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "Carl Cox의 1996년 포르투갈 공연 사진 공개",
+          "topic": "Carl Cox 1996년 포르투갈 공연 사진 공개",
           "keywords": [
             "Carl Cox",
-            "1996년",
-            "포르투갈",
-            "레코드",
-            "USB"
+            "1996",
+            "DJing",
+            "Vintage Photo",
+            "Analog Records"
           ],
           "articleIds": [
             "d05fa571-c04f-4dd6-8bbf-cfc1b4150b3a"
           ],
-          "reason": "Carl Cox가 1996년 포르투갈에서의 공연 사진을 공개한 것으로, 전자음악 아티스트의 역사적 소식과 관련이 있습니다.",
+          "reason": "전자음악 아티스트의 과거 공연 관련 소식으로 승인됨.",
           "commonEntities": [
             "Carl Cox",
-            "1996년",
-            "포르투갈",
-            "레코드",
-            "USB"
+            "1996",
+            "Vintage Photo"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "Pittsburgh Modular Lifeforms SV-2 신제품 공개",
+          "topic": "Pittsburgh Modular 신규 합성기 'Lifeforms SV-2' 공개",
           "keywords": [
             "Pittsburgh Modular",
             "Lifeforms SV-2",
-            "아날로그 신디사이저",
+            "Analog Synthesizer",
             "Eurorack",
-            "Ableton Live"
+            "Semi-Modular"
           ],
           "articleIds": [
             "ef7a3c58-fdc4-489a-898d-1f888df2dbcc"
           ],
-          "reason": "Pittsburgh Modular의 새로운 아날로그 신디사이저 Lifeforms SV-2가 공개된 것으로, 전자음악 장비와 관련된 내용입니다.",
+          "reason": "전자음악 장비 관련 소식으로 승인됨.",
           "commonEntities": [
             "Pittsburgh Modular",
-            "Lifeforms SV-2",
-            "아날로그 신디사이저",
-            "Eurorack",
-            "Ableton Live"
+            "Lifeforms SV-2"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "Maribou State, 새 앨범 'Hallucinating Love' 발매",
+          "topic": "Maribou State, Ninja Tune 레이블 통해 새 앨범 'Hallucinating Love' 발표",
           "keywords": [
             "Maribou State",
             "Ninja Tune",
-            "Hallucinating Love",
             "Deluxe Edition",
-            "2026년 8월 21일"
+            "Hallucinating Love",
+            "Electronic"
           ],
           "articleIds": [
             "7b68f9bf-cda9-4d4c-8074-a1972f1b006a"
           ],
-          "reason": "Maribou State의 새 앨범 'Hallucinating Love' 발매 소식으로, 전자음악 씬과 직접적으로 관련된 내용입니다.",
+          "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
           "commonEntities": [
             "Maribou State",
             "Ninja Tune",
-            "Hallucinating Love",
-            "Deluxe Edition",
-            "2026년 8월 21일"
+            "Hallucinating Love"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "Above & Beyond, 25주년 기념 'One Mix' 공개",
+          "topic": "Above & Beyond, 25주년 기념 Apple Music 미싱 'One Mix' 공개",
           "keywords": [
             "Above & Beyond",
             "Apple Music",
             "One Mix",
-            "Spatial Audio",
-            "25주년"
+            "25th Anniversary",
+            "Spatial Audio"
           ],
           "articleIds": [
-            "c7ccf53d-22c7-4495-991c-98a8bf88be9e",
-            "cbad5af5-65c5-40ea-a243-6b4f2b885bc9"
+            "c7ccf53d-22c7-4495-991c-98a8bf88be9e"
           ],
-          "reason": "Above & Beyond의 25주년 기념 DJ 믹스 'One Mix'가 Apple Music에서 공개된 것으로, 전자음악 씬과 직접적으로 관련된 내용입니다.",
+          "reason": "전자음악 아티스트의 릴리즈 및 이벤트 소식으로 승인됨.",
           "commonEntities": [
             "Above & Beyond",
             "Apple Music",
-            "One Mix",
-            "Spatial Audio",
-            "25주년"
+            "One Mix"
           ],
           "cohesionScore": null
         },
@@ -2939,95 +2926,87 @@
           "topic": "Escape Halloween 2026 라인업 발표",
           "keywords": [
             "Escape Halloween",
-            "2026",
+            "2026 Lineup",
             "Insomniac Events",
             "NOS Events Center",
-            "Halloween"
+            "Halloween Festival"
           ],
           "articleIds": [
             "3b9aa1d7-635d-4277-9e11-ce0455491dd6"
           ],
-          "reason": "Escape Halloween 2026의 라인업이 발표된 것으로, 전자음악 페스티벌과 관련된 기사입니다.",
+          "reason": "전자음악 페스티벌 관련 소식으로 승인됨.",
           "commonEntities": [
             "Escape Halloween",
-            "2026",
-            "Insomniac Events",
-            "NOS Events Center",
-            "Halloween"
+            "2026 Lineup",
+            "Insomniac Events"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "Electronic Groove, 베네수엘라 구호 컴필레이션 발매",
+          "topic": "Electronic Groove, 베네수엘라 구호 앨범 'Electronic Groove for Venezuela' 발표",
           "keywords": [
             "Electronic Groove",
-            "베네수엘라",
-            "구호 컴필레이션",
+            "Charity Compilation",
+            "Venezuela Relief",
             "Nick Warren",
             "Danny Howells"
           ],
           "articleIds": [
             "4cab2fae-7c07-4370-a188-24eaaa281671"
           ],
-          "reason": "Electronic Groove가 베네수엘라 구호를 위한 컴필레이션을 발매한 것으로, 전자음악 씬과 관련된 소식입니다.",
+          "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
           "commonEntities": [
             "Electronic Groove",
-            "베네수엘라",
-            "구호 컴필레이션",
-            "Nick Warren",
-            "Danny Howells"
+            "Charity Compilation",
+            "Venezuela Relief"
           ],
           "cohesionScore": null
         },
         {
           "topic": "Meta AI 글라스, DJ 공연 영상 촬영 가능성 분석",
           "keywords": [
-            "Meta AI 글라스",
+            "Meta Glasses",
             "DJing",
-            "POV 영상",
+            "POV Video",
             "Beatport Tech",
-            "Mojaxx"
+            "Social Media"
           ],
           "articleIds": [
             "f1daca30-4a35-426e-85c4-45674714c79e"
           ],
-          "reason": "Meta AI 글라스가 DJ 공연 영상 촬영에 활용될 수 있는지 분석한 것으로, 전자음악 관련 기술 소식입니다.",
+          "reason": "전자음악 관련 기술 및 장비 소식으로 승인됨.",
           "commonEntities": [
-            "Meta AI 글라스",
+            "Meta Glasses",
             "DJing",
-            "POV 영상",
-            "Beatport Tech",
-            "Mojaxx"
+            "POV Video"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "Alan Walker, 'Pain' Fatal Fury: City of the Wolves 사운드트랙 참여",
+          "topic": "Alan Walker, 'Fatal Fury: City of the Wolves' 사운드트랙 참여",
           "keywords": [
             "Alan Walker",
-            "Fatal Fury: City of the Wolves",
-            "Pain",
-            "Norwegian producer",
-            "soundtrack"
+            "Fatal Fury",
+            "Soundtrack",
+            "City of the Wolves",
+            "Norwegian Producer"
           ],
           "articleIds": [
             "21193649-1a1e-4e95-8ead-3713075f471e"
           ],
-          "reason": "Alan Walker가 'Pain'을 Fatal Fury: City of the Wolves 사운드트랙에 참여한 것으로, 전자음악 씬과 관련된 소식입니다.",
+          "reason": "전자음악 아티스트의 릴리즈 소식으로 승인됨.",
           "commonEntities": [
             "Alan Walker",
-            "Fatal Fury: City of the Wolves",
-            "Pain",
-            "Norwegian producer",
-            "soundtrack"
+            "Fatal Fury",
+            "City of the Wolves"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "Beyond The Valley 2026 라인업 발표",
+          "topic": "Australia’s Beyond The Valley 2026 라인업 발표",
           "keywords": [
             "Beyond The Valley",
-            "2026",
+            "2026 Lineup",
             "KI/KI",
             "Boys Noize",
             "Skepta"
@@ -3035,40 +3014,36 @@
           "articleIds": [
             "b0ed8ca6-42ae-4ae6-8679-df3375870e4c"
           ],
-          "reason": "Beyond The Valley 2026의 라인업이 발표된 것으로, 전자음악 페스티벌과 관련된 기사입니다.",
+          "reason": "전자음악 페스티벌 관련 소식으로 승인됨.",
           "commonEntities": [
             "Beyond The Valley",
-            "2026",
-            "KI/KI",
-            "Boys Noize",
-            "Skepta"
+            "2026 Lineup",
+            "KI/KI"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "Kaskade, ORIGIN// 투어 발표",
+          "topic": "Kaskade, 'ORIGIN// Tour' 발표 및 Coachella 무대 연출 포함",
           "keywords": [
             "Kaskade",
-            "ORIGIN// 투어",
-            "Coachella",
+            "ORIGIN// Tour",
+            "Coachella Stage Production",
             "Miami",
             "New York"
           ],
           "articleIds": [
             "a3c3e958-48cb-45b3-831e-764c37537b65"
           ],
-          "reason": "Kaskade가 ORIGIN// 투어를 발표한 것으로, 전자음악 씬과 직접적으로 관련된 내용입니다.",
+          "reason": "전자음악 아티스트의 투어 및 이벤트 소식으로 승인됨.",
           "commonEntities": [
             "Kaskade",
-            "ORIGIN// 투어",
-            "Coachella",
-            "Miami",
-            "New York"
+            "ORIGIN// Tour",
+            "Coachella"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "Dimitri Vegas, Tomorrowland 및 Ushuaïa Ibiza 세트에서 Lukaku, De Bruyne 등 참여",
+          "topic": "Dimitri Vegas, Tomorrowland 및 Ushuaïa Ibiza 공연에 축구 선수 참여",
           "keywords": [
             "Dimitri Vegas",
             "Tomorrowland",
@@ -3079,62 +3054,56 @@
           "articleIds": [
             "330b30e4-0b10-45f5-8c46-13ad6a376b19"
           ],
-          "reason": "Dimitri Vegas의 Tomorrowland 및 Ushuaïa Ibiza 세트에서 축구 스타 Lukaku, De Bruyne 등이 참여한 것으로, 전자음악 페스티벌과 관련된 소식입니다.",
+          "reason": "전자음악 페스티벌 관련 소식으로 승인됨.",
           "commonEntities": [
             "Dimitri Vegas",
             "Tomorrowland",
-            "Ushuaïa Ibiza",
-            "Lukaku",
-            "De Bruyne"
+            "Ushuaïa Ibiza"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "Paco Wegmann, “Mais Forte” 발표 및 Loco Dice의 SB Recordings와 협업",
+          "topic": "Paco Wegmann, “Mais Forte” 릴리즈 및 Loco Dice SB Recordings와 협업",
           "keywords": [
             "Paco Wegmann",
             "Mais Forte",
             "Loco Dice",
             "SB Recordings",
-            "Rincon Sapiencia"
+            "Brazilian Vocalist"
           ],
           "articleIds": [
             "997a3e8d-9b22-4fbc-9305-8de90f50deb7"
           ],
-          "reason": "Paco Wegmann이 “Mais Forte”를 발표하고 Loco Dice의 SB Recordings과 협업한 것으로, 전자음악 씬과 관련된 소식입니다.",
+          "reason": "전자음악 아티스트의 릴리즈 소식으로 승인됨.",
           "commonEntities": [
             "Paco Wegmann",
             "Mais Forte",
-            "Loco Dice",
-            "SB Recordings",
-            "Rincon Sapiencia"
+            "Loco Dice"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "El Tony, Ibiza에서 프로듀서 아카데미 운영",
+          "topic": "El Tony, Ibiza에서의 프로듀서 아카데미 프로그램 발표",
           "keywords": [
             "El Tony",
+            "Producer Academy",
             "Ibiza",
-            "프로듀서 아카데미",
             "Beatport",
-            "2026년 10월"
+            "Electronic Music Producers"
           ],
           "articleIds": [
             "aa270acb-cde1-487e-851f-37f0bb6a0555"
           ],
-          "reason": "El Tony가 Ibiza에서 프로듀서 아카데미를 운영하는 것으로, 전자음악 씬과 관련된 교육 프로그램 소식입니다.",
+          "reason": "전자음악 교육 및 이벤트 관련 소식으로 승인됨.",
           "commonEntities": [
             "El Tony",
-            "Ibiza",
-            "프로듀서 아카데미",
-            "Beatport",
-            "2026년 10월"
+            "Producer Academy",
+            "Ibiza"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "Deadcrow & Caster, 'Euphoria' 발매",
+          "topic": "Deadcrow & Caster, NIGHTMODE 레이블 통해 신곡 'Euphoria' 발표",
           "keywords": [
             "Deadcrow",
             "Caster",
@@ -3145,18 +3114,16 @@
           "articleIds": [
             "405af67d-3614-4665-83f8-2c45ffea4a17"
           ],
-          "reason": "Deadcrow와 Caster가 'Euphoria'를 발매한 것으로, 전자음악 씬과 관련된 소식입니다.",
+          "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
           "commonEntities": [
             "Deadcrow",
             "Caster",
-            "Euphoria",
-            "NIGHTMODE",
-            "Bass Music"
+            "Euphoria"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "Christian Hornbostel, “Eridanus” Magnetic Magazine에 공개",
+          "topic": "Christian Hornbostel, Magnetic Magazine Recordings 통해 신곡 'Eridanus' 발표",
           "keywords": [
             "Christian Hornbostel",
             "Eridanus",
@@ -3167,35 +3134,31 @@
           "articleIds": [
             "e2aeaf6a-1e05-4163-a491-b6efb2570759"
           ],
-          "reason": "Christian Hornbostel의 “Eridanus”가 Magnetic Magazine에 공개된 것으로, 전자음악 씬과 관련된 소식입니다.",
+          "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
           "commonEntities": [
             "Christian Hornbostel",
             "Eridanus",
-            "Magnetic Magazine",
-            "Spatial Audio",
-            "Electronic Music"
+            "Magnetic Magazine"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "Eliza Rose & Sega Bodega, 새 싱글 'Kite' 발표",
+          "topic": "Eliza Rose & Sega Bodega, 신곡 'Kite' 발표",
           "keywords": [
             "Eliza Rose",
             "Sega Bodega",
             "Kite",
-            "bashment",
+            "Bashment",
             "Carnival"
           ],
           "articleIds": [
             "bfff6140-0da4-4d38-b518-d660995a6844"
           ],
-          "reason": "Eliza Rose와 Sega Bodega가 새 싱글 'Kite'를 발표한 것으로, 전자음악 씬과 관련된 소식입니다.",
+          "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
           "commonEntities": [
             "Eliza Rose",
             "Sega Bodega",
-            "Kite",
-            "bashment",
-            "Carnival"
+            "Kite"
           ],
           "cohesionScore": null
         }
@@ -3225,43 +3188,42 @@
         "adf80d1b-5c21-4378-b180-be96bacc8b02",
         "3edb458c-852c-4f3e-baba-e8478b1d1a8f"
       ],
-      "responseExcerpt": "{\"suggestions\": [{\"topic\": \"Tomorrowland 2026 공식 애프터무비 공개\", \"keywords\": [\"Tomorrowland\", \"aftermovie\", \"2026\", \"festival\", \"official\"] , \"articleIds\": [\"5482179c-27e2-41bf-9e58-1a176092b2a2\", \"eee21e05-70b5-402b-bf6e-716c1c3cb599\"] , \"reason\": \"Tomorrowland 2026의 공식 애프터무비 공개 및 Aaron Hibell의 인터뷰와 관련된 기사로 묶음 가능.\" , \"commonEntities\": [\"Tomorrowland 2026\", \"aftermovie\"] }, {\"topic\": \"Kashovski와 Moojo의 'Show Me' 콜라보레이션 릴리스\", \"keywords\": [\"Kashovski\", \"Moojo\", \"Show Me\", \"collaboration\", \"house\"] , \"articleIds\": [\"c070c29a-55f9-46be-9e48-2086cef9bccc\"] , \"reason\": \"Kashovski와 Moojo의 첫 번째 콜라보레이션 'Show Me' 릴리스 관련 기사로 단독 클러스터.\" , \"commonEntities\": [\"Kashovski\", \"Moojo\", \"Show Me\"] }, {\"topic\": \"Cyprus KAMAYA 페스티벌 라인업 공개\", \"keywords\": [\"KAMAYA Festival\", \"Dixon\", \"Mind Against\", \"lineup\", \"2026\"] , ",
-      "responseLength": 4704,
-      "responseHash": "c3f08b738f5f279bd896df203444215bf4f280920e3ea8e17fc1b9cfe587e3ac",
+      "responseExcerpt": "{\"suggestions\": [{\"topic\": \"Cale Anderson의 'Yemaya (We All Come from the Goddess)' 앨범 발매\", \"keywords\": [\"Cale Anderson\", \"folktronica\", \"Maschine MK3\", \"UVI plugins\", \"앨범\"], \"articleIds\": [\"5482179c-27e2-41bf-9e58-1a176092b2a2\"],\"reason\": \"승인됨: 전자음악 관련 릴리즈에 해당합니다.\",\"commonEntities\": [\"Cale Anderson\", \"Yemaya (We All Come from the Goddess)\"]}, {\"topic\": \"Kashovski와 Moojo의 'Show Me' 콜라보레이션 발매\", \"keywords\": [\"Kashovski\", \"Moojo\", \"House\", \"Calamar Records\", \"싱글\"], \"articleIds\": [\"c070c29a-55f9-46be-9e48-2086cef9bccc\"],\"reason\": \"승인됨: 전자음악 관련 릴리즈에 해당합니다.\",\"commonEntities\": [\"Kashovski\", \"Moojo\", \"Show Me\"]}, {\"topic\": \"Tomorrowland 2026 공식 애프터무비 공개\", \"keywords\": [\"Tomorrowland 2026\", \"공식 애프터무비\", \"Boom, Belgium\", \"500 아티스트\", \"16 스테이지\"], \"articleIds\": [\"2439f041-6819-455a-8aa6-b17775140039\"],\"re",
+      "responseLength": 5623,
+      "responseHash": "77966d21582eee4eb5e392dc0c7cb0a7927804ca839c3c4fbbba1e1eb6bee394",
       "suggestions": [
         {
-          "topic": "Tomorrowland 2026 공식 애프터무비 공개",
+          "topic": "Cale Anderson의 'Yemaya (We All Come from the Goddess)' 앨범 발매",
           "keywords": [
-            "Tomorrowland",
-            "aftermovie",
-            "2026",
-            "festival",
-            "official"
+            "Cale Anderson",
+            "folktronica",
+            "Maschine MK3",
+            "UVI plugins",
+            "앨범"
           ],
           "articleIds": [
-            "5482179c-27e2-41bf-9e58-1a176092b2a2",
-            "eee21e05-70b5-402b-bf6e-716c1c3cb599"
+            "5482179c-27e2-41bf-9e58-1a176092b2a2"
           ],
-          "reason": "Tomorrowland 2026의 공식 애프터무비 공개 및 Aaron Hibell의 인터뷰와 관련된 기사로 묶음 가능.",
+          "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
           "commonEntities": [
-            "Tomorrowland 2026",
-            "aftermovie"
+            "Cale Anderson",
+            "Yemaya (We All Come from the Goddess)"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "Kashovski와 Moojo의 'Show Me' 콜라보레이션 릴리스",
+          "topic": "Kashovski와 Moojo의 'Show Me' 콜라보레이션 발매",
           "keywords": [
             "Kashovski",
             "Moojo",
-            "Show Me",
-            "collaboration",
-            "house"
+            "House",
+            "Calamar Records",
+            "싱글"
           ],
           "articleIds": [
             "c070c29a-55f9-46be-9e48-2086cef9bccc"
           ],
-          "reason": "Kashovski와 Moojo의 첫 번째 콜라보레이션 'Show Me' 릴리스 관련 기사로 단독 클러스터.",
+          "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
           "commonEntities": [
             "Kashovski",
             "Moojo",
@@ -3270,245 +3232,344 @@
           "cohesionScore": null
         },
         {
-          "topic": "Cyprus KAMAYA 페스티벌 라인업 공개",
+          "topic": "Tomorrowland 2026 공식 애프터무비 공개",
           "keywords": [
-            "KAMAYA Festival",
+            "Tomorrowland 2026",
+            "공식 애프터무비",
+            "Boom, Belgium",
+            "500 아티스트",
+            "16 스테이지"
+          ],
+          "articleIds": [
+            "2439f041-6819-455a-8aa6-b17775140039"
+          ],
+          "reason": "승인됨: 전자음악 페스티벌 관련 소식에 해당합니다.",
+          "commonEntities": [
+            "Tomorrowland 2026",
+            "Boom, Belgium"
+          ],
+          "cohesionScore": null
+        },
+        {
+          "topic": "Native Instruments의 SuperStarSaw 리뷰",
+          "keywords": [
+            "Native Instruments",
+            "SuperStarSaw",
+            "음악 소프트웨어",
+            "Maschine MK3",
+            "UVI plugins"
+          ],
+          "articleIds": [
+            "b6218fd1-8c85-4c8e-9271-471c1dd0f68c"
+          ],
+          "reason": "승인됨: 전자음악 장비/소프트웨어 관련 소식에 해당합니다.",
+          "commonEntities": [
+            "Native Instruments",
+            "SuperStarSaw"
+          ],
+          "cohesionScore": null
+        },
+        {
+          "topic": "헝가리 Ozora 페스티벌, 2명의 참가자 사망으로 조기 종료",
+          "keywords": [
+            "Ozora 페스티벌",
+            "헝가리",
+            "Psytrance",
+            "조기 종료",
+            "사망"
+          ],
+          "articleIds": [
+            "2225d129-ec8f-445b-b110-f384c4ba4381"
+          ],
+          "reason": "승인됨: 전자음악 페스티벌 관련 사고에 해당합니다.",
+          "commonEntities": [
+            "Ozora 페스티벌",
+            "헝가리"
+          ],
+          "cohesionScore": null
+        },
+        {
+          "topic": "Aaron Hibell, Tomorrowland 2026에서의 공연 및 인터뷰",
+          "keywords": [
+            "Aaron Hibell",
+            "Tomorrowland 2026",
+            "데뷔 앨범",
+            "인터뷰",
+            "EDMTunes"
+          ],
+          "articleIds": [
+            "eee21e05-70b5-402b-bf6e-716c1c3cb599"
+          ],
+          "reason": "승인됨: 전자음악 아티스트 관련 소식에 해당합니다.",
+          "commonEntities": [
+            "Aaron Hibell",
+            "Tomorrowland 2026"
+          ],
+          "cohesionScore": null
+        },
+        {
+          "topic": "키프로스 KAMAYA 페스티벌, 디슨, Mind Against 등 출연 확정",
+          "keywords": [
+            "KAMAYA 페스티벌",
+            "키프로스",
             "Dixon",
             "Mind Against",
-            "lineup",
-            "2026"
+            "전자음악"
           ],
           "articleIds": [
             "5540884f-8038-4ef5-bf27-28747fbfbb14"
           ],
-          "reason": "KAMAYA 페스티벌의 첫 번째 라인업 공개 및 전자음악 플랫폼 관련 기사로 단독 클러스터.",
+          "reason": "승인됨: 전자음악 페스티벌 관련 소식에 해당합니다.",
           "commonEntities": [
-            "KAMAYA Festival",
-            "Dixon",
-            "Mind Against"
+            "KAMAYA 페스티벌",
+            "키프로스"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "Vintage Culture, Nariman, rhys from the sticks의 'Think Too Much' 릴리스",
+          "topic": "Vintage Culture, Nariman 및 rhys from the sticks와 'Think Too Much' 콜라보레이션 발매",
           "keywords": [
             "Vintage Culture",
             "Nariman",
             "rhys from the sticks",
-            "Think Too Much",
-            "Tech House"
+            "Tech House",
+            "Affairs Music"
           ],
           "articleIds": [
-            "ebf9cabf-804b-43c4-b438-11b0ff45b6c0",
-            "3edb458c-852c-4f3e-baba-e8478b1d1a8f"
+            "ebf9cabf-804b-43c4-b438-11b0ff45b6c0"
           ],
-          "reason": "Vintage Culture의 신곡 'Think Too Much' 릴리스 및 관련 정보를 다룬 기사로 묶음 가능.",
+          "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
           "commonEntities": [
             "Vintage Culture",
-            "Think Too Much",
-            "Tech House"
+            "Think Too Much"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "Maceo Plex, Kavinsky의 'Nightcall' 리믹스 무료 다운로드",
+          "topic": "Maceo Plex, Kavinsky의 'Nightcall' 리믹스 무료 공개",
           "keywords": [
             "Maceo Plex",
             "Kavinsky",
             "Nightcall",
-            "remix",
-            "free download"
+            "리믹스",
+            "프리 다운로드"
           ],
           "articleIds": [
             "35047bce-64c4-4d8b-bbaa-31c53631d57f"
           ],
-          "reason": "Maceo Plex의 Kavinsky 'Nightcall' 리믹스 무료 제공 관련 기사로 단독 클러스터.",
+          "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
           "commonEntities": [
             "Maceo Plex",
-            "Kavinsky",
             "Nightcall"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "Ozora 페스티벌, 두 명의 참가자 사망으로 조기 종료",
+          "topic": "헝가리 Ozora 페스티벌, 2명의 참가자 사망으로 조기 종료",
           "keywords": [
-            "Ozora Festival",
-            "Hungary",
+            "Ozora 페스티벌",
+            "헝가리",
             "Psytrance",
-            "tragedy",
-            "early closure"
+            "조기 종료",
+            "사망"
           ],
           "articleIds": [
-            "2225d129-ec8f-445b-b110-f384c4ba4381",
-            "b3fd0782-d645-40fe-b093-ff24850e74a1",
-            "291bd1c4-8919-40a4-91de-e32408755beb"
+            "b3fd0782-d645-40fe-b093-ff24850e74a1"
           ],
-          "reason": "Ozora 페스티벌의 조기 종료와 관련된 여러 언론 보도로 묶음 가능.",
+          "reason": "승인됨: 전자음악 페스티벌 관련 사고에 해당합니다.",
           "commonEntities": [
-            "Ozora Festival",
-            "Hungary",
-            "Psytrance"
+            "Ozora 페스티벌",
+            "헝가리"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "Eastern Electrics 2026 라인업 공개",
+          "topic": "헝가리 Psychedelic Music Festival Ozora, 2명의 사망으로 조기 종료",
+          "keywords": [
+            "Ozora 페스티벌",
+            "헝가리",
+            "Psychedelic",
+            "조기 종료",
+            "사망"
+          ],
+          "articleIds": [
+            "291bd1c4-8919-40a4-91de-e32408755beb"
+          ],
+          "reason": "승인됨: 전자음악 페스티벌 관련 사고에 해당합니다.",
+          "commonEntities": [
+            "Ozora 페스티벌",
+            "헝가리"
+          ],
+          "cohesionScore": null
+        },
+        {
+          "topic": "Eastern Electrics, East End Dubs, Joseph Capriati 등 참여하는 2026년 행사 공개",
           "keywords": [
             "Eastern Electrics",
             "East End Dubs",
             "Joseph Capriati",
-            "lineup",
-            "2026"
+            "Burgess Park",
+            "전자음악"
           ],
           "articleIds": [
             "ccc5b5c6-781c-4f10-9faa-46b57417b4e2"
           ],
-          "reason": "Eastern Electrics 2026의 라인업 공개 관련 기사로 단독 클러스터.",
+          "reason": "승인됨: 전자음악 페스티벌 관련 소식에 해당합니다.",
           "commonEntities": [
             "Eastern Electrics",
-            "East End Dubs",
-            "Joseph Capriati"
+            "Burgess Park"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "David Penn의 전자음악 커리어와 ‘Big Love’ 릴리스",
+          "topic": "David Penn의 커리어와 음악적 영향력에 대한 인터뷰",
           "keywords": [
             "David Penn",
-            "Spanish house",
-            "Big Love",
+            "Spanish House",
             "Defected",
-            "career"
+            "Big Love",
+            "인터뷰"
           ],
           "articleIds": [
             "4e0b2892-c472-40c3-90c1-2887bd3c835b"
           ],
-          "reason": "David Penn의 커리어와 관련된 기사로 단독 클러스터.",
+          "reason": "승인됨: 전자음악 아티스트 관련 소식에 해당합니다.",
           "commonEntities": [
             "David Penn",
-            "Big Love",
-            "Defected"
+            "Big Love"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "Giom의 2000년대 하우스 클래식 릴리스",
+          "topic": "Giom의 2000년대 하우스 음악 클래식 컬렉션 발표",
           "keywords": [
             "Giom",
-            "house classics",
+            "2000년대",
+            "하우스",
             "Supremus Records",
-            "2000s",
-            "remix"
+            "리믹스"
           ],
           "articleIds": [
             "9a7d7875-1a18-4298-9976-b36c720be8e0"
           ],
-          "reason": "Giom의 2000년대 하우스 클래식 릴리스 관련 기사로 단독 클러스터.",
+          "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
           "commonEntities": [
             "Giom",
-            "house classics",
-            "Supremus Records"
+            "As Darkness Falls"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "Fred again..과 LATIN MAFIA의 ‘9 months & 50 hours’ 미キテープ 릴리스",
+          "topic": "Fred again.. 및 LATIN MAFIA의 '9 months & 50 hours' 믹스테이프 발표",
           "keywords": [
             "Fred again..",
             "LATIN MAFIA",
-            "9 months & 50 hours",
-            "mixtape",
-            "Mexico City"
+            "믹스테이프",
+            "Mexico City",
+            "fabric"
           ],
           "articleIds": [
             "44dad22b-390c-47da-9ffd-64b91eb4a9c8"
           ],
-          "reason": "Fred again..과 LATIN MAFIA의 미キ테ープ 릴리스 관련 기사로 단독 클러스터.",
+          "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
           "commonEntities": [
             "Fred again..",
-            "LATIN MAFIA",
             "9 months & 50 hours"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "fabric 27주년 라인업 공개",
+          "topic": "fabric, 27주년 기념 이벤트 라인업 발표",
           "keywords": [
             "fabric",
-            "27th birthday",
-            "lineup",
+            "27주년",
             "Ricardo Villalobos",
-            "Zip"
+            "Zip",
+            "Vlada"
           ],
           "articleIds": [
             "ac03829d-cbcf-4cd1-abf0-a9140aeb1c57"
           ],
-          "reason": "fabric의 27주년 라인업 공개 관련 기사로 단독 클러스터.",
+          "reason": "승인됨: 전자음악 페스티벌 관련 소식에 해당합니다.",
           "commonEntities": [
             "fabric",
-            "27th birthday",
-            "Ricardo Villalobos"
+            "27주년"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "Mount Kimbie, fabric presents Compilation 릴리스",
+          "topic": "Mount Kimbie, fabric presents 컴필레이션 발표",
           "keywords": [
             "Mount Kimbie",
             "fabric presents",
-            "Compilation",
-            "electronic duo",
-            "Phonica Records"
+            "Monroe",
+            "Jomox",
+            "컴필레이션"
           ],
           "articleIds": [
             "0b481d88-a706-4a7f-8949-0a35f6ddc498"
           ],
-          "reason": "Mount Kimbie의 fabric presents Compilation 릴리스 관련 기사로 단독 클러스터.",
+          "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
           "commonEntities": [
             "Mount Kimbie",
-            "fabric presents",
-            "Compilation"
+            "fabric presents"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "salute와 Riva Starr의 'soulreply' 릴리스",
+          "topic": "salute 및 Riva Starr, 'soulreply' 싱글 발표",
           "keywords": [
             "salute",
             "Riva Starr",
             "soulreply",
-            "infinite passion",
-            "Ninja Tune"
+            "Ninja Tune",
+            "믹스테이프"
           ],
           "articleIds": [
             "0de537ec-41fb-4cab-9ac0-86091eb8c509"
           ],
-          "reason": "salute와 Riva Starr의 'soulreply' 릴리스 관련 기사로 단독 클러스터.",
+          "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
           "commonEntities": [
             "salute",
-            "Riva Starr",
             "soulreply"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "Roland JD-990 소프트웨어 에뮬레이터 JADE 개발",
+          "topic": "Roland JD-990 소프트웨어 에뮬레이터 JADE 개발 중",
           "keywords": [
             "Roland",
             "JD-990",
             "JADE",
-            "software emulator",
-            "The Usual Suspects"
+            "The Usual Suspects",
+            "음악 소프트웨어"
           ],
           "articleIds": [
             "adf80d1b-5c21-4378-b180-be96bacc8b02"
           ],
-          "reason": "Roland JD-990의 JADE 소프트웨어 에뮬레이터 개발 관련 기사로 단독 클러스터.",
+          "reason": "승인됨: 전자음악 장비/소프트웨어 관련 소식에 해당합니다.",
           "commonEntities": [
             "Roland",
-            "JD-990",
             "JADE"
+          ],
+          "cohesionScore": null
+        },
+        {
+          "topic": "Vintage Culture, 'Think Too Much' 싱글 발표",
+          "keywords": [
+            "Vintage Culture",
+            "Think Too Much",
+            "Melodic House",
+            "Affairs Music",
+            "싱글"
+          ],
+          "articleIds": [
+            "3edb458c-852c-4f3e-baba-e8478b1d1a8f"
+          ],
+          "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
+          "commonEntities": [
+            "Vintage Culture",
+            "Think Too Much"
           ],
           "cohesionScore": null
         }
@@ -3528,7 +3589,6 @@
         "6f720c3d-0871-4158-b772-ef35b87101fc",
         "843bc16c-70c6-4c87-a579-765b05c7088f",
         "5f4bb5b3-b519-477b-8958-1908157ce18b",
-        "c8adbbe5-2e20-421f-bb3e-606516f1bf29",
         "4ca71425-48f8-4279-9618-6e4641f22af1",
         "84ee2511-3136-4b33-b59e-1c1e1b0ef26c",
         "59e2d723-1b46-49ec-a404-8873552a9ae5",
@@ -3536,64 +3596,66 @@
         "be9cafd4-297c-46a0-8c9f-c2f64e9c61eb",
         "d13d1666-30ed-480f-87f6-7735a1572466",
         "7b90746c-1b89-47b4-8f88-0d8711ac11a1",
-        "d5c5e356-9b4f-49c2-a2fb-eb19c8161f54"
+        "d5c5e356-9b4f-49c2-a2fb-eb19c8161f54",
+        "8c3a4c04-9cc7-442c-8041-740d7f9d6795"
       ],
-      "responseExcerpt": "{\"suggestions\": [{\"topic\": \"Roland GO:KEYS 3 Minion 키보드 출시\", \"keywords\": [\"Roland\", \"GO:KEYS 3\", \"Minion\", \"키보드\", \"2026년 9월\"], \"articleIds\": [\"70e0dd77-62b7-4959-b31c-9de70493b809\"] , \"reason\": \"전자음악 장비 관련 제품 출시 소식으로 전자음악 씬과 연결됨.\" ,\"commonEntities\": [\"Roland\", \"GO:KEYS 3\", \"Minion\", \"2026년 9월\"]}, {\"topic\": \"Kaskade 'ORIGIN //' 라이브 공연 투어\", \"keywords\": [\"Kaskade\", \"ORIGIN //\", \"라이브 공연\", \"2026년 가을\"], \"articleIds\": [\"37df4ffc-1996-419b-926b-ebd9d7037724\"], \"reason\": \"DJ Kaskade의 라이브 공연 소식으로 전자음악 씬과 연결됨.\", \"commonEntities\": [\"Kaskade\", \"ORIGIN //\", \"2026년 가을\"]}, {\"topic\": \"Nutritious, Liquid Culture Records에서 'Solarmaxxing' 발매\", \"keywords\": [\"Nutritious\", \"Solarmaxxing\", \"Liquid Culture Records\", \"하우스\"], \"articleIds\": [\"7be74f06-4a95-48a8-9efd-b0d1d6f714d9\"], \"reason\": \"하우스 음악 프로듀서의 신곡 발매로 전자음악",
-      "responseLength": 4968,
-      "responseHash": "fdd6ad5f4f2fd395de8fcc91626bfd0b2f0ffdba9c199b902b95c59fc9724132",
+      "responseExcerpt": "{\"suggestions\": [{\"topic\": \"Roland GO:KEYS 3 Minion 키보드 2026년 9월 출시\", \"keywords\": [\"Roland\", \"GO:KEYS 3\", \"Minion\", \"키보드\", \"음악 장비\"], \"articleIds\": [\"70e0dd77-62b7-4959-b31c-9de70493b809\"],\"reason\": \"전자음악 관련 음악 장비 출시 소식으로 승인되었습니다.\",\"commonEntities\": [\"Roland\", \"GO:KEYS 3\", \"Minion\", \"키보드\"]},{\"topic\": \"Kaskade, 'ORIGIN //' 라이브 쇼 미국 4개 도시 순회\", \"keywords\": [\"Kaskade\", \"ORIGIN //\", \"라이브 공연\", \"deep house\"], \"articleIds\": [\"37df4ffc-1996-419b-926b-ebd9d7037724\"],\"reason\": \"전자음악 아티스트의 라이브 공연 소식으로 승인되었습니다.\",\"commonEntities\": [\"Kaskade\", \"ORIGIN //\", \"라이브 쇼\"]},{\"topic\": \"Nutritious, Liquid Culture Records에서 'Solarmaxxing' 미니 앨범 발매\", \"keywords\": [\"Nutritious\", \"Solarmaxxing\", \"Liquid Culture Records\", \"house\", \"techno\"], \"articleIds\": [\"7be74f06-4a95-48a8-9efd-b0d1d6f714d9\"],\"reason\": \"전자음악 아티스트의 신곡 ",
+      "responseLength": 5299,
+      "responseHash": "1e385c10a394559359b0c9b6e051e56d340991762e02d33279066872f6f7b9b3",
       "suggestions": [
         {
-          "topic": "Roland GO:KEYS 3 Minion 키보드 출시",
+          "topic": "Roland GO:KEYS 3 Minion 키보드 2026년 9월 출시",
           "keywords": [
             "Roland",
             "GO:KEYS 3",
             "Minion",
             "키보드",
-            "2026년 9월"
+            "음악 장비"
           ],
           "articleIds": [
             "70e0dd77-62b7-4959-b31c-9de70493b809"
           ],
-          "reason": "전자음악 장비 관련 제품 출시 소식으로 전자음악 씬과 연결됨.",
+          "reason": "전자음악 관련 음악 장비 출시 소식으로 승인되었습니다.",
           "commonEntities": [
             "Roland",
             "GO:KEYS 3",
             "Minion",
-            "2026년 9월"
+            "키보드"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "Kaskade 'ORIGIN //' 라이브 공연 투어",
+          "topic": "Kaskade, 'ORIGIN //' 라이브 쇼 미국 4개 도시 순회",
           "keywords": [
             "Kaskade",
             "ORIGIN //",
             "라이브 공연",
-            "2026년 가을"
+            "deep house"
           ],
           "articleIds": [
             "37df4ffc-1996-419b-926b-ebd9d7037724"
           ],
-          "reason": "DJ Kaskade의 라이브 공연 소식으로 전자음악 씬과 연결됨.",
+          "reason": "전자음악 아티스트의 라이브 공연 소식으로 승인되었습니다.",
           "commonEntities": [
             "Kaskade",
             "ORIGIN //",
-            "2026년 가을"
+            "라이브 쇼"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "Nutritious, Liquid Culture Records에서 'Solarmaxxing' 발매",
+          "topic": "Nutritious, Liquid Culture Records에서 'Solarmaxxing' 미니 앨범 발매",
           "keywords": [
             "Nutritious",
             "Solarmaxxing",
             "Liquid Culture Records",
-            "하우스"
+            "house",
+            "techno"
           ],
           "articleIds": [
             "7be74f06-4a95-48a8-9efd-b0d1d6f714d9"
           ],
-          "reason": "하우스 음악 프로듀서의 신곡 발매로 전자음악 씬과 연결됨.",
+          "reason": "전자음악 아티스트의 신곡 및 앨범 릴리즈 소식으로 승인되었습니다.",
           "commonEntities": [
             "Nutritious",
             "Solarmaxxing",
@@ -3602,16 +3664,17 @@
           "cohesionScore": null
         },
         {
-          "topic": "Guyver7x3, 'Half Of Me Still With You' 발매",
+          "topic": "Guyver7x3, 'Half Of Me Still With You' 싱글 발매",
           "keywords": [
             "Guyver7x3",
             "Half Of Me Still With You",
-            "시냅스 팝"
+            "synth pop",
+            "음악 릴리즈"
           ],
           "articleIds": [
             "46df593a-47e7-4929-88e0-6a4646d08fd5"
           ],
-          "reason": "시냅스 팝 장르의 신곡 발매로 전자음악 씬과 연결됨.",
+          "reason": "전자음악 아티스트의 신곡 릴리즈 소식으로 승인되었습니다.",
           "commonEntities": [
             "Guyver7x3",
             "Half Of Me Still With You"
@@ -3619,16 +3682,17 @@
           "cohesionScore": null
         },
         {
-          "topic": "DJ Dr Vitos, 'Walk me Home' 발매",
+          "topic": "DJ Dr Vitos, 'Walk me Home' 앨범 발매",
           "keywords": [
             "DJ Dr Vitos",
             "Walk me Home",
-            "인디 팝"
+            "indie pop",
+            "음악 릴리즈"
           ],
           "articleIds": [
             "4400139e-2ffd-4757-a7e0-0e37e9bbd877"
           ],
-          "reason": "인디 팝 장르의 신곡 발매로 전자음악 씬과 연결됨.",
+          "reason": "전자음악 아티스트의 신곡 및 앨범 릴리즈 소식으로 승인되었습니다.",
           "commonEntities": [
             "DJ Dr Vitos",
             "Walk me Home"
@@ -3636,17 +3700,18 @@
           "cohesionScore": null
         },
         {
-          "topic": "Chuck Daniels, 'The Remixes' 발매",
+          "topic": "Chuck Daniels, 'The Remixes' 릴리즈로 Sampled Detroit 재개",
           "keywords": [
             "Chuck Daniels",
             "The Remixes",
             "Sampled Detroit",
-            "하우스"
+            "remix",
+            "house"
           ],
           "articleIds": [
             "69032d03-0f1f-4b60-8033-d6f887bdd883"
           ],
-          "reason": "하우스 음악 레이블의 리믹스 컬렉션 발매로 전자음악 씬과 연결됨.",
+          "reason": "전자음악 레이블 및 아티스트의 릴리즈 소식으로 승인되었습니다.",
           "commonEntities": [
             "Chuck Daniels",
             "The Remixes",
@@ -3655,34 +3720,36 @@
           "cohesionScore": null
         },
         {
-          "topic": "Vital 소프트웨어 시냅스 출시",
+          "topic": "Vital, 무료 소프트웨어 신디사이저로 주목",
           "keywords": [
             "Vital",
-            "소프트웨어",
-            "시냅스"
+            "소프트웨어 신디사이저",
+            "5 Magazine",
+            "음악 소프트웨어"
           ],
           "articleIds": [
             "c0d18098-25e7-4bb5-9e45-dcdc9464230d"
           ],
-          "reason": "전자음악 제작을 위한 소프트웨어 관련 정보로 전자음악 씬과 연결됨.",
+          "reason": "전자음악 관련 음악 소프트웨어 소개로 승인되었습니다.",
           "commonEntities": [
             "Vital",
-            "소프트웨어"
+            "소프트웨어 신디사이저"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "Emanuele Cisi & Joe Claussell, 'Pharoah’s Message' 리믹스",
+          "topic": "Emanuele Cisi & Joe Claussell, 'Pharoah’s Message' 리믹스 발표",
           "keywords": [
             "Emanuele Cisi",
             "Joe Claussell",
             "Pharoah’s Message",
-            "리믹스"
+            "리믹스",
+            "deep house"
           ],
           "articleIds": [
             "6f720c3d-0871-4158-b772-ef35b87101fc"
           ],
-          "reason": "유명 프로듀서들의 리믹스 발표로 전자음악 씬과 연결됨.",
+          "reason": "전자음악 아티스트의 리믹스 릴리즈 소식으로 승인되었습니다.",
           "commonEntities": [
             "Emanuele Cisi",
             "Joe Claussell",
@@ -3691,17 +3758,17 @@
           "cohesionScore": null
         },
         {
-          "topic": "ARC Music Festival 2026 공연자 발표",
+          "topic": "ARC Music Festival 2026, 5개 아티스트 추천",
           "keywords": [
             "ARC Music Festival 2026",
             "Silva Bumpa",
-            "Techno",
-            "하우스"
+            "house",
+            "techno"
           ],
           "articleIds": [
-            "84ee2511-3136-4b33-b59e-1c1e1b0ef26c"
+            "843bc16c-70c6-4c87-a579-765b05c7088f"
           ],
-          "reason": "하우스 및 테크노 음악 페스티벌의 공연자 발표로 전자음악 씬과 연결됨.",
+          "reason": "전자음악 페스티벌 관련 소식으로 승인되었습니다.",
           "commonEntities": [
             "ARC Music Festival 2026",
             "Silva Bumpa"
@@ -3709,18 +3776,18 @@
           "cohesionScore": null
         },
         {
-          "topic": "Sullivan King, TRYM & Graphyt, 'Rumble' 발매",
+          "topic": "Sullivan King, TRYM & Graphyt, 'Rumble' 협업곡 발표",
           "keywords": [
             "Sullivan King",
             "TRYM",
             "Graphyt",
             "Rumble",
-            "하드 테크노"
+            "hard techno"
           ],
           "articleIds": [
             "59e2d723-1b46-49ec-a404-8873552a9ae5"
           ],
-          "reason": "하드 테크노 및 럭스텝 장르의 신곡 발매로 전자음악 씬과 연결됨.",
+          "reason": "전자음악 아티스트의 협업곡 릴리즈 소식으로 승인되었습니다.",
           "commonEntities": [
             "Sullivan King",
             "TRYM",
@@ -3730,17 +3797,18 @@
           "cohesionScore": null
         },
         {
-          "topic": "Mat Weasel Busters 사망 소식",
+          "topic": "Mat Weasel Busters, Hardtek 및 Frenchcore의 선구자로 사망",
           "keywords": [
             "Mat Weasel Busters",
             "Hardtek",
             "Frenchcore",
-            "사망"
+            "사망",
+            "전자음악"
           ],
           "articleIds": [
             "57519485-435f-46b5-b844-678573083aa2"
           ],
-          "reason": "전자음악 장르의 선구자의 사망 소식으로 전자음악 씬과 연결됨.",
+          "reason": "전자음악 아티스트의 사망 소식으로 승인되었습니다.",
           "commonEntities": [
             "Mat Weasel Busters",
             "Hardtek",
@@ -3749,16 +3817,17 @@
           "cohesionScore": null
         },
         {
-          "topic": "Jan Wayne 은퇴 발표",
+          "topic": "Jan Wayne, 2027년 말 은퇴 발표",
           "keywords": [
             "Jan Wayne",
             "은퇴",
-            "35년"
+            "DJ",
+            "35년 경력"
           ],
           "articleIds": [
             "be9cafd4-297c-46a0-8c9f-c2f64e9c61eb"
           ],
-          "reason": "장기간 활동한 DJ의 은퇴 소식으로 전자음악 씬과 연결됨.",
+          "reason": "전자음악 DJ의 은퇴 소식으로 승인되었습니다.",
           "commonEntities": [
             "Jan Wayne",
             "은퇴"
@@ -3766,16 +3835,17 @@
           "cohesionScore": null
         },
         {
-          "topic": "M. Shadows, Avenged Sevenfold 독립 레이블 발표",
+          "topic": "M. Shadows, Avenged Sevenfold, 독립 레이블로 전환",
           "keywords": [
             "M. Shadows",
             "Avenged Sevenfold",
-            "독립 레이블"
+            "독립 레이블",
+            "음악 산업"
           ],
           "articleIds": [
             "d13d1666-30ed-480f-87f6-7735a1572466"
           ],
-          "reason": "음악 산업의 독립 레이블 관련 소식으로 전자음악 씬과 연결됨.",
+          "reason": "전자음악 관련 레이블 및 아티스트 소식으로 승인되었습니다.",
           "commonEntities": [
             "M. Shadows",
             "Avenged Sevenfold"
@@ -3783,16 +3853,17 @@
           "cohesionScore": null
         },
         {
-          "topic": "Purple Tape 인터뷰",
+          "topic": "Purple Tape, 'The industry rewards noise, but the culture rewards care' 인터뷰",
           "keywords": [
             "Purple Tape",
             "Desert Vision",
-            "Adriatic Indie Dance"
+            "Adriatic Indie Dance",
+            "인터뷰"
           ],
           "articleIds": [
             "7b90746c-1b89-47b4-8f88-0d8711ac11a1"
           ],
-          "reason": "전자음악 프로듀서의 인터뷰로 전자음악 씬과 연결됨.",
+          "reason": "전자음악 아티스트의 인터뷰 소식으로 승인되었습니다.",
           "commonEntities": [
             "Purple Tape",
             "Desert Vision"
@@ -3800,18 +3871,18 @@
           "cohesionScore": null
         },
         {
-          "topic": "Matty Ralph, JOKESONYOU – Heaven 발매",
+          "topic": "Matty Ralph & JOKESONYOU, 'Heaven' 협업곡 발표",
           "keywords": [
             "Matty Ralph",
             "JOKESONYOU",
             "Heaven",
-            "하우스",
-            "트랜스"
+            "house",
+            "trance"
           ],
           "articleIds": [
             "d5c5e356-9b4f-49c2-a2fb-eb19c8161f54"
           ],
-          "reason": "하우스 및 트랜스 음악의 신곡 발매로 전자음악 씬과 연결됨.",
+          "reason": "전자음악 아티스트의 협업곡 릴리즈 소식으로 승인되었습니다.",
           "commonEntities": [
             "Matty Ralph",
             "JOKESONYOU",
@@ -3820,48 +3891,35 @@
           "cohesionScore": null
         },
         {
-          "topic": "DJ 보호용 이어폰 추천",
+          "topic": "Chilsta, 'Back' 신곡 발표",
           "keywords": [
-            "이어폰",
-            "DJ",
-            "믹싱"
-          ],
-          "articleIds": [
-            "5f4bb5b3-b519-477b-8958-1908157ce18b"
-          ],
-          "reason": "DJ 및 음악 제작을 위한 이어폰 관련 정보로 전자음악 씬과 연결됨.",
-          "commonEntities": [
-            "이어폰",
+            "Chilsta",
+            "Back",
+            "electronic",
             "DJ"
           ],
-          "cohesionScore": null
-        },
-        {
-          "topic": "MIDI 컨트롤러 추천",
-          "keywords": [
-            "MIDI 컨트롤러",
-            "하이브리드 스튜디오"
-          ],
           "articleIds": [
-            "843bc16c-70c6-4c87-a579-765b05c7088f"
+            "8c3a4c04-9cc7-442c-8041-740d7f9d6795"
           ],
-          "reason": "전자음악 제작을 위한 MIDI 컨트롤러 관련 정보로 전자음악 씬과 연결됨.",
+          "reason": "전자음악 아티스트의 신곡 릴리즈 소식으로 승인되었습니다.",
           "commonEntities": [
-            "MIDI 컨트롤러"
+            "Chilsta",
+            "Back"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "Spybar 공동 창업자 및 DJ 구형",
+          "topic": "Spybar 공동 창업자 및 DJ, 6년형 선고",
           "keywords": [
             "Spybar",
             "DJ",
-            "구형"
+            "약물 운반",
+            "법적 문제"
           ],
           "articleIds": [
             "4ca71425-48f8-4279-9618-6e4641f22af1"
           ],
-          "reason": "전자음악 관련 클럽의 공동 창업자 및 DJ의 구형 소식으로 전자음악 씬과 연결됨.",
+          "reason": "전자음악 관련 DJ의 법적 문제 소식으로 승인되었습니다.",
           "commonEntities": [
             "Spybar",
             "DJ"
@@ -3869,18 +3927,38 @@
           "cohesionScore": null
         },
         {
-          "topic": "음악 산업의 청력 보호 가이드",
+          "topic": "Best wired headphones under $500 2026 추천",
           "keywords": [
-            "청력 보호",
-            "음악 산업"
+            "wired headphones",
+            "믹싱",
+            "DJ",
+            "음악 제작"
           ],
           "articleIds": [
-            "b4c32ee8-4c4e-44ae-8f99-07b6cc0dfb96"
+            "5f4bb5b3-b519-477b-8958-1908157ce18b"
           ],
-          "reason": "음악 산업 내 청력 보호 관련 정보로 전자음악 씬과 연결됨.",
+          "reason": "전자음악 관련 장비 추천으로 승인되었습니다.",
           "commonEntities": [
-            "청력 보호",
-            "음악 산업"
+            "wired headphones",
+            "믹싱",
+            "DJ"
+          ],
+          "cohesionScore": null
+        },
+        {
+          "topic": "Best MIDI Controllers For Hybrid Studios 추천",
+          "keywords": [
+            "MIDI 컨트롤러",
+            "하이브리드 스튜디오",
+            "음악 장비"
+          ],
+          "articleIds": [
+            "843bc16c-70c6-4c87-a579-765b05c7088f"
+          ],
+          "reason": "전자음악 관련 장비 추천으로 승인되었습니다.",
+          "commonEntities": [
+            "MIDI 컨트롤러",
+            "하이브리드 스튜디오"
           ],
           "cohesionScore": null
         }
@@ -3889,48 +3967,28 @@
     {
       "batchIndex": 3,
       "articleIds": [
-        "8c3a4c04-9cc7-442c-8041-740d7f9d6795",
         "dcd95628-2bda-4596-86e8-02f35b270e09",
         "54f0a5fb-e1c3-4623-8b39-3d951e64b656",
         "16f7e17e-ee16-4958-a7cb-c9c82b787e13",
         "bad63d31-693d-40f4-944a-be2604d6b548"
       ],
-      "responseExcerpt": "{\"suggestions\": [{\"topic\": \"Chilsta 신곡 'Back' 발표\", \"keywords\": [\"Chilsta\", \"Back\", \"신곡\", \"릴리즈\", \"EDM\"], \"articleIds\": [\"8c3a4c04-9cc7-442c-8041-740d7f9d6795\"] ,\"reason\": \"승인됨. 아티스트의 신곡 발표에 관한 내용으로 전자음악과 관련이 있음.\" ,\"commonEntities\": [\"Chilsta\", \"Back\"] },{\"topic\": \"Souldynamic, 10주년 기념 앨범 'Equatoriale' 재발매\", \"keywords\": [\"Souldynamic\", \"Equatoriale\", \"10주년\", \"재발매\", \"레이블\"], \"articleIds\": [\"dcd95628-2bda-4596-86e8-02f35b270e09\"] ,\"reason\": \"승인됨. 아티스트의 10주년 기념 앨범 재발매에 관한 내용으로 전자음악과 관련이 있음.\" ,\"commonEntities\": [\"Souldynamic\", \"Equatoriale\"] },{\"topic\": \"BBC Radio 6 Music, 블랙브리티시 댄스 음악을 위한 새 프로그램 'Rave Forever' 시작\", \"keywords\": [\"BBC Radio 6 Music\", \"Rave Forever\", \"블랙브리티시 댄스 음악\", \"프로모션\", \"라디오\"], \"articleIds\": [\"54f0a5fb-e1c3-4623-8b39-3d951e64b656\"] ,\"reason\": \"승인됨. 블랙브리티시 댄스 음악 관련 프로그램 시작 소식으로 ",
-      "responseLength": 1372,
-      "responseHash": "d15c60d3e0e44400f39a9052e1b622e49146b1be0ae6740aa38ac2154a678b1f",
+      "responseExcerpt": "{\"suggestions\": [{\"topic\": \"Souldynamic, 'Equatoriale' 10주년 에디션 발매\", \"keywords\": [\"Souldynamic\", \"10th anniversary\", \"Equatoriale\", \"release\", \"EDM\"], \"articleIds\": [\"dcd95628-2bda-4596-86e8-02f35b270e09\"], \"reason\": \"아티스트와 관련된 릴리즈 소식으로 전자음악과 관련됨.\" ,\"commonEntities\": [\"Souldynamic\", \"Equatoriale\"]}, {\"topic\": \"BBC Radio 6 Music, 블랙 브리티시 디스코 음악을 위한 새 쇼 'Rave Forever' 개시\", \"keywords\": [\"BBC Radio 6 Music\", \"Black British\", \"Rave Forever\", \"show\", \"dance music\"], \"articleIds\": [\"54f0a5fb-e1c3-4623-8b39-3d951e64b656\"], \"reason\": \"블랙 브리티시 디스코 음악 관련 쇼 발표로 전자음악과 관련됨.\" ,\"commonEntities\": [\"BBC Radio 6 Music\", \"Rave Forever\"]}, {\"topic\": \"Game Boy 칩튠을 위한 초보자 가이드 공개\", \"keywords\": [\"Game Boy\", \"chiptune\", \"LSDJ\", \"guide\", \"Synthtopia\"], \"articleIds\": [\"16f7e17e-ee16-4958-a7cb-c9c82b787e13\"], \"reason\"",
+      "responseLength": 1195,
+      "responseHash": "57c8b9fd39534c1e16d39214537f2aaf846b1da6f71f86c63acf74bcebbd8d1f",
       "suggestions": [
         {
-          "topic": "Chilsta 신곡 'Back' 발표",
-          "keywords": [
-            "Chilsta",
-            "Back",
-            "신곡",
-            "릴리즈",
-            "EDM"
-          ],
-          "articleIds": [
-            "8c3a4c04-9cc7-442c-8041-740d7f9d6795"
-          ],
-          "reason": "승인됨. 아티스트의 신곡 발표에 관한 내용으로 전자음악과 관련이 있음.",
-          "commonEntities": [
-            "Chilsta",
-            "Back"
-          ],
-          "cohesionScore": null
-        },
-        {
-          "topic": "Souldynamic, 10주년 기념 앨범 'Equatoriale' 재발매",
+          "topic": "Souldynamic, 'Equatoriale' 10주년 에디션 발매",
           "keywords": [
             "Souldynamic",
+            "10th anniversary",
             "Equatoriale",
-            "10주년",
-            "재발매",
-            "레이블"
+            "release",
+            "EDM"
           ],
           "articleIds": [
             "dcd95628-2bda-4596-86e8-02f35b270e09"
           ],
-          "reason": "승인됨. 아티스트의 10주년 기념 앨범 재발매에 관한 내용으로 전자음악과 관련이 있음.",
+          "reason": "아티스트와 관련된 릴리즈 소식으로 전자음악과 관련됨.",
           "commonEntities": [
             "Souldynamic",
             "Equatoriale"
@@ -3938,18 +3996,18 @@
           "cohesionScore": null
         },
         {
-          "topic": "BBC Radio 6 Music, 블랙브리티시 댄스 음악을 위한 새 프로그램 'Rave Forever' 시작",
+          "topic": "BBC Radio 6 Music, 블랙 브리티시 디스코 음악을 위한 새 쇼 'Rave Forever' 개시",
           "keywords": [
             "BBC Radio 6 Music",
+            "Black British",
             "Rave Forever",
-            "블랙브리티시 댄스 음악",
-            "프로모션",
-            "라디오"
+            "show",
+            "dance music"
           ],
           "articleIds": [
             "54f0a5fb-e1c3-4623-8b39-3d951e64b656"
           ],
-          "reason": "승인됨. 블랙브리티시 댄스 음악 관련 프로그램 시작 소식으로 전자음악과 관련이 있음.",
+          "reason": "블랙 브리티시 디스코 음악 관련 쇼 발표로 전자음악과 관련됨.",
           "commonEntities": [
             "BBC Radio 6 Music",
             "Rave Forever"
@@ -3957,40 +4015,40 @@
           "cohesionScore": null
         },
         {
-          "topic": "게임 보이 칩튠 제작을 위한 초보자 가이드 발표",
+          "topic": "Game Boy 칩튠을 위한 초보자 가이드 공개",
           "keywords": [
-            "게임 보이",
-            "칩튠",
+            "Game Boy",
+            "chiptune",
             "LSDJ",
-            "제작 가이드",
-            "음악 소프트웨어"
+            "guide",
+            "Synthtopia"
           ],
           "articleIds": [
             "16f7e17e-ee16-4958-a7cb-c9c82b787e13"
           ],
-          "reason": "승인됨. 전자음악 제작과 관련된 교육 자료로 전자음악과 관련이 있음.",
+          "reason": "전자음악 제작에 관련된 교육 자료로 전자음악과 관련됨.",
           "commonEntities": [
-            "게임 보이",
-            "칩튠"
+            "Game Boy",
+            "chiptune"
           ],
           "cohesionScore": null
         },
         {
-          "topic": "두 어린이, 세계 최연소 DJ 데뷔로 깨기 유니버설 레코드",
+          "topic": "두 어린이, 가장 어린 DJ 데뷔 조합으로 기네스 세계 기록 갱신",
           "keywords": [
-            "두 어린이",
-            "유니버설 레코드",
-            "최연소 DJ",
-            "기록",
-            "EDM"
+            "Guinness World Record",
+            "youngest DJ duo",
+            "EDMTunes",
+            "electronic music",
+            "record"
           ],
           "articleIds": [
             "bad63d31-693d-40f4-944a-be2604d6b548"
           ],
-          "reason": "승인됨. DJ와 관련된 기록 설정 소식으로 전자음악과 관련이 있음.",
+          "reason": "전자음악 아티스트 관련 소식으로 전자음악과 관련됨.",
           "commonEntities": [
-            "두 어린이",
-            "유니버설 레코드"
+            "Guinness World Record",
+            "youngest DJ duo"
           ],
           "cohesionScore": null
         }
@@ -3999,194 +4057,210 @@
   ],
   "normalizedSuggestions": [
     {
-      "topic": "Function의 'Aeternum (Existenz)' 미니 앨범 발매",
+      "topic": "Function의 'Aeternum (Existenz)' 앨범 발표",
       "keywords": [
         "Function",
         "Tresor Records",
-        "미니 앨범",
-        "Aeternum (Existenz)"
+        "Mini Album",
+        "Aeternum"
       ],
       "articleIds": [
         "aa53f947-d07c-4281-90a6-adeeae48cd59"
       ],
-      "reason": "전자음악 아티스트 Function의 신규 미니 앨범 발매 소식으로, 전자음악 씬과 직접적으로 관련된 내용입니다.",
-      "commonEntities": [],
+      "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
+      "commonEntities": [
+        "Tresor"
+      ],
       "cohesionScore": 0
     },
     {
-      "topic": "Tomorrowland 2026 공연 영상 공개",
+      "topic": "Tomorrowland 2026 주요 무대 공연 영상 공개",
       "keywords": [
         "Tomorrowland 2026",
         "Martin Garrix",
         "Hardwell",
-        "Sara Landry"
+        "Mainstage"
       ],
       "articleIds": [
-        "a7c024a1-7611-4c83-8f40-533334ba7eb2",
-        "330b30e4-0b10-45f5-8c46-13ad6a376b19"
+        "a7c024a1-7611-4c83-8f40-533334ba7eb2"
       ],
-      "reason": "Tomorrowland 2026의 공식 메인스테이지 및 스테이지 세트 영상이 공개된 것으로, 전자음악 페스티벌과 관련된 기사입니다.",
-      "commonEntities": [],
-      "cohesionScore": 48
+      "reason": "전자음악 페스티벌 관련 공연 소식으로 승인됨.",
+      "commonEntities": [
+        "Martin Garrix",
+        "Hardwell",
+        "Charlotte de Witte",
+        "Sara Landry",
+        "Tomorrowland"
+      ],
+      "cohesionScore": 0
     },
     {
-      "topic": "Fred again.. & LATIN MAFIA 공동 믹스테이프 '9 months & 50 hours' 발매",
+      "topic": "Fred again.. & LATIN MAFIA 협업 미니앨범 '9 months & 50 hours' 발표",
       "keywords": [
         "Fred again..",
         "LATIN MAFIA",
-        "믹스테이프",
-        "9 months & 50 hours"
+        "Mixtape",
+        "Mexico City"
       ],
       "articleIds": [
         "0b59de4a-9627-4965-9010-71aa0a042589"
       ],
-      "reason": "Fred again..과 LATIN MAFIA의 공동 믹스테이프 발매 소식으로, 전자음악 씬과 직접적으로 관련된 내용입니다.",
+      "reason": "전자음악 아티스트의 협업 릴리즈 소식으로 승인됨.",
       "commonEntities": [
         "Fred again.."
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Carl Cox의 1996년 포르투갈 공연 사진 공개",
+      "topic": "Carl Cox 1996년 포르투갈 공연 사진 공개",
       "keywords": [
         "Carl Cox",
-        "포르투갈",
-        "레코드",
-        "USB"
+        "DJing",
+        "Vintage Photo",
+        "Analog Records"
       ],
       "articleIds": [
         "d05fa571-c04f-4dd6-8bbf-cfc1b4150b3a"
       ],
-      "reason": "Carl Cox가 1996년 포르투갈에서의 공연 사진을 공개한 것으로, 전자음악 아티스트의 역사적 소식과 관련이 있습니다.",
+      "reason": "전자음악 아티스트의 과거 공연 관련 소식으로 승인됨.",
       "commonEntities": [
         "Carl Cox"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Pittsburgh Modular Lifeforms SV-2 신제품 공개",
+      "topic": "Pittsburgh Modular 신규 합성기 'Lifeforms SV-2' 공개",
       "keywords": [
         "Pittsburgh Modular",
         "Lifeforms SV-2",
-        "아날로그 신디사이저",
+        "Analog Synthesizer",
         "Eurorack",
-        "Ableton Live"
+        "Semi-Modular"
       ],
       "articleIds": [
         "ef7a3c58-fdc4-489a-898d-1f888df2dbcc"
       ],
-      "reason": "Pittsburgh Modular의 새로운 아날로그 신디사이저 Lifeforms SV-2가 공개된 것으로, 전자음악 장비와 관련된 내용입니다.",
-      "commonEntities": [],
+      "reason": "전자음악 장비 관련 소식으로 승인됨.",
+      "commonEntities": [
+        "LIV Nightclub",
+        "Ableton"
+      ],
       "cohesionScore": 0
     },
     {
-      "topic": "Maribou State, 새 앨범 'Hallucinating Love' 발매",
+      "topic": "Maribou State, Ninja Tune 레이블 통해 새 앨범 'Hallucinating Love' 발표",
       "keywords": [
         "Maribou State",
         "Ninja Tune",
-        "Hallucinating Love",
         "Deluxe Edition",
-        "2026년 8월 21일"
+        "Hallucinating Love",
+        "Electronic"
       ],
       "articleIds": [
         "7b68f9bf-cda9-4d4c-8074-a1972f1b006a"
       ],
-      "reason": "Maribou State의 새 앨범 'Hallucinating Love' 발매 소식으로, 전자음악 씬과 직접적으로 관련된 내용입니다.",
+      "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
       "commonEntities": [
         "Ninja Tune"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Above & Beyond, 25주년 기념 'One Mix' 공개",
+      "topic": "Above & Beyond, 25주년 기념 Apple Music 미싱 'One Mix' 공개",
       "keywords": [
         "Above & Beyond",
         "Apple Music",
         "One Mix",
-        "Spatial Audio",
-        "25주년"
+        "25th Anniversary",
+        "Spatial Audio"
       ],
       "articleIds": [
-        "c7ccf53d-22c7-4495-991c-98a8bf88be9e",
-        "cbad5af5-65c5-40ea-a243-6b4f2b885bc9"
+        "c7ccf53d-22c7-4495-991c-98a8bf88be9e"
       ],
-      "reason": "Above & Beyond의 25주년 기념 DJ 믹스 'One Mix'가 Apple Music에서 공개된 것으로, 전자음악 씬과 직접적으로 관련된 내용입니다.",
+      "reason": "전자음악 아티스트의 릴리즈 및 이벤트 소식으로 승인됨.",
       "commonEntities": [
         "Above & Beyond"
       ],
-      "cohesionScore": 88
+      "cohesionScore": 0
     },
     {
       "topic": "Escape Halloween 2026 라인업 발표",
       "keywords": [
         "Escape Halloween",
+        "2026 Lineup",
         "Insomniac Events",
         "NOS Events Center",
-        "Halloween"
+        "Halloween Festival"
       ],
       "articleIds": [
         "3b9aa1d7-635d-4277-9e11-ce0455491dd6"
       ],
-      "reason": "Escape Halloween 2026의 라인업이 발표된 것으로, 전자음악 페스티벌과 관련된 기사입니다.",
-      "commonEntities": [],
+      "reason": "전자음악 페스티벌 관련 소식으로 승인됨.",
+      "commonEntities": [
+        "HARD Summer"
+      ],
       "cohesionScore": 0
     },
     {
-      "topic": "Electronic Groove, 베네수엘라 구호 컴필레이션 발매",
+      "topic": "Electronic Groove, 베네수엘라 구호 앨범 'Electronic Groove for Venezuela' 발표",
       "keywords": [
         "Electronic Groove",
-        "베네수엘라",
-        "구호 컴필레이션",
+        "Charity Compilation",
+        "Venezuela Relief",
         "Nick Warren",
         "Danny Howells"
       ],
       "articleIds": [
         "4cab2fae-7c07-4370-a188-24eaaa281671"
       ],
-      "reason": "Electronic Groove가 베네수엘라 구호를 위한 컴필레이션을 발매한 것으로, 전자음악 씬과 관련된 소식입니다.",
+      "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
       "commonEntities": [
-        "Nick Warren"
+        "Nick Warren",
+        "Hernán Cattáneo"
       ],
       "cohesionScore": 0
     },
     {
       "topic": "Meta AI 글라스, DJ 공연 영상 촬영 가능성 분석",
       "keywords": [
-        "Meta AI 글라스",
+        "Meta Glasses",
         "DJing",
-        "POV 영상",
+        "POV Video",
         "Beatport Tech",
-        "Mojaxx"
+        "Social Media"
       ],
       "articleIds": [
         "f1daca30-4a35-426e-85c4-45674714c79e"
       ],
-      "reason": "Meta AI 글라스가 DJ 공연 영상 촬영에 활용될 수 있는지 분석한 것으로, 전자음악 관련 기술 소식입니다.",
-      "commonEntities": [],
+      "reason": "전자음악 관련 기술 및 장비 소식으로 승인됨.",
+      "commonEntities": [
+        "Beatport"
+      ],
       "cohesionScore": 0
     },
     {
-      "topic": "Alan Walker, 'Pain' Fatal Fury: City of the Wolves 사운드트랙 참여",
+      "topic": "Alan Walker, 'Fatal Fury: City of the Wolves' 사운드트랙 참여",
       "keywords": [
         "Alan Walker",
-        "Fatal Fury: City of the Wolves",
-        "Pain",
-        "Norwegian producer",
-        "soundtrack"
+        "Fatal Fury",
+        "Soundtrack",
+        "City of the Wolves",
+        "Norwegian Producer"
       ],
       "articleIds": [
         "21193649-1a1e-4e95-8ead-3713075f471e"
       ],
-      "reason": "Alan Walker가 'Pain'을 Fatal Fury: City of the Wolves 사운드트랙에 참여한 것으로, 전자음악 씬과 관련된 소식입니다.",
+      "reason": "전자음악 아티스트의 릴리즈 소식으로 승인됨.",
       "commonEntities": [
         "Alan Walker"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Beyond The Valley 2026 라인업 발표",
+      "topic": "Australia’s Beyond The Valley 2026 라인업 발표",
       "keywords": [
         "Beyond The Valley",
+        "2026 Lineup",
         "KI/KI",
         "Boys Noize",
         "Skepta"
@@ -4194,23 +4268,29 @@
       "articleIds": [
         "b0ed8ca6-42ae-4ae6-8679-df3375870e4c"
       ],
-      "reason": "Beyond The Valley 2026의 라인업이 발표된 것으로, 전자음악 페스티벌과 관련된 기사입니다.",
-      "commonEntities": [],
+      "reason": "전자음악 페스티벌 관련 소식으로 승인됨.",
+      "commonEntities": [
+        "Maceo Plex",
+        "Black Coffee",
+        "Loco Dice",
+        "Dixon",
+        "Indira Paganotto"
+      ],
       "cohesionScore": 0
     },
     {
-      "topic": "Kaskade, ORIGIN// 투어 발표",
+      "topic": "Kaskade, 'ORIGIN// Tour' 발표 및 Coachella 무대 연출 포함",
       "keywords": [
         "Kaskade",
-        "ORIGIN// 투어",
-        "Coachella",
+        "ORIGIN// Tour",
+        "Coachella Stage Production",
         "Miami",
         "New York"
       ],
       "articleIds": [
         "a3c3e958-48cb-45b3-831e-764c37537b65"
       ],
-      "reason": "Kaskade가 ORIGIN// 투어를 발표한 것으로, 전자음악 씬과 직접적으로 관련된 내용입니다.",
+      "reason": "전자음악 아티스트의 투어 및 이벤트 소식으로 승인됨.",
       "commonEntities": [
         "Kaskade",
         "Coachella"
@@ -4218,43 +4298,61 @@
       "cohesionScore": 0
     },
     {
-      "topic": "Paco Wegmann, “Mais Forte” 발표 및 Loco Dice의 SB Recordings와 협업",
+      "topic": "Dimitri Vegas, Tomorrowland 및 Ushuaïa Ibiza 공연에 축구 선수 참여",
+      "keywords": [
+        "Dimitri Vegas",
+        "Tomorrowland",
+        "Ushuaïa Ibiza",
+        "Lukaku"
+      ],
+      "articleIds": [
+        "330b30e4-0b10-45f5-8c46-13ad6a376b19"
+      ],
+      "reason": "전자음악 페스티벌 관련 소식으로 승인됨.",
+      "commonEntities": [
+        "Tomorrowland",
+        "Ushuaïa Ibiza"
+      ],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "Paco Wegmann, “Mais Forte” 릴리즈 및 Loco Dice SB Recordings와 협업",
       "keywords": [
         "Paco Wegmann",
         "Mais Forte",
         "Loco Dice",
         "SB Recordings",
-        "Rincon Sapiencia"
+        "Brazilian Vocalist"
       ],
       "articleIds": [
         "997a3e8d-9b22-4fbc-9305-8de90f50deb7"
       ],
-      "reason": "Paco Wegmann이 “Mais Forte”를 발표하고 Loco Dice의 SB Recordings과 협업한 것으로, 전자음악 씬과 관련된 소식입니다.",
+      "reason": "전자음악 아티스트의 릴리즈 소식으로 승인됨.",
       "commonEntities": [
         "Loco Dice"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "El Tony, Ibiza에서 프로듀서 아카데미 운영",
+      "topic": "El Tony, Ibiza에서의 프로듀서 아카데미 프로그램 발표",
       "keywords": [
         "El Tony",
+        "Producer Academy",
         "Ibiza",
-        "프로듀서 아카데미",
         "Beatport",
-        "2026년 10월"
+        "Electronic Music Producers"
       ],
       "articleIds": [
         "aa270acb-cde1-487e-851f-37f0bb6a0555"
       ],
-      "reason": "El Tony가 Ibiza에서 프로듀서 아카데미를 운영하는 것으로, 전자음악 씬과 관련된 교육 프로그램 소식입니다.",
+      "reason": "전자음악 교육 및 이벤트 관련 소식으로 승인됨.",
       "commonEntities": [
         "Beatport"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Deadcrow & Caster, 'Euphoria' 발매",
+      "topic": "Deadcrow & Caster, NIGHTMODE 레이블 통해 신곡 'Euphoria' 발표",
       "keywords": [
         "Deadcrow",
         "Caster",
@@ -4265,14 +4363,14 @@
       "articleIds": [
         "405af67d-3614-4665-83f8-2c45ffea4a17"
       ],
-      "reason": "Deadcrow와 Caster가 'Euphoria'를 발매한 것으로, 전자음악 씬과 관련된 소식입니다.",
+      "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
       "commonEntities": [
         "Deadcrow"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Christian Hornbostel, “Eridanus” Magnetic Magazine에 공개",
+      "topic": "Christian Hornbostel, Magnetic Magazine Recordings 통해 신곡 'Eridanus' 발표",
       "keywords": [
         "Christian Hornbostel",
         "Eridanus",
@@ -4283,73 +4381,150 @@
       "articleIds": [
         "e2aeaf6a-1e05-4163-a491-b6efb2570759"
       ],
-      "reason": "Christian Hornbostel의 “Eridanus”가 Magnetic Magazine에 공개된 것으로, 전자음악 씬과 관련된 소식입니다.",
+      "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
       "commonEntities": [
         "Christian Hornbostel"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Eliza Rose & Sega Bodega, 새 싱글 'Kite' 발표",
+      "topic": "Eliza Rose & Sega Bodega, 신곡 'Kite' 발표",
       "keywords": [
         "Eliza Rose",
         "Sega Bodega",
         "Kite",
-        "bashment",
+        "Bashment",
         "Carnival"
       ],
       "articleIds": [
         "bfff6140-0da4-4d38-b518-d660995a6844"
       ],
-      "reason": "Eliza Rose와 Sega Bodega가 새 싱글 'Kite'를 발표한 것으로, 전자음악 씬과 관련된 소식입니다.",
+      "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
       "commonEntities": [
         "Eliza Rose"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Tomorrowland 2026 공식 애프터무비 공개",
+      "topic": "Cale Anderson의 'Yemaya (We All Come from the Goddess)' 앨범 발매",
       "keywords": [
-        "Tomorrowland",
-        "aftermovie",
-        "official"
+        "Cale Anderson",
+        "folktronica",
+        "Maschine MK3",
+        "UVI plugins",
+        "앨범"
       ],
       "articleIds": [
-        "5482179c-27e2-41bf-9e58-1a176092b2a2",
-        "eee21e05-70b5-402b-bf6e-716c1c3cb599"
+        "5482179c-27e2-41bf-9e58-1a176092b2a2"
       ],
-      "reason": "Tomorrowland 2026의 공식 애프터무비 공개 및 Aaron Hibell의 인터뷰와 관련된 기사로 묶음 가능.",
-      "commonEntities": [],
-      "cohesionScore": 21
+      "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
+      "commonEntities": [
+        "Native Instruments"
+      ],
+      "cohesionScore": 0
     },
     {
-      "topic": "Kashovski와 Moojo의 'Show Me' 콜라보레이션 릴리스",
+      "topic": "Kashovski와 Moojo의 'Show Me' 콜라보레이션 발매",
       "keywords": [
         "Kashovski",
         "Moojo",
-        "Show Me",
-        "collaboration"
+        "Calamar Records",
+        "싱글"
       ],
       "articleIds": [
         "c070c29a-55f9-46be-9e48-2086cef9bccc"
       ],
-      "reason": "Kashovski와 Moojo의 첫 번째 콜라보레이션 'Show Me' 릴리스 관련 기사로 단독 클러스터.",
+      "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
       "commonEntities": [
         "Moojo"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Cyprus KAMAYA 페스티벌 라인업 공개",
+      "topic": "Tomorrowland 2026 공식 애프터무비 공개",
       "keywords": [
-        "KAMAYA Festival",
+        "Tomorrowland 2026",
+        "공식 애프터무비",
+        "Boom, Belgium",
+        "500 아티스트",
+        "16 스테이지"
+      ],
+      "articleIds": [
+        "2439f041-6819-455a-8aa6-b17775140039"
+      ],
+      "reason": "승인됨: 전자음악 페스티벌 관련 소식에 해당합니다.",
+      "commonEntities": [
+        "Tomorrowland"
+      ],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "Native Instruments의 SuperStarSaw 리뷰",
+      "keywords": [
+        "Native Instruments",
+        "SuperStarSaw",
+        "음악 소프트웨어",
+        "Maschine MK3",
+        "UVI plugins"
+      ],
+      "articleIds": [
+        "b6218fd1-8c85-4c8e-9271-471c1dd0f68c"
+      ],
+      "reason": "승인됨: 전자음악 장비/소프트웨어 관련 소식에 해당합니다.",
+      "commonEntities": [
+        "Reason"
+      ],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "헝가리 Ozora 페스티벌, 2명의 참가자 사망으로 조기 종료",
+      "keywords": [
+        "Ozora 페스티벌",
+        "헝가리",
+        "Psytrance",
+        "조기 종료",
+        "사망"
+      ],
+      "articleIds": [
+        "2225d129-ec8f-445b-b110-f384c4ba4381"
+      ],
+      "reason": "승인됨: 전자음악 페스티벌 관련 사고에 해당합니다.",
+      "commonEntities": [
+        "O.Z.O.R.A. Festival"
+      ],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "Aaron Hibell, Tomorrowland 2026에서의 공연 및 인터뷰",
+      "keywords": [
+        "Aaron Hibell",
+        "Tomorrowland 2026",
+        "데뷔 앨범",
+        "인터뷰",
+        "EDMTunes"
+      ],
+      "articleIds": [
+        "eee21e05-70b5-402b-bf6e-716c1c3cb599"
+      ],
+      "reason": "승인됨: 전자음악 아티스트 관련 소식에 해당합니다.",
+      "commonEntities": [
+        "Tomorrowland"
+      ],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "키프로스 KAMAYA 페스티벌, 디슨, Mind Against 등 출연 확정",
+      "keywords": [
+        "KAMAYA 페스티벌",
+        "키프로스",
         "Dixon",
-        "Mind Against"
+        "Mind Against",
+        "전자음악"
       ],
       "articleIds": [
         "5540884f-8038-4ef5-bf27-28747fbfbb14"
       ],
-      "reason": "KAMAYA 페스티벌의 첫 번째 라인업 공개 및 전자음악 플랫폼 관련 기사로 단독 클러스터.",
+      "reason": "승인됨: 전자음악 페스티벌 관련 소식에 해당합니다.",
       "commonEntities": [
         "Dixon",
         "Mind Against"
@@ -4357,688 +4532,683 @@
       "cohesionScore": 0
     },
     {
-      "topic": "Vintage Culture, Nariman, rhys from the sticks의 'Think Too Much' 릴리스",
+      "topic": "Vintage Culture, Nariman 및 rhys from the sticks와 'Think Too Much' 콜라보레이션 발매",
       "keywords": [
         "Vintage Culture",
         "Nariman",
         "rhys from the sticks",
-        "Think Too Much",
-        "Tech House"
+        "Tech House",
+        "Affairs Music"
       ],
       "articleIds": [
-        "ebf9cabf-804b-43c4-b438-11b0ff45b6c0",
-        "3edb458c-852c-4f3e-baba-e8478b1d1a8f"
+        "ebf9cabf-804b-43c4-b438-11b0ff45b6c0"
       ],
-      "reason": "Vintage Culture의 신곡 'Think Too Much' 릴리스 및 관련 정보를 다룬 기사로 묶음 가능.",
+      "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
       "commonEntities": [
-        "Vintage Culture"
+        "Vintage Culture",
+        "Tomorrowland"
       ],
-      "cohesionScore": 88
+      "cohesionScore": 0
     },
     {
-      "topic": "Maceo Plex, Kavinsky의 'Nightcall' 리믹스 무료 다운로드",
+      "topic": "Maceo Plex, Kavinsky의 'Nightcall' 리믹스 무료 공개",
       "keywords": [
         "Maceo Plex",
         "Kavinsky",
         "Nightcall",
-        "remix",
-        "free download"
+        "리믹스",
+        "프리 다운로드"
       ],
       "articleIds": [
         "35047bce-64c4-4d8b-bbaa-31c53631d57f"
       ],
-      "reason": "Maceo Plex의 Kavinsky 'Nightcall' 리믹스 무료 제공 관련 기사로 단독 클러스터.",
+      "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
       "commonEntities": [
         "Maceo Plex"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Ozora 페스티벌, 두 명의 참가자 사망으로 조기 종료",
+      "topic": "헝가리 Ozora 페스티벌, 2명의 참가자 사망으로 조기 종료",
       "keywords": [
-        "Ozora Festival",
-        "Hungary",
+        "Ozora 페스티벌",
+        "헝가리",
         "Psytrance",
-        "tragedy",
-        "early closure"
+        "조기 종료",
+        "사망"
       ],
       "articleIds": [
-        "2225d129-ec8f-445b-b110-f384c4ba4381",
-        "b3fd0782-d645-40fe-b093-ff24850e74a1",
-        "291bd1c4-8919-40a4-91de-e32408755beb"
+        "b3fd0782-d645-40fe-b093-ff24850e74a1"
       ],
-      "reason": "Ozora 페스티벌의 조기 종료와 관련된 여러 언론 보도로 묶음 가능.",
-      "commonEntities": [],
-      "cohesionScore": 33
+      "reason": "승인됨: 전자음악 페스티벌 관련 사고에 해당합니다.",
+      "commonEntities": [
+        "O.Z.O.R.A. Festival"
+      ],
+      "cohesionScore": 0
     },
     {
-      "topic": "Eastern Electrics 2026 라인업 공개",
+      "topic": "헝가리 Psychedelic Music Festival Ozora, 2명의 사망으로 조기 종료",
+      "keywords": [
+        "Ozora 페스티벌",
+        "헝가리",
+        "Psychedelic",
+        "조기 종료",
+        "사망"
+      ],
+      "articleIds": [
+        "291bd1c4-8919-40a4-91de-e32408755beb"
+      ],
+      "reason": "승인됨: 전자음악 페스티벌 관련 사고에 해당합니다.",
+      "commonEntities": [
+        "O.Z.O.R.A. Festival"
+      ],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "Eastern Electrics, East End Dubs, Joseph Capriati 등 참여하는 2026년 행사 공개",
       "keywords": [
         "Eastern Electrics",
         "East End Dubs",
-        "Joseph Capriati"
+        "Joseph Capriati",
+        "Burgess Park",
+        "전자음악"
       ],
       "articleIds": [
         "ccc5b5c6-781c-4f10-9faa-46b57417b4e2"
       ],
-      "reason": "Eastern Electrics 2026의 라인업 공개 관련 기사로 단독 클러스터.",
+      "reason": "승인됨: 전자음악 페스티벌 관련 소식에 해당합니다.",
       "commonEntities": [
         "Joseph Capriati"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "David Penn의 전자음악 커리어와 ‘Big Love’ 릴리스",
+      "topic": "David Penn의 커리어와 음악적 영향력에 대한 인터뷰",
       "keywords": [
         "David Penn",
-        "Spanish house",
-        "Big Love",
+        "Spanish House",
         "Defected",
-        "career"
+        "Big Love",
+        "인터뷰"
       ],
       "articleIds": [
         "4e0b2892-c472-40c3-90c1-2887bd3c835b"
       ],
-      "reason": "David Penn의 커리어와 관련된 기사로 단독 클러스터.",
-      "commonEntities": [],
+      "reason": "승인됨: 전자음악 아티스트 관련 소식에 해당합니다.",
+      "commonEntities": [
+        "Defected Records"
+      ],
       "cohesionScore": 0
     },
     {
-      "topic": "Giom의 2000년대 하우스 클래식 릴리스",
+      "topic": "Giom의 2000년대 하우스 음악 클래식 컬렉션 발표",
       "keywords": [
         "Giom",
-        "house classics",
+        "하우스",
         "Supremus Records",
-        "2000s",
-        "remix"
+        "리믹스"
       ],
       "articleIds": [
         "9a7d7875-1a18-4298-9976-b36c720be8e0"
       ],
-      "reason": "Giom의 2000년대 하우스 클래식 릴리스 관련 기사로 단독 클러스터.",
+      "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
       "commonEntities": [
         "Giom"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Fred again..과 LATIN MAFIA의 ‘9 months & 50 hours’ 미キテープ 릴리스",
+      "topic": "Fred again.. 및 LATIN MAFIA의 '9 months & 50 hours' 믹스테이프 발표",
       "keywords": [
         "Fred again..",
         "LATIN MAFIA",
-        "9 months & 50 hours",
-        "mixtape",
-        "Mexico City"
+        "믹스테이프",
+        "Mexico City",
+        "fabric"
       ],
       "articleIds": [
         "44dad22b-390c-47da-9ffd-64b91eb4a9c8"
       ],
-      "reason": "Fred again..과 LATIN MAFIA의 미キ테ープ 릴리스 관련 기사로 단독 클러스터.",
+      "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
       "commonEntities": [
-        "Fred again.."
+        "Fred again..",
+        "fabric"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "fabric 27주년 라인업 공개",
+      "topic": "fabric, 27주년 기념 이벤트 라인업 발표",
       "keywords": [
         "fabric",
-        "27th birthday",
+        "27주년",
         "Ricardo Villalobos",
-        "Zip"
+        "Zip",
+        "Vlada"
       ],
       "articleIds": [
         "ac03829d-cbcf-4cd1-abf0-a9140aeb1c57"
       ],
-      "reason": "fabric의 27주년 라인업 공개 관련 기사로 단독 클러스터.",
+      "reason": "승인됨: 전자음악 페스티벌 관련 소식에 해당합니다.",
       "commonEntities": [
-        "Ricardo Villalobos"
+        "Ricardo Villalobos",
+        "fabric"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Mount Kimbie, fabric presents Compilation 릴리스",
+      "topic": "Mount Kimbie, fabric presents 컴필레이션 발표",
       "keywords": [
         "Mount Kimbie",
         "fabric presents",
-        "Compilation",
-        "electronic duo",
-        "Phonica Records"
+        "Monroe",
+        "Jomox",
+        "컴필레이션"
       ],
       "articleIds": [
         "0b481d88-a706-4a7f-8949-0a35f6ddc498"
       ],
-      "reason": "Mount Kimbie의 fabric presents Compilation 릴리스 관련 기사로 단독 클러스터.",
-      "commonEntities": [],
+      "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
+      "commonEntities": [
+        "fabric"
+      ],
       "cohesionScore": 0
     },
     {
-      "topic": "salute와 Riva Starr의 'soulreply' 릴리스",
+      "topic": "salute 및 Riva Starr, 'soulreply' 싱글 발표",
       "keywords": [
         "salute",
         "Riva Starr",
         "soulreply",
-        "infinite passion",
-        "Ninja Tune"
+        "Ninja Tune",
+        "믹스테이프"
       ],
       "articleIds": [
         "0de537ec-41fb-4cab-9ac0-86091eb8c509"
       ],
-      "reason": "salute와 Riva Starr의 'soulreply' 릴리스 관련 기사로 단독 클러스터.",
-      "commonEntities": [],
+      "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
+      "commonEntities": [
+        "Ninja Tune"
+      ],
       "cohesionScore": 0
     },
     {
-      "topic": "Roland JD-990 소프트웨어 에뮬레이터 JADE 개발",
+      "topic": "Roland JD-990 소프트웨어 에뮬레이터 JADE 개발 중",
       "keywords": [
         "Roland",
         "JD-990",
         "JADE",
-        "software emulator",
-        "The Usual Suspects"
+        "The Usual Suspects",
+        "음악 소프트웨어"
       ],
       "articleIds": [
         "adf80d1b-5c21-4378-b180-be96bacc8b02"
       ],
-      "reason": "Roland JD-990의 JADE 소프트웨어 에뮬레이터 개발 관련 기사로 단독 클러스터.",
+      "reason": "승인됨: 전자음악 장비/소프트웨어 관련 소식에 해당합니다.",
       "commonEntities": [
         "Roland"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Roland GO:KEYS 3 Minion 키보드 출시",
+      "topic": "Vintage Culture, 'Think Too Much' 싱글 발표",
+      "keywords": [
+        "Vintage Culture",
+        "Think Too Much",
+        "Melodic House",
+        "Affairs Music",
+        "싱글"
+      ],
+      "articleIds": [
+        "3edb458c-852c-4f3e-baba-e8478b1d1a8f"
+      ],
+      "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
+      "commonEntities": [
+        "Vintage Culture"
+      ],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "Roland GO:KEYS 3 Minion 키보드 2026년 9월 출시",
       "keywords": [
         "Roland",
         "GO:KEYS 3",
         "Minion",
         "키보드",
-        "2026년 9월"
+        "음악 장비"
       ],
       "articleIds": [
         "70e0dd77-62b7-4959-b31c-9de70493b809"
       ],
-      "reason": "전자음악 장비 관련 제품 출시 소식으로 전자음악 씬과 연결됨.",
+      "reason": "전자음악 관련 음악 장비 출시 소식으로 승인되었습니다.",
       "commonEntities": [
         "Roland"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Kaskade 'ORIGIN //' 라이브 공연 투어",
+      "topic": "Kaskade, 'ORIGIN //' 라이브 쇼 미국 4개 도시 순회",
       "keywords": [
         "Kaskade",
         "ORIGIN //",
-        "라이브 공연"
+        "라이브 공연",
+        "deep house"
       ],
       "articleIds": [
         "37df4ffc-1996-419b-926b-ebd9d7037724"
       ],
-      "reason": "DJ Kaskade의 라이브 공연 소식으로 전자음악 씬과 연결됨.",
+      "reason": "전자음악 아티스트의 라이브 공연 소식으로 승인되었습니다.",
       "commonEntities": [
-        "Kaskade"
+        "Kaskade",
+        "Coachella"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Nutritious, Liquid Culture Records에서 'Solarmaxxing' 발매",
+      "topic": "Nutritious, Liquid Culture Records에서 'Solarmaxxing' 미니 앨범 발매",
       "keywords": [
         "Nutritious",
         "Solarmaxxing",
-        "Liquid Culture Records",
-        "하우스"
+        "Liquid Culture Records"
       ],
       "articleIds": [
         "7be74f06-4a95-48a8-9efd-b0d1d6f714d9"
       ],
-      "reason": "하우스 음악 프로듀서의 신곡 발매로 전자음악 씬과 연결됨.",
+      "reason": "전자음악 아티스트의 신곡 및 앨범 릴리즈 소식으로 승인되었습니다.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "Guyver7x3, 'Half Of Me Still With You' 발매",
+      "topic": "Guyver7x3, 'Half Of Me Still With You' 싱글 발매",
       "keywords": [
         "Guyver7x3",
         "Half Of Me Still With You",
-        "시냅스 팝"
+        "synth pop",
+        "음악 릴리즈"
       ],
       "articleIds": [
         "46df593a-47e7-4929-88e0-6a4646d08fd5"
       ],
-      "reason": "시냅스 팝 장르의 신곡 발매로 전자음악 씬과 연결됨.",
+      "reason": "전자음악 아티스트의 신곡 릴리즈 소식으로 승인되었습니다.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "DJ Dr Vitos, 'Walk me Home' 발매",
+      "topic": "DJ Dr Vitos, 'Walk me Home' 앨범 발매",
       "keywords": [
         "DJ Dr Vitos",
         "Walk me Home",
-        "인디 팝"
+        "indie pop",
+        "음악 릴리즈"
       ],
       "articleIds": [
         "4400139e-2ffd-4757-a7e0-0e37e9bbd877"
       ],
-      "reason": "인디 팝 장르의 신곡 발매로 전자음악 씬과 연결됨.",
+      "reason": "전자음악 아티스트의 신곡 및 앨범 릴리즈 소식으로 승인되었습니다.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "Chuck Daniels, 'The Remixes' 발매",
+      "topic": "Chuck Daniels, 'The Remixes' 릴리즈로 Sampled Detroit 재개",
       "keywords": [
         "Chuck Daniels",
         "The Remixes",
         "Sampled Detroit",
-        "하우스"
+        "remix"
       ],
       "articleIds": [
         "69032d03-0f1f-4b60-8033-d6f887bdd883"
       ],
-      "reason": "하우스 음악 레이블의 리믹스 컬렉션 발매로 전자음악 씬과 연결됨.",
+      "reason": "전자음악 레이블 및 아티스트의 릴리즈 소식으로 승인되었습니다.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "Vital 소프트웨어 시냅스 출시",
+      "topic": "Vital, 무료 소프트웨어 신디사이저로 주목",
       "keywords": [
         "Vital",
-        "소프트웨어",
-        "시냅스"
+        "소프트웨어 신디사이저",
+        "음악 소프트웨어"
       ],
       "articleIds": [
         "c0d18098-25e7-4bb5-9e45-dcdc9464230d"
       ],
-      "reason": "전자음악 제작을 위한 소프트웨어 관련 정보로 전자음악 씬과 연결됨.",
+      "reason": "전자음악 관련 음악 소프트웨어 소개로 승인되었습니다.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "Emanuele Cisi & Joe Claussell, 'Pharoah’s Message' 리믹스",
+      "topic": "Emanuele Cisi & Joe Claussell, 'Pharoah’s Message' 리믹스 발표",
       "keywords": [
         "Emanuele Cisi",
         "Joe Claussell",
         "Pharoah’s Message",
-        "리믹스"
+        "리믹스",
+        "deep house"
       ],
       "articleIds": [
         "6f720c3d-0871-4158-b772-ef35b87101fc"
       ],
-      "reason": "유명 프로듀서들의 리믹스 발표로 전자음악 씬과 연결됨.",
+      "reason": "전자음악 아티스트의 리믹스 릴리즈 소식으로 승인되었습니다.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "ARC Music Festival 2026 공연자 발표",
-      "keywords": [
-        "ARC Music Festival 2026",
-        "Silva Bumpa",
-        "하우스"
-      ],
-      "articleIds": [
-        "84ee2511-3136-4b33-b59e-1c1e1b0ef26c"
-      ],
-      "reason": "하우스 및 테크노 음악 페스티벌의 공연자 발표로 전자음악 씬과 연결됨.",
-      "commonEntities": [],
-      "cohesionScore": 0
-    },
-    {
-      "topic": "Sullivan King, TRYM & Graphyt, 'Rumble' 발매",
+      "topic": "Sullivan King, TRYM & Graphyt, 'Rumble' 협업곡 발표",
       "keywords": [
         "Sullivan King",
         "TRYM",
         "Graphyt",
         "Rumble",
-        "하드 테크노"
+        "hard techno"
       ],
       "articleIds": [
         "59e2d723-1b46-49ec-a404-8873552a9ae5"
       ],
-      "reason": "하드 테크노 및 럭스텝 장르의 신곡 발매로 전자음악 씬과 연결됨.",
+      "reason": "전자음악 아티스트의 협업곡 릴리즈 소식으로 승인되었습니다.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "Mat Weasel Busters 사망 소식",
+      "topic": "Mat Weasel Busters, Hardtek 및 Frenchcore의 선구자로 사망",
       "keywords": [
         "Mat Weasel Busters",
         "Hardtek",
         "Frenchcore",
-        "사망"
+        "사망",
+        "전자음악"
       ],
       "articleIds": [
         "57519485-435f-46b5-b844-678573083aa2"
       ],
-      "reason": "전자음악 장르의 선구자의 사망 소식으로 전자음악 씬과 연결됨.",
+      "reason": "전자음악 아티스트의 사망 소식으로 승인되었습니다.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "Jan Wayne 은퇴 발표",
+      "topic": "Jan Wayne, 2027년 말 은퇴 발표",
       "keywords": [
         "Jan Wayne",
         "은퇴",
-        "35년"
+        "35년 경력"
       ],
       "articleIds": [
         "be9cafd4-297c-46a0-8c9f-c2f64e9c61eb"
       ],
-      "reason": "장기간 활동한 DJ의 은퇴 소식으로 전자음악 씬과 연결됨.",
+      "reason": "전자음악 DJ의 은퇴 소식으로 승인되었습니다.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "M. Shadows, Avenged Sevenfold 독립 레이블 발표",
+      "topic": "M. Shadows, Avenged Sevenfold, 독립 레이블로 전환",
       "keywords": [
         "M. Shadows",
         "Avenged Sevenfold",
-        "독립 레이블"
+        "독립 레이블",
+        "음악 산업"
       ],
       "articleIds": [
         "d13d1666-30ed-480f-87f6-7735a1572466"
       ],
-      "reason": "음악 산업의 독립 레이블 관련 소식으로 전자음악 씬과 연결됨.",
+      "reason": "전자음악 관련 레이블 및 아티스트 소식으로 승인되었습니다.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "Purple Tape 인터뷰",
+      "topic": "Purple Tape, 'The industry rewards noise, but the culture rewards care' 인터뷰",
       "keywords": [
         "Purple Tape",
         "Desert Vision",
-        "Adriatic Indie Dance"
+        "Adriatic Indie Dance",
+        "인터뷰"
       ],
       "articleIds": [
         "7b90746c-1b89-47b4-8f88-0d8711ac11a1"
       ],
-      "reason": "전자음악 프로듀서의 인터뷰로 전자음악 씬과 연결됨.",
+      "reason": "전자음악 아티스트의 인터뷰 소식으로 승인되었습니다.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "Matty Ralph, JOKESONYOU – Heaven 발매",
+      "topic": "Matty Ralph & JOKESONYOU, 'Heaven' 협업곡 발표",
       "keywords": [
         "Matty Ralph",
         "JOKESONYOU",
         "Heaven",
-        "하우스",
-        "트랜스"
+        "trance"
       ],
       "articleIds": [
         "d5c5e356-9b4f-49c2-a2fb-eb19c8161f54"
       ],
-      "reason": "하우스 및 트랜스 음악의 신곡 발매로 전자음악 씬과 연결됨.",
+      "reason": "전자음악 아티스트의 협업곡 릴리즈 소식으로 승인되었습니다.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "DJ 보호용 이어폰 추천",
-      "keywords": [
-        "이어폰",
-        "믹싱"
-      ],
-      "articleIds": [
-        "5f4bb5b3-b519-477b-8958-1908157ce18b"
-      ],
-      "reason": "DJ 및 음악 제작을 위한 이어폰 관련 정보로 전자음악 씬과 연결됨.",
-      "commonEntities": [],
-      "cohesionScore": 0
-    },
-    {
-      "topic": "MIDI 컨트롤러 추천",
-      "keywords": [
-        "MIDI 컨트롤러",
-        "하이브리드 스튜디오"
-      ],
-      "articleIds": [
-        "843bc16c-70c6-4c87-a579-765b05c7088f"
-      ],
-      "reason": "전자음악 제작을 위한 MIDI 컨트롤러 관련 정보로 전자음악 씬과 연결됨.",
-      "commonEntities": [],
-      "cohesionScore": 0
-    },
-    {
-      "topic": "Spybar 공동 창업자 및 DJ 구형",
-      "keywords": [
-        "Spybar",
-        "구형"
-      ],
-      "articleIds": [
-        "4ca71425-48f8-4279-9618-6e4641f22af1"
-      ],
-      "reason": "전자음악 관련 클럽의 공동 창업자 및 DJ의 구형 소식으로 전자음악 씬과 연결됨.",
-      "commonEntities": [],
-      "cohesionScore": 0
-    },
-    {
-      "topic": "음악 산업의 청력 보호 가이드",
-      "keywords": [
-        "청력 보호",
-        "음악 산업"
-      ],
-      "articleIds": [
-        "b4c32ee8-4c4e-44ae-8f99-07b6cc0dfb96"
-      ],
-      "reason": "음악 산업 내 청력 보호 관련 정보로 전자음악 씬과 연결됨.",
-      "commonEntities": [],
-      "cohesionScore": 0
-    },
-    {
-      "topic": "Chilsta 신곡 'Back' 발표",
+      "topic": "Chilsta, 'Back' 신곡 발표",
       "keywords": [
         "Chilsta",
         "Back",
-        "신곡",
-        "릴리즈"
+        "electronic"
       ],
       "articleIds": [
         "8c3a4c04-9cc7-442c-8041-740d7f9d6795"
       ],
-      "reason": "승인됨. 아티스트의 신곡 발표에 관한 내용으로 전자음악과 관련이 있음.",
+      "reason": "전자음악 아티스트의 신곡 릴리즈 소식으로 승인되었습니다.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "Souldynamic, 10주년 기념 앨범 'Equatoriale' 재발매",
+      "topic": "Spybar 공동 창업자 및 DJ, 6년형 선고",
+      "keywords": [
+        "Spybar",
+        "약물 운반",
+        "법적 문제"
+      ],
+      "articleIds": [
+        "4ca71425-48f8-4279-9618-6e4641f22af1"
+      ],
+      "reason": "전자음악 관련 DJ의 법적 문제 소식으로 승인되었습니다.",
+      "commonEntities": [],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "Best wired headphones under $500 2026 추천",
+      "keywords": [
+        "wired headphones",
+        "믹싱",
+        "음악 제작"
+      ],
+      "articleIds": [
+        "5f4bb5b3-b519-477b-8958-1908157ce18b"
+      ],
+      "reason": "전자음악 관련 장비 추천으로 승인되었습니다.",
+      "commonEntities": [],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "Best MIDI Controllers For Hybrid Studios 추천",
+      "keywords": [
+        "MIDI 컨트롤러",
+        "하이브리드 스튜디오",
+        "음악 장비"
+      ],
+      "articleIds": [
+        "843bc16c-70c6-4c87-a579-765b05c7088f"
+      ],
+      "reason": "전자음악 관련 장비 추천으로 승인되었습니다.",
+      "commonEntities": [],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "Souldynamic, 'Equatoriale' 10주년 에디션 발매",
       "keywords": [
         "Souldynamic",
-        "Equatoriale",
-        "10주년",
-        "재발매",
-        "레이블"
+        "10th anniversary",
+        "Equatoriale"
       ],
       "articleIds": [
         "dcd95628-2bda-4596-86e8-02f35b270e09"
       ],
-      "reason": "승인됨. 아티스트의 10주년 기념 앨범 재발매에 관한 내용으로 전자음악과 관련이 있음.",
+      "reason": "아티스트와 관련된 릴리즈 소식으로 전자음악과 관련됨.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "BBC Radio 6 Music, 블랙브리티시 댄스 음악을 위한 새 프로그램 'Rave Forever' 시작",
+      "topic": "BBC Radio 6 Music, 블랙 브리티시 디스코 음악을 위한 새 쇼 'Rave Forever' 개시",
       "keywords": [
         "BBC Radio 6 Music",
+        "Black British",
         "Rave Forever",
-        "블랙브리티시 댄스 음악",
-        "프로모션",
-        "라디오"
+        "show",
+        "dance music"
       ],
       "articleIds": [
         "54f0a5fb-e1c3-4623-8b39-3d951e64b656"
       ],
-      "reason": "승인됨. 블랙브리티시 댄스 음악 관련 프로그램 시작 소식으로 전자음악과 관련이 있음.",
+      "reason": "블랙 브리티시 디스코 음악 관련 쇼 발표로 전자음악과 관련됨.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "게임 보이 칩튠 제작을 위한 초보자 가이드 발표",
+      "topic": "Game Boy 칩튠을 위한 초보자 가이드 공개",
       "keywords": [
-        "게임 보이",
-        "칩튠",
+        "Game Boy",
+        "chiptune",
         "LSDJ",
-        "제작 가이드",
-        "음악 소프트웨어"
+        "guide",
+        "Synthtopia"
       ],
       "articleIds": [
         "16f7e17e-ee16-4958-a7cb-c9c82b787e13"
       ],
-      "reason": "승인됨. 전자음악 제작과 관련된 교육 자료로 전자음악과 관련이 있음.",
+      "reason": "전자음악 제작에 관련된 교육 자료로 전자음악과 관련됨.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "두 어린이, 세계 최연소 DJ 데뷔로 깨기 유니버설 레코드",
+      "topic": "두 어린이, 가장 어린 DJ 데뷔 조합으로 기네스 세계 기록 갱신",
       "keywords": [
-        "두 어린이",
-        "유니버설 레코드",
-        "기록"
+        "Guinness World Record",
+        "youngest DJ duo",
+        "EDMTunes",
+        "electronic music"
       ],
       "articleIds": [
         "bad63d31-693d-40f4-944a-be2604d6b548"
       ],
-      "reason": "승인됨. DJ와 관련된 기록 설정 소식으로 전자음악과 관련이 있음.",
+      "reason": "전자음악 아티스트 관련 소식으로 전자음악과 관련됨.",
       "commonEntities": [],
       "cohesionScore": 0
     }
   ],
   "mergedSuggestions": [
     {
-      "topic": "Fred again.. & LATIN MAFIA 공동 믹스테이프 '9 months & 50 hours' 발매",
-      "keywords": [
-        "Fred again..",
-        "LATIN MAFIA",
-        "믹스테이프",
-        "9 months & 50 hours",
-        "mixtape",
-        "Mexico City"
-      ],
-      "articleIds": [
-        "0b59de4a-9627-4965-9010-71aa0a042589",
-        "44dad22b-390c-47da-9ffd-64b91eb4a9c8"
-      ],
-      "reason": "Fred again..과 LATIN MAFIA의 공동 믹스테이프 발매 소식으로, 전자음악 씬과 직접적으로 관련된 내용입니다.",
-      "commonEntities": [
-        "Fred again.."
-      ],
-      "cohesionScore": 88
-    },
-    {
-      "topic": "Kaskade, ORIGIN// 투어 발표",
-      "keywords": [
-        "Kaskade",
-        "ORIGIN// 투어",
-        "Coachella",
-        "Miami",
-        "New York",
-        "ORIGIN //"
-      ],
-      "articleIds": [
-        "a3c3e958-48cb-45b3-831e-764c37537b65",
-        "37df4ffc-1996-419b-926b-ebd9d7037724"
-      ],
-      "reason": "Kaskade가 ORIGIN// 투어를 발표한 것으로, 전자음악 씬과 직접적으로 관련된 내용입니다.",
-      "commonEntities": [
-        "Kaskade"
-      ],
-      "cohesionScore": 88
-    },
-    {
-      "topic": "Above & Beyond, 25주년 기념 'One Mix' 공개",
-      "keywords": [
-        "Above & Beyond",
-        "Apple Music",
-        "One Mix",
-        "Spatial Audio",
-        "25주년",
-        "Christian Hornbostel"
-      ],
-      "articleIds": [
-        "c7ccf53d-22c7-4495-991c-98a8bf88be9e",
-        "cbad5af5-65c5-40ea-a243-6b4f2b885bc9",
-        "e2aeaf6a-1e05-4163-a491-b6efb2570759"
-      ],
-      "reason": "Above & Beyond의 25주년 기념 DJ 믹스 'One Mix'가 Apple Music에서 공개된 것으로, 전자음악 씬과 직접적으로 관련된 내용입니다.",
-      "commonEntities": [],
-      "cohesionScore": 65
-    },
-    {
-      "topic": "Function의 'Aeternum (Existenz)' 미니 앨범 발매",
+      "topic": "Function의 'Aeternum (Existenz)' 앨범 발표",
       "keywords": [
         "Function",
         "Tresor Records",
-        "미니 앨범",
-        "Aeternum (Existenz)"
+        "Mini Album",
+        "Aeternum"
       ],
       "articleIds": [
         "aa53f947-d07c-4281-90a6-adeeae48cd59"
       ],
-      "reason": "전자음악 아티스트 Function의 신규 미니 앨범 발매 소식으로, 전자음악 씬과 직접적으로 관련된 내용입니다.",
-      "commonEntities": [],
+      "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
+      "commonEntities": [
+        "Tresor"
+      ],
       "cohesionScore": 0
     },
     {
-      "topic": "Tomorrowland 2026 공연 영상 공개",
+      "topic": "Tomorrowland 2026 주요 무대 공연 영상 공개",
       "keywords": [
         "Tomorrowland 2026",
         "Martin Garrix",
         "Hardwell",
-        "Sara Landry"
+        "Mainstage"
       ],
       "articleIds": [
-        "a7c024a1-7611-4c83-8f40-533334ba7eb2",
-        "330b30e4-0b10-45f5-8c46-13ad6a376b19"
+        "a7c024a1-7611-4c83-8f40-533334ba7eb2"
       ],
-      "reason": "Tomorrowland 2026의 공식 메인스테이지 및 스테이지 세트 영상이 공개된 것으로, 전자음악 페스티벌과 관련된 기사입니다.",
-      "commonEntities": [],
-      "cohesionScore": 48
+      "reason": "전자음악 페스티벌 관련 공연 소식으로 승인됨.",
+      "commonEntities": [
+        "Martin Garrix",
+        "Hardwell",
+        "Charlotte de Witte",
+        "Sara Landry",
+        "Tomorrowland"
+      ],
+      "cohesionScore": 0
     },
     {
-      "topic": "Carl Cox의 1996년 포르투갈 공연 사진 공개",
+      "topic": "Carl Cox 1996년 포르투갈 공연 사진 공개",
       "keywords": [
         "Carl Cox",
-        "포르투갈",
-        "레코드",
-        "USB"
+        "DJing",
+        "Vintage Photo",
+        "Analog Records"
       ],
       "articleIds": [
         "d05fa571-c04f-4dd6-8bbf-cfc1b4150b3a"
       ],
-      "reason": "Carl Cox가 1996년 포르투갈에서의 공연 사진을 공개한 것으로, 전자음악 아티스트의 역사적 소식과 관련이 있습니다.",
+      "reason": "전자음악 아티스트의 과거 공연 관련 소식으로 승인됨.",
       "commonEntities": [
         "Carl Cox"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Pittsburgh Modular Lifeforms SV-2 신제품 공개",
+      "topic": "Pittsburgh Modular 신규 합성기 'Lifeforms SV-2' 공개",
       "keywords": [
         "Pittsburgh Modular",
         "Lifeforms SV-2",
-        "아날로그 신디사이저",
+        "Analog Synthesizer",
         "Eurorack",
-        "Ableton Live"
+        "Semi-Modular"
       ],
       "articleIds": [
         "ef7a3c58-fdc4-489a-898d-1f888df2dbcc"
       ],
-      "reason": "Pittsburgh Modular의 새로운 아날로그 신디사이저 Lifeforms SV-2가 공개된 것으로, 전자음악 장비와 관련된 내용입니다.",
-      "commonEntities": [],
+      "reason": "전자음악 장비 관련 소식으로 승인됨.",
+      "commonEntities": [
+        "LIV Nightclub",
+        "Ableton"
+      ],
       "cohesionScore": 0
     },
     {
-      "topic": "Maribou State, 새 앨범 'Hallucinating Love' 발매",
+      "topic": "Maribou State, Ninja Tune 레이블 통해 새 앨범 'Hallucinating Love' 발표",
       "keywords": [
         "Maribou State",
         "Ninja Tune",
-        "Hallucinating Love",
         "Deluxe Edition",
-        "2026년 8월 21일"
+        "Hallucinating Love",
+        "Electronic"
       ],
       "articleIds": [
         "7b68f9bf-cda9-4d4c-8074-a1972f1b006a"
       ],
-      "reason": "Maribou State의 새 앨범 'Hallucinating Love' 발매 소식으로, 전자음악 씬과 직접적으로 관련된 내용입니다.",
+      "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
       "commonEntities": [
         "Ninja Tune"
+      ],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "Above & Beyond, 25주년 기념 Apple Music 미싱 'One Mix' 공개",
+      "keywords": [
+        "Above & Beyond",
+        "Apple Music",
+        "One Mix",
+        "25th Anniversary",
+        "Spatial Audio"
+      ],
+      "articleIds": [
+        "c7ccf53d-22c7-4495-991c-98a8bf88be9e"
+      ],
+      "reason": "전자음악 아티스트의 릴리즈 및 이벤트 소식으로 승인됨.",
+      "commonEntities": [
+        "Above & Beyond"
       ],
       "cohesionScore": 0
     },
@@ -5046,73 +5216,80 @@
       "topic": "Escape Halloween 2026 라인업 발표",
       "keywords": [
         "Escape Halloween",
+        "2026 Lineup",
         "Insomniac Events",
         "NOS Events Center",
-        "Halloween"
+        "Halloween Festival"
       ],
       "articleIds": [
         "3b9aa1d7-635d-4277-9e11-ce0455491dd6"
       ],
-      "reason": "Escape Halloween 2026의 라인업이 발표된 것으로, 전자음악 페스티벌과 관련된 기사입니다.",
-      "commonEntities": [],
+      "reason": "전자음악 페스티벌 관련 소식으로 승인됨.",
+      "commonEntities": [
+        "HARD Summer"
+      ],
       "cohesionScore": 0
     },
     {
-      "topic": "Electronic Groove, 베네수엘라 구호 컴필레이션 발매",
+      "topic": "Electronic Groove, 베네수엘라 구호 앨범 'Electronic Groove for Venezuela' 발표",
       "keywords": [
         "Electronic Groove",
-        "베네수엘라",
-        "구호 컴필레이션",
+        "Charity Compilation",
+        "Venezuela Relief",
         "Nick Warren",
         "Danny Howells"
       ],
       "articleIds": [
         "4cab2fae-7c07-4370-a188-24eaaa281671"
       ],
-      "reason": "Electronic Groove가 베네수엘라 구호를 위한 컴필레이션을 발매한 것으로, 전자음악 씬과 관련된 소식입니다.",
+      "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
       "commonEntities": [
-        "Nick Warren"
+        "Nick Warren",
+        "Hernán Cattáneo"
       ],
       "cohesionScore": 0
     },
     {
       "topic": "Meta AI 글라스, DJ 공연 영상 촬영 가능성 분석",
       "keywords": [
-        "Meta AI 글라스",
+        "Meta Glasses",
         "DJing",
-        "POV 영상",
+        "POV Video",
         "Beatport Tech",
-        "Mojaxx"
+        "Social Media"
       ],
       "articleIds": [
         "f1daca30-4a35-426e-85c4-45674714c79e"
       ],
-      "reason": "Meta AI 글라스가 DJ 공연 영상 촬영에 활용될 수 있는지 분석한 것으로, 전자음악 관련 기술 소식입니다.",
-      "commonEntities": [],
+      "reason": "전자음악 관련 기술 및 장비 소식으로 승인됨.",
+      "commonEntities": [
+        "Beatport"
+      ],
       "cohesionScore": 0
     },
     {
-      "topic": "Alan Walker, 'Pain' Fatal Fury: City of the Wolves 사운드트랙 참여",
+      "topic": "Alan Walker, 'Fatal Fury: City of the Wolves' 사운드트랙 참여",
       "keywords": [
         "Alan Walker",
-        "Fatal Fury: City of the Wolves",
-        "Pain",
-        "Norwegian producer",
-        "soundtrack"
+        "Fatal Fury",
+        "Soundtrack",
+        "City of the Wolves",
+        "Norwegian Producer"
       ],
       "articleIds": [
         "21193649-1a1e-4e95-8ead-3713075f471e"
       ],
-      "reason": "Alan Walker가 'Pain'을 Fatal Fury: City of the Wolves 사운드트랙에 참여한 것으로, 전자음악 씬과 관련된 소식입니다.",
+      "reason": "전자음악 아티스트의 릴리즈 소식으로 승인됨.",
       "commonEntities": [
         "Alan Walker"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Beyond The Valley 2026 라인업 발표",
+      "topic": "Australia’s Beyond The Valley 2026 라인업 발표",
       "keywords": [
         "Beyond The Valley",
+        "2026 Lineup",
         "KI/KI",
         "Boys Noize",
         "Skepta"
@@ -5120,48 +5297,72 @@
       "articleIds": [
         "b0ed8ca6-42ae-4ae6-8679-df3375870e4c"
       ],
-      "reason": "Beyond The Valley 2026의 라인업이 발표된 것으로, 전자음악 페스티벌과 관련된 기사입니다.",
-      "commonEntities": [],
+      "reason": "전자음악 페스티벌 관련 소식으로 승인됨.",
+      "commonEntities": [
+        "Maceo Plex",
+        "Black Coffee",
+        "Loco Dice",
+        "Dixon",
+        "Indira Paganotto"
+      ],
       "cohesionScore": 0
     },
     {
-      "topic": "Paco Wegmann, “Mais Forte” 발표 및 Loco Dice의 SB Recordings와 협업",
+      "topic": "Dimitri Vegas, Tomorrowland 및 Ushuaïa Ibiza 공연에 축구 선수 참여",
+      "keywords": [
+        "Dimitri Vegas",
+        "Tomorrowland",
+        "Ushuaïa Ibiza",
+        "Lukaku"
+      ],
+      "articleIds": [
+        "330b30e4-0b10-45f5-8c46-13ad6a376b19"
+      ],
+      "reason": "전자음악 페스티벌 관련 소식으로 승인됨.",
+      "commonEntities": [
+        "Tomorrowland",
+        "Ushuaïa Ibiza"
+      ],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "Paco Wegmann, “Mais Forte” 릴리즈 및 Loco Dice SB Recordings와 협업",
       "keywords": [
         "Paco Wegmann",
         "Mais Forte",
         "Loco Dice",
         "SB Recordings",
-        "Rincon Sapiencia"
+        "Brazilian Vocalist"
       ],
       "articleIds": [
         "997a3e8d-9b22-4fbc-9305-8de90f50deb7"
       ],
-      "reason": "Paco Wegmann이 “Mais Forte”를 발표하고 Loco Dice의 SB Recordings과 협업한 것으로, 전자음악 씬과 관련된 소식입니다.",
+      "reason": "전자음악 아티스트의 릴리즈 소식으로 승인됨.",
       "commonEntities": [
         "Loco Dice"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "El Tony, Ibiza에서 프로듀서 아카데미 운영",
+      "topic": "El Tony, Ibiza에서의 프로듀서 아카데미 프로그램 발표",
       "keywords": [
         "El Tony",
+        "Producer Academy",
         "Ibiza",
-        "프로듀서 아카데미",
         "Beatport",
-        "2026년 10월"
+        "Electronic Music Producers"
       ],
       "articleIds": [
         "aa270acb-cde1-487e-851f-37f0bb6a0555"
       ],
-      "reason": "El Tony가 Ibiza에서 프로듀서 아카데미를 운영하는 것으로, 전자음악 씬과 관련된 교육 프로그램 소식입니다.",
+      "reason": "전자음악 교육 및 이벤트 관련 소식으로 승인됨.",
       "commonEntities": [
         "Beatport"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Deadcrow & Caster, 'Euphoria' 발매",
+      "topic": "Deadcrow & Caster, NIGHTMODE 레이블 통해 신곡 'Euphoria' 발표",
       "keywords": [
         "Deadcrow",
         "Caster",
@@ -5172,73 +5373,150 @@
       "articleIds": [
         "405af67d-3614-4665-83f8-2c45ffea4a17"
       ],
-      "reason": "Deadcrow와 Caster가 'Euphoria'를 발매한 것으로, 전자음악 씬과 관련된 소식입니다.",
+      "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
       "commonEntities": [
         "Deadcrow"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Eliza Rose & Sega Bodega, 새 싱글 'Kite' 발표",
+      "topic": "Christian Hornbostel, Magnetic Magazine Recordings 통해 신곡 'Eridanus' 발표",
+      "keywords": [
+        "Christian Hornbostel",
+        "Eridanus",
+        "Magnetic Magazine",
+        "Spatial Audio",
+        "Electronic Music"
+      ],
+      "articleIds": [
+        "e2aeaf6a-1e05-4163-a491-b6efb2570759"
+      ],
+      "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
+      "commonEntities": [
+        "Christian Hornbostel"
+      ],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "Eliza Rose & Sega Bodega, 신곡 'Kite' 발표",
       "keywords": [
         "Eliza Rose",
         "Sega Bodega",
         "Kite",
-        "bashment",
+        "Bashment",
         "Carnival"
       ],
       "articleIds": [
         "bfff6140-0da4-4d38-b518-d660995a6844"
       ],
-      "reason": "Eliza Rose와 Sega Bodega가 새 싱글 'Kite'를 발표한 것으로, 전자음악 씬과 관련된 소식입니다.",
+      "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
       "commonEntities": [
         "Eliza Rose"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Tomorrowland 2026 공식 애프터무비 공개",
+      "topic": "Cale Anderson의 'Yemaya (We All Come from the Goddess)' 앨범 발매",
       "keywords": [
-        "Tomorrowland",
-        "aftermovie",
-        "official"
+        "Cale Anderson",
+        "folktronica",
+        "Maschine MK3",
+        "UVI plugins",
+        "앨범"
       ],
       "articleIds": [
-        "5482179c-27e2-41bf-9e58-1a176092b2a2",
-        "eee21e05-70b5-402b-bf6e-716c1c3cb599"
+        "5482179c-27e2-41bf-9e58-1a176092b2a2"
       ],
-      "reason": "Tomorrowland 2026의 공식 애프터무비 공개 및 Aaron Hibell의 인터뷰와 관련된 기사로 묶음 가능.",
-      "commonEntities": [],
-      "cohesionScore": 21
+      "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
+      "commonEntities": [
+        "Native Instruments"
+      ],
+      "cohesionScore": 0
     },
     {
-      "topic": "Kashovski와 Moojo의 'Show Me' 콜라보레이션 릴리스",
+      "topic": "Kashovski와 Moojo의 'Show Me' 콜라보레이션 발매",
       "keywords": [
         "Kashovski",
         "Moojo",
-        "Show Me",
-        "collaboration"
+        "Calamar Records",
+        "싱글"
       ],
       "articleIds": [
         "c070c29a-55f9-46be-9e48-2086cef9bccc"
       ],
-      "reason": "Kashovski와 Moojo의 첫 번째 콜라보레이션 'Show Me' 릴리스 관련 기사로 단독 클러스터.",
+      "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
       "commonEntities": [
         "Moojo"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Cyprus KAMAYA 페스티벌 라인업 공개",
+      "topic": "Tomorrowland 2026 공식 애프터무비 공개",
       "keywords": [
-        "KAMAYA Festival",
+        "Tomorrowland 2026",
+        "공식 애프터무비",
+        "Boom, Belgium",
+        "500 아티스트",
+        "16 스테이지"
+      ],
+      "articleIds": [
+        "2439f041-6819-455a-8aa6-b17775140039"
+      ],
+      "reason": "승인됨: 전자음악 페스티벌 관련 소식에 해당합니다.",
+      "commonEntities": [
+        "Tomorrowland"
+      ],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "Native Instruments의 SuperStarSaw 리뷰",
+      "keywords": [
+        "Native Instruments",
+        "SuperStarSaw",
+        "음악 소프트웨어",
+        "Maschine MK3",
+        "UVI plugins"
+      ],
+      "articleIds": [
+        "b6218fd1-8c85-4c8e-9271-471c1dd0f68c"
+      ],
+      "reason": "승인됨: 전자음악 장비/소프트웨어 관련 소식에 해당합니다.",
+      "commonEntities": [
+        "Reason"
+      ],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "Aaron Hibell, Tomorrowland 2026에서의 공연 및 인터뷰",
+      "keywords": [
+        "Aaron Hibell",
+        "Tomorrowland 2026",
+        "데뷔 앨범",
+        "인터뷰",
+        "EDMTunes"
+      ],
+      "articleIds": [
+        "eee21e05-70b5-402b-bf6e-716c1c3cb599"
+      ],
+      "reason": "승인됨: 전자음악 아티스트 관련 소식에 해당합니다.",
+      "commonEntities": [
+        "Tomorrowland"
+      ],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "키프로스 KAMAYA 페스티벌, 디슨, Mind Against 등 출연 확정",
+      "keywords": [
+        "KAMAYA 페스티벌",
+        "키프로스",
         "Dixon",
-        "Mind Against"
+        "Mind Against",
+        "전자음악"
       ],
       "articleIds": [
         "5540884f-8038-4ef5-bf27-28747fbfbb14"
       ],
-      "reason": "KAMAYA 페스티벌의 첫 번째 라인업 공개 및 전자음악 플랫폼 관련 기사로 단독 클러스터.",
+      "reason": "승인됨: 전자음악 페스티벌 관련 소식에 해당합니다.",
       "commonEntities": [
         "Dixon",
         "Mind Against"
@@ -5246,542 +5524,470 @@
       "cohesionScore": 0
     },
     {
-      "topic": "Vintage Culture, Nariman, rhys from the sticks의 'Think Too Much' 릴리스",
-      "keywords": [
-        "Vintage Culture",
-        "Nariman",
-        "rhys from the sticks",
-        "Think Too Much",
-        "Tech House"
-      ],
-      "articleIds": [
-        "ebf9cabf-804b-43c4-b438-11b0ff45b6c0",
-        "3edb458c-852c-4f3e-baba-e8478b1d1a8f"
-      ],
-      "reason": "Vintage Culture의 신곡 'Think Too Much' 릴리스 및 관련 정보를 다룬 기사로 묶음 가능.",
-      "commonEntities": [
-        "Vintage Culture"
-      ],
-      "cohesionScore": 88
-    },
-    {
-      "topic": "Maceo Plex, Kavinsky의 'Nightcall' 리믹스 무료 다운로드",
+      "topic": "Maceo Plex, Kavinsky의 'Nightcall' 리믹스 무료 공개",
       "keywords": [
         "Maceo Plex",
         "Kavinsky",
         "Nightcall",
-        "remix",
-        "free download"
+        "리믹스",
+        "프리 다운로드"
       ],
       "articleIds": [
         "35047bce-64c4-4d8b-bbaa-31c53631d57f"
       ],
-      "reason": "Maceo Plex의 Kavinsky 'Nightcall' 리믹스 무료 제공 관련 기사로 단독 클러스터.",
+      "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
       "commonEntities": [
         "Maceo Plex"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Ozora 페스티벌, 두 명의 참가자 사망으로 조기 종료",
-      "keywords": [
-        "Ozora Festival",
-        "Hungary",
-        "Psytrance",
-        "tragedy",
-        "early closure"
-      ],
-      "articleIds": [
-        "2225d129-ec8f-445b-b110-f384c4ba4381",
-        "b3fd0782-d645-40fe-b093-ff24850e74a1",
-        "291bd1c4-8919-40a4-91de-e32408755beb"
-      ],
-      "reason": "Ozora 페스티벌의 조기 종료와 관련된 여러 언론 보도로 묶음 가능.",
-      "commonEntities": [],
-      "cohesionScore": 33
-    },
-    {
-      "topic": "Eastern Electrics 2026 라인업 공개",
+      "topic": "Eastern Electrics, East End Dubs, Joseph Capriati 등 참여하는 2026년 행사 공개",
       "keywords": [
         "Eastern Electrics",
         "East End Dubs",
-        "Joseph Capriati"
+        "Joseph Capriati",
+        "Burgess Park",
+        "전자음악"
       ],
       "articleIds": [
         "ccc5b5c6-781c-4f10-9faa-46b57417b4e2"
       ],
-      "reason": "Eastern Electrics 2026의 라인업 공개 관련 기사로 단독 클러스터.",
+      "reason": "승인됨: 전자음악 페스티벌 관련 소식에 해당합니다.",
       "commonEntities": [
         "Joseph Capriati"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "David Penn의 전자음악 커리어와 ‘Big Love’ 릴리스",
+      "topic": "David Penn의 커리어와 음악적 영향력에 대한 인터뷰",
       "keywords": [
         "David Penn",
-        "Spanish house",
-        "Big Love",
+        "Spanish House",
         "Defected",
-        "career"
+        "Big Love",
+        "인터뷰"
       ],
       "articleIds": [
         "4e0b2892-c472-40c3-90c1-2887bd3c835b"
       ],
-      "reason": "David Penn의 커리어와 관련된 기사로 단독 클러스터.",
-      "commonEntities": [],
+      "reason": "승인됨: 전자음악 아티스트 관련 소식에 해당합니다.",
+      "commonEntities": [
+        "Defected Records"
+      ],
       "cohesionScore": 0
     },
     {
-      "topic": "Giom의 2000년대 하우스 클래식 릴리스",
+      "topic": "Giom의 2000년대 하우스 음악 클래식 컬렉션 발표",
       "keywords": [
         "Giom",
-        "house classics",
+        "하우스",
         "Supremus Records",
-        "2000s",
-        "remix"
+        "리믹스"
       ],
       "articleIds": [
         "9a7d7875-1a18-4298-9976-b36c720be8e0"
       ],
-      "reason": "Giom의 2000년대 하우스 클래식 릴리스 관련 기사로 단독 클러스터.",
+      "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
       "commonEntities": [
         "Giom"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "fabric 27주년 라인업 공개",
+      "topic": "fabric, 27주년 기념 이벤트 라인업 발표",
       "keywords": [
         "fabric",
-        "27th birthday",
+        "27주년",
         "Ricardo Villalobos",
-        "Zip"
+        "Zip",
+        "Vlada"
       ],
       "articleIds": [
         "ac03829d-cbcf-4cd1-abf0-a9140aeb1c57"
       ],
-      "reason": "fabric의 27주년 라인업 공개 관련 기사로 단독 클러스터.",
+      "reason": "승인됨: 전자음악 페스티벌 관련 소식에 해당합니다.",
       "commonEntities": [
-        "Ricardo Villalobos"
+        "Ricardo Villalobos",
+        "fabric"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Mount Kimbie, fabric presents Compilation 릴리스",
+      "topic": "Mount Kimbie, fabric presents 컴필레이션 발표",
       "keywords": [
         "Mount Kimbie",
         "fabric presents",
-        "Compilation",
-        "electronic duo",
-        "Phonica Records"
+        "Monroe",
+        "Jomox",
+        "컴필레이션"
       ],
       "articleIds": [
         "0b481d88-a706-4a7f-8949-0a35f6ddc498"
       ],
-      "reason": "Mount Kimbie의 fabric presents Compilation 릴리스 관련 기사로 단독 클러스터.",
-      "commonEntities": [],
+      "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
+      "commonEntities": [
+        "fabric"
+      ],
       "cohesionScore": 0
     },
     {
-      "topic": "salute와 Riva Starr의 'soulreply' 릴리스",
+      "topic": "salute 및 Riva Starr, 'soulreply' 싱글 발표",
       "keywords": [
         "salute",
         "Riva Starr",
         "soulreply",
-        "infinite passion",
-        "Ninja Tune"
+        "Ninja Tune",
+        "믹스테이프"
       ],
       "articleIds": [
         "0de537ec-41fb-4cab-9ac0-86091eb8c509"
       ],
-      "reason": "salute와 Riva Starr의 'soulreply' 릴리스 관련 기사로 단독 클러스터.",
-      "commonEntities": [],
+      "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
+      "commonEntities": [
+        "Ninja Tune"
+      ],
       "cohesionScore": 0
     },
     {
-      "topic": "Roland JD-990 소프트웨어 에뮬레이터 JADE 개발",
+      "topic": "Roland JD-990 소프트웨어 에뮬레이터 JADE 개발 중",
       "keywords": [
         "Roland",
         "JD-990",
         "JADE",
-        "software emulator",
-        "The Usual Suspects"
+        "The Usual Suspects",
+        "음악 소프트웨어"
       ],
       "articleIds": [
         "adf80d1b-5c21-4378-b180-be96bacc8b02"
       ],
-      "reason": "Roland JD-990의 JADE 소프트웨어 에뮬레이터 개발 관련 기사로 단독 클러스터.",
+      "reason": "승인됨: 전자음악 장비/소프트웨어 관련 소식에 해당합니다.",
       "commonEntities": [
         "Roland"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Roland GO:KEYS 3 Minion 키보드 출시",
+      "topic": "Roland GO:KEYS 3 Minion 키보드 2026년 9월 출시",
       "keywords": [
         "Roland",
         "GO:KEYS 3",
         "Minion",
         "키보드",
-        "2026년 9월"
+        "음악 장비"
       ],
       "articleIds": [
         "70e0dd77-62b7-4959-b31c-9de70493b809"
       ],
-      "reason": "전자음악 장비 관련 제품 출시 소식으로 전자음악 씬과 연결됨.",
+      "reason": "전자음악 관련 음악 장비 출시 소식으로 승인되었습니다.",
       "commonEntities": [
         "Roland"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Nutritious, Liquid Culture Records에서 'Solarmaxxing' 발매",
+      "topic": "Nutritious, Liquid Culture Records에서 'Solarmaxxing' 미니 앨범 발매",
       "keywords": [
         "Nutritious",
         "Solarmaxxing",
-        "Liquid Culture Records",
-        "하우스"
+        "Liquid Culture Records"
       ],
       "articleIds": [
         "7be74f06-4a95-48a8-9efd-b0d1d6f714d9"
       ],
-      "reason": "하우스 음악 프로듀서의 신곡 발매로 전자음악 씬과 연결됨.",
+      "reason": "전자음악 아티스트의 신곡 및 앨범 릴리즈 소식으로 승인되었습니다.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "Guyver7x3, 'Half Of Me Still With You' 발매",
+      "topic": "Guyver7x3, 'Half Of Me Still With You' 싱글 발매",
       "keywords": [
         "Guyver7x3",
         "Half Of Me Still With You",
-        "시냅스 팝"
+        "synth pop",
+        "음악 릴리즈"
       ],
       "articleIds": [
         "46df593a-47e7-4929-88e0-6a4646d08fd5"
       ],
-      "reason": "시냅스 팝 장르의 신곡 발매로 전자음악 씬과 연결됨.",
+      "reason": "전자음악 아티스트의 신곡 릴리즈 소식으로 승인되었습니다.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "DJ Dr Vitos, 'Walk me Home' 발매",
+      "topic": "DJ Dr Vitos, 'Walk me Home' 앨범 발매",
       "keywords": [
         "DJ Dr Vitos",
         "Walk me Home",
-        "인디 팝"
+        "indie pop",
+        "음악 릴리즈"
       ],
       "articleIds": [
         "4400139e-2ffd-4757-a7e0-0e37e9bbd877"
       ],
-      "reason": "인디 팝 장르의 신곡 발매로 전자음악 씬과 연결됨.",
+      "reason": "전자음악 아티스트의 신곡 및 앨범 릴리즈 소식으로 승인되었습니다.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "Chuck Daniels, 'The Remixes' 발매",
+      "topic": "Chuck Daniels, 'The Remixes' 릴리즈로 Sampled Detroit 재개",
       "keywords": [
         "Chuck Daniels",
         "The Remixes",
         "Sampled Detroit",
-        "하우스"
+        "remix"
       ],
       "articleIds": [
         "69032d03-0f1f-4b60-8033-d6f887bdd883"
       ],
-      "reason": "하우스 음악 레이블의 리믹스 컬렉션 발매로 전자음악 씬과 연결됨.",
+      "reason": "전자음악 레이블 및 아티스트의 릴리즈 소식으로 승인되었습니다.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "Vital 소프트웨어 시냅스 출시",
+      "topic": "Vital, 무료 소프트웨어 신디사이저로 주목",
       "keywords": [
         "Vital",
-        "소프트웨어",
-        "시냅스"
+        "소프트웨어 신디사이저",
+        "음악 소프트웨어"
       ],
       "articleIds": [
         "c0d18098-25e7-4bb5-9e45-dcdc9464230d"
       ],
-      "reason": "전자음악 제작을 위한 소프트웨어 관련 정보로 전자음악 씬과 연결됨.",
+      "reason": "전자음악 관련 음악 소프트웨어 소개로 승인되었습니다.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "Emanuele Cisi & Joe Claussell, 'Pharoah’s Message' 리믹스",
+      "topic": "Emanuele Cisi & Joe Claussell, 'Pharoah’s Message' 리믹스 발표",
       "keywords": [
         "Emanuele Cisi",
         "Joe Claussell",
         "Pharoah’s Message",
-        "리믹스"
+        "리믹스",
+        "deep house"
       ],
       "articleIds": [
         "6f720c3d-0871-4158-b772-ef35b87101fc"
       ],
-      "reason": "유명 프로듀서들의 리믹스 발표로 전자음악 씬과 연결됨.",
+      "reason": "전자음악 아티스트의 리믹스 릴리즈 소식으로 승인되었습니다.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "ARC Music Festival 2026 공연자 발표",
-      "keywords": [
-        "ARC Music Festival 2026",
-        "Silva Bumpa",
-        "하우스"
-      ],
-      "articleIds": [
-        "84ee2511-3136-4b33-b59e-1c1e1b0ef26c"
-      ],
-      "reason": "하우스 및 테크노 음악 페스티벌의 공연자 발표로 전자음악 씬과 연결됨.",
-      "commonEntities": [],
-      "cohesionScore": 0
-    },
-    {
-      "topic": "Sullivan King, TRYM & Graphyt, 'Rumble' 발매",
+      "topic": "Sullivan King, TRYM & Graphyt, 'Rumble' 협업곡 발표",
       "keywords": [
         "Sullivan King",
         "TRYM",
         "Graphyt",
         "Rumble",
-        "하드 테크노"
+        "hard techno"
       ],
       "articleIds": [
         "59e2d723-1b46-49ec-a404-8873552a9ae5"
       ],
-      "reason": "하드 테크노 및 럭스텝 장르의 신곡 발매로 전자음악 씬과 연결됨.",
+      "reason": "전자음악 아티스트의 협업곡 릴리즈 소식으로 승인되었습니다.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "Mat Weasel Busters 사망 소식",
+      "topic": "Mat Weasel Busters, Hardtek 및 Frenchcore의 선구자로 사망",
       "keywords": [
         "Mat Weasel Busters",
         "Hardtek",
         "Frenchcore",
-        "사망"
+        "사망",
+        "전자음악"
       ],
       "articleIds": [
         "57519485-435f-46b5-b844-678573083aa2"
       ],
-      "reason": "전자음악 장르의 선구자의 사망 소식으로 전자음악 씬과 연결됨.",
+      "reason": "전자음악 아티스트의 사망 소식으로 승인되었습니다.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "Jan Wayne 은퇴 발표",
+      "topic": "Jan Wayne, 2027년 말 은퇴 발표",
       "keywords": [
         "Jan Wayne",
         "은퇴",
-        "35년"
+        "35년 경력"
       ],
       "articleIds": [
         "be9cafd4-297c-46a0-8c9f-c2f64e9c61eb"
       ],
-      "reason": "장기간 활동한 DJ의 은퇴 소식으로 전자음악 씬과 연결됨.",
+      "reason": "전자음악 DJ의 은퇴 소식으로 승인되었습니다.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "M. Shadows, Avenged Sevenfold 독립 레이블 발표",
+      "topic": "M. Shadows, Avenged Sevenfold, 독립 레이블로 전환",
       "keywords": [
         "M. Shadows",
         "Avenged Sevenfold",
-        "독립 레이블"
+        "독립 레이블",
+        "음악 산업"
       ],
       "articleIds": [
         "d13d1666-30ed-480f-87f6-7735a1572466"
       ],
-      "reason": "음악 산업의 독립 레이블 관련 소식으로 전자음악 씬과 연결됨.",
+      "reason": "전자음악 관련 레이블 및 아티스트 소식으로 승인되었습니다.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "Purple Tape 인터뷰",
+      "topic": "Purple Tape, 'The industry rewards noise, but the culture rewards care' 인터뷰",
       "keywords": [
         "Purple Tape",
         "Desert Vision",
-        "Adriatic Indie Dance"
+        "Adriatic Indie Dance",
+        "인터뷰"
       ],
       "articleIds": [
         "7b90746c-1b89-47b4-8f88-0d8711ac11a1"
       ],
-      "reason": "전자음악 프로듀서의 인터뷰로 전자음악 씬과 연결됨.",
+      "reason": "전자음악 아티스트의 인터뷰 소식으로 승인되었습니다.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "Matty Ralph, JOKESONYOU – Heaven 발매",
+      "topic": "Matty Ralph & JOKESONYOU, 'Heaven' 협업곡 발표",
       "keywords": [
         "Matty Ralph",
         "JOKESONYOU",
         "Heaven",
-        "하우스",
-        "트랜스"
+        "trance"
       ],
       "articleIds": [
         "d5c5e356-9b4f-49c2-a2fb-eb19c8161f54"
       ],
-      "reason": "하우스 및 트랜스 음악의 신곡 발매로 전자음악 씬과 연결됨.",
+      "reason": "전자음악 아티스트의 협업곡 릴리즈 소식으로 승인되었습니다.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "DJ 보호용 이어폰 추천",
-      "keywords": [
-        "이어폰",
-        "믹싱"
-      ],
-      "articleIds": [
-        "5f4bb5b3-b519-477b-8958-1908157ce18b"
-      ],
-      "reason": "DJ 및 음악 제작을 위한 이어폰 관련 정보로 전자음악 씬과 연결됨.",
-      "commonEntities": [],
-      "cohesionScore": 0
-    },
-    {
-      "topic": "MIDI 컨트롤러 추천",
-      "keywords": [
-        "MIDI 컨트롤러",
-        "하이브리드 스튜디오"
-      ],
-      "articleIds": [
-        "843bc16c-70c6-4c87-a579-765b05c7088f"
-      ],
-      "reason": "전자음악 제작을 위한 MIDI 컨트롤러 관련 정보로 전자음악 씬과 연결됨.",
-      "commonEntities": [],
-      "cohesionScore": 0
-    },
-    {
-      "topic": "Spybar 공동 창업자 및 DJ 구형",
-      "keywords": [
-        "Spybar",
-        "구형"
-      ],
-      "articleIds": [
-        "4ca71425-48f8-4279-9618-6e4641f22af1"
-      ],
-      "reason": "전자음악 관련 클럽의 공동 창업자 및 DJ의 구형 소식으로 전자음악 씬과 연결됨.",
-      "commonEntities": [],
-      "cohesionScore": 0
-    },
-    {
-      "topic": "음악 산업의 청력 보호 가이드",
-      "keywords": [
-        "청력 보호",
-        "음악 산업"
-      ],
-      "articleIds": [
-        "b4c32ee8-4c4e-44ae-8f99-07b6cc0dfb96"
-      ],
-      "reason": "음악 산업 내 청력 보호 관련 정보로 전자음악 씬과 연결됨.",
-      "commonEntities": [],
-      "cohesionScore": 0
-    },
-    {
-      "topic": "Chilsta 신곡 'Back' 발표",
+      "topic": "Chilsta, 'Back' 신곡 발표",
       "keywords": [
         "Chilsta",
         "Back",
-        "신곡",
-        "릴리즈"
+        "electronic"
       ],
       "articleIds": [
         "8c3a4c04-9cc7-442c-8041-740d7f9d6795"
       ],
-      "reason": "승인됨. 아티스트의 신곡 발표에 관한 내용으로 전자음악과 관련이 있음.",
+      "reason": "전자음악 아티스트의 신곡 릴리즈 소식으로 승인되었습니다.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "Souldynamic, 10주년 기념 앨범 'Equatoriale' 재발매",
+      "topic": "Spybar 공동 창업자 및 DJ, 6년형 선고",
+      "keywords": [
+        "Spybar",
+        "약물 운반",
+        "법적 문제"
+      ],
+      "articleIds": [
+        "4ca71425-48f8-4279-9618-6e4641f22af1"
+      ],
+      "reason": "전자음악 관련 DJ의 법적 문제 소식으로 승인되었습니다.",
+      "commonEntities": [],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "Best wired headphones under $500 2026 추천",
+      "keywords": [
+        "wired headphones",
+        "믹싱",
+        "음악 제작"
+      ],
+      "articleIds": [
+        "5f4bb5b3-b519-477b-8958-1908157ce18b"
+      ],
+      "reason": "전자음악 관련 장비 추천으로 승인되었습니다.",
+      "commonEntities": [],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "Best MIDI Controllers For Hybrid Studios 추천",
+      "keywords": [
+        "MIDI 컨트롤러",
+        "하이브리드 스튜디오",
+        "음악 장비"
+      ],
+      "articleIds": [
+        "843bc16c-70c6-4c87-a579-765b05c7088f"
+      ],
+      "reason": "전자음악 관련 장비 추천으로 승인되었습니다.",
+      "commonEntities": [],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "Souldynamic, 'Equatoriale' 10주년 에디션 발매",
       "keywords": [
         "Souldynamic",
-        "Equatoriale",
-        "10주년",
-        "재발매",
-        "레이블"
+        "10th anniversary",
+        "Equatoriale"
       ],
       "articleIds": [
         "dcd95628-2bda-4596-86e8-02f35b270e09"
       ],
-      "reason": "승인됨. 아티스트의 10주년 기념 앨범 재발매에 관한 내용으로 전자음악과 관련이 있음.",
+      "reason": "아티스트와 관련된 릴리즈 소식으로 전자음악과 관련됨.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "BBC Radio 6 Music, 블랙브리티시 댄스 음악을 위한 새 프로그램 'Rave Forever' 시작",
+      "topic": "BBC Radio 6 Music, 블랙 브리티시 디스코 음악을 위한 새 쇼 'Rave Forever' 개시",
       "keywords": [
         "BBC Radio 6 Music",
+        "Black British",
         "Rave Forever",
-        "블랙브리티시 댄스 음악",
-        "프로모션",
-        "라디오"
+        "show",
+        "dance music"
       ],
       "articleIds": [
         "54f0a5fb-e1c3-4623-8b39-3d951e64b656"
       ],
-      "reason": "승인됨. 블랙브리티시 댄스 음악 관련 프로그램 시작 소식으로 전자음악과 관련이 있음.",
+      "reason": "블랙 브리티시 디스코 음악 관련 쇼 발표로 전자음악과 관련됨.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "게임 보이 칩튠 제작을 위한 초보자 가이드 발표",
+      "topic": "Game Boy 칩튠을 위한 초보자 가이드 공개",
       "keywords": [
-        "게임 보이",
-        "칩튠",
+        "Game Boy",
+        "chiptune",
         "LSDJ",
-        "제작 가이드",
-        "음악 소프트웨어"
+        "guide",
+        "Synthtopia"
       ],
       "articleIds": [
         "16f7e17e-ee16-4958-a7cb-c9c82b787e13"
       ],
-      "reason": "승인됨. 전자음악 제작과 관련된 교육 자료로 전자음악과 관련이 있음.",
+      "reason": "전자음악 제작에 관련된 교육 자료로 전자음악과 관련됨.",
       "commonEntities": [],
       "cohesionScore": 0
     },
     {
-      "topic": "두 어린이, 세계 최연소 DJ 데뷔로 깨기 유니버설 레코드",
+      "topic": "두 어린이, 가장 어린 DJ 데뷔 조합으로 기네스 세계 기록 갱신",
       "keywords": [
-        "두 어린이",
-        "유니버설 레코드",
-        "기록"
+        "Guinness World Record",
+        "youngest DJ duo",
+        "EDMTunes",
+        "electronic music"
       ],
       "articleIds": [
         "bad63d31-693d-40f4-944a-be2604d6b548"
       ],
-      "reason": "승인됨. DJ와 관련된 기록 설정 소식으로 전자음악과 관련이 있음.",
+      "reason": "전자음악 아티스트 관련 소식으로 전자음악과 관련됨.",
       "commonEntities": [],
       "cohesionScore": 0
-    }
-  ],
-  "rankedSuggestions": [
-    {
-      "topic": "Fred again.. & LATIN MAFIA 공동 믹스테이프 '9 months & 50 hours' 발매",
-      "keywords": [
-        "Fred again..",
-        "LATIN MAFIA",
-        "믹스테이프",
-        "9 months & 50 hours",
-        "mixtape",
-        "Mexico City"
-      ],
-      "articleIds": [
-        "0b59de4a-9627-4965-9010-71aa0a042589",
-        "44dad22b-390c-47da-9ffd-64b91eb4a9c8"
-      ],
-      "reason": "Fred again..과 LATIN MAFIA의 공동 믹스테이프 발매 소식으로, 전자음악 씬과 직접적으로 관련된 내용입니다.",
-      "commonEntities": [
-        "Fred again.."
-      ],
-      "cohesionScore": 88
     },
     {
-      "topic": "Kaskade, ORIGIN// 투어 발표",
+      "topic": "Kaskade, 'ORIGIN// Tour' 발표 및 Coachella 무대 연출 포함",
       "keywords": [
         "Kaskade",
-        "ORIGIN// 투어",
-        "Coachella",
+        "ORIGIN// Tour",
+        "Coachella Stage Production",
         "Miami",
         "New York",
         "ORIGIN //"
@@ -5790,199 +5996,394 @@
         "a3c3e958-48cb-45b3-831e-764c37537b65",
         "37df4ffc-1996-419b-926b-ebd9d7037724"
       ],
-      "reason": "Kaskade가 ORIGIN// 투어를 발표한 것으로, 전자음악 씬과 직접적으로 관련된 내용입니다.",
+      "reason": "전자음악 아티스트의 투어 및 이벤트 소식으로 승인됨.",
       "commonEntities": [
-        "Kaskade"
+        "Kaskade",
+        "Coachella"
       ],
       "cohesionScore": 88
     },
     {
-      "topic": "Vintage Culture, Nariman, rhys from the sticks의 'Think Too Much' 릴리스",
+      "topic": "Fred again.. & LATIN MAFIA 협업 미니앨범 '9 months & 50 hours' 발표",
+      "keywords": [
+        "Fred again..",
+        "LATIN MAFIA",
+        "Mixtape",
+        "Mexico City",
+        "믹스테이프",
+        "fabric"
+      ],
+      "articleIds": [
+        "0b59de4a-9627-4965-9010-71aa0a042589",
+        "44dad22b-390c-47da-9ffd-64b91eb4a9c8"
+      ],
+      "reason": "전자음악 아티스트의 협업 릴리즈 소식으로 승인됨.",
+      "commonEntities": [
+        "Fred again.."
+      ],
+      "cohesionScore": 88
+    },
+    {
+      "topic": "Vintage Culture, Nariman 및 rhys from the sticks와 'Think Too Much' 콜라보레이션 발매",
       "keywords": [
         "Vintage Culture",
         "Nariman",
         "rhys from the sticks",
-        "Think Too Much",
-        "Tech House"
+        "Tech House",
+        "Affairs Music",
+        "Think Too Much"
       ],
       "articleIds": [
         "ebf9cabf-804b-43c4-b438-11b0ff45b6c0",
         "3edb458c-852c-4f3e-baba-e8478b1d1a8f"
       ],
-      "reason": "Vintage Culture의 신곡 'Think Too Much' 릴리스 및 관련 정보를 다룬 기사로 묶음 가능.",
+      "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
       "commonEntities": [
         "Vintage Culture"
       ],
       "cohesionScore": 88
     },
     {
-      "topic": "Above & Beyond, 25주년 기념 'One Mix' 공개",
+      "topic": "헝가리 Ozora 페스티벌, 2명의 참가자 사망으로 조기 종료",
       "keywords": [
-        "Above & Beyond",
-        "Apple Music",
-        "One Mix",
-        "Spatial Audio",
-        "25주년",
-        "Christian Hornbostel"
+        "Ozora 페스티벌",
+        "헝가리",
+        "Psychedelic",
+        "조기 종료",
+        "사망",
+        "Psytrance"
       ],
       "articleIds": [
-        "c7ccf53d-22c7-4495-991c-98a8bf88be9e",
-        "cbad5af5-65c5-40ea-a243-6b4f2b885bc9",
-        "e2aeaf6a-1e05-4163-a491-b6efb2570759"
+        "291bd1c4-8919-40a4-91de-e32408755beb",
+        "2225d129-ec8f-445b-b110-f384c4ba4381",
+        "b3fd0782-d645-40fe-b093-ff24850e74a1"
       ],
-      "reason": "Above & Beyond의 25주년 기념 DJ 믹스 'One Mix'가 Apple Music에서 공개된 것으로, 전자음악 씬과 직접적으로 관련된 내용입니다.",
-      "commonEntities": [],
-      "cohesionScore": 65
+      "reason": "승인됨: 전자음악 페스티벌 관련 사고에 해당합니다.",
+      "commonEntities": [
+        "O.Z.O.R.A. Festival"
+      ],
+      "cohesionScore": 92
+    }
+  ],
+  "rankedSuggestions": [
+    {
+      "topic": "헝가리 Ozora 페스티벌, 2명의 참가자 사망으로 조기 종료",
+      "keywords": [
+        "Ozora 페스티벌",
+        "헝가리",
+        "Psychedelic",
+        "조기 종료",
+        "사망",
+        "Psytrance"
+      ],
+      "articleIds": [
+        "291bd1c4-8919-40a4-91de-e32408755beb",
+        "2225d129-ec8f-445b-b110-f384c4ba4381",
+        "b3fd0782-d645-40fe-b093-ff24850e74a1"
+      ],
+      "reason": "승인됨: 전자음악 페스티벌 관련 사고에 해당합니다.",
+      "commonEntities": [
+        "O.Z.O.R.A. Festival"
+      ],
+      "cohesionScore": 92
     },
     {
-      "topic": "Tomorrowland 2026 공연 영상 공개",
+      "topic": "Kaskade, 'ORIGIN// Tour' 발표 및 Coachella 무대 연출 포함",
+      "keywords": [
+        "Kaskade",
+        "ORIGIN// Tour",
+        "Coachella Stage Production",
+        "Miami",
+        "New York",
+        "ORIGIN //"
+      ],
+      "articleIds": [
+        "a3c3e958-48cb-45b3-831e-764c37537b65",
+        "37df4ffc-1996-419b-926b-ebd9d7037724"
+      ],
+      "reason": "전자음악 아티스트의 투어 및 이벤트 소식으로 승인됨.",
+      "commonEntities": [
+        "Kaskade",
+        "Coachella"
+      ],
+      "cohesionScore": 88
+    },
+    {
+      "topic": "Fred again.. & LATIN MAFIA 협업 미니앨범 '9 months & 50 hours' 발표",
+      "keywords": [
+        "Fred again..",
+        "LATIN MAFIA",
+        "Mixtape",
+        "Mexico City",
+        "믹스테이프",
+        "fabric"
+      ],
+      "articleIds": [
+        "0b59de4a-9627-4965-9010-71aa0a042589",
+        "44dad22b-390c-47da-9ffd-64b91eb4a9c8"
+      ],
+      "reason": "전자음악 아티스트의 협업 릴리즈 소식으로 승인됨.",
+      "commonEntities": [
+        "Fred again.."
+      ],
+      "cohesionScore": 88
+    },
+    {
+      "topic": "Vintage Culture, Nariman 및 rhys from the sticks와 'Think Too Much' 콜라보레이션 발매",
+      "keywords": [
+        "Vintage Culture",
+        "Nariman",
+        "rhys from the sticks",
+        "Tech House",
+        "Affairs Music",
+        "Think Too Much"
+      ],
+      "articleIds": [
+        "ebf9cabf-804b-43c4-b438-11b0ff45b6c0",
+        "3edb458c-852c-4f3e-baba-e8478b1d1a8f"
+      ],
+      "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
+      "commonEntities": [
+        "Vintage Culture"
+      ],
+      "cohesionScore": 88
+    },
+    {
+      "topic": "Tomorrowland 2026 주요 무대 공연 영상 공개",
       "keywords": [
         "Tomorrowland 2026",
         "Martin Garrix",
         "Hardwell",
-        "Sara Landry"
+        "Mainstage"
       ],
       "articleIds": [
-        "a7c024a1-7611-4c83-8f40-533334ba7eb2",
-        "330b30e4-0b10-45f5-8c46-13ad6a376b19"
+        "a7c024a1-7611-4c83-8f40-533334ba7eb2"
       ],
-      "reason": "Tomorrowland 2026의 공식 메인스테이지 및 스테이지 세트 영상이 공개된 것으로, 전자음악 페스티벌과 관련된 기사입니다.",
-      "commonEntities": [],
-      "cohesionScore": 48
+      "reason": "전자음악 페스티벌 관련 공연 소식으로 승인됨.",
+      "commonEntities": [
+        "Martin Garrix",
+        "Hardwell",
+        "Charlotte de Witte",
+        "Sara Landry",
+        "Tomorrowland"
+      ],
+      "cohesionScore": 0
     },
     {
-      "topic": "Ozora 페스티벌, 두 명의 참가자 사망으로 조기 종료",
-      "keywords": [
-        "Ozora Festival",
-        "Hungary",
-        "Psytrance",
-        "tragedy",
-        "early closure"
-      ],
-      "articleIds": [
-        "2225d129-ec8f-445b-b110-f384c4ba4381",
-        "b3fd0782-d645-40fe-b093-ff24850e74a1",
-        "291bd1c4-8919-40a4-91de-e32408755beb"
-      ],
-      "reason": "Ozora 페스티벌의 조기 종료와 관련된 여러 언론 보도로 묶음 가능.",
-      "commonEntities": [],
-      "cohesionScore": 33
-    },
-    {
-      "topic": "Tomorrowland 2026 공식 애프터무비 공개",
-      "keywords": [
-        "Tomorrowland",
-        "aftermovie",
-        "official"
-      ],
-      "articleIds": [
-        "5482179c-27e2-41bf-9e58-1a176092b2a2",
-        "eee21e05-70b5-402b-bf6e-716c1c3cb599"
-      ],
-      "reason": "Tomorrowland 2026의 공식 애프터무비 공개 및 Aaron Hibell의 인터뷰와 관련된 기사로 묶음 가능.",
-      "commonEntities": [],
-      "cohesionScore": 21
-    },
-    {
-      "topic": "Alan Walker, 'Pain' Fatal Fury: City of the Wolves 사운드트랙 참여",
+      "topic": "Alan Walker, 'Fatal Fury: City of the Wolves' 사운드트랙 참여",
       "keywords": [
         "Alan Walker",
-        "Fatal Fury: City of the Wolves",
-        "Pain",
-        "Norwegian producer",
-        "soundtrack"
+        "Fatal Fury",
+        "Soundtrack",
+        "City of the Wolves",
+        "Norwegian Producer"
       ],
       "articleIds": [
         "21193649-1a1e-4e95-8ead-3713075f471e"
       ],
-      "reason": "Alan Walker가 'Pain'을 Fatal Fury: City of the Wolves 사운드트랙에 참여한 것으로, 전자음악 씬과 관련된 소식입니다.",
+      "reason": "전자음악 아티스트의 릴리즈 소식으로 승인됨.",
       "commonEntities": [
         "Alan Walker"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Carl Cox의 1996년 포르투갈 공연 사진 공개",
+      "topic": "Dimitri Vegas, Tomorrowland 및 Ushuaïa Ibiza 공연에 축구 선수 참여",
+      "keywords": [
+        "Dimitri Vegas",
+        "Tomorrowland",
+        "Ushuaïa Ibiza",
+        "Lukaku"
+      ],
+      "articleIds": [
+        "330b30e4-0b10-45f5-8c46-13ad6a376b19"
+      ],
+      "reason": "전자음악 페스티벌 관련 소식으로 승인됨.",
+      "commonEntities": [
+        "Tomorrowland",
+        "Ushuaïa Ibiza"
+      ],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "Tomorrowland 2026 공식 애프터무비 공개",
+      "keywords": [
+        "Tomorrowland 2026",
+        "공식 애프터무비",
+        "Boom, Belgium",
+        "500 아티스트",
+        "16 스테이지"
+      ],
+      "articleIds": [
+        "2439f041-6819-455a-8aa6-b17775140039"
+      ],
+      "reason": "승인됨: 전자음악 페스티벌 관련 소식에 해당합니다.",
+      "commonEntities": [
+        "Tomorrowland"
+      ],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "Aaron Hibell, Tomorrowland 2026에서의 공연 및 인터뷰",
+      "keywords": [
+        "Aaron Hibell",
+        "Tomorrowland 2026",
+        "데뷔 앨범",
+        "인터뷰",
+        "EDMTunes"
+      ],
+      "articleIds": [
+        "eee21e05-70b5-402b-bf6e-716c1c3cb599"
+      ],
+      "reason": "승인됨: 전자음악 아티스트 관련 소식에 해당합니다.",
+      "commonEntities": [
+        "Tomorrowland"
+      ],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "Carl Cox 1996년 포르투갈 공연 사진 공개",
       "keywords": [
         "Carl Cox",
-        "포르투갈",
-        "레코드",
-        "USB"
+        "DJing",
+        "Vintage Photo",
+        "Analog Records"
       ],
       "articleIds": [
         "d05fa571-c04f-4dd6-8bbf-cfc1b4150b3a"
       ],
-      "reason": "Carl Cox가 1996년 포르투갈에서의 공연 사진을 공개한 것으로, 전자음악 아티스트의 역사적 소식과 관련이 있습니다.",
+      "reason": "전자음악 아티스트의 과거 공연 관련 소식으로 승인됨.",
       "commonEntities": [
         "Carl Cox"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Electronic Groove, 베네수엘라 구호 컴필레이션 발매",
+      "topic": "Above & Beyond, 25주년 기념 Apple Music 미싱 'One Mix' 공개",
+      "keywords": [
+        "Above & Beyond",
+        "Apple Music",
+        "One Mix",
+        "25th Anniversary",
+        "Spatial Audio"
+      ],
+      "articleIds": [
+        "c7ccf53d-22c7-4495-991c-98a8bf88be9e"
+      ],
+      "reason": "전자음악 아티스트의 릴리즈 및 이벤트 소식으로 승인됨.",
+      "commonEntities": [
+        "Above & Beyond"
+      ],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "Escape Halloween 2026 라인업 발표",
+      "keywords": [
+        "Escape Halloween",
+        "2026 Lineup",
+        "Insomniac Events",
+        "NOS Events Center",
+        "Halloween Festival"
+      ],
+      "articleIds": [
+        "3b9aa1d7-635d-4277-9e11-ce0455491dd6"
+      ],
+      "reason": "전자음악 페스티벌 관련 소식으로 승인됨.",
+      "commonEntities": [
+        "HARD Summer"
+      ],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "Electronic Groove, 베네수엘라 구호 앨범 'Electronic Groove for Venezuela' 발표",
       "keywords": [
         "Electronic Groove",
-        "베네수엘라",
-        "구호 컴필레이션",
+        "Charity Compilation",
+        "Venezuela Relief",
         "Nick Warren",
         "Danny Howells"
       ],
       "articleIds": [
         "4cab2fae-7c07-4370-a188-24eaaa281671"
       ],
-      "reason": "Electronic Groove가 베네수엘라 구호를 위한 컴필레이션을 발매한 것으로, 전자음악 씬과 관련된 소식입니다.",
+      "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
       "commonEntities": [
-        "Nick Warren"
+        "Nick Warren",
+        "Hernán Cattáneo"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Paco Wegmann, “Mais Forte” 발표 및 Loco Dice의 SB Recordings와 협업",
+      "topic": "Australia’s Beyond The Valley 2026 라인업 발표",
+      "keywords": [
+        "Beyond The Valley",
+        "2026 Lineup",
+        "KI/KI",
+        "Boys Noize",
+        "Skepta"
+      ],
+      "articleIds": [
+        "b0ed8ca6-42ae-4ae6-8679-df3375870e4c"
+      ],
+      "reason": "전자음악 페스티벌 관련 소식으로 승인됨.",
+      "commonEntities": [
+        "Maceo Plex",
+        "Black Coffee",
+        "Loco Dice",
+        "Dixon",
+        "Indira Paganotto"
+      ],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "Paco Wegmann, “Mais Forte” 릴리즈 및 Loco Dice SB Recordings와 협업",
       "keywords": [
         "Paco Wegmann",
         "Mais Forte",
         "Loco Dice",
         "SB Recordings",
-        "Rincon Sapiencia"
+        "Brazilian Vocalist"
       ],
       "articleIds": [
         "997a3e8d-9b22-4fbc-9305-8de90f50deb7"
       ],
-      "reason": "Paco Wegmann이 “Mais Forte”를 발표하고 Loco Dice의 SB Recordings과 협업한 것으로, 전자음악 씬과 관련된 소식입니다.",
+      "reason": "전자음악 아티스트의 릴리즈 소식으로 승인됨.",
       "commonEntities": [
         "Loco Dice"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Eliza Rose & Sega Bodega, 새 싱글 'Kite' 발표",
+      "topic": "Eliza Rose & Sega Bodega, 신곡 'Kite' 발표",
       "keywords": [
         "Eliza Rose",
         "Sega Bodega",
         "Kite",
-        "bashment",
+        "Bashment",
         "Carnival"
       ],
       "articleIds": [
         "bfff6140-0da4-4d38-b518-d660995a6844"
       ],
-      "reason": "Eliza Rose와 Sega Bodega가 새 싱글 'Kite'를 발표한 것으로, 전자음악 씬과 관련된 소식입니다.",
+      "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
       "commonEntities": [
         "Eliza Rose"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Cyprus KAMAYA 페스티벌 라인업 공개",
+      "topic": "키프로스 KAMAYA 페스티벌, 디슨, Mind Against 등 출연 확정",
       "keywords": [
-        "KAMAYA Festival",
+        "KAMAYA 페스티벌",
+        "키프로스",
         "Dixon",
-        "Mind Against"
+        "Mind Against",
+        "전자음악"
       ],
       "articleIds": [
         "5540884f-8038-4ef5-bf27-28747fbfbb14"
       ],
-      "reason": "KAMAYA 페스티벌의 첫 번째 라인업 공개 및 전자음악 플랫폼 관련 기사로 단독 클러스터.",
+      "reason": "승인됨: 전자음악 페스티벌 관련 소식에 해당합니다.",
       "commonEntities": [
         "Dixon",
         "Mind Against"
@@ -5990,58 +6391,98 @@
       "cohesionScore": 0
     },
     {
-      "topic": "Maceo Plex, Kavinsky의 'Nightcall' 리믹스 무료 다운로드",
+      "topic": "Maceo Plex, Kavinsky의 'Nightcall' 리믹스 무료 공개",
       "keywords": [
         "Maceo Plex",
         "Kavinsky",
         "Nightcall",
-        "remix",
-        "free download"
+        "리믹스",
+        "프리 다운로드"
       ],
       "articleIds": [
         "35047bce-64c4-4d8b-bbaa-31c53631d57f"
       ],
-      "reason": "Maceo Plex의 Kavinsky 'Nightcall' 리믹스 무료 제공 관련 기사로 단독 클러스터.",
+      "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
       "commonEntities": [
         "Maceo Plex"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Eastern Electrics 2026 라인업 공개",
+      "topic": "Eastern Electrics, East End Dubs, Joseph Capriati 등 참여하는 2026년 행사 공개",
       "keywords": [
         "Eastern Electrics",
         "East End Dubs",
-        "Joseph Capriati"
+        "Joseph Capriati",
+        "Burgess Park",
+        "전자음악"
       ],
       "articleIds": [
         "ccc5b5c6-781c-4f10-9faa-46b57417b4e2"
       ],
-      "reason": "Eastern Electrics 2026의 라인업 공개 관련 기사로 단독 클러스터.",
+      "reason": "승인됨: 전자음악 페스티벌 관련 소식에 해당합니다.",
       "commonEntities": [
         "Joseph Capriati"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "fabric 27주년 라인업 공개",
+      "topic": "fabric, 27주년 기념 이벤트 라인업 발표",
       "keywords": [
         "fabric",
-        "27th birthday",
+        "27주년",
         "Ricardo Villalobos",
-        "Zip"
+        "Zip",
+        "Vlada"
       ],
       "articleIds": [
         "ac03829d-cbcf-4cd1-abf0-a9140aeb1c57"
       ],
-      "reason": "fabric의 27주년 라인업 공개 관련 기사로 단독 클러스터.",
+      "reason": "승인됨: 전자음악 페스티벌 관련 소식에 해당합니다.",
       "commonEntities": [
-        "Ricardo Villalobos"
+        "Ricardo Villalobos",
+        "fabric"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Deadcrow & Caster, 'Euphoria' 발매",
+      "topic": "Function의 'Aeternum (Existenz)' 앨범 발표",
+      "keywords": [
+        "Function",
+        "Tresor Records",
+        "Mini Album",
+        "Aeternum"
+      ],
+      "articleIds": [
+        "aa53f947-d07c-4281-90a6-adeeae48cd59"
+      ],
+      "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
+      "commonEntities": [
+        "Tresor"
+      ],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "Pittsburgh Modular 신규 합성기 'Lifeforms SV-2' 공개",
+      "keywords": [
+        "Pittsburgh Modular",
+        "Lifeforms SV-2",
+        "Analog Synthesizer",
+        "Eurorack",
+        "Semi-Modular"
+      ],
+      "articleIds": [
+        "ef7a3c58-fdc4-489a-898d-1f888df2dbcc"
+      ],
+      "reason": "전자음악 장비 관련 소식으로 승인됨.",
+      "commonEntities": [
+        "LIV Nightclub",
+        "Ableton"
+      ],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "Deadcrow & Caster, NIGHTMODE 레이블 통해 신곡 'Euphoria' 발표",
       "keywords": [
         "Deadcrow",
         "Caster",
@@ -6052,246 +6493,220 @@
       "articleIds": [
         "405af67d-3614-4665-83f8-2c45ffea4a17"
       ],
-      "reason": "Deadcrow와 Caster가 'Euphoria'를 발매한 것으로, 전자음악 씬과 관련된 소식입니다.",
+      "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
       "commonEntities": [
         "Deadcrow"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Kashovski와 Moojo의 'Show Me' 콜라보레이션 릴리스",
+      "topic": "Christian Hornbostel, Magnetic Magazine Recordings 통해 신곡 'Eridanus' 발표",
+      "keywords": [
+        "Christian Hornbostel",
+        "Eridanus",
+        "Magnetic Magazine",
+        "Spatial Audio",
+        "Electronic Music"
+      ],
+      "articleIds": [
+        "e2aeaf6a-1e05-4163-a491-b6efb2570759"
+      ],
+      "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
+      "commonEntities": [
+        "Christian Hornbostel"
+      ],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "Kashovski와 Moojo의 'Show Me' 콜라보레이션 발매",
       "keywords": [
         "Kashovski",
         "Moojo",
-        "Show Me",
-        "collaboration"
+        "Calamar Records",
+        "싱글"
       ],
       "articleIds": [
         "c070c29a-55f9-46be-9e48-2086cef9bccc"
       ],
-      "reason": "Kashovski와 Moojo의 첫 번째 콜라보레이션 'Show Me' 릴리스 관련 기사로 단독 클러스터.",
+      "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
       "commonEntities": [
         "Moojo"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Giom의 2000년대 하우스 클래식 릴리스",
+      "topic": "Giom의 2000년대 하우스 음악 클래식 컬렉션 발표",
       "keywords": [
         "Giom",
-        "house classics",
+        "하우스",
         "Supremus Records",
-        "2000s",
-        "remix"
+        "리믹스"
       ],
       "articleIds": [
         "9a7d7875-1a18-4298-9976-b36c720be8e0"
       ],
-      "reason": "Giom의 2000년대 하우스 클래식 릴리스 관련 기사로 단독 클러스터.",
+      "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
       "commonEntities": [
         "Giom"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Maribou State, 새 앨범 'Hallucinating Love' 발매",
+      "topic": "Mount Kimbie, fabric presents 컴필레이션 발표",
+      "keywords": [
+        "Mount Kimbie",
+        "fabric presents",
+        "Monroe",
+        "Jomox",
+        "컴필레이션"
+      ],
+      "articleIds": [
+        "0b481d88-a706-4a7f-8949-0a35f6ddc498"
+      ],
+      "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
+      "commonEntities": [
+        "fabric"
+      ],
+      "cohesionScore": 0
+    },
+    {
+      "topic": "Maribou State, Ninja Tune 레이블 통해 새 앨범 'Hallucinating Love' 발표",
       "keywords": [
         "Maribou State",
         "Ninja Tune",
-        "Hallucinating Love",
         "Deluxe Edition",
-        "2026년 8월 21일"
+        "Hallucinating Love",
+        "Electronic"
       ],
       "articleIds": [
         "7b68f9bf-cda9-4d4c-8074-a1972f1b006a"
       ],
-      "reason": "Maribou State의 새 앨범 'Hallucinating Love' 발매 소식으로, 전자음악 씬과 직접적으로 관련된 내용입니다.",
+      "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
       "commonEntities": [
         "Ninja Tune"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "El Tony, Ibiza에서 프로듀서 아카데미 운영",
+      "topic": "Meta AI 글라스, DJ 공연 영상 촬영 가능성 분석",
       "keywords": [
-        "El Tony",
-        "Ibiza",
-        "프로듀서 아카데미",
-        "Beatport",
-        "2026년 10월"
+        "Meta Glasses",
+        "DJing",
+        "POV Video",
+        "Beatport Tech",
+        "Social Media"
       ],
       "articleIds": [
-        "aa270acb-cde1-487e-851f-37f0bb6a0555"
+        "f1daca30-4a35-426e-85c4-45674714c79e"
       ],
-      "reason": "El Tony가 Ibiza에서 프로듀서 아카데미를 운영하는 것으로, 전자음악 씬과 관련된 교육 프로그램 소식입니다.",
+      "reason": "전자음악 관련 기술 및 장비 소식으로 승인됨.",
       "commonEntities": [
         "Beatport"
       ],
       "cohesionScore": 0
     },
     {
-      "topic": "Roland JD-990 소프트웨어 에뮬레이터 JADE 개발",
+      "topic": "El Tony, Ibiza에서의 프로듀서 아카데미 프로그램 발표",
       "keywords": [
-        "Roland",
-        "JD-990",
-        "JADE",
-        "software emulator",
-        "The Usual Suspects"
+        "El Tony",
+        "Producer Academy",
+        "Ibiza",
+        "Beatport",
+        "Electronic Music Producers"
       ],
       "articleIds": [
-        "adf80d1b-5c21-4378-b180-be96bacc8b02"
+        "aa270acb-cde1-487e-851f-37f0bb6a0555"
       ],
-      "reason": "Roland JD-990의 JADE 소프트웨어 에뮬레이터 개발 관련 기사로 단독 클러스터.",
+      "reason": "전자음악 교육 및 이벤트 관련 소식으로 승인됨.",
       "commonEntities": [
-        "Roland"
+        "Beatport"
       ],
-      "cohesionScore": 0
-    },
-    {
-      "topic": "Roland GO:KEYS 3 Minion 키보드 출시",
-      "keywords": [
-        "Roland",
-        "GO:KEYS 3",
-        "Minion",
-        "키보드",
-        "2026년 9월"
-      ],
-      "articleIds": [
-        "70e0dd77-62b7-4959-b31c-9de70493b809"
-      ],
-      "reason": "전자음악 장비 관련 제품 출시 소식으로 전자음악 씬과 연결됨.",
-      "commonEntities": [
-        "Roland"
-      ],
-      "cohesionScore": 0
-    },
-    {
-      "topic": "Function의 'Aeternum (Existenz)' 미니 앨범 발매",
-      "keywords": [
-        "Function",
-        "Tresor Records",
-        "미니 앨범",
-        "Aeternum (Existenz)"
-      ],
-      "articleIds": [
-        "aa53f947-d07c-4281-90a6-adeeae48cd59"
-      ],
-      "reason": "전자음악 아티스트 Function의 신규 미니 앨범 발매 소식으로, 전자음악 씬과 직접적으로 관련된 내용입니다.",
-      "commonEntities": [],
-      "cohesionScore": 0
-    },
-    {
-      "topic": "Pittsburgh Modular Lifeforms SV-2 신제품 공개",
-      "keywords": [
-        "Pittsburgh Modular",
-        "Lifeforms SV-2",
-        "아날로그 신디사이저",
-        "Eurorack",
-        "Ableton Live"
-      ],
-      "articleIds": [
-        "ef7a3c58-fdc4-489a-898d-1f888df2dbcc"
-      ],
-      "reason": "Pittsburgh Modular의 새로운 아날로그 신디사이저 Lifeforms SV-2가 공개된 것으로, 전자음악 장비와 관련된 내용입니다.",
-      "commonEntities": [],
-      "cohesionScore": 0
-    },
-    {
-      "topic": "Escape Halloween 2026 라인업 발표",
-      "keywords": [
-        "Escape Halloween",
-        "Insomniac Events",
-        "NOS Events Center",
-        "Halloween"
-      ],
-      "articleIds": [
-        "3b9aa1d7-635d-4277-9e11-ce0455491dd6"
-      ],
-      "reason": "Escape Halloween 2026의 라인업이 발표된 것으로, 전자음악 페스티벌과 관련된 기사입니다.",
-      "commonEntities": [],
-      "cohesionScore": 0
-    },
-    {
-      "topic": "Meta AI 글라스, DJ 공연 영상 촬영 가능성 분석",
-      "keywords": [
-        "Meta AI 글라스",
-        "DJing",
-        "POV 영상",
-        "Beatport Tech",
-        "Mojaxx"
-      ],
-      "articleIds": [
-        "f1daca30-4a35-426e-85c4-45674714c79e"
-      ],
-      "reason": "Meta AI 글라스가 DJ 공연 영상 촬영에 활용될 수 있는지 분석한 것으로, 전자음악 관련 기술 소식입니다.",
-      "commonEntities": [],
-      "cohesionScore": 0
-    },
-    {
-      "topic": "Beyond The Valley 2026 라인업 발표",
-      "keywords": [
-        "Beyond The Valley",
-        "KI/KI",
-        "Boys Noize",
-        "Skepta"
-      ],
-      "articleIds": [
-        "b0ed8ca6-42ae-4ae6-8679-df3375870e4c"
-      ],
-      "reason": "Beyond The Valley 2026의 라인업이 발표된 것으로, 전자음악 페스티벌과 관련된 기사입니다.",
-      "commonEntities": [],
-      "cohesionScore": 0
-    },
-    {
-      "topic": "David Penn의 전자음악 커리어와 ‘Big Love’ 릴리스",
-      "keywords": [
-        "David Penn",
-        "Spanish house",
-        "Big Love",
-        "Defected",
-        "career"
-      ],
-      "articleIds": [
-        "4e0b2892-c472-40c3-90c1-2887bd3c835b"
-      ],
-      "reason": "David Penn의 커리어와 관련된 기사로 단독 클러스터.",
-      "commonEntities": [],
-      "cohesionScore": 0
-    },
-    {
-      "topic": "Mount Kimbie, fabric presents Compilation 릴리스",
-      "keywords": [
-        "Mount Kimbie",
-        "fabric presents",
-        "Compilation",
-        "electronic duo",
-        "Phonica Records"
-      ],
-      "articleIds": [
-        "0b481d88-a706-4a7f-8949-0a35f6ddc498"
-      ],
-      "reason": "Mount Kimbie의 fabric presents Compilation 릴리스 관련 기사로 단독 클러스터.",
-      "commonEntities": [],
       "cohesionScore": 0
     }
   ],
   "duplicateFiltering": [],
   "saveableSuggestions": [
     {
-      "topic": "Fred again.. & LATIN MAFIA 공동 믹스테이프 '9 months & 50 hours' 발매",
+      "topic": "헝가리 Ozora 페스티벌, 2명의 참가자 사망으로 조기 종료",
+      "keywords": [
+        "Ozora 페스티벌",
+        "헝가리",
+        "Psychedelic",
+        "조기 종료",
+        "사망",
+        "Psytrance"
+      ],
+      "articleIds": [
+        "291bd1c4-8919-40a4-91de-e32408755beb",
+        "2225d129-ec8f-445b-b110-f384c4ba4381",
+        "b3fd0782-d645-40fe-b093-ff24850e74a1"
+      ],
+      "reason": "승인됨: 전자음악 페스티벌 관련 사고에 해당합니다.",
+      "commonEntities": [
+        "O.Z.O.R.A. Festival"
+      ],
+      "cohesionScore": 92,
+      "articles": [
+        {
+          "id": "291bd1c4-8919-40a4-91de-e32408755beb",
+          "title": "This Music Festival Was Abruptly Cancelled After Two Deaths"
+        },
+        {
+          "id": "2225d129-ec8f-445b-b110-f384c4ba4381",
+          "title": "Two attendees die at Hungary's Ozora Festival, event ends early"
+        },
+        {
+          "id": "b3fd0782-d645-40fe-b093-ff24850e74a1",
+          "title": "Nach zwei Todesfällen: Ungarisches Psytrance-Festival vorzeitig beendet"
+        }
+      ]
+    },
+    {
+      "topic": "Kaskade, 'ORIGIN// Tour' 발표 및 Coachella 무대 연출 포함",
+      "keywords": [
+        "Kaskade",
+        "ORIGIN// Tour",
+        "Coachella Stage Production",
+        "Miami",
+        "New York",
+        "ORIGIN //"
+      ],
+      "articleIds": [
+        "a3c3e958-48cb-45b3-831e-764c37537b65",
+        "37df4ffc-1996-419b-926b-ebd9d7037724"
+      ],
+      "reason": "전자음악 아티스트의 투어 및 이벤트 소식으로 승인됨.",
+      "commonEntities": [
+        "Kaskade",
+        "Coachella"
+      ],
+      "cohesionScore": 88,
+      "articles": [
+        {
+          "id": "a3c3e958-48cb-45b3-831e-764c37537b65",
+          "title": "Kaskade Announces ORIGIN// Tour Featuring The Acclaimed Coachella Stage Production"
+        },
+        {
+          "id": "37df4ffc-1996-419b-926b-ebd9d7037724",
+          "title": "Kaskade To Bring Immersive ‘ORIGIN //’ Live Show To Four U.S. Cities This Fall"
+        }
+      ]
+    },
+    {
+      "topic": "Fred again.. & LATIN MAFIA 협업 미니앨범 '9 months & 50 hours' 발표",
       "keywords": [
         "Fred again..",
         "LATIN MAFIA",
+        "Mixtape",
+        "Mexico City",
         "믹스테이프",
-        "9 months & 50 hours",
-        "mixtape",
-        "Mexico City"
+        "fabric"
       ],
       "articleIds": [
         "0b59de4a-9627-4965-9010-71aa0a042589",
         "44dad22b-390c-47da-9ffd-64b91eb4a9c8"
       ],
-      "reason": "Fred again..과 LATIN MAFIA의 공동 믹스테이프 발매 소식으로, 전자음악 씬과 직접적으로 관련된 내용입니다.",
+      "reason": "전자음악 아티스트의 협업 릴리즈 소식으로 승인됨.",
       "commonEntities": [
         "Fred again.."
       ],
@@ -6308,49 +6723,20 @@
       ]
     },
     {
-      "topic": "Kaskade, ORIGIN// 투어 발표",
-      "keywords": [
-        "Kaskade",
-        "ORIGIN// 투어",
-        "Coachella",
-        "Miami",
-        "New York",
-        "ORIGIN //"
-      ],
-      "articleIds": [
-        "a3c3e958-48cb-45b3-831e-764c37537b65",
-        "37df4ffc-1996-419b-926b-ebd9d7037724"
-      ],
-      "reason": "Kaskade가 ORIGIN// 투어를 발표한 것으로, 전자음악 씬과 직접적으로 관련된 내용입니다.",
-      "commonEntities": [
-        "Kaskade"
-      ],
-      "cohesionScore": 88,
-      "articles": [
-        {
-          "id": "a3c3e958-48cb-45b3-831e-764c37537b65",
-          "title": "Kaskade Announces ORIGIN// Tour Featuring The Acclaimed Coachella Stage Production"
-        },
-        {
-          "id": "37df4ffc-1996-419b-926b-ebd9d7037724",
-          "title": "Kaskade To Bring Immersive ‘ORIGIN //’ Live Show To Four U.S. Cities This Fall"
-        }
-      ]
-    },
-    {
-      "topic": "Vintage Culture, Nariman, rhys from the sticks의 'Think Too Much' 릴리스",
+      "topic": "Vintage Culture, Nariman 및 rhys from the sticks와 'Think Too Much' 콜라보레이션 발매",
       "keywords": [
         "Vintage Culture",
         "Nariman",
         "rhys from the sticks",
-        "Think Too Much",
-        "Tech House"
+        "Tech House",
+        "Affairs Music",
+        "Think Too Much"
       ],
       "articleIds": [
         "ebf9cabf-804b-43c4-b438-11b0ff45b6c0",
         "3edb458c-852c-4f3e-baba-e8478b1d1a8f"
       ],
-      "reason": "Vintage Culture의 신곡 'Think Too Much' 릴리스 및 관련 정보를 다룬 기사로 묶음 가능.",
+      "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
       "commonEntities": [
         "Vintage Culture"
       ],
@@ -6367,134 +6753,45 @@
       ]
     },
     {
-      "topic": "Above & Beyond, 25주년 기념 'One Mix' 공개",
-      "keywords": [
-        "Above & Beyond",
-        "Apple Music",
-        "One Mix",
-        "Spatial Audio",
-        "25주년",
-        "Christian Hornbostel"
-      ],
-      "articleIds": [
-        "c7ccf53d-22c7-4495-991c-98a8bf88be9e",
-        "cbad5af5-65c5-40ea-a243-6b4f2b885bc9",
-        "e2aeaf6a-1e05-4163-a491-b6efb2570759"
-      ],
-      "reason": "Above & Beyond의 25주년 기념 DJ 믹스 'One Mix'가 Apple Music에서 공개된 것으로, 전자음악 씬과 직접적으로 관련된 내용입니다.",
-      "commonEntities": [],
-      "cohesionScore": 65,
-      "articles": [
-        {
-          "id": "c7ccf53d-22c7-4495-991c-98a8bf88be9e",
-          "title": "Above & Beyond、結成25周年記念ミックス「One Mix」をApple Musicで公開"
-        },
-        {
-          "id": "cbad5af5-65c5-40ea-a243-6b4f2b885bc9",
-          "title": "Above & Beyond celebrate 25 years with career-spanning One Mix on Apple Music in Spatial Audio"
-        },
-        {
-          "id": "e2aeaf6a-1e05-4163-a491-b6efb2570759",
-          "title": "PREMIERE: Christian Hornbostel Brings “Eridanus” to Magnetic"
-        }
-      ]
-    },
-    {
-      "topic": "Tomorrowland 2026 공연 영상 공개",
+      "topic": "Tomorrowland 2026 주요 무대 공연 영상 공개",
       "keywords": [
         "Tomorrowland 2026",
         "Martin Garrix",
         "Hardwell",
-        "Sara Landry"
+        "Mainstage"
       ],
       "articleIds": [
-        "a7c024a1-7611-4c83-8f40-533334ba7eb2",
-        "330b30e4-0b10-45f5-8c46-13ad6a376b19"
+        "a7c024a1-7611-4c83-8f40-533334ba7eb2"
       ],
-      "reason": "Tomorrowland 2026의 공식 메인스테이지 및 스테이지 세트 영상이 공개된 것으로, 전자음악 페스티벌과 관련된 기사입니다.",
-      "commonEntities": [],
-      "cohesionScore": 48,
+      "reason": "전자음악 페스티벌 관련 공연 소식으로 승인됨.",
+      "commonEntities": [
+        "Martin Garrix",
+        "Hardwell",
+        "Charlotte de Witte",
+        "Sara Landry",
+        "Tomorrowland"
+      ],
+      "cohesionScore": 0,
       "articles": [
         {
           "id": "a7c024a1-7611-4c83-8f40-533334ba7eb2",
           "title": "Watch Tomorrowland 2026 sets from Martin Garrix, Hardwell, Charlotte de Witte, Sara Landry and more"
-        },
-        {
-          "id": "330b30e4-0b10-45f5-8c46-13ad6a376b19",
-          "title": "Lukaku, De Bruyne & More Join Dimitri Vegas During Tomorrowland and Ushuaïa Ibiza Sets"
         }
       ]
     },
     {
-      "topic": "Ozora 페스티벌, 두 명의 참가자 사망으로 조기 종료",
-      "keywords": [
-        "Ozora Festival",
-        "Hungary",
-        "Psytrance",
-        "tragedy",
-        "early closure"
-      ],
-      "articleIds": [
-        "2225d129-ec8f-445b-b110-f384c4ba4381",
-        "b3fd0782-d645-40fe-b093-ff24850e74a1",
-        "291bd1c4-8919-40a4-91de-e32408755beb"
-      ],
-      "reason": "Ozora 페스티벌의 조기 종료와 관련된 여러 언론 보도로 묶음 가능.",
-      "commonEntities": [],
-      "cohesionScore": 33,
-      "articles": [
-        {
-          "id": "2225d129-ec8f-445b-b110-f384c4ba4381",
-          "title": "Two attendees die at Hungary's Ozora Festival, event ends early"
-        },
-        {
-          "id": "b3fd0782-d645-40fe-b093-ff24850e74a1",
-          "title": "Nach zwei Todesfällen: Ungarisches Psytrance-Festival vorzeitig beendet"
-        },
-        {
-          "id": "291bd1c4-8919-40a4-91de-e32408755beb",
-          "title": "This Music Festival Was Abruptly Cancelled After Two Deaths"
-        }
-      ]
-    },
-    {
-      "topic": "Tomorrowland 2026 공식 애프터무비 공개",
-      "keywords": [
-        "Tomorrowland",
-        "aftermovie",
-        "official"
-      ],
-      "articleIds": [
-        "5482179c-27e2-41bf-9e58-1a176092b2a2",
-        "eee21e05-70b5-402b-bf6e-716c1c3cb599"
-      ],
-      "reason": "Tomorrowland 2026의 공식 애프터무비 공개 및 Aaron Hibell의 인터뷰와 관련된 기사로 묶음 가능.",
-      "commonEntities": [],
-      "cohesionScore": 21,
-      "articles": [
-        {
-          "id": "5482179c-27e2-41bf-9e58-1a176092b2a2",
-          "title": "Cale Anderson On Goddess Worship, Folktronica, And Yemaya"
-        },
-        {
-          "id": "eee21e05-70b5-402b-bf6e-716c1c3cb599",
-          "title": "EDMTunes Chats with Aaron Hibell at Tomorrowland 2026"
-        }
-      ]
-    },
-    {
-      "topic": "Alan Walker, 'Pain' Fatal Fury: City of the Wolves 사운드트랙 참여",
+      "topic": "Alan Walker, 'Fatal Fury: City of the Wolves' 사운드트랙 참여",
       "keywords": [
         "Alan Walker",
-        "Fatal Fury: City of the Wolves",
-        "Pain",
-        "Norwegian producer",
-        "soundtrack"
+        "Fatal Fury",
+        "Soundtrack",
+        "City of the Wolves",
+        "Norwegian Producer"
       ],
       "articleIds": [
         "21193649-1a1e-4e95-8ead-3713075f471e"
       ],
-      "reason": "Alan Walker가 'Pain'을 Fatal Fury: City of the Wolves 사운드트랙에 참여한 것으로, 전자음악 씬과 관련된 소식입니다.",
+      "reason": "전자음악 아티스트의 릴리즈 소식으로 승인됨.",
       "commonEntities": [
         "Alan Walker"
       ],
@@ -6507,17 +6804,89 @@
       ]
     },
     {
-      "topic": "Carl Cox의 1996년 포르투갈 공연 사진 공개",
+      "topic": "Dimitri Vegas, Tomorrowland 및 Ushuaïa Ibiza 공연에 축구 선수 참여",
+      "keywords": [
+        "Dimitri Vegas",
+        "Tomorrowland",
+        "Ushuaïa Ibiza",
+        "Lukaku"
+      ],
+      "articleIds": [
+        "330b30e4-0b10-45f5-8c46-13ad6a376b19"
+      ],
+      "reason": "전자음악 페스티벌 관련 소식으로 승인됨.",
+      "commonEntities": [
+        "Tomorrowland",
+        "Ushuaïa Ibiza"
+      ],
+      "cohesionScore": 0,
+      "articles": [
+        {
+          "id": "330b30e4-0b10-45f5-8c46-13ad6a376b19",
+          "title": "Lukaku, De Bruyne & More Join Dimitri Vegas During Tomorrowland and Ushuaïa Ibiza Sets"
+        }
+      ]
+    },
+    {
+      "topic": "Tomorrowland 2026 공식 애프터무비 공개",
+      "keywords": [
+        "Tomorrowland 2026",
+        "공식 애프터무비",
+        "Boom, Belgium",
+        "500 아티스트",
+        "16 스테이지"
+      ],
+      "articleIds": [
+        "2439f041-6819-455a-8aa6-b17775140039"
+      ],
+      "reason": "승인됨: 전자음악 페스티벌 관련 소식에 해당합니다.",
+      "commonEntities": [
+        "Tomorrowland"
+      ],
+      "cohesionScore": 0,
+      "articles": [
+        {
+          "id": "2439f041-6819-455a-8aa6-b17775140039",
+          "title": "Watch the Tomorrowland 2026 official aftermovie"
+        }
+      ]
+    },
+    {
+      "topic": "Aaron Hibell, Tomorrowland 2026에서의 공연 및 인터뷰",
+      "keywords": [
+        "Aaron Hibell",
+        "Tomorrowland 2026",
+        "데뷔 앨범",
+        "인터뷰",
+        "EDMTunes"
+      ],
+      "articleIds": [
+        "eee21e05-70b5-402b-bf6e-716c1c3cb599"
+      ],
+      "reason": "승인됨: 전자음악 아티스트 관련 소식에 해당합니다.",
+      "commonEntities": [
+        "Tomorrowland"
+      ],
+      "cohesionScore": 0,
+      "articles": [
+        {
+          "id": "eee21e05-70b5-402b-bf6e-716c1c3cb599",
+          "title": "EDMTunes Chats with Aaron Hibell at Tomorrowland 2026"
+        }
+      ]
+    },
+    {
+      "topic": "Carl Cox 1996년 포르투갈 공연 사진 공개",
       "keywords": [
         "Carl Cox",
-        "포르투갈",
-        "레코드",
-        "USB"
+        "DJing",
+        "Vintage Photo",
+        "Analog Records"
       ],
       "articleIds": [
         "d05fa571-c04f-4dd6-8bbf-cfc1b4150b3a"
       ],
-      "reason": "Carl Cox가 1996년 포르투갈에서의 공연 사진을 공개한 것으로, 전자음악 아티스트의 역사적 소식과 관련이 있습니다.",
+      "reason": "전자음악 아티스트의 과거 공연 관련 소식으로 승인됨.",
       "commonEntities": [
         "Carl Cox"
       ],
@@ -6530,20 +6899,69 @@
       ]
     },
     {
-      "topic": "Electronic Groove, 베네수엘라 구호 컴필레이션 발매",
+      "topic": "Above & Beyond, 25주년 기념 Apple Music 미싱 'One Mix' 공개",
+      "keywords": [
+        "Above & Beyond",
+        "Apple Music",
+        "One Mix",
+        "25th Anniversary",
+        "Spatial Audio"
+      ],
+      "articleIds": [
+        "c7ccf53d-22c7-4495-991c-98a8bf88be9e"
+      ],
+      "reason": "전자음악 아티스트의 릴리즈 및 이벤트 소식으로 승인됨.",
+      "commonEntities": [
+        "Above & Beyond"
+      ],
+      "cohesionScore": 0,
+      "articles": [
+        {
+          "id": "c7ccf53d-22c7-4495-991c-98a8bf88be9e",
+          "title": "Above & Beyond、結成25周年記念ミックス「One Mix」をApple Musicで公開"
+        }
+      ]
+    },
+    {
+      "topic": "Escape Halloween 2026 라인업 발표",
+      "keywords": [
+        "Escape Halloween",
+        "2026 Lineup",
+        "Insomniac Events",
+        "NOS Events Center",
+        "Halloween Festival"
+      ],
+      "articleIds": [
+        "3b9aa1d7-635d-4277-9e11-ce0455491dd6"
+      ],
+      "reason": "전자음악 페스티벌 관련 소식으로 승인됨.",
+      "commonEntities": [
+        "HARD Summer"
+      ],
+      "cohesionScore": 0,
+      "articles": [
+        {
+          "id": "3b9aa1d7-635d-4277-9e11-ce0455491dd6",
+          "title": "Escape Halloween Confirms Full 2026 Lineup"
+        }
+      ]
+    },
+    {
+      "topic": "Electronic Groove, 베네수엘라 구호 앨범 'Electronic Groove for Venezuela' 발표",
       "keywords": [
         "Electronic Groove",
-        "베네수엘라",
-        "구호 컴필레이션",
+        "Charity Compilation",
+        "Venezuela Relief",
         "Nick Warren",
         "Danny Howells"
       ],
       "articleIds": [
         "4cab2fae-7c07-4370-a188-24eaaa281671"
       ],
-      "reason": "Electronic Groove가 베네수엘라 구호를 위한 컴필레이션을 발매한 것으로, 전자음악 씬과 관련된 소식입니다.",
+      "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
       "commonEntities": [
-        "Nick Warren"
+        "Nick Warren",
+        "Hernán Cattáneo"
       ],
       "cohesionScore": 0,
       "articles": [
@@ -6554,18 +6972,46 @@
       ]
     },
     {
-      "topic": "Paco Wegmann, “Mais Forte” 발표 및 Loco Dice의 SB Recordings와 협업",
+      "topic": "Australia’s Beyond The Valley 2026 라인업 발표",
+      "keywords": [
+        "Beyond The Valley",
+        "2026 Lineup",
+        "KI/KI",
+        "Boys Noize",
+        "Skepta"
+      ],
+      "articleIds": [
+        "b0ed8ca6-42ae-4ae6-8679-df3375870e4c"
+      ],
+      "reason": "전자음악 페스티벌 관련 소식으로 승인됨.",
+      "commonEntities": [
+        "Maceo Plex",
+        "Black Coffee",
+        "Loco Dice",
+        "Dixon",
+        "Indira Paganotto"
+      ],
+      "cohesionScore": 0,
+      "articles": [
+        {
+          "id": "b0ed8ca6-42ae-4ae6-8679-df3375870e4c",
+          "title": "Australia’s Beyond The Valley drops 2026 lineup including KI/KI, Boys Noize, Skepta, & more"
+        }
+      ]
+    },
+    {
+      "topic": "Paco Wegmann, “Mais Forte” 릴리즈 및 Loco Dice SB Recordings와 협업",
       "keywords": [
         "Paco Wegmann",
         "Mais Forte",
         "Loco Dice",
         "SB Recordings",
-        "Rincon Sapiencia"
+        "Brazilian Vocalist"
       ],
       "articleIds": [
         "997a3e8d-9b22-4fbc-9305-8de90f50deb7"
       ],
-      "reason": "Paco Wegmann이 “Mais Forte”를 발표하고 Loco Dice의 SB Recordings과 협업한 것으로, 전자음악 씬과 관련된 소식입니다.",
+      "reason": "전자음악 아티스트의 릴리즈 소식으로 승인됨.",
       "commonEntities": [
         "Loco Dice"
       ],
@@ -6578,18 +7024,18 @@
       ]
     },
     {
-      "topic": "Eliza Rose & Sega Bodega, 새 싱글 'Kite' 발표",
+      "topic": "Eliza Rose & Sega Bodega, 신곡 'Kite' 발표",
       "keywords": [
         "Eliza Rose",
         "Sega Bodega",
         "Kite",
-        "bashment",
+        "Bashment",
         "Carnival"
       ],
       "articleIds": [
         "bfff6140-0da4-4d38-b518-d660995a6844"
       ],
-      "reason": "Eliza Rose와 Sega Bodega가 새 싱글 'Kite'를 발표한 것으로, 전자음악 씬과 관련된 소식입니다.",
+      "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
       "commonEntities": [
         "Eliza Rose"
       ],
@@ -6602,16 +7048,18 @@
       ]
     },
     {
-      "topic": "Cyprus KAMAYA 페스티벌 라인업 공개",
+      "topic": "키프로스 KAMAYA 페스티벌, 디슨, Mind Against 등 출연 확정",
       "keywords": [
-        "KAMAYA Festival",
+        "KAMAYA 페스티벌",
+        "키프로스",
         "Dixon",
-        "Mind Against"
+        "Mind Against",
+        "전자음악"
       ],
       "articleIds": [
         "5540884f-8038-4ef5-bf27-28747fbfbb14"
       ],
-      "reason": "KAMAYA 페스티벌의 첫 번째 라인업 공개 및 전자음악 플랫폼 관련 기사로 단독 클러스터.",
+      "reason": "승인됨: 전자음악 페스티벌 관련 소식에 해당합니다.",
       "commonEntities": [
         "Dixon",
         "Mind Against"
@@ -6625,18 +7073,18 @@
       ]
     },
     {
-      "topic": "Maceo Plex, Kavinsky의 'Nightcall' 리믹스 무료 다운로드",
+      "topic": "Maceo Plex, Kavinsky의 'Nightcall' 리믹스 무료 공개",
       "keywords": [
         "Maceo Plex",
         "Kavinsky",
         "Nightcall",
-        "remix",
-        "free download"
+        "리믹스",
+        "프리 다운로드"
       ],
       "articleIds": [
         "35047bce-64c4-4d8b-bbaa-31c53631d57f"
       ],
-      "reason": "Maceo Plex의 Kavinsky 'Nightcall' 리믹스 무료 제공 관련 기사로 단독 클러스터.",
+      "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
       "commonEntities": [
         "Maceo Plex"
       ],
@@ -6649,16 +7097,18 @@
       ]
     },
     {
-      "topic": "Eastern Electrics 2026 라인업 공개",
+      "topic": "Eastern Electrics, East End Dubs, Joseph Capriati 등 참여하는 2026년 행사 공개",
       "keywords": [
         "Eastern Electrics",
         "East End Dubs",
-        "Joseph Capriati"
+        "Joseph Capriati",
+        "Burgess Park",
+        "전자음악"
       ],
       "articleIds": [
         "ccc5b5c6-781c-4f10-9faa-46b57417b4e2"
       ],
-      "reason": "Eastern Electrics 2026의 라인업 공개 관련 기사로 단독 클러스터.",
+      "reason": "승인됨: 전자음악 페스티벌 관련 소식에 해당합니다.",
       "commonEntities": [
         "Joseph Capriati"
       ],
@@ -6671,19 +7121,21 @@
       ]
     },
     {
-      "topic": "fabric 27주년 라인업 공개",
+      "topic": "fabric, 27주년 기념 이벤트 라인업 발표",
       "keywords": [
         "fabric",
-        "27th birthday",
+        "27주년",
         "Ricardo Villalobos",
-        "Zip"
+        "Zip",
+        "Vlada"
       ],
       "articleIds": [
         "ac03829d-cbcf-4cd1-abf0-a9140aeb1c57"
       ],
-      "reason": "fabric의 27주년 라인업 공개 관련 기사로 단독 클러스터.",
+      "reason": "승인됨: 전자음악 페스티벌 관련 소식에 해당합니다.",
       "commonEntities": [
-        "Ricardo Villalobos"
+        "Ricardo Villalobos",
+        "fabric"
       ],
       "cohesionScore": 0,
       "articles": [
@@ -6694,7 +7146,55 @@
       ]
     },
     {
-      "topic": "Deadcrow & Caster, 'Euphoria' 발매",
+      "topic": "Function의 'Aeternum (Existenz)' 앨범 발표",
+      "keywords": [
+        "Function",
+        "Tresor Records",
+        "Mini Album",
+        "Aeternum"
+      ],
+      "articleIds": [
+        "aa53f947-d07c-4281-90a6-adeeae48cd59"
+      ],
+      "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
+      "commonEntities": [
+        "Tresor"
+      ],
+      "cohesionScore": 0,
+      "articles": [
+        {
+          "id": "aa53f947-d07c-4281-90a6-adeeae48cd59",
+          "title": "Function: Aeternum (Existenz) (Tresor Records)"
+        }
+      ]
+    },
+    {
+      "topic": "Pittsburgh Modular 신규 합성기 'Lifeforms SV-2' 공개",
+      "keywords": [
+        "Pittsburgh Modular",
+        "Lifeforms SV-2",
+        "Analog Synthesizer",
+        "Eurorack",
+        "Semi-Modular"
+      ],
+      "articleIds": [
+        "ef7a3c58-fdc4-489a-898d-1f888df2dbcc"
+      ],
+      "reason": "전자음악 장비 관련 소식으로 승인됨.",
+      "commonEntities": [
+        "LIV Nightclub",
+        "Ableton"
+      ],
+      "cohesionScore": 0,
+      "articles": [
+        {
+          "id": "ef7a3c58-fdc4-489a-898d-1f888df2dbcc",
+          "title": "Pittsburgh Modular Lifeforms SV-2 Sneak Preview"
+        }
+      ]
+    },
+    {
+      "topic": "Deadcrow & Caster, NIGHTMODE 레이블 통해 신곡 'Euphoria' 발표",
       "keywords": [
         "Deadcrow",
         "Caster",
@@ -6705,7 +7205,7 @@
       "articleIds": [
         "405af67d-3614-4665-83f8-2c45ffea4a17"
       ],
-      "reason": "Deadcrow와 Caster가 'Euphoria'를 발매한 것으로, 전자음악 씬과 관련된 소식입니다.",
+      "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
       "commonEntities": [
         "Deadcrow"
       ],
@@ -6718,17 +7218,41 @@
       ]
     },
     {
-      "topic": "Kashovski와 Moojo의 'Show Me' 콜라보레이션 릴리스",
+      "topic": "Christian Hornbostel, Magnetic Magazine Recordings 통해 신곡 'Eridanus' 발표",
+      "keywords": [
+        "Christian Hornbostel",
+        "Eridanus",
+        "Magnetic Magazine",
+        "Spatial Audio",
+        "Electronic Music"
+      ],
+      "articleIds": [
+        "e2aeaf6a-1e05-4163-a491-b6efb2570759"
+      ],
+      "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
+      "commonEntities": [
+        "Christian Hornbostel"
+      ],
+      "cohesionScore": 0,
+      "articles": [
+        {
+          "id": "e2aeaf6a-1e05-4163-a491-b6efb2570759",
+          "title": "PREMIERE: Christian Hornbostel Brings “Eridanus” to Magnetic"
+        }
+      ]
+    },
+    {
+      "topic": "Kashovski와 Moojo의 'Show Me' 콜라보레이션 발매",
       "keywords": [
         "Kashovski",
         "Moojo",
-        "Show Me",
-        "collaboration"
+        "Calamar Records",
+        "싱글"
       ],
       "articleIds": [
         "c070c29a-55f9-46be-9e48-2086cef9bccc"
       ],
-      "reason": "Kashovski와 Moojo의 첫 번째 콜라보레이션 'Show Me' 릴리스 관련 기사로 단독 클러스터.",
+      "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
       "commonEntities": [
         "Moojo"
       ],
@@ -6741,18 +7265,17 @@
       ]
     },
     {
-      "topic": "Giom의 2000년대 하우스 클래식 릴리스",
+      "topic": "Giom의 2000년대 하우스 음악 클래식 컬렉션 발표",
       "keywords": [
         "Giom",
-        "house classics",
+        "하우스",
         "Supremus Records",
-        "2000s",
-        "remix"
+        "리믹스"
       ],
       "articleIds": [
         "9a7d7875-1a18-4298-9976-b36c720be8e0"
       ],
-      "reason": "Giom의 2000년대 하우스 클래식 릴리스 관련 기사로 단독 클러스터.",
+      "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
       "commonEntities": [
         "Giom"
       ],
@@ -6765,18 +7288,42 @@
       ]
     },
     {
-      "topic": "Maribou State, 새 앨범 'Hallucinating Love' 발매",
+      "topic": "Mount Kimbie, fabric presents 컴필레이션 발표",
+      "keywords": [
+        "Mount Kimbie",
+        "fabric presents",
+        "Monroe",
+        "Jomox",
+        "컴필레이션"
+      ],
+      "articleIds": [
+        "0b481d88-a706-4a7f-8949-0a35f6ddc498"
+      ],
+      "reason": "승인됨: 전자음악 관련 릴리즈에 해당합니다.",
+      "commonEntities": [
+        "fabric"
+      ],
+      "cohesionScore": 0,
+      "articles": [
+        {
+          "id": "0b481d88-a706-4a7f-8949-0a35f6ddc498",
+          "title": "Mount Kimbie Release fabric presents Compilation"
+        }
+      ]
+    },
+    {
+      "topic": "Maribou State, Ninja Tune 레이블 통해 새 앨범 'Hallucinating Love' 발표",
       "keywords": [
         "Maribou State",
         "Ninja Tune",
-        "Hallucinating Love",
         "Deluxe Edition",
-        "2026년 8월 21일"
+        "Hallucinating Love",
+        "Electronic"
       ],
       "articleIds": [
         "7b68f9bf-cda9-4d4c-8074-a1972f1b006a"
       ],
-      "reason": "Maribou State의 새 앨범 'Hallucinating Love' 발매 소식으로, 전자음악 씬과 직접적으로 관련된 내용입니다.",
+      "reason": "전자음악 관련 릴리즈 소식으로 승인됨.",
       "commonEntities": [
         "Ninja Tune"
       ],
@@ -6789,18 +7336,42 @@
       ]
     },
     {
-      "topic": "El Tony, Ibiza에서 프로듀서 아카데미 운영",
+      "topic": "Meta AI 글라스, DJ 공연 영상 촬영 가능성 분석",
+      "keywords": [
+        "Meta Glasses",
+        "DJing",
+        "POV Video",
+        "Beatport Tech",
+        "Social Media"
+      ],
+      "articleIds": [
+        "f1daca30-4a35-426e-85c4-45674714c79e"
+      ],
+      "reason": "전자음악 관련 기술 및 장비 소식으로 승인됨.",
+      "commonEntities": [
+        "Beatport"
+      ],
+      "cohesionScore": 0,
+      "articles": [
+        {
+          "id": "f1daca30-4a35-426e-85c4-45674714c79e",
+          "title": "Meta Glasses + DJing = The Ultimate POV?"
+        }
+      ]
+    },
+    {
+      "topic": "El Tony, Ibiza에서의 프로듀서 아카데미 프로그램 발표",
       "keywords": [
         "El Tony",
+        "Producer Academy",
         "Ibiza",
-        "프로듀서 아카데미",
         "Beatport",
-        "2026년 10월"
+        "Electronic Music Producers"
       ],
       "articleIds": [
         "aa270acb-cde1-487e-851f-37f0bb6a0555"
       ],
-      "reason": "El Tony가 Ibiza에서 프로듀서 아카데미를 운영하는 것으로, 전자음악 씬과 관련된 교육 프로그램 소식입니다.",
+      "reason": "전자음악 교육 및 이벤트 관련 소식으로 승인됨.",
       "commonEntities": [
         "Beatport"
       ],
@@ -6811,205 +7382,20 @@
           "title": "El Tony Sends Producers to Ibiza"
         }
       ]
+    }
+  ],
+  "llmOmittedArticles": [
+    {
+      "id": "cbad5af5-65c5-40ea-a243-6b4f2b885bc9",
+      "title": "Above & Beyond celebrate 25 years with career-spanning One Mix on Apple Music in Spatial Audio"
     },
     {
-      "topic": "Roland JD-990 소프트웨어 에뮬레이터 JADE 개발",
-      "keywords": [
-        "Roland",
-        "JD-990",
-        "JADE",
-        "software emulator",
-        "The Usual Suspects"
-      ],
-      "articleIds": [
-        "adf80d1b-5c21-4378-b180-be96bacc8b02"
-      ],
-      "reason": "Roland JD-990의 JADE 소프트웨어 에뮬레이터 개발 관련 기사로 단독 클러스터.",
-      "commonEntities": [
-        "Roland"
-      ],
-      "cohesionScore": 0,
-      "articles": [
-        {
-          "id": "adf80d1b-5c21-4378-b180-be96bacc8b02",
-          "title": "Roland JD-990 Emulator, JADE, Now In Development (Sneak Preview)"
-        }
-      ]
+      "id": "b4c32ee8-4c4e-44ae-8f99-07b6cc0dfb96",
+      "title": "Your Ears Are Your Career: A Complete Guide to Hearing Protection in the Music Industry"
     },
     {
-      "topic": "Roland GO:KEYS 3 Minion 키보드 출시",
-      "keywords": [
-        "Roland",
-        "GO:KEYS 3",
-        "Minion",
-        "키보드",
-        "2026년 9월"
-      ],
-      "articleIds": [
-        "70e0dd77-62b7-4959-b31c-9de70493b809"
-      ],
-      "reason": "전자음악 장비 관련 제품 출시 소식으로 전자음악 씬과 연결됨.",
-      "commonEntities": [
-        "Roland"
-      ],
-      "cohesionScore": 0,
-      "articles": [
-        {
-          "id": "70e0dd77-62b7-4959-b31c-9de70493b809",
-          "title": "Roland GO:KEYS 3 Minion Keyboard Coming In Sept"
-        }
-      ]
-    },
-    {
-      "topic": "Function의 'Aeternum (Existenz)' 미니 앨범 발매",
-      "keywords": [
-        "Function",
-        "Tresor Records",
-        "미니 앨범",
-        "Aeternum (Existenz)"
-      ],
-      "articleIds": [
-        "aa53f947-d07c-4281-90a6-adeeae48cd59"
-      ],
-      "reason": "전자음악 아티스트 Function의 신규 미니 앨범 발매 소식으로, 전자음악 씬과 직접적으로 관련된 내용입니다.",
-      "commonEntities": [],
-      "cohesionScore": 0,
-      "articles": [
-        {
-          "id": "aa53f947-d07c-4281-90a6-adeeae48cd59",
-          "title": "Function: Aeternum (Existenz) (Tresor Records)"
-        }
-      ]
-    },
-    {
-      "topic": "Pittsburgh Modular Lifeforms SV-2 신제품 공개",
-      "keywords": [
-        "Pittsburgh Modular",
-        "Lifeforms SV-2",
-        "아날로그 신디사이저",
-        "Eurorack",
-        "Ableton Live"
-      ],
-      "articleIds": [
-        "ef7a3c58-fdc4-489a-898d-1f888df2dbcc"
-      ],
-      "reason": "Pittsburgh Modular의 새로운 아날로그 신디사이저 Lifeforms SV-2가 공개된 것으로, 전자음악 장비와 관련된 내용입니다.",
-      "commonEntities": [],
-      "cohesionScore": 0,
-      "articles": [
-        {
-          "id": "ef7a3c58-fdc4-489a-898d-1f888df2dbcc",
-          "title": "Pittsburgh Modular Lifeforms SV-2 Sneak Preview"
-        }
-      ]
-    },
-    {
-      "topic": "Escape Halloween 2026 라인업 발표",
-      "keywords": [
-        "Escape Halloween",
-        "Insomniac Events",
-        "NOS Events Center",
-        "Halloween"
-      ],
-      "articleIds": [
-        "3b9aa1d7-635d-4277-9e11-ce0455491dd6"
-      ],
-      "reason": "Escape Halloween 2026의 라인업이 발표된 것으로, 전자음악 페스티벌과 관련된 기사입니다.",
-      "commonEntities": [],
-      "cohesionScore": 0,
-      "articles": [
-        {
-          "id": "3b9aa1d7-635d-4277-9e11-ce0455491dd6",
-          "title": "Escape Halloween Confirms Full 2026 Lineup"
-        }
-      ]
-    },
-    {
-      "topic": "Meta AI 글라스, DJ 공연 영상 촬영 가능성 분석",
-      "keywords": [
-        "Meta AI 글라스",
-        "DJing",
-        "POV 영상",
-        "Beatport Tech",
-        "Mojaxx"
-      ],
-      "articleIds": [
-        "f1daca30-4a35-426e-85c4-45674714c79e"
-      ],
-      "reason": "Meta AI 글라스가 DJ 공연 영상 촬영에 활용될 수 있는지 분석한 것으로, 전자음악 관련 기술 소식입니다.",
-      "commonEntities": [],
-      "cohesionScore": 0,
-      "articles": [
-        {
-          "id": "f1daca30-4a35-426e-85c4-45674714c79e",
-          "title": "Meta Glasses + DJing = The Ultimate POV?"
-        }
-      ]
-    },
-    {
-      "topic": "Beyond The Valley 2026 라인업 발표",
-      "keywords": [
-        "Beyond The Valley",
-        "KI/KI",
-        "Boys Noize",
-        "Skepta"
-      ],
-      "articleIds": [
-        "b0ed8ca6-42ae-4ae6-8679-df3375870e4c"
-      ],
-      "reason": "Beyond The Valley 2026의 라인업이 발표된 것으로, 전자음악 페스티벌과 관련된 기사입니다.",
-      "commonEntities": [],
-      "cohesionScore": 0,
-      "articles": [
-        {
-          "id": "b0ed8ca6-42ae-4ae6-8679-df3375870e4c",
-          "title": "Australia’s Beyond The Valley drops 2026 lineup including KI/KI, Boys Noize, Skepta, & more"
-        }
-      ]
-    },
-    {
-      "topic": "David Penn의 전자음악 커리어와 ‘Big Love’ 릴리스",
-      "keywords": [
-        "David Penn",
-        "Spanish house",
-        "Big Love",
-        "Defected",
-        "career"
-      ],
-      "articleIds": [
-        "4e0b2892-c472-40c3-90c1-2887bd3c835b"
-      ],
-      "reason": "David Penn의 커리어와 관련된 기사로 단독 클러스터.",
-      "commonEntities": [],
-      "cohesionScore": 0,
-      "articles": [
-        {
-          "id": "4e0b2892-c472-40c3-90c1-2887bd3c835b",
-          "title": "Turning Points: David Penn"
-        }
-      ]
-    },
-    {
-      "topic": "Mount Kimbie, fabric presents Compilation 릴리스",
-      "keywords": [
-        "Mount Kimbie",
-        "fabric presents",
-        "Compilation",
-        "electronic duo",
-        "Phonica Records"
-      ],
-      "articleIds": [
-        "0b481d88-a706-4a7f-8949-0a35f6ddc498"
-      ],
-      "reason": "Mount Kimbie의 fabric presents Compilation 릴리스 관련 기사로 단독 클러스터.",
-      "commonEntities": [],
-      "cohesionScore": 0,
-      "articles": [
-        {
-          "id": "0b481d88-a706-4a7f-8949-0a35f6ddc498",
-          "title": "Mount Kimbie Release fabric presents Compilation"
-        }
-      ]
+      "id": "84ee2511-3136-4b33-b59e-1c1e1b0ef26c",
+      "title": "5 Acts to Catch at ARC Music Festival 2026"
     }
   ],
   "drops": [
@@ -7186,6 +7572,13 @@
       "reason": "no_entity_or_explicit_edm_evidence",
       "articleIds": [
         "cc6551d4-810f-407f-9a41-9bb983774e1c"
+      ]
+    },
+    {
+      "stage": "eligibility",
+      "reason": "no_entity_or_explicit_edm_evidence",
+      "articleIds": [
+        "c8adbbe5-2e20-421f-bb3e-606516f1bf29"
       ]
     },
     {
@@ -7423,12 +7816,12 @@
       "stage": "normalization",
       "reason": "normalization_failed",
       "articleIds": [
-        "330b30e4-0b10-45f5-8c46-13ad6a376b19"
+        "843bc16c-70c6-4c87-a579-765b05c7088f"
       ],
-      "topic": "Dimitri Vegas, Tomorrowland 및 Ushuaïa Ibiza 세트에서 Lukaku, De Bruyne 등 참여",
+      "topic": "ARC Music Festival 2026, 5개 아티스트 추천",
       "detail": {
         "validArticleIds": [
-          "330b30e4-0b10-45f5-8c46-13ad6a376b19"
+          "843bc16c-70c6-4c87-a579-765b05c7088f"
         ],
         "eventDates": []
       }
@@ -7439,16 +7832,7 @@
       "articleIds": [
         "0b59de4a-9627-4965-9010-71aa0a042589"
       ],
-      "topic": "Fred again.. & LATIN MAFIA 공동 믹스테이프 '9 months & 50 hours' 발매"
-    },
-    {
-      "stage": "merge",
-      "reason": "merged_into_suggestion",
-      "articleIds": [
-        "c7ccf53d-22c7-4495-991c-98a8bf88be9e",
-        "cbad5af5-65c5-40ea-a243-6b4f2b885bc9"
-      ],
-      "topic": "Above & Beyond, 25주년 기념 'One Mix' 공개"
+      "topic": "Fred again.. & LATIN MAFIA 협업 미니앨범 '9 months & 50 hours' 발표"
     },
     {
       "stage": "merge",
@@ -7456,15 +7840,39 @@
       "articleIds": [
         "a3c3e958-48cb-45b3-831e-764c37537b65"
       ],
-      "topic": "Kaskade, ORIGIN// 투어 발표"
+      "topic": "Kaskade, 'ORIGIN// Tour' 발표 및 Coachella 무대 연출 포함"
     },
     {
       "stage": "merge",
       "reason": "merged_into_suggestion",
       "articleIds": [
-        "e2aeaf6a-1e05-4163-a491-b6efb2570759"
+        "2225d129-ec8f-445b-b110-f384c4ba4381"
       ],
-      "topic": "Christian Hornbostel, “Eridanus” Magnetic Magazine에 공개"
+      "topic": "헝가리 Ozora 페스티벌, 2명의 참가자 사망으로 조기 종료"
+    },
+    {
+      "stage": "merge",
+      "reason": "merged_into_suggestion",
+      "articleIds": [
+        "ebf9cabf-804b-43c4-b438-11b0ff45b6c0"
+      ],
+      "topic": "Vintage Culture, Nariman 및 rhys from the sticks와 'Think Too Much' 콜라보레이션 발매"
+    },
+    {
+      "stage": "merge",
+      "reason": "merged_into_suggestion",
+      "articleIds": [
+        "b3fd0782-d645-40fe-b093-ff24850e74a1"
+      ],
+      "topic": "헝가리 Ozora 페스티벌, 2명의 참가자 사망으로 조기 종료"
+    },
+    {
+      "stage": "merge",
+      "reason": "merged_into_suggestion",
+      "articleIds": [
+        "291bd1c4-8919-40a4-91de-e32408755beb"
+      ],
+      "topic": "헝가리 Psychedelic Music Festival Ozora, 2명의 사망으로 조기 종료"
     },
     {
       "stage": "merge",
@@ -7472,7 +7880,15 @@
       "articleIds": [
         "44dad22b-390c-47da-9ffd-64b91eb4a9c8"
       ],
-      "topic": "Fred again..과 LATIN MAFIA의 ‘9 months & 50 hours’ 미キテープ 릴리스"
+      "topic": "Fred again.. 및 LATIN MAFIA의 '9 months & 50 hours' 믹스테이프 발표"
+    },
+    {
+      "stage": "merge",
+      "reason": "merged_into_suggestion",
+      "articleIds": [
+        "3edb458c-852c-4f3e-baba-e8478b1d1a8f"
+      ],
+      "topic": "Vintage Culture, 'Think Too Much' 싱글 발표"
     },
     {
       "stage": "merge",
@@ -7480,7 +7896,31 @@
       "articleIds": [
         "37df4ffc-1996-419b-926b-ebd9d7037724"
       ],
-      "topic": "Kaskade 'ORIGIN //' 라이브 공연 투어"
+      "topic": "Kaskade, 'ORIGIN //' 라이브 쇼 미국 4개 도시 순회"
+    },
+    {
+      "stage": "ranking",
+      "reason": "rank_cap",
+      "articleIds": [
+        "5482179c-27e2-41bf-9e58-1a176092b2a2"
+      ],
+      "topic": "Cale Anderson의 'Yemaya (We All Come from the Goddess)' 앨범 발매"
+    },
+    {
+      "stage": "ranking",
+      "reason": "rank_cap",
+      "articleIds": [
+        "b6218fd1-8c85-4c8e-9271-471c1dd0f68c"
+      ],
+      "topic": "Native Instruments의 SuperStarSaw 리뷰"
+    },
+    {
+      "stage": "ranking",
+      "reason": "rank_cap",
+      "articleIds": [
+        "4e0b2892-c472-40c3-90c1-2887bd3c835b"
+      ],
+      "topic": "David Penn의 커리어와 음악적 영향력에 대한 인터뷰"
     },
     {
       "stage": "ranking",
@@ -7488,7 +7928,23 @@
       "articleIds": [
         "0de537ec-41fb-4cab-9ac0-86091eb8c509"
       ],
-      "topic": "salute와 Riva Starr의 'soulreply' 릴리스"
+      "topic": "salute 및 Riva Starr, 'soulreply' 싱글 발표"
+    },
+    {
+      "stage": "ranking",
+      "reason": "rank_cap",
+      "articleIds": [
+        "adf80d1b-5c21-4378-b180-be96bacc8b02"
+      ],
+      "topic": "Roland JD-990 소프트웨어 에뮬레이터 JADE 개발 중"
+    },
+    {
+      "stage": "ranking",
+      "reason": "rank_cap",
+      "articleIds": [
+        "70e0dd77-62b7-4959-b31c-9de70493b809"
+      ],
+      "topic": "Roland GO:KEYS 3 Minion 키보드 2026년 9월 출시"
     },
     {
       "stage": "ranking",
@@ -7496,7 +7952,7 @@
       "articleIds": [
         "7be74f06-4a95-48a8-9efd-b0d1d6f714d9"
       ],
-      "topic": "Nutritious, Liquid Culture Records에서 'Solarmaxxing' 발매"
+      "topic": "Nutritious, Liquid Culture Records에서 'Solarmaxxing' 미니 앨범 발매"
     },
     {
       "stage": "ranking",
@@ -7504,7 +7960,7 @@
       "articleIds": [
         "46df593a-47e7-4929-88e0-6a4646d08fd5"
       ],
-      "topic": "Guyver7x3, 'Half Of Me Still With You' 발매"
+      "topic": "Guyver7x3, 'Half Of Me Still With You' 싱글 발매"
     },
     {
       "stage": "ranking",
@@ -7512,7 +7968,7 @@
       "articleIds": [
         "4400139e-2ffd-4757-a7e0-0e37e9bbd877"
       ],
-      "topic": "DJ Dr Vitos, 'Walk me Home' 발매"
+      "topic": "DJ Dr Vitos, 'Walk me Home' 앨범 발매"
     },
     {
       "stage": "ranking",
@@ -7520,7 +7976,7 @@
       "articleIds": [
         "69032d03-0f1f-4b60-8033-d6f887bdd883"
       ],
-      "topic": "Chuck Daniels, 'The Remixes' 발매"
+      "topic": "Chuck Daniels, 'The Remixes' 릴리즈로 Sampled Detroit 재개"
     },
     {
       "stage": "ranking",
@@ -7528,7 +7984,7 @@
       "articleIds": [
         "c0d18098-25e7-4bb5-9e45-dcdc9464230d"
       ],
-      "topic": "Vital 소프트웨어 시냅스 출시"
+      "topic": "Vital, 무료 소프트웨어 신디사이저로 주목"
     },
     {
       "stage": "ranking",
@@ -7536,15 +7992,7 @@
       "articleIds": [
         "6f720c3d-0871-4158-b772-ef35b87101fc"
       ],
-      "topic": "Emanuele Cisi & Joe Claussell, 'Pharoah’s Message' 리믹스"
-    },
-    {
-      "stage": "ranking",
-      "reason": "rank_cap",
-      "articleIds": [
-        "84ee2511-3136-4b33-b59e-1c1e1b0ef26c"
-      ],
-      "topic": "ARC Music Festival 2026 공연자 발표"
+      "topic": "Emanuele Cisi & Joe Claussell, 'Pharoah’s Message' 리믹스 발표"
     },
     {
       "stage": "ranking",
@@ -7552,7 +8000,7 @@
       "articleIds": [
         "59e2d723-1b46-49ec-a404-8873552a9ae5"
       ],
-      "topic": "Sullivan King, TRYM & Graphyt, 'Rumble' 발매"
+      "topic": "Sullivan King, TRYM & Graphyt, 'Rumble' 협업곡 발표"
     },
     {
       "stage": "ranking",
@@ -7560,7 +8008,7 @@
       "articleIds": [
         "57519485-435f-46b5-b844-678573083aa2"
       ],
-      "topic": "Mat Weasel Busters 사망 소식"
+      "topic": "Mat Weasel Busters, Hardtek 및 Frenchcore의 선구자로 사망"
     },
     {
       "stage": "ranking",
@@ -7568,7 +8016,7 @@
       "articleIds": [
         "be9cafd4-297c-46a0-8c9f-c2f64e9c61eb"
       ],
-      "topic": "Jan Wayne 은퇴 발표"
+      "topic": "Jan Wayne, 2027년 말 은퇴 발표"
     },
     {
       "stage": "ranking",
@@ -7576,7 +8024,7 @@
       "articleIds": [
         "d13d1666-30ed-480f-87f6-7735a1572466"
       ],
-      "topic": "M. Shadows, Avenged Sevenfold 독립 레이블 발표"
+      "topic": "M. Shadows, Avenged Sevenfold, 독립 레이블로 전환"
     },
     {
       "stage": "ranking",
@@ -7584,7 +8032,7 @@
       "articleIds": [
         "7b90746c-1b89-47b4-8f88-0d8711ac11a1"
       ],
-      "topic": "Purple Tape 인터뷰"
+      "topic": "Purple Tape, 'The industry rewards noise, but the culture rewards care' 인터뷰"
     },
     {
       "stage": "ranking",
@@ -7592,39 +8040,7 @@
       "articleIds": [
         "d5c5e356-9b4f-49c2-a2fb-eb19c8161f54"
       ],
-      "topic": "Matty Ralph, JOKESONYOU – Heaven 발매"
-    },
-    {
-      "stage": "ranking",
-      "reason": "rank_cap",
-      "articleIds": [
-        "5f4bb5b3-b519-477b-8958-1908157ce18b"
-      ],
-      "topic": "DJ 보호용 이어폰 추천"
-    },
-    {
-      "stage": "ranking",
-      "reason": "rank_cap",
-      "articleIds": [
-        "843bc16c-70c6-4c87-a579-765b05c7088f"
-      ],
-      "topic": "MIDI 컨트롤러 추천"
-    },
-    {
-      "stage": "ranking",
-      "reason": "rank_cap",
-      "articleIds": [
-        "4ca71425-48f8-4279-9618-6e4641f22af1"
-      ],
-      "topic": "Spybar 공동 창업자 및 DJ 구형"
-    },
-    {
-      "stage": "ranking",
-      "reason": "rank_cap",
-      "articleIds": [
-        "b4c32ee8-4c4e-44ae-8f99-07b6cc0dfb96"
-      ],
-      "topic": "음악 산업의 청력 보호 가이드"
+      "topic": "Matty Ralph & JOKESONYOU, 'Heaven' 협업곡 발표"
     },
     {
       "stage": "ranking",
@@ -7632,7 +8048,31 @@
       "articleIds": [
         "8c3a4c04-9cc7-442c-8041-740d7f9d6795"
       ],
-      "topic": "Chilsta 신곡 'Back' 발표"
+      "topic": "Chilsta, 'Back' 신곡 발표"
+    },
+    {
+      "stage": "ranking",
+      "reason": "rank_cap",
+      "articleIds": [
+        "4ca71425-48f8-4279-9618-6e4641f22af1"
+      ],
+      "topic": "Spybar 공동 창업자 및 DJ, 6년형 선고"
+    },
+    {
+      "stage": "ranking",
+      "reason": "rank_cap",
+      "articleIds": [
+        "5f4bb5b3-b519-477b-8958-1908157ce18b"
+      ],
+      "topic": "Best wired headphones under $500 2026 추천"
+    },
+    {
+      "stage": "ranking",
+      "reason": "rank_cap",
+      "articleIds": [
+        "843bc16c-70c6-4c87-a579-765b05c7088f"
+      ],
+      "topic": "Best MIDI Controllers For Hybrid Studios 추천"
     },
     {
       "stage": "ranking",
@@ -7640,7 +8080,7 @@
       "articleIds": [
         "dcd95628-2bda-4596-86e8-02f35b270e09"
       ],
-      "topic": "Souldynamic, 10주년 기념 앨범 'Equatoriale' 재발매"
+      "topic": "Souldynamic, 'Equatoriale' 10주년 에디션 발매"
     },
     {
       "stage": "ranking",
@@ -7648,7 +8088,7 @@
       "articleIds": [
         "54f0a5fb-e1c3-4623-8b39-3d951e64b656"
       ],
-      "topic": "BBC Radio 6 Music, 블랙브리티시 댄스 음악을 위한 새 프로그램 'Rave Forever' 시작"
+      "topic": "BBC Radio 6 Music, 블랙 브리티시 디스코 음악을 위한 새 쇼 'Rave Forever' 개시"
     },
     {
       "stage": "ranking",
@@ -7656,7 +8096,7 @@
       "articleIds": [
         "16f7e17e-ee16-4958-a7cb-c9c82b787e13"
       ],
-      "topic": "게임 보이 칩튠 제작을 위한 초보자 가이드 발표"
+      "topic": "Game Boy 칩튠을 위한 초보자 가이드 공개"
     },
     {
       "stage": "ranking",
@@ -7664,7 +8104,7 @@
       "articleIds": [
         "bad63d31-693d-40f4-944a-be2604d6b548"
       ],
-      "topic": "두 어린이, 세계 최연소 DJ 데뷔로 깨기 유니버설 레코드"
+      "topic": "두 어린이, 가장 어린 DJ 데뷔 조합으로 기네스 세계 기록 갱신"
     }
   ]
 }

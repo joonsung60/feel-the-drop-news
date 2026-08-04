@@ -48,7 +48,7 @@ function normalizeOne(
 ) {
   return normalizeSuggestion({
     topic: '테스트 토픽',
-    keywords: ['Specific Name'],
+    keywords: [raw.title],
     commonEntities: ['COEX THE PLATZ', 'Carl Cox'],
     articleIds: [raw.id],
   }, validIds, new Map([[raw.id, {
@@ -203,4 +203,95 @@ test('generic discovery words do not count as explicit EDM evidence', () => {
   ]) {
     assert.equal(hasExplicitEdmEvidence(article(text, text)), false, text)
   }
+})
+
+test('DJ fallback excludes explicit hip-hop and turntablist context without harming EDM DJ recall', () => {
+  assert.equal(hasExplicitEdmEvidence(article(
+    'andrew',
+    'Remembering Andrew Chow, the legendary turntablist who shaped Singapore’s hip-hop nightlife',
+    'Better known as DJ Wiz, he played hip-hop and R&B.',
+  )), false)
+  assert.equal(hasExplicitEdmEvidence(article(
+    'dance-dj',
+    'Two children set a record as the youngest DJ duo',
+  )), true)
+  assert.equal(hasExplicitEdmEvidence(article(
+    'djing',
+    'Meta glasses make DJing point-of-view video possible',
+  )), true)
+})
+
+test('synth fallback excludes a non-music vehicle metaphor without harming music coverage', () => {
+  assert.equal(hasExplicitEdmEvidence(article(
+    'aventon',
+    'Aventon Current ADV Review: An Amazing eMTB That Hits The Sweet Spot',
+    'The electric mountain bike market has become a little like the modular synth world.',
+  )), false)
+  assert.equal(hasExplicitEdmEvidence(article(
+    'praana',
+    'PRAANA Talk Insight Out, Presence, And Looking Inward',
+    'The progressive house album uses glowing synth work and hypnotic grooves.',
+  )), true)
+  assert.equal(hasExplicitEdmEvidence(article(
+    'hardware',
+    'Best MIDI Controllers For Hybrid Studios',
+    'A hardware synth or drum machine enters the setup.',
+  )), true)
+})
+
+test('normalization uses canonical deterministic entities instead of LLM alias spelling', () => {
+  const ozora = article(
+    'ozora',
+    'Two attendees die at Hungary’s Ozora Festival, event ends early',
+  )
+  const normalized = normalizeSuggestion({
+    topic: 'Ozora Festival 조기 종료',
+    keywords: ['tragic fatalities'],
+    commonEntities: ['Ozora Festival'],
+    articleIds: [ozora.id],
+  }, new Set([ozora.id]), new Map([[ozora.id, {
+    id: ozora.id,
+    title: ozora.title,
+    url: ozora.url,
+  }]]), [ozora], new Map([[ozora.id, new Set(['O.Z.O.R.A. Festival'])]]))
+
+  assert.deepEqual(normalized?.commonEntities, ['O.Z.O.R.A. Festival'])
+})
+
+test('normalization rejects a singleton whose LLM story belongs to another article', () => {
+  const ozora = article(
+    'ozora-shifted',
+    'Ozora Festival ends early after two deaths',
+  )
+  const normalized = normalizeSuggestion({
+    topic: 'Eastern Electrics 2026 라인업 발표',
+    keywords: ['Eastern Electrics', 'East End Dubs', 'Joseph Capriati'],
+    commonEntities: ['Eastern Electrics'],
+    articleIds: [ozora.id],
+  }, new Set([ozora.id]), new Map([[ozora.id, {
+    id: ozora.id,
+    title: ozora.title,
+    url: ozora.url,
+  }]]), [ozora], new Map([[ozora.id, new Set(['O.Z.O.R.A. Festival'])]]))
+
+  assert.equal(normalized, null)
+})
+
+test('normalization permits Korean-only descriptions for a deterministically matched singleton', () => {
+  const ozora = article(
+    'ozora-korean',
+    'Ozora Festival ends early after two deaths',
+  )
+  const normalized = normalizeSuggestion({
+    topic: '오조라 페스티벌 사망 사고로 조기 종료',
+    keywords: ['오조라 페스티벌', '사망 사고', '조기 종료'],
+    commonEntities: ['오조라 페스티벌'],
+    articleIds: [ozora.id],
+  }, new Set([ozora.id]), new Map([[ozora.id, {
+    id: ozora.id,
+    title: ozora.title,
+    url: ozora.url,
+  }]]), [ozora], new Map([[ozora.id, new Set(['O.Z.O.R.A. Festival'])]]))
+
+  assert.deepEqual(normalized?.commonEntities, ['O.Z.O.R.A. Festival'])
 })

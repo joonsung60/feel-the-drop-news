@@ -1,0 +1,342 @@
+{
+  "version": 1,
+  "generatedAt": "2026-08-04T12:38:55.420Z",
+  "scope": {
+    "origin": "rss",
+    "total": 938
+  },
+  "baselineEligible": 299,
+  "currentEligible": 309,
+  "added": [
+    {
+      "id": "0fdf4a1c-788b-441d-b717-6a9c35d79fec",
+      "title": "Anukari is a unique modelling synth that dares to be different, but how does it fit into my workflow?",
+      "url": "https://musictech.com/reviews/plug-ins/anukari-review/?utm_source=rss&utm_medium=rss&utm_campaign=anukari-review",
+      "origin": "rss",
+      "publishedAt": "2026-08-03T08:00:48+00:00",
+      "fetchedAt": "2026-08-03T09:30:46.359012+00:00",
+      "triggers": [
+        "synth"
+      ],
+      "excerpt": "by Stefan Wyeth just now Anukari # Plugins # Soft Synths When you purchase through affiliate links on MusicTech.com, you may contribute to our site through commissions. Learn more Featured Deal Enhance your music with Free Samples from BandLab Sounds View Reviews Anukari is a unique modelling synth that dares to be different, but how does it fit into my workflow? I explore the sonic potential of this 3D physics synth plugin to see how it performs in a music production context by Stefan Wyeth just now When you purchase through affiliate links on MusicTech.com, you may contribute to our site through commissions. Learn more Anukari. Image: Press Review Overview Our rating 6 Our verdict &oplus; Virtual 3D physics engine &oplus; Wildly flexible sound creation &oplus; Non-linear workflow &oplus;",
+      "contentLength": 9069,
+      "contentHash": "d3833a0d30a72ad0d45ef926034cd7f4d698a4a724edf87c5b15df150944446b"
+    },
+    {
+      "id": "3342d18c-b507-48d1-a7d7-bd24e22b70c1",
+      "title": "reFX Intros Rippler Physical Modeling Synthesizer",
+      "url": "https://www.synthtopia.com/content/2026/07/30/refx-intros-rippler-physical-modeling-synthesizer/",
+      "origin": "rss",
+      "publishedAt": "2026-07-30T22:11:09+00:00",
+      "fetchedAt": "2026-07-31T09:56:35.837299+00:00",
+      "triggers": [
+        "synthesizer"
+      ],
+      "excerpt": "Rippler is a software synthesizer built around a combination of modal synthesis and subtractive synthesis techniques. The instrument uses banks of resonators to generate sounds without samples, with bi-directional energy coupling between resonators and two independent synthesis layers. Each layer can use parallel or serial resonator routing, with additional oscillators, filters, modulation sources, and effects processing. Rippler supports MPE, aftertouch, micro-tuning, MIDI tuning systems, and audio input routed into the resonator system. Features: Modal synthesis engine using banks of resonators to generate sounds without samples Bi-directional energy coupling between resonators Dual-layer synthesis architecture with parallel and serial resonator routing Two oscillators and two filters pe",
+      "contentLength": 1827,
+      "contentHash": "672dcb3911cc51cc419786ae0d8300082d1d7e78eff18b55ef7661e6aecabe49"
+    },
+    {
+      "id": "40e15ebb-13e9-4c9c-a916-cf429a826f8d",
+      "title": "PRAANA Talk Insight Out, Presence, And Looking Inward",
+      "url": "https://magneticmag.com/2026/07/praana-interview/",
+      "origin": "rss",
+      "publishedAt": "2026-07-31T18:33:00+00:00",
+      "fetchedAt": "2026-08-01T10:59:10.148835+00:00",
+      "triggers": [
+        "synth"
+      ],
+      "excerpt": "PRAANA Talk Insight Out, Presence, And Looking Inward - Magnetic Magazine Home / Music PRAANA (@praanamusic) return with Insight Out , their second studio album, out now on Colorize. The 16-track project follows 2023’s Supernal Dawn and pushes Chad Cisneros and Dave Reed further into the reflective, melodic side of progressive house, where glowing synth work, hypnotic grooves, and emotional songwriting all sit at the center of the record. It also lands during a strong stretch for Colorize albums, following the kind of full-length melodic-progressive worldbuilding I wrote about recently in my coverage of Sound Quelle’s Higher Note . The idea behind Insight Out is clear from the title. PRAANA describe Supernal Dawn as the awakening and Insight Out as the embodiment, with the new album turnin",
+      "contentLength": 9999,
+      "contentHash": "2effda9302b063bfd185495aff5c3309b0706cc26496519a12a11105a0e10a23"
+    },
+    {
+      "id": "42195a56-830b-44bf-8bb6-1355fa56f146",
+      "title": "Make Noise Announces Free Updates For MultiWAVE, PoliMATHS & MultiMod",
+      "url": "https://www.synthtopia.com/content/2026/07/29/make-noise-announces-free-updates-for-multiwave-polimaths-multimod/",
+      "origin": "rss",
+      "publishedAt": "2026-07-29T20:00:53+00:00",
+      "fetchedAt": "2026-07-30T08:48:02.585211+00:00",
+      "triggers": [
+        "synthesizer"
+      ],
+      "excerpt": "Make Noise has released new firmware for its digital New Universal Synthesizer System modules: MultiWAVE, PoliMATHS and MultiMod. Features of the new firmware include: 1New Cross Mod option on MultiWAVE for internal audio rate modulation Custom scale quantizer option on MultiWAVE Use PoliMATHS to generate offsets and easily use a connected QXG pair as a mixer, among other tricks Extended Oscillations range on PoliMATHS MultiMod Channel Index updated to work more smoothly when processing audio Here’s what’s new in the updated firmware: MultiWAVE firmware version 4.3.5: Includes a new modulation shape: Cross Mod, which is indicated by a lime green color. In this mode, instead of internal low frequency mod shapes, the oscillator receives wave position modulation from the other oscillator and ",
+      "contentLength": 2317,
+      "contentHash": "e61b5f318a2534f347e94abdf5ade4ade2388939fd2fa1439ffa54a00033049b"
+    },
+    {
+      "id": "46df593a-47e7-4929-88e0-6a4646d08fd5",
+      "title": "Guyver7x3 – HALF OF ME STILL WITH YOU",
+      "url": "https://www.parkettchannel.it/guyver7x3-half-of-me-still-with-you/",
+      "origin": "rss",
+      "publishedAt": "2026-08-04T07:20:58+00:00",
+      "fetchedAt": "2026-08-04T08:47:38.125434+00:00",
+      "triggers": [
+        "synth"
+      ],
+      "excerpt": "Guyver7x3 – HALF OF ME STILL WITH YOU by Redazione 4 Agosto 2026 Guyver7x3’s “Half Of Me Still With You” explores the fragile space between moving forward and remaining emotionally connected to something that has already changed. The synth pop landscape created by the artist becomes a place where memory, loss and personal transformation coexist, shaping a track that does not simply describe absence but examines the invisible traces people leave behind. It is an intimate release, built around the idea that certain relationships continue to exist within us even after they are no longer part of our everyday reality. The production immediately establishes a reflective and cinematic atmosphere, where the synth elements play a central role in translating the emotional weight of the song. Rather ",
+      "contentLength": 4352,
+      "contentHash": "4e123fa3bc5f6296f25b2be822c2447381dcb8bb7831daeed7c49e66dc85ac14"
+    },
+    {
+      "id": "56b3276c-b9ba-44bb-b087-e3b0893f0b6a",
+      "title": "Isla Electronics Previews Virtual Alesis Andromeda A6, ASICS",
+      "url": "https://www.synthtopia.com/content/2026/07/29/isla-electronics-previews-virtual-alesis-andromeda-a6-asics/",
+      "origin": "rss",
+      "publishedAt": "2026-07-29T16:12:01+00:00",
+      "fetchedAt": "2026-07-30T08:48:04.813298+00:00",
+      "triggers": [
+        "synthesizer"
+      ],
+      "excerpt": "Isla Electronics shared this sneak preview of ASICS , an internal engine for their upcoming Caladan hardware synthesizer, that’s inspired by the Alesis Andromeda A6 . They say that ASICS is also likely to be released as a VST/AU plugin. ASICS is fully sysex compatible with the original machine and can act as a remote controller for the real hardware. Details are to come at the Isla site . 2 thoughts on &ldquo; Isla Electronics Previews Virtual Alesis Andromeda A6, ASICS &rdquo; Well, it was nearly the last vintage synth left that no one had emulated in full. Now watch four of them appear within six months. It’ll be worth it. The thing sounds huge. this dude takes 20 years to release anything… remember the Parva? how well did that go Leave a Reply Cancel reply",
+      "contentLength": 769,
+      "contentHash": "546c9c439de4757297e2718d6109265c9d15f31257c8944fb836a87da40e60a7"
+    },
+    {
+      "id": "739b4671-161b-4f07-a35b-fb1abcd14765",
+      "title": "How To make your own kick drums in Diva",
+      "url": "https://www.attackmagazine.com/technique/synth-secrets/how-to-make-your-own-kick-drums-in-diva/",
+      "origin": "rss",
+      "publishedAt": "2026-07-28T15:49:28+00:00",
+      "fetchedAt": "2026-07-29T08:25:36.21666+00:00",
+      "triggers": [
+        "synth"
+      ],
+      "excerpt": "How To make your own kick drums in Diva - Attack Magazine Technique » Synth Secrets » How To make your own kick drums in Diva How To make your own kick drums in Diva This channel is sponsored by u-he are makers of award-winning software synthesisers and effects including Diva, Repro-1, Zebra2, Hive, Bazille, Presswerk and Satin. Visit U-he With so many kick drum samples available, it’s easy to overlook the benefits of programming your own. It only takes seconds. Kick drums, eh? You can’t live with ‘em, but you can’t live without programming ‘em. Except, of course, you can – there are bloody millions of kick samples to choose from! So why bother programming your own? Three reasons, really. 1. It’s a great way to really tailor your kick to your track. 2. It helps your productions stand out. ",
+      "contentLength": 7062,
+      "contentHash": "aed7559bac475fc1f9627d3eccdb2d8f7eb56398d9ca519f4a3f0ff1498530ed"
+    },
+    {
+      "id": "843bc16c-70c6-4c87-a579-765b05c7088f",
+      "title": "Best MIDI Controllers For Hybrid Studios Without Routing Headaches",
+      "url": "https://magneticmag.com/2026/08/best-midi-controllers-for-hybrid-studios-without-routing-headaches/",
+      "origin": "rss",
+      "publishedAt": "2026-08-03T23:33:38+00:00",
+      "fetchedAt": "2026-08-04T08:46:59.039092+00:00",
+      "triggers": [
+        "synth"
+      ],
+      "excerpt": "Home / Gear The best MIDI controllers for hybrid studios need to control software instruments without treating external hardware as an afterthought. A controller can feel complete beside a laptop, then expose its limits as soon as a hardware synth or drum machine enters the setup. USB covers the computer connection, while five-pin MIDI lets the controller communicate directly with instruments that cannot host a USB device on their own. That difference becomes increasingly important as the studio grows. A controller may handle one synth without any trouble, though several instruments quickly introduce questions around MIDI channels, clock distribution, and port count. My article on the best MIDI interfaces for hardware synths covers that side of the setup in greater detail, especially for p",
+      "contentLength": 10000,
+      "contentHash": "848c43322c875eba3c1cbd9c62d7a5a81bf116e971571503deecd8415d7ee1cf"
+    },
+    {
+      "id": "88c33c4e-2b98-47d2-abea-521bb650f5bc",
+      "title": "reFX Rippler Makes Acoustic Synthesis Feel Playable",
+      "url": "https://magneticmag.com/2026/07/refx-rippler/",
+      "origin": "rss",
+      "publishedAt": "2026-07-30T16:09:03+00:00",
+      "fetchedAt": "2026-07-31T09:55:15.834268+00:00",
+      "triggers": [
+        "synth"
+      ],
+      "excerpt": "reFX Rippler Makes Acoustic Synthesis Feel Playable - Magnetic Magazine Home / Gear Physical modeling has always had a slightly strange promise inside music production. On paper, it sounds like the most natural thing in the room. Instead of triggering samples, the synth models the behavior of strings, tubes, membranes, plates, bells, drumheads, and other resonant bodies. The result can feel closer to an instrument reacting than a static recording playing back. In actual production, that realism can become the limitation. A modeled instrument can get locked too closely to the thing it is trying to imitate, while a subtractive synth can give you control but lose the organic instability that makes acoustic sound feel alive. reFX Rippler sits right inside that gap. The new VST, AU, and AAX ins",
+      "contentLength": 7153,
+      "contentHash": "75a9f5c9dfb95c1ee79d3924f53c6179bde63ce002c50321bed9ada8cce83683"
+    },
+    {
+      "id": "90c10c18-2c6e-41ff-800f-fec9c1b1c471",
+      "title": "You can run Doom on a modular synth – who knew?",
+      "url": "https://musictech.com/news/gear/you-can-run-doom-on-a-modular-synth/?utm_source=rss&utm_medium=rss&utm_campaign=you-can-run-doom-on-a-modular-synth",
+      "origin": "rss",
+      "publishedAt": "2026-07-29T12:22:27+00:00",
+      "fetchedAt": "2026-07-30T08:46:03.820116+00:00",
+      "triggers": [
+        "synth"
+      ],
+      "excerpt": "by Sam Roche 19 hours ago # Hard Synths When you purchase through affiliate links on MusicTech.com, you may contribute to our site through commissions. Learn more Featured Deal Enhance your music with Free Samples from BandLab Sounds View News You can run Doom on a modular synth – who knew? One engineer has built a website that makes your Workshop Computer module Doom-compatible. by Sam Roche 19 hours ago When you purchase through affiliate links on MusicTech.com, you may contribute to our site through commissions. Learn more Credit: Chicoe/Instagram Want more news stories from MusicTech ? Follow us on Google News. Do you really need a next-gen console to play video games? Apparently not, as this producer has made iconic first-person shooter Doom work perfectly well on a modular synthesize",
+      "contentLength": 3097,
+      "contentHash": "71d2750397949f6daefd4d932c1763c72f41478f2b555a4223f232b2456d1037"
+    },
+    {
+      "id": "a2513838-6784-44d4-aaee-f8f15bc69872",
+      "title": "New VAPolyEnsemble Synth Features Multi-Oscillator Architecture",
+      "url": "https://www.synthtopia.com/content/2026/07/30/new-vapolyensemble-synth-features-multi-oscillator-architecture/",
+      "origin": "rss",
+      "publishedAt": "2026-07-30T21:57:39+00:00",
+      "fetchedAt": "2026-07-31T09:56:37.298466+00:00",
+      "triggers": [
+        "synth",
+        "synthesizer"
+      ],
+      "excerpt": "VAPolyEnsemble is part of RT Music Software’s VAPoly synthesizer lineup for Apple platforms. The instrument combines polyphonic synthesis with integrated sequencing, effects processing, MIDI support, audio export, and Audio Unit Extension (AUv3) compatibility. Like other recent VAPoly instruments, it is designed to operate as both a standalone application and an AUv3 plugin, allowing use within compatible iOS and macOS hosts. Features: Polyphonic synthesizer architecture Standalone operation for iPhone, iPad, and Mac Audio Unit Extension (AUv3) support Integrated piano-roll sequencer Parameter automation editing Multi-clip pattern workflow Built-in effects processing MIDI input and output support Bluetooth MIDI support Ableton Link support Audio export functionality iCloud Drive project st",
+      "contentLength": 1054,
+      "contentHash": "331d75c053e0c832f65a673f60871900d0157230612222f57ec3cf5aeabfa413"
+    },
+    {
+      "id": "a486d4fe-dabc-44a4-941a-58d5f297fa4a",
+      "title": "Free Software Synth Recreates Nintendo FDS Chiptune Sound",
+      "url": "https://www.synthtopia.com/content/2026/07/29/free-software-synth-recreates-nintendo-fds-chiptune-sound/",
+      "origin": "rss",
+      "publishedAt": "2026-07-29T23:35:49+00:00",
+      "fetchedAt": "2026-07-30T08:48:02.129983+00:00",
+      "triggers": [
+        "synth",
+        "synthesizer",
+        "chiptune"
+      ],
+      "excerpt": "Magical FDS Plug is a free and open source software synthesizer plug-in, for Mac & Windows, that reproduces the sound of the Nintendo FDS sound chip. Here’s what they have to say about it: “The FDS sound chip features a unique architecture in which a 64-sample waveform memory (carrier) is modulated by a separate 32-step instruction sequence (modulator). Magical FDS Plug preserves the full flexibility of the original hardware, while providing a logical interface for building waveforms — through additive synthesis, presets, and more.” Features: Carrier + Modulator — two independent signal paths. Design the audible waveform (carrier) and its modulation sequence (modulator) separately. Logical waveform editing to take the guesswork out of FDS sound design: Additive Synthesis — Drawbar-style, l",
+      "contentLength": 1806,
+      "contentHash": "709797e53eb1c9cd8d1d608479d06e82288c06873d29fc534b483792e4a923d1"
+    },
+    {
+      "id": "b738dc9f-bd2f-4af7-acae-699772fc8e0e",
+      "title": "Best Audio Interfaces For Hardware Synth Setups: What I’d Use When The Room Outgrows A Two-Channel Box",
+      "url": "https://magneticmag.com/2026/07/best-audio-interfaces-for-hardware-synth-setups/",
+      "origin": "rss",
+      "publishedAt": "2026-07-30T21:01:54+00:00",
+      "fetchedAt": "2026-07-31T09:55:14.705151+00:00",
+      "triggers": [
+        "synth"
+      ],
+      "excerpt": "Home / Gear Audio interfaces are essential, no duh, but they serve a completley different purpose when you need them to act as the central hub of a gear collection and not just something to connect your laptop to your monitors. The best audio interfaces for hardware synth setups get a bit more interesting and are worth treating as their own category because synth rooms hit a very specific problem fast. A small two-channel box can work when you have one synth on the desk, although it starts feeling cramped once drum machines, pedals, stereo synths, samplers, and controllers enter the room. I care most about line-level I/O, MIDI, ADAT expansion, monitor control, low-noise conversion, and how quickly I can get a sound recorded once the idea shows up. This list is built around interfaces I hav",
+      "contentLength": 9999,
+      "contentHash": "28daaedf267bb6d32474f81c7d72b3110920f1380ebb927a7292ec76da0e4ea7"
+    },
+    {
+      "id": "d07e2170-ca5f-4c9e-9a1d-ce186aa1ad1e",
+      "title": "Marie Hopkinson – Every Darkness",
+      "url": "https://www.parkettchannel.it/marie-hopkinson-every-darkness/",
+      "origin": "rss",
+      "publishedAt": "2026-07-27T12:43:21+00:00",
+      "fetchedAt": "2026-07-27T14:16:31.459842+00:00",
+      "triggers": [
+        "synth"
+      ],
+      "excerpt": "Screenshot Marie Hopkinson – Every Darkness by Redazione 27 Luglio 2026 Every Darkness marks a deeply personal and ambitious evolution for Marie Hopkinson, an artist who transforms introspection, emotional vulnerability and human experience into a cinematic synth pop landscape. The Australian singer-songwriter and multi-instrumentalist returns with a 13-track album that blends downtempo rhythms, atmospheric electronic textures and intimate indie-folk elements, creating a record that feels both expansive and remarkably close to the listener. It is a release built around contrast: darkness and hope, fragility and resilience, isolation and connection. From the opening moments, Every Darkness establishes a distinctive sonic identity where synth layers become emotional landscapes rather than si",
+      "contentLength": 4893,
+      "contentHash": "1bd363a8a90f7ada53ef7327d3615d110f87aee921546c34d62923a340215f09"
+    },
+    {
+      "id": "e0e3e2a5-1de1-43f0-b991-7948440de30a",
+      "title": "STRAY LIGHT – “Hiroko”",
+      "url": "https://www.parkettchannel.it/stray-light-hiroko/",
+      "origin": "rss",
+      "publishedAt": "2026-07-28T06:45:37+00:00",
+      "fetchedAt": "2026-07-28T07:27:07.198231+00:00",
+      "triggers": [
+        "synth"
+      ],
+      "excerpt": "STRAY LIGHT – “Hiroko” by Redazione 28 Luglio 2026 Some collaborations feel inevitable once they finally happen, as though two creative paths had been quietly moving toward the same destination all along. Hiroko , the latest release from STRAY LIGHT featuring the songwriting and vocal talent of HATi, captures that sensation with remarkable ease. Rooted in synth-pop but enriched by subtle electronic textures and heartfelt songwriting, the track presents a refined balance between emotional storytelling and polished production. It is a release that feels equally intimate and expansive, revealing new details with every listen while maintaining an immediate melodic appeal. One of the most striking aspects of Hiroko is its rhythmic construction. Rather than relying on an aggressive dancefloor ap",
+      "contentLength": 5683,
+      "contentHash": "e7ddf71ae90e7adb2474021b05737f23865c10f271b4b5c09d99f1d07c820329"
+    },
+    {
+      "id": "ef7a3c58-fdc4-489a-898d-1f888df2dbcc",
+      "title": "Pittsburgh Modular Lifeforms SV-2 Sneak Preview",
+      "url": "https://www.synthtopia.com/content/2026/08/03/pittsburgh-modular-lifeforms-sv-2-sneak-preview/",
+      "origin": "rss",
+      "publishedAt": "2026-08-03T22:41:01+00:00",
+      "fetchedAt": "2026-08-04T08:46:42.945924+00:00",
+      "triggers": [
+        "synth",
+        "synthesizer"
+      ],
+      "excerpt": "Pittsburgh Modular founder Richard Nicol shared this teaser video for the Lifeforms SV-2 , a new semi-modular analog synthesizer. Details are still to be announced, but we expect it will build on the Lifeforms SV-1 , a retired Pittsburgh Modular design that offered a complete synth voice in Eurorack format. Nicol says the Lifeforms SV-2 is “perfect for complex tones or lo-fi noise’. He adds that the soundtrack of the teaser video was recorded by multi-tracking the Lifeforms SV-2 into Ableton Live, with EQ and compression added in the mix. Details for the Lifeforms SV-2 are expected to be announced Tuesday August 11, 2026. Leave a Reply Cancel reply",
+      "contentLength": 656,
+      "contentHash": "8276259e62214f4172edcae2abd47798632b7bb8417a02ce9cbf5039889a9254"
+    },
+    {
+      "id": "f375fed7-c3a5-434d-8634-e532cd136095",
+      "title": "Trentemøller incontra Øyunn: il remix di “Feed The Good”",
+      "url": "https://www.parkettchannel.it/trentemoller-remix-oyunn/",
+      "origin": "rss",
+      "publishedAt": "2026-07-29T20:43:47+00:00",
+      "fetchedAt": "2026-07-30T08:47:53.560202+00:00",
+      "triggers": [
+        "synth"
+      ],
+      "excerpt": "Trentemøller incontra Øyunn: il remix di “Feed The Good” by Andrea Marsili 29 Luglio 2026 Un incontro tra due mondi sonori distanti ma affini. Trentemøller, storico nome della scena elettronica danese, mette la sua firma su “Feed The Good”, brano della cantautrice, batterista e rapper Øyunn. Il produttore reinterpreta il pezzo dandogli una nuova veste sonora, dove synth luminosi si intrecciano a ritmiche ispirate al mondo jungle e drum’n’bass. Nonostante la trasformazione, il cuore del brano resta lo stesso: un invito a essere più gentili con se stessi e a coltivare i legami che davvero ci fanno stare bene. Il risultato è un pezzo perfetto per accompagnare le giornate d’estate. Øyunn stessa ha raccontato l’emozione di questa collaborazione, spiegando di ascoltare la musica di Trentemøller ",
+      "contentLength": 3163,
+      "contentHash": "e2261a44c174a71f6760e2b383e4648033266ae510937c86c6bc35ab83206c66"
+    }
+  ],
+  "removed": [
+    {
+      "id": "157fe556-a3c3-4998-9383-dd63840c6a0c",
+      "title": "DJcity Summer Sale 2026: Get 2 Months for $10 (Use Code SUMMER26)",
+      "url": "https://news.djcity.com/djcity-summer-sale-2026-get-2-months-for-10-use-code-summer26/?utm_source=rss&utm_medium=rss&utm_campaign=djcity-summer-sale-2026-get-2-months-for-10-use-code-summer26",
+      "origin": "rss",
+      "publishedAt": "2026-08-03T04:19:59+00:00",
+      "fetchedAt": "2026-08-03T09:30:00.93733+00:00",
+      "triggers": [],
+      "excerpt": "News • Summer Sale 2026 🚨 Summer Sale ON NOW: Get 2 Months for $10 Summer is in full swing. Make sure your crates are loaded with exclusive edits, heavy remixes, and club-ready bangers for every gig. To help you stay ahead, we’re dropping our biggest deal of the season. Standard Trial 1 Month / $10 Regular Price SUMMER SALE OFFER 🔥 2 Months / $10 Double The Value (50% OFF) For a limited time, get 60 days of unlimited DJcity downloads for just $10 . That’s double the access at no extra cost. LIMITED TIME OFFER 2 MONTHS $10 USE CODE: SUMMER26 COPY CODE Offer Ends Soon — Start Your 60-Day Trial Today. CLAIM 2 MONTHS FOR $10 How To Claim The Offer: 1 Head over to DJcity . 2 Create your account. 3 Enter promo code SUMMER26 at checkout. 4 Start downloading and building your crates for the summ",
+      "contentLength": 2720,
+      "contentHash": "7dbe26ca4189ff47aef01f36ebff47f766204aa8abec7323e773ea92af4c1e75"
+    },
+    {
+      "id": "351639c9-012c-4851-8d12-705d70a4a237",
+      "title": "July 2026 Charts: Top Downloads By Region 📈",
+      "url": "https://news.djcity.com/july-2026-charts-top-downloads-by-region-%f0%9f%93%88/?utm_source=rss&utm_medium=rss&utm_campaign=july-2026-charts-top-downloads-by-region-%25f0%259f%2593%2588",
+      "origin": "rss",
+      "publishedAt": "2026-07-27T18:24:23+00:00",
+      "fetchedAt": "2026-07-28T07:27:12.176405+00:00",
+      "triggers": [],
+      "excerpt": "July 2026 Download Charts DJcity’s monthly charts highlight the most popular tracks globally alongside regional breakdowns across key markets. Select a chart below to download the full tracklist. 01 🌎 Global Top 50 All Genres & Regions Featuring: HUGEL, Rihanna, Ed Sheeran, Shakira, + More 02 🇪🇸 Latin Chart Latin, Urbano, + More Featuring: Shakira, Bad Bunny, J Balvin, Fantomel, + More 03 🇬🇧 UK Chart UK House, UKG, UK Hip Hop Featuring: J Hus, Gala, Jorja Smith, + More 04 🇩🇪 Germany Chart German Rap, Dance, & Pop Featuring: KITSCHKRIEG, Blumengarten, Shirin David, Bausa, + More 05 🇯🇵 Asia Chart K-Pop + Japanese Featuring: aespa, ¥ellow Bucks, C6ix, B2K, + More 06 🪷 South Asia Chart Punjabi, Bollywood, & Bhangra Featuring: VIZANO, Diljit Dosanjh, Chani Nattan, Muhammad Sadiq, + Mo",
+      "contentLength": 2770,
+      "contentHash": "f038abfb1571b339a4f9b0290b1bc19fa7cb7e64949a4fd7eadf5db3a0aea06d"
+    },
+    {
+      "id": "4d7c4141-80fa-4db3-92fd-68c129c8931d",
+      "title": "New Gristleizer Plugin, Grizzly, For macOS & Windows",
+      "url": "https://www.synthtopia.com/content/2026/07/26/new-gristleizer-plugin-grizzly-for-macos-windows/",
+      "origin": "rss",
+      "publishedAt": "2026-07-26T13:17:00+00:00",
+      "fetchedAt": "2026-07-29T08:26:16.838584+00:00",
+      "triggers": [],
+      "excerpt": "AOFN Audio’s Grizzly is a stereo modulation effect, based on the 1979 Gristleizer circuit, published by David Simpson in Electronics & Music Maker. It uses an internal LFO with triangle, square, rising saw, and falling saw waveforms to drive a modeled JFET stage in either VCA mode, which modulates the input amplitude, or VCF mode, which modulates a low-pass filter. The plugin includes adjustable modulation speed, depth, shape, offset, bias, drive, and stereo spread, with free-running or host-synchronized operation. Features: Modeled JFET stage based on the 1979 Gristleizer circuit VCA mode for amplitude modulation, including tremolo and rhythmic gating effects VCF mode for low-pass filter modulation Internal LFO with triangle, square, rising saw, and falling saw waveforms LFO speed from 0.",
+      "contentLength": 1404,
+      "contentHash": "bfd1c273adb2a5a4ed481ca8899652b88464ee41b4695e77017fc4b3cd32f2ff"
+    },
+    {
+      "id": "6c525b94-cade-4e2e-9153-6a530563bc67",
+      "title": "Free Sympathetic String Virtual Instrument, Synpathy",
+      "url": "https://www.synthtopia.com/content/2026/07/25/free-sympathetic-string-virtual-instrument-synpathy/",
+      "origin": "rss",
+      "publishedAt": "2026-07-25T17:48:11+00:00",
+      "fetchedAt": "2026-07-29T08:26:17.307204+00:00",
+      "triggers": [],
+      "excerpt": "Quantastical Sound’s Synpathy is a free software string machine that uses a sympathetic resonance system in which held voices a common field and interact with one another. The instrument provides three primary controls: Form, which shapes the string sound from thin and glassy to wide and choral; Aura, which controls the surrounding spatial character; and Synpathy, which adjusts the interaction between voices. The instrument also includes 16 presets accessible using the arrow keys and per-voice humanization that varies the response of individual chords. Features: Sympathetic resonance system in which held voices a common field and interact with one another Form control ranges from thin and glassy string sounds to wide and choral sounds Aura control ranges from dry and intimate to vast and w",
+      "contentLength": 1125,
+      "contentHash": "fd799180597be3d103519398673a9fc074d01116a8ba1ae3157b4c100661b6e7"
+    },
+    {
+      "id": "984ba9c2-30e5-4263-98ab-5cdfc88ebb35",
+      "title": "Waves Introduces Atlas Reverb Algorithmic Reverb Plugin",
+      "url": "https://www.synthtopia.com/content/2026/07/30/waves-introduces-atlas-reverb-algorithmic-reverb-plugin/",
+      "origin": "rss",
+      "publishedAt": "2026-07-30T17:43:40+00:00",
+      "fetchedAt": "2026-07-31T09:56:38.304133+00:00",
+      "triggers": [],
+      "excerpt": "Waves Audio has introduced Atlas Reverb , a new algorithmic reverb effect for Mac & Windows. The plugin provides controls for shaping the behavior and placement of the reverb within a mix, including parameters for adjusting depth, dimension, and movement. Features: Algorithmic reverb engine based on classic DSP processing Controls for adjusting depth, dimension, and movement Designed for use within full mixes and individual tracks Preset-based workflow Available through the Waves plugin ecosystem Supports Waves Central installation and management system Available as a plugin for macOS and Windows systems Supports Audio Units, VST, VST3, and AAX plugin formats Compatible with major DAW applications supporting supported plugin formats Pricing & Availability: Waves Atlas Reverb is available n",
+      "contentLength": 860,
+      "contentHash": "276697ab2b3f08e06d58965c10ec784eaf294d63786dfe0894659f635df621e0"
+    },
+    {
+      "id": "bc642c83-c62c-477d-a07e-8d9dca1ecd2f",
+      "title": "MoBlack, Bedouin, and Feki Station Bring Salif Keita’s “Mandjou” Into an Afro-House Frame",
+      "url": "https://magneticmag.com/2026/07/moblack-bedouin-and-feki-station-bring-salif-keitas-mandjou-into-an-afro-house-frame/",
+      "origin": "rss",
+      "publishedAt": "2026-07-24T19:27:06+00:00",
+      "fetchedAt": "2026-07-25T09:51:46.12157+00:00",
+      "triggers": [],
+      "excerpt": "MoBlack, Bedouin, and Feki Station Bring Salif Keita’s “Mandjou” Into an Afro-House Frame - Magnetic Magazine Home / Music MoBlack has linked with Bedouin and Feki Station for a new rework of Salif Keita’s “Mandjou,” out July 24 via Decca Records France. The release follows MoBlack’s official remix of Keita’s “Yamore,” which became one of the more visible examples of how classic African vocal recordings can find a second life inside modern Afro-house and melodic club sets. That context is important because “Mandjou” is not being treated like a quick edit or a simple vocal lift. The new version uses Keita’s original voice as the emotional center, then builds around it with organic instrumentation, tribal percussion, and the kind of restrained club movement that lets the vocal keep its digni",
+      "contentLength": 6570,
+      "contentHash": "0f2d723da59804855b128508594ec4548d60507ec455160b3379d7433b48c112"
+    },
+    {
+      "id": "dd8524e2-3294-411a-8efd-08c0870bea2e",
+      "title": "Remembering Andrew Chow, the legendary turntablist who shaped Singapore’s hip-hop nightlife",
+      "url": "https://www.bandwagon.asia/articles/remembering-andrew-chow-the-legendarturntablist-who-shaped-singapore-s-hip-hop-nightlife",
+      "origin": "rss",
+      "publishedAt": "2026-08-04T03:01:00+00:00",
+      "fetchedAt": "2026-08-04T08:48:46.8384+00:00",
+      "triggers": [
+        "dj"
+      ],
+      "excerpt": "Estimated: reading For decades, Andrew Chow , better known as DJ Wiz , helped define what hip-hop and R&B sounded like in Singapore’s clubs. A champion turntablist, influential resident DJ and generous mentor, his impact travelled far beyond the booth, reaching the DJs, dancers and club-goers who grew up around the scenes he helped build. Chow died on 3 August at the age of 63. His daughter, Abby Bernadette Chow, announced the passing of her “dearest Daddy” in a post , thanking friends and fans for the messages that had poured in for him. “I am glad to see all the sweet and touching messages and tributes to him,” she wrote. “He passed on peacefully and he would be so happy to know that you guys appreciate him so deeply.” According to The Straits Times , Chow died of stomach cancer. He rema",
+      "contentLength": 9999,
+      "contentHash": "34a8a55b1868a723c7d816674e2a4ff5ab1a27cb054787a0417f5bcb5ad58224"
+    }
+  ]
+}

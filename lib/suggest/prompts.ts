@@ -41,6 +41,8 @@ export const SUGGEST_RESPONSE_FORMAT = {
           articleIds: {
             type: 'array',
             items: { type: 'string' },
+            minItems: 1,
+            maxItems: 1,
           },
           reason: { type: 'string' },
           commonEntities: {
@@ -73,14 +75,13 @@ export function buildClusterPrompt(batch: RawArticle[]): string {
 
   return `다음 기사 목록(${batch.length}개)을 분석하세요.
 
-이 기사들을 읽고 같은 사건/릴리즈/행사/인물을 다루는 기사끼리 묶어서 토픽을 제안하세요.
-하나의 클러스터는 반드시 하나의 구체적 사건이어야 합니다.
-서로 다른 별개의 사건을 다루는 기사는 절대 같은 클러스터로 묶지 마세요.
-두 기사의 행사/발매일이 모두 알려져 있고 서로 다르면 절대 같은 클러스터로 묶지 마세요.
-행사/발매일이 불명인 기사는 제목과 본문을 이용해 기존 방식으로 판단하세요.
-여러 기사를 "음악산업", "페스티벌", "라이브 공연", "씬 동향" 같은 넓은 테마로 묶지 마세요.
-topic에는 구체적 고유명사나 작품명/행사명/제품명을 포함하세요.
-단독 기사도 한국어 EDM 기사로 쓸 만한 가치가 있으면 단독으로 제안하세요.
+기사별로 독립적인 suggestion을 만드세요.
+하나의 suggestion에는 정확히 하나의 article ID만 넣으세요.
+LLM 단계에서는 여러 기사를 서로 묶지 마세요. 동일 사건 기사 병합은 이후 deterministic 단계에서 수행됩니다.
+후속 병합에서는 두 기사의 행사/발매일이 모두 알려져 있고 서로 다르면 병합하지 않습니다.
+목록의 모든 기사를 끝까지 각각 검토한 뒤, 관련 기사마다 하나씩 suggestion을 만드세요.
+관련 없는 기사는 suggestions 배열에서 생략하세요.
+각 topic에는 해당 단일 기사의 구체적 고유명사나 작품명/행사명/제품명을 포함하세요.
 festival, fair, event, house, club, venue라는 일반 단어 또는 범용 장소명만으로 승인하지 마세요.
 홈·인테리어·라이프스타일·브랜드·패션·푸드 전시, 무역 박람회, 일반 컨퍼런스는 명시적 전자음악 근거가 없으면 거절하세요.
 "HOME DIGGING FAIR at COEX THE PLATZ"는 거절 예시입니다. house가 집인지 house music인지 문맥으로 구분하세요.

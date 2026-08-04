@@ -1,13 +1,24 @@
-import { RawArticle, SuggestionWithArticles } from './types'
-import { calculateCohesionScore } from './normalize'
+import { MIN_COHESION_SCORE, RawArticle, SuggestionWithArticles } from './types'
+import {
+  articleSnippet,
+  calculateCohesionScore,
+  isSourceOrSeriesEntity,
+} from './normalize'
 import { canMergeByEventDate } from './event-date'
 
 const MAX_MERGED_ARTICLES = 10
 const MAX_KEYWORDS = 6
 const MAX_COMMON_ENTITIES = 5
-const KEYWORD_OVERLAP_THRESHOLD = 2
-const ENTITY_OVERLAP_THRESHOLD = 1
 const RECENCY_WINDOW_MS = 7 * 24 * 60 * 60 * 1000
+const GENERIC_STORY_TERMS = new Set([
+  'announce', 'announced', 'announcement', 'artist', 'artists', 'event', 'festival',
+  'lineup', 'music',
+  'new', 'official', 'release', 'released', 'releases', 'single', 'album', 'ep',
+  'track', 'tour', 'show', 'performance', 'video', 'interview', 'premiere',
+  'set', 'sets', 'stage', 'stages',
+  '공개', '발표', '발매', '릴리즈', '신곡', '싱글', '앨범', '행사', '페스티벌',
+  '라인업', '공연', '영상', '인터뷰', '공식', '관련', '소식', '투어',
+])
 
 type ArticleMeta = { id: string; title: string; url: string }
 
@@ -30,6 +41,112 @@ function countOverlap(a: Set<string>, b: Set<string>): number {
     if (b.has(value)) count++
   }
   return count
+}
+
+function normalizeStoryTerm(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/\b(?:deaths?|died|fatalities|todesfällen|todesfaellen)\b|사망/g, ' fatality ')
+    .replace(
+      /\b(?:ends?\s+early|ended\s+early|early\s+termination|abruptly\s+cancelled|vorzeitig\s+beendet)\b|조기\s*종료/g,
+      ' early termination ',
+    )
+    .replace(/[’‘“”"'`]/g, ' ')
+    .replace(/[^a-z0-9가-힣]+/g, ' ')
+    .replace(/\b(?:19|20)\d{2}\b/g, ' ')
+    .split(/\s+/)
+    .filter((token) => token.length > 1 && !GENERIC_STORY_TERMS.has(token))
+    .join(' ')
+    .trim()
+}
+
+function quotedTopicTerms(topic: string): string[] {
+  return [...topic.matchAll(/[‘’“”"'`]([^‘’“”"'`]+)[‘’“”"'`]/g)]
+    .map((match) => match[1])
+}
+
+function discriminativeTerms(suggestion: SuggestionWithArticles): Set<string> {
+  const entityKeys = toKeySet(suggestion.commonEntities)
+  const terms = new Set<string>()
+  for (const value of [...suggestion.keywords, ...quotedTopicTerms(suggestion.topic)]) {
+    const normalized = normalizeStoryTerm(value)
+    if (
+      normalized.length >= 3
+      && !entityKeys.has(normalized)
+      && !GENERIC_STORY_TERMS.has(normalized)
+    ) {
+      terms.add(normalized)
+      for (const token of normalized.split(' ')) {
+        if (token.length >= 5 && !GENERIC_STORY_TERMS.has(token)) {
+          terms.add(token)
+        }
+      }
+    }
+  }
+  return terms
+}
+
+function groundedTerms(
+  suggestion: SuggestionWithArticles,
+  articleById: Map<string, RawArticle>,
+): Set<string> {
+  const terms = discriminativeTerms(suggestion)
+  const articles = suggestion.articleIds
+    .map((id) => articleById.get(id))
+    .filter((article): article is RawArticle => article !== undefined)
+  if (articles.length !== suggestion.articleIds.length) return new Set()
+
+  return new Set([...terms].filter((term) => {
+    if (isSourceOrSeriesEntity(term)) return false
+    const tokens = term.split(' ').filter(Boolean)
+    return articles.every((article) => {
+      const source = normalizeStoryTerm(article.sourceName ?? '')
+      if (source && (term === source || source.includes(term))) return false
+      const text = normalizeStoryTerm(`${article.title} ${articleSnippet(article)}`)
+      return text.includes(term) || tokens.every((token) => text.includes(token))
+    })
+  }))
+}
+
+function storyOverlap(
+  a: SuggestionWithArticles,
+  b: SuggestionWithArticles,
+  articleById: Map<string, RawArticle>,
+): number {
+  const termsA = groundedTerms(a, articleById)
+  const termsB = groundedTerms(b, articleById)
+  let score = 0
+  for (const left of termsA) {
+    for (const right of termsB) {
+      if (left === right) {
+        score = Math.max(score, left.includes(' ') ? 2 : 1)
+      } else if (
+        Math.min(left.length, right.length) >= 5
+        && (left.includes(right) || right.includes(left))
+      ) {
+        score = Math.max(score, 1)
+      }
+    }
+  }
+  return score
+}
+
+function sharedStoryTerms(
+  group: SuggestionWithArticles[],
+  articleById: Map<string, RawArticle>,
+): string[] {
+  if (group.length < 2) return []
+  const first = groundedTerms(group[0], articleById)
+  const rest = group.slice(1).map((suggestion) => groundedTerms(suggestion, articleById))
+  return [...first].filter((left) => rest.every((terms) =>
+    [...terms].some((right) =>
+      left === right
+      || (
+        Math.min(left.length, right.length) >= 5
+        && (left.includes(right) || right.includes(left))
+      )
+    )
+  ))
 }
 
 function latestPublishedAt(
@@ -60,14 +177,9 @@ function pairMergeScore(
   const entitiesB = toKeySet(b.commonEntities)
   const entityOverlap = countOverlap(entitiesA, entitiesB)
 
-  const keywordsA = toKeySet(a.keywords)
-  const keywordsB = toKeySet(b.keywords)
-  const keywordOverlap = countOverlap(keywordsA, keywordsB)
-
-  let mergeable = false
-  if (entityOverlap >= ENTITY_OVERLAP_THRESHOLD) {
-    mergeable = true
-  } else if (keywordOverlap >= KEYWORD_OVERLAP_THRESHOLD) {
+  const discriminativeOverlap = storyOverlap(a, b, articleById)
+  let mergeable = entityOverlap >= 1 && discriminativeOverlap >= 1
+  if (entityOverlap === 0 && discriminativeOverlap >= 2) {
     const latestA = latestPublishedAt(a.articleIds, articleById)
     const latestB = latestPublishedAt(b.articleIds, articleById)
     if (
@@ -80,7 +192,7 @@ function pairMergeScore(
   }
 
   if (!mergeable) return null
-  return entityOverlap * 2 + keywordOverlap
+  return entityOverlap * 2 + discriminativeOverlap
 }
 
 function pickTopicSource(group: SuggestionWithArticles[]): SuggestionWithArticles {
@@ -112,6 +224,20 @@ function mergeStringsByKey(
     }
   }
   return result
+}
+
+function intersectStringsByKey(
+  group: SuggestionWithArticles[],
+  pick: (s: SuggestionWithArticles) => string[] | undefined,
+  cap: number
+): string[] {
+  const first = pick(group[0]) ?? []
+  const remaining = group.slice(1).map((suggestion) =>
+    new Set((pick(suggestion) ?? []).map(toKey))
+  )
+  return first
+    .filter((value) => remaining.every((values) => values.has(toKey(value))))
+    .slice(0, cap)
 }
 
 function mergeArticleIds(group: SuggestionWithArticles[]): string[] {
@@ -158,9 +284,21 @@ function buildMergedSuggestion(
 
   const topicSource = pickTopicSource(group)
   const keywords = mergeStringsByKey(group, (s) => s.keywords, MAX_KEYWORDS)
-  const commonEntities = mergeStringsByKey(group, (s) => s.commonEntities, MAX_COMMON_ENTITIES)
+  const commonEntities = intersectStringsByKey(
+    group,
+    (s) => s.commonEntities,
+    MAX_COMMON_ENTITIES,
+  )
   const articleIds = trimByCohesion(mergeArticleIds(group), group)
-  const cohesionScore = calculateCohesionScore(articleIds, commonEntities, rawArticles)
+  const entityCohesion = calculateCohesionScore(articleIds, commonEntities, rawArticles)
+  const commonStoryAnchors = sharedStoryTerms(
+    group,
+    new Map(rawArticles.map((article) => [article.id, article])),
+  )
+  const storyCohesion = commonStoryAnchors.length > 0
+    ? Math.min(100, 80 + Math.min(articleIds.length, 5) * 4)
+    : 0
+  const cohesionScore = Math.max(entityCohesion, storyCohesion)
   const articles = articleIds
     .map((id) => articleMeta.get(id))
     .filter((a): a is ArticleMeta => a !== undefined)
@@ -176,8 +314,6 @@ function buildMergedSuggestion(
   }
 }
 
-type Pair = { i: number; j: number; score: number }
-
 export function mergeNormalizedSuggestions(
   suggestions: SuggestionWithArticles[],
   rawArticles: RawArticle[]
@@ -185,17 +321,6 @@ export function mergeNormalizedSuggestions(
   if (suggestions.length <= 1) return suggestions
 
   const articleById = new Map(rawArticles.map((a) => [a.id, a]))
-
-  const pairs: Pair[] = []
-  for (let i = 0; i < suggestions.length; i++) {
-    for (let j = i + 1; j < suggestions.length; j++) {
-      const score = pairMergeScore(suggestions[i], suggestions[j], articleById)
-      if (score !== null) {
-        pairs.push({ i, j, score })
-      }
-    }
-  }
-  pairs.sort((a, b) => b.score - a.score)
 
   const articleMeta = new Map<string, ArticleMeta>()
   for (const s of suggestions) {
@@ -206,24 +331,37 @@ export function mergeNormalizedSuggestions(
     }
   }
 
-  const used = new Set<number>()
-  const merged: SuggestionWithArticles[] = []
-
-  // Greedy pairwise: 점수 높은 쌍부터, 둘 다 미사용일 때만 병합 (전이성 없음)
-  for (const { i, j } of pairs) {
-    if (used.has(i) || used.has(j)) continue
-    merged.push(
-      buildMergedSuggestion([suggestions[i], suggestions[j]], articleMeta, rawArticles)
-    )
-    used.add(i)
-    used.add(j)
-  }
-
-  // 병합에 참여하지 않은 나머지는 단독으로 유지
-  for (let i = 0; i < suggestions.length; i++) {
-    if (!used.has(i)) {
-      merged.push(suggestions[i])
+  const merged = [...suggestions]
+  while (true) {
+    const pairs: Array<{ i: number; j: number; score: number }> = []
+    for (let i = 0; i < merged.length; i++) {
+      for (let j = i + 1; j < merged.length; j++) {
+        const score = pairMergeScore(merged[i], merged[j], articleById)
+        if (score !== null) pairs.push({ i, j, score })
+      }
     }
+    pairs.sort((a, b) => b.score - a.score)
+
+    let accepted: { i: number; j: number; candidate: SuggestionWithArticles } | null = null
+    for (const { i, j } of pairs) {
+      const candidate = buildMergedSuggestion(
+        [merged[i], merged[j]],
+        articleMeta,
+        rawArticles,
+      )
+      if (
+        candidate.cohesionScore !== undefined
+        && candidate.cohesionScore >= MIN_COHESION_SCORE
+      ) {
+        accepted = { i, j, candidate }
+        break
+      }
+    }
+    if (!accepted) break
+
+    const next = merged.filter((_, index) => index !== accepted!.i && index !== accepted!.j)
+    next.push(accepted.candidate)
+    merged.splice(0, merged.length, ...next)
   }
 
   console.log(`[merge] 병합 전: ${suggestions.length}건 → 병합 후: ${merged.length}건`)

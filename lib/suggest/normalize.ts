@@ -59,6 +59,12 @@ export function parseSuggestions(responseText: string): { suggestions?: Suggesti
   }
 }
 
+export function isSingletonRawSuggestion(
+  suggestion: Partial<Suggestion>,
+): boolean {
+  return Array.isArray(suggestion.articleIds) && suggestion.articleIds.length === 1
+}
+
 export function normalizeText(text: string): string {
   return text.toLowerCase().replace(/[^a-z0-9\s-]/g, ' ').replace(/\s+/g, ' ').trim()
 }
@@ -174,21 +180,28 @@ export function normalizeSuggestion(
       .filter((keyword) => !isLowSignalClusterText(keyword))
       .slice(0, 6)
   ))
-  let commonEntities = Array.from(new Set(
+  const rawCommonEntities = Array.from(new Set(
     (Array.isArray(suggestion.commonEntities) ? suggestion.commonEntities : [])
       .map((entity) => normalizeEntity(String(entity)))
       .filter(isSpecificEntity)
       .slice(0, 5)
   ))
+  let commonEntities = Array.from(new Set(
+    rawCommonEntities
+  ))
   if (qualifyingEntitiesByArticle) {
-    commonEntities = commonEntities.filter((entity) =>
-      articleIds.every((id) => {
-        const deterministic = qualifyingEntitiesByArticle.get(id) ?? new Set()
-        return [...deterministic].some((canonical) =>
-          canonical.toLowerCase() === entity.toLowerCase()
-        )
-      })
+    const deterministicByArticle = articleIds.map(
+      (id) => qualifyingEntitiesByArticle.get(id) ?? new Set<string>(),
     )
+    commonEntities = deterministicByArticle.length === 0
+      ? []
+      : [...deterministicByArticle[0]]
+        .filter((entity) => deterministicByArticle.slice(1).every((entities) =>
+          [...entities].some((candidate) =>
+            candidate.toLowerCase() === entity.toLowerCase()
+          )
+        ))
+        .slice(0, 5)
   }
   const topic = String(suggestion.topic ?? '').trim()
   const reason = String(suggestion.reason ?? '').trim()
@@ -204,8 +217,24 @@ export function normalizeSuggestion(
 
   const rawArticleById = new Map(rawArticles.map((article) => [article.id, article]))
   const singletonArticle = articleIds.length === 1 ? rawArticleById.get(articleIds[0]) : undefined
+  const singletonText = singletonArticle
+    ? normalizeText(`${singletonArticle.title} ${articleSnippet(singletonArticle)}`)
+    : ''
+  const groundingCandidates = [...keywords, ...rawCommonEntities]
+  const singletonGrounded = !singletonArticle || groundingCandidates.some((value) => {
+    const normalized = normalizeText(value)
+    if (!normalized || isCategoryKeyword(normalized)) return false
+    if (singletonText.includes(normalized)) return true
+    const tokens = normalized.split(' ').filter((token) => token.length >= 3)
+    return tokens.length > 0 && tokens.every((token) => singletonText.includes(token))
+  }) || (
+    Boolean(qualifyingEntitiesByArticle?.get(articleIds[0])?.size)
+    && groundingCandidates.length > 0
+    && groundingCandidates.every((value) => !/[a-z]/i.test(value))
+  )
   const singletonEligible = articleIds.length > 1 || (
     Boolean(singletonArticle)
+    && singletonGrounded
     && (
       qualifyingEntitiesByArticle
         ? (qualifyingEntitiesByArticle.get(articleIds[0])?.size ?? 0) > 0
