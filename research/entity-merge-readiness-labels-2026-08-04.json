@@ -1,0 +1,97 @@
+{
+  "review_basis": "Manual review of each stored article title and up-to-800-character excerpt. Source name alone was not used as approval evidence.",
+  "batch_labels": {
+    "2026-08-03": {
+      "editorially_irrelevant": [
+        3,
+        5,
+        9,
+        14,
+        19,
+        20,
+        21,
+        22,
+        24,
+        26,
+        27,
+        28,
+        33,
+        35,
+        36,
+        48,
+        52
+      ],
+      "ambiguous": [
+        18,
+        23,
+        47
+      ]
+    },
+    "2026-08-01": {
+      "editorially_irrelevant": [
+        3,
+        6,
+        9,
+        10,
+        12,
+        22,
+        33,
+        35,
+        49,
+        55,
+        68,
+        72,
+        75,
+        79,
+        89
+      ],
+      "ambiguous": [
+        28,
+        31,
+        36,
+        62,
+        63,
+        64,
+        74
+      ]
+    },
+    "2026-07-31": {
+      "editorially_irrelevant": [
+        1,
+        8,
+        12,
+        13,
+        14,
+        15,
+        30,
+        32,
+        33,
+        35,
+        36,
+        38,
+        40,
+        43,
+        48,
+        83,
+        85,
+        89,
+        100,
+        113,
+        125
+      ],
+      "ambiguous": [
+        9,
+        19,
+        50,
+        79,
+        84,
+        92,
+        101,
+        106,
+        110,
+        120,
+        128
+      ]
+    }
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "schema_version": "2.0",
+  "title": "FEEL THE DROP EDM Entity Dictionary Addendum Candidate — 2026-08-04 Recall Audit",
+  "last_reviewed": "2026-08-04",
+  "scope": "Conservative candidate additions supported by the 2026-08-04 123-article recall audit and independent or official evidence of sustained EDM/electronic-music relevance.",
+  "usage_policy": {
+    "english": "Preserve exact capitalization, spacing, punctuation, and accents in `en`.",
+    "korean_established": "ko_status=established: use `ko` as the Korean output only when a settled Korean notation was independently verified.",
+    "korean_none": "ko_status=none: NO settled Korean notation was verified. Keep the English form as-is. NEVER invent a Korean transliteration.",
+    "ko_avoid": "Incorrect Korean notations that must never be output.",
+    "aliases_en": "Accepted input variants for matching. Do not use as output.",
+    "weight": "Entity-matching weight follows the existing dictionary convention.",
+    "candidate_verification": "Every candidate requires evidence beyond appearance in the audited one-day batch; evidence URLs are documented in the companion audit report."
+  },
+  "counts": {
+    "artist": 7,
+    "equipment": 0,
+    "festival": 1,
+    "label": 0,
+    "venue": 0,
+    "total": 8,
+    "ko_established": 0
+  },
+  "entities": [
+    {
+      "id": "artist_christian_hornbostel",
+      "type": "artist",
+      "en": "Christian Hornbostel",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_eliza_rose",
+      "type": "artist",
+      "en": "Eliza Rose",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_moojo",
+      "type": "artist",
+      "en": "Moojo",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "FR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_nick_warren",
+      "type": "artist",
+      "en": "Nick Warren",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_hernan_cattaneo",
+      "type": "artist",
+      "en": "Hernán Cattáneo",
+      "aliases_en": [
+        "Hernan Cattaneo"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "AR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_deadcrow",
+      "type": "artist",
+      "en": "Deadcrow",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "NL",
+      "ko_source": null
+    },
+    {
+      "id": "artist_giom",
+      "type": "artist",
+      "en": "Giom",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "festival_ozora",
+      "type": "festival",
+      "en": "O.Z.O.R.A. Festival",
+      "aliases_en": [
+        "Ozora Festival",
+        "Ozora"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "HU",
+      "ko_source": null
+    }
+  ]
+}

@@ -12,12 +12,12 @@
     "weight": "Entity-matching weight used by the topic suggestion pipeline."
   },
   "counts": {
-    "artist": 360,
+    "artist": 387,
     "equipment": 33,
-    "festival": 60,
+    "festival": 63,
     "label": 49,
-    "venue": 39,
-    "total": 541,
+    "venue": 42,
+    "total": 574,
     "ko_established": 91
   },
   "entities": [
@@ -7929,6 +7929,115 @@
       "tier": "C",
       "weight": 1.0,
       "region": "JP",
+      "ko_source": null
+    },
+    {
+      "id": "artist_christian_hornbostel",
+      "type": "artist",
+      "en": "Christian Hornbostel",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "EU",
+      "ko_source": null
+    },
+    {
+      "id": "artist_eliza_rose",
+      "type": "artist",
+      "en": "Eliza Rose",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_moojo",
+      "type": "artist",
+      "en": "Moojo",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "FR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_nick_warren",
+      "type": "artist",
+      "en": "Nick Warren",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "artist_hernan_cattaneo",
+      "type": "artist",
+      "en": "Hernán Cattáneo",
+      "aliases_en": [
+        "Hernan Cattaneo"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "AR",
+      "ko_source": null
+    },
+    {
+      "id": "artist_deadcrow",
+      "type": "artist",
+      "en": "Deadcrow",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "NL",
+      "ko_source": null
+    },
+    {
+      "id": "artist_giom",
+      "type": "artist",
+      "en": "Giom",
+      "aliases_en": [],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "UK",
+      "ko_source": null
+    },
+    {
+      "id": "festival_ozora",
+      "type": "festival",
+      "en": "O.Z.O.R.A. Festival",
+      "aliases_en": [
+        "Ozora Festival",
+        "Ozora"
+      ],
+      "ko": null,
+      "ko_status": "none",
+      "ko_avoid": [],
+      "tier": "A",
+      "weight": 1.0,
+      "region": "HU",
       "ko_source": null
     }
   ]

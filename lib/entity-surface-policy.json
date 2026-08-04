@@ -1,6 +1,23 @@
 {
   "version": 2,
   "entities": {
+    "O.Z.O.R.A. Festival": {
+      "contextual_surfaces": {
+        "Ozora": {
+          "before": [
+            "festival",
+            "psytrance",
+            "psychedelic trance"
+          ],
+          "after": [
+            "festival",
+            "psytrance",
+            "psychedelic trance"
+          ],
+          "max_gap_chars": 12
+        }
+      }
+    },
     "COEX THE PLATZ": {
       "role": "supporting"
     },
