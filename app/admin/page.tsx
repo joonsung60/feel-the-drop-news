@@ -67,6 +67,7 @@ export default function AdminPage() {
   const [activeRssTab, setActiveRssTab] = useState<RssTab>('collect')
   const [activeImageTab, setActiveImageTab] = useState<ImageTab>('image-source')
   const [activeInterviewTab, setActiveInterviewTab] = useState<InterviewTab>('discovery')
+  const [preferredIngestionRunId, setPreferredIngestionRunId] = useState<string | null>(null)
 
   return (
     <div className="max-w-4xl mx-auto p-8">
@@ -119,9 +120,15 @@ export default function AdminPage() {
         />
       )}
 
-      {activeGroup === 'rss' && activeRssTab === 'collect' && <CollectTab />}
-      {activeGroup === 'rss' && activeRssTab === 'add-urls' && <AddUrlsTab />}
-      {activeGroup === 'rss' && activeRssTab === 'suggest' && <SuggestTab />}
+      {activeGroup === 'rss' && activeRssTab === 'collect' && (
+        <CollectTab onIngestionRun={setPreferredIngestionRunId} />
+      )}
+      {activeGroup === 'rss' && activeRssTab === 'add-urls' && (
+        <AddUrlsTab onIngestionRun={setPreferredIngestionRunId} />
+      )}
+      {activeGroup === 'rss' && activeRssTab === 'suggest' && (
+        <SuggestTab preferredIngestionRunId={preferredIngestionRunId} />
+      )}
       {activeGroup === 'rss' && activeRssTab === 'articles' && <ArticlesReviewTab />}
       {activeGroup === 'rss' && activeRssTab === 'cluster' && <ClusterTab />}
       {activeGroup === 'rss' && activeRssTab === 'generate' && <GenerateTab />}
@@ -180,7 +187,11 @@ function fileToDataUrl(file: File): Promise<string> {
   })
 }
 
-function CollectTab() {
+function CollectTab({
+  onIngestionRun,
+}: {
+  onIngestionRun: (runId: string) => void
+}) {
   const [isLoading, setIsLoading] = useState(false)
   const [result, setResult] = useState<string>('')
   const [failures, setFailures] = useState<{ source: string; url: string; error: string }[]>([])
@@ -212,6 +223,7 @@ function CollectTab() {
     try {
       const res = await fetch('/api/collect', { method: 'POST' })
       const data = await res.json()
+      if (typeof data.ingestionRunId === 'string') onIngestionRun(data.ingestionRunId)
       setResult(`수집 완료: ${data.collected}개 기사 저장됨`)
       setFailures(data.failures ?? [])
     } catch {
@@ -254,7 +266,11 @@ function CollectTab() {
   )
 }
 
-function AddUrlsTab() {
+function AddUrlsTab({
+  onIngestionRun,
+}: {
+  onIngestionRun: (runId: string) => void
+}) {
   const [urls, setUrls] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [result, setResult] = useState<string>('')
@@ -272,6 +288,7 @@ function AddUrlsTab() {
         body: JSON.stringify({ urls: urlList }),
       })
       const data = await res.json()
+      if (typeof data.ingestionRunId === 'string') onIngestionRun(data.ingestionRunId)
       setResult(`${data.collected}개 기사가 DB에 추가됐습니다.`)
       setUrls('')
     } catch {
@@ -696,7 +713,11 @@ type GenerateResult = {
   error?: string
 }
 
-function SuggestTab() {
+function SuggestTab({
+  preferredIngestionRunId,
+}: {
+  preferredIngestionRunId: string | null
+}) {
   const [subTab, setSubTab] = useState<SubTab>('pending')
   const [suggestions, setSuggestions] = useState<PersistedSuggestion[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -795,7 +816,10 @@ function SuggestTab() {
       const res = await fetch('/api/suggest-clusters', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ limit: suggestLimit }),
+        body: JSON.stringify({
+          limit: suggestLimit,
+          preferredIngestionRunId,
+        }),
       })
       const data = await res.json()
       if (data.error) {

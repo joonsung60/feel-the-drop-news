@@ -19,6 +19,7 @@ import re
 import sys
 import time
 import unicodedata
+import uuid
 from dataclasses import asdict, dataclass
 from datetime import date, datetime, timedelta, timezone
 from html.parser import HTMLParser
@@ -30,6 +31,12 @@ from zoneinfo import ZoneInfo
 import requests
 from dotenv import load_dotenv
 from pipeline_observer import PipelineObserver
+
+
+def correspondent_ingestion_source(source_url: str) -> str:
+    normalized = source_url.strip().lower().rstrip("/")
+    digest = hashlib.sha256(normalized.encode("utf-8")).hexdigest()[:24]
+    return f"correspondent:{digest}"
 
 # Keep Crawl4AI's database/cache inside the standalone process directory. This
 # also avoids assuming that the WSL home directory is writable.
@@ -2175,6 +2182,7 @@ class CorrespondentCrawler:
         config: dict[str, Any],
         dry_run: bool,
         observer: PipelineObserver,
+        ingestion_run_id: str,
     ) -> None:
         self.database = database
         self.ollama = ollama
@@ -2183,6 +2191,7 @@ class CorrespondentCrawler:
         self.config = config
         self.dry_run = dry_run
         self.observer = observer
+        self.ingestion_run_id = ingestion_run_id
         self.denylist = config["tracking_query_denylist"]
         self.item_url_exclude_patterns = config["item_url_exclude_patterns"]
         self.news_beats = set(config["news_beats"])
@@ -2453,6 +2462,8 @@ class CorrespondentCrawler:
                 "origin": "correspondent",
                 "source_id": None,
                 "suggestion_state": "new",
+                "ingestion_run_id": self.ingestion_run_id,
+                "ingestion_source": correspondent_ingestion_source(beat.url),
             }
             if self.dry_run:
                 try:
@@ -2673,6 +2684,7 @@ async def async_main(args: argparse.Namespace) -> int:
         raise RuntimeError("No active beats found")
 
     observer = PipelineObserver("correspondent", root / "logs")
+    ingestion_run_id = str(uuid.uuid4())
     observer.event(
         "run_start",
         detail={
@@ -2684,6 +2696,7 @@ async def async_main(args: argparse.Namespace) -> int:
             },
             "model": model,
             "targets": [asdict(beat) for beat in beats],
+            "ingestion_run_id": ingestion_run_id,
         },
     )
 
@@ -2712,7 +2725,14 @@ async def async_main(args: argparse.Namespace) -> int:
         async with Crawl4AIRenderer(int(config["crawl_timeout_ms"])) as renderer:
             fetcher = HybridFetcher(renderer, config)
             crawler = CorrespondentCrawler(
-                database, ollama, fetcher, entities, config, args.dry_run, observer,
+                database,
+                ollama,
+                fetcher,
+                entities,
+                config,
+                args.dry_run,
+                observer,
+                ingestion_run_id,
             )
             for beat in beats:
                 try:
@@ -2733,11 +2753,20 @@ async def async_main(args: argparse.Namespace) -> int:
                 and all(summary.errors == 0 for summary in summaries.values())
                 else "error"
             ),
-            detail={"dry_run": args.dry_run, "beats": {name: asdict(value) for name, value in summaries.items()}},
+            detail={
+                "dry_run": args.dry_run,
+                "ingestion_run_id": ingestion_run_id,
+                "beats": {name: asdict(value) for name, value in summaries.items()},
+            },
         )
 
     result = {name: asdict(summary) for name, summary in summaries.items()}
-    print(json.dumps({"dry_run": args.dry_run, "model": model, "beats": result}, ensure_ascii=False, indent=2))
+    print(json.dumps({
+        "dry_run": args.dry_run,
+        "model": model,
+        "ingestionRunId": ingestion_run_id,
+        "beats": result,
+    }, ensure_ascii=False, indent=2))
     return 0
 
 

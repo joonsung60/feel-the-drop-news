@@ -103,3 +103,20 @@ export async function markRawArticlesSuggested(suggestions: SuggestionWithArticl
     console.error('[suggest-clusters] raw_articles suggestion_state 업데이트 실패:', error.message)
   }
 }
+
+export async function markRawArticlesChecked(
+  articleIds: string[],
+  checkedAt = new Date().toISOString(),
+): Promise<void> {
+  const uniqueIds = Array.from(new Set(articleIds))
+  if (uniqueIds.length === 0) return
+
+  const { error } = await supabase
+    .from('raw_articles')
+    .update({ suggestion_last_checked_at: checkedAt })
+    .in('id', uniqueIds)
+
+  if (error) {
+    throw new Error(`raw_articles checked timestamp update failed: ${error.message}`)
+  }
+}

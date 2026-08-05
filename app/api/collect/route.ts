@@ -4,6 +4,11 @@ import { extractArticleText, extractArticleTitle, extractImageUrl, isUrlLikeTitl
 import Parser from 'rss-parser'
 import { syncArticleViews } from '@/lib/article-views'
 import { PipelineObserver } from '@/lib/pipeline-observer'
+import {
+  createIngestionRunId,
+  directUrlIngestionSource,
+  rssIngestionSource,
+} from '@/lib/ingestion-run'
 
 const parser = new Parser()
 const RSS_TIMEOUT_MS = 12000
@@ -113,7 +118,10 @@ async function fetchArticleContent(url: string): Promise<{ content: string; imag
 }
 
 // RSS 자동 수집
-async function collectFromRSS(observer: PipelineObserver): Promise<{ collected: number; failures: CollectFailure[]; diagnostics: RssDiagnostics }> {
+async function collectFromRSS(
+  observer: PipelineObserver,
+  ingestionRunId: string,
+): Promise<{ collected: number; failures: CollectFailure[]; diagnostics: RssDiagnostics }> {
   const diagnostics: RssDiagnostics = {
     sourceCount: 0,
     parsedSourceCount: 0,
@@ -204,6 +212,8 @@ async function collectFromRSS(observer: PipelineObserver): Promise<{ collected: 
           author: item.creator || null,
           published_at: publishedAt,
           origin: 'rss',
+          ingestion_run_id: ingestionRunId,
+          ingestion_source: rssIngestionSource(source.id),
         })
 
         if (insertError) {
@@ -251,7 +261,11 @@ async function collectFromRSS(observer: PipelineObserver): Promise<{ collected: 
 }
 
 // URL 직접 추가
-async function collectFromUrls(urls: string[], observer: PipelineObserver): Promise<{ collected: number; diagnostics: UrlDiagnostics }> {
+async function collectFromUrls(
+  urls: string[],
+  observer: PipelineObserver,
+  ingestionRunId: string,
+): Promise<{ collected: number; diagnostics: UrlDiagnostics }> {
   let collected = 0
   const diagnostics: UrlDiagnostics = {
     urlCount: urls.length,
@@ -291,6 +305,8 @@ async function collectFromUrls(urls: string[], observer: PipelineObserver): Prom
         image_url: imageUrl,
         published_at: new Date().toISOString(),
         origin: 'url',
+        ingestion_run_id: ingestionRunId,
+        ingestion_source: directUrlIngestionSource(),
       })
 
       if (insertError) {
@@ -328,6 +344,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}))
     const { urls } = body
+    const ingestionRunId = createIngestionRunId()
 
     observer.event({
       stage: 'run_start', reason: null, source: null, item_url: null, title: null,
@@ -335,6 +352,7 @@ export async function POST(req: NextRequest) {
         params: body,
         model: null,
         targets: urls && urls.length > 0 ? urls : ['active rss_sources'],
+        ingestion_run_id: ingestionRunId,
       },
     })
 
@@ -342,10 +360,10 @@ export async function POST(req: NextRequest) {
 
     let result;
     if (urls && urls.length > 0) {
-      const { collected, diagnostics } = await collectFromUrls(urls, observer)
+      const { collected, diagnostics } = await collectFromUrls(urls, observer, ingestionRunId)
       result = { collected, failures: [], diagnostics }
     } else {
-      result = await collectFromRSS(observer)
+      result = await collectFromRSS(observer, ingestionRunId)
     }
 
     console.log('수집 완료:', result.collected)
@@ -360,7 +378,13 @@ export async function POST(req: NextRequest) {
 
     observer.event({
       stage: 'run_end', reason: 'ok', source: null, item_url: null, title: null,
-      detail: { collected: result.collected, failures: result.failures.length, diagnostics: result.diagnostics, views_synced: viewsSynced },
+      detail: {
+        collected: result.collected,
+        failures: result.failures.length,
+        diagnostics: result.diagnostics,
+        views_synced: viewsSynced,
+        ingestion_run_id: ingestionRunId,
+      },
     })
     return NextResponse.json({ 
       success: true, 
@@ -368,6 +392,7 @@ export async function POST(req: NextRequest) {
       failures: result.failures,
       diagnostics: result.diagnostics,
       viewsSynced,
+      ingestionRunId,
     })
   } catch (err) {
     console.error('collect API 에러:', err)

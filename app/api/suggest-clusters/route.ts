@@ -25,8 +25,19 @@ import {
   partitionArticlesByEntityRole,
   selectEligibleLlmInput,
 } from '@/lib/suggest/eligibility'
-import { attachSourceMeta, hydrateSuggestions, markRawArticlesSuggested } from '@/lib/suggest/db'
+import {
+  attachSourceMeta,
+  hydrateSuggestions,
+  markRawArticlesChecked,
+  markRawArticlesSuggested,
+} from '@/lib/suggest/db'
 import { PipelineObserver } from '@/lib/pipeline-observer'
+import {
+  hydrateSelectedArticles,
+  selectSuggestPool,
+  suggestPoolPolicy,
+} from '@/lib/suggest/pool-selection'
+import { resolvePoolEvaluationCompletion } from '@/lib/suggest/evaluation-completion'
 
 const LLM_INPUT_MAX = 120
 const NO_ENTITY_RATIO_MAX = 0.6
@@ -100,7 +111,12 @@ export async function POST(req: NextRequest) {
   const observer = new PipelineObserver('suggest')
   try {
     const body = await req.json().catch(() => ({}))
-    const { limit: rawLimit } = body as { limit?: unknown }
+    const { limit: rawLimit, preferredIngestionRunId: rawPreferredIngestionRunId } =
+      body as { limit?: unknown; preferredIngestionRunId?: unknown }
+    const preferredIngestionRunId =
+      typeof rawPreferredIngestionRunId === 'string' && rawPreferredIngestionRunId.trim()
+        ? rawPreferredIngestionRunId.trim()
+        : null
 
     const MIN_LIMIT = 60
     const MAX_LIMIT = 200
@@ -110,6 +126,7 @@ export async function POST(req: NextRequest) {
     const limit = Math.ceil(clampedLimit / BATCH_SIZE) * BATCH_SIZE
     const ollamaUrl = process.env.OLLAMA_BASE_URL || 'http://localhost:11434'
     const suggestModel = process.env.OLLAMA_SUGGEST_MODEL || process.env.OLLAMA_MODEL || 'qwen3:14b'
+    const poolPolicy = suggestPoolPolicy()
 
     observer.event({
       stage: 'run_start', reason: null, source: null, item_url: null, title: null,
@@ -118,42 +135,94 @@ export async function POST(req: NextRequest) {
         model: suggestModel,
         targets: ['raw_articles'],
         applied_limit: limit,
+        pool_policy: poolPolicy,
+        preferred_ingestion_run_id: preferredIngestionRunId,
       },
     })
 
-    const { data: articles, error } = await supabase
-      .from('raw_articles')
-      .select('id, title, content, url, source_id, published_at, event_date, facts')
-      .or('suggestion_state.is.null,suggestion_state.eq.new')
-      .order('published_at', { ascending: false })
-      .limit(limit)
-
-    if (error) {
-      return finishRun(observer, NextResponse.json({ error: error.message }, { status: 500 }), {
-        error: error.message,
-      }, 'error')
-    }
-    const publishedValues = (articles ?? [])
+    const pool = await selectSuggestPool(supabase, {
+      limit,
+      preferredIngestionRunId,
+      policy: poolPolicy,
+    })
+    const articles = await hydrateSelectedArticles(supabase, pool.articleIds)
+    const publishedValues = articles
       .map((article) => article.published_at)
       .filter((value): value is string => typeof value === 'string' && value.length > 0)
       .sort()
     observer.event({
       stage: 'pool_query', reason: 'ok', source: 'raw_articles', item_url: null, title: null,
       detail: {
-        returned_rows: articles?.length ?? 0,
+        returned_rows: articles.length,
         applied_limit: limit,
         published_at_min: publishedValues[0] ?? null,
         published_at_max: publishedValues[publishedValues.length - 1] ?? null,
+        pool_policy: pool.diagnostics.policy,
+        preferred_ingestion_run_id: pool.diagnostics.preferredIngestionRunId,
+        resolved_ingestion_run_id: pool.diagnostics.resolvedIngestionRunId,
+        invalid_preferred_ingestion_run_id: pool.diagnostics.invalidPreferredIngestionRunId,
+        cohort_entitlement: pool.diagnostics.cohortEntitlement,
+        cohort_selected: pool.diagnostics.cohortSelected,
+        fair_remainder_selected: pool.diagnostics.fairRemainderSelected,
+        origin_distribution: pool.diagnostics.origin,
+        source_distribution: pool.diagnostics.source,
+        publication_distribution: pool.diagnostics.publication,
+        unchecked: pool.diagnostics.unchecked,
+        rechecked: pool.diagnostics.rechecked,
       },
     })
-    if (!articles || articles.length === 0) {
+    if (articles.length === 0) {
+      const emptyCompletion = {
+        checked_article_count: 0,
+        retryable_article_count: 0,
+        retryable_article_ids: [] as string[],
+        successful_llm_batches: 0,
+        failed_llm_batches: 0,
+      }
       return finishRun(
         observer,
-        NextResponse.json({ suggestions: [], total: 0, message: '최근 미사용 기사가 없습니다.' }),
-        { total: 0, saved: 0 },
+        NextResponse.json({
+          suggestions: [],
+          total: 0,
+          message: '최근 미사용 기사가 없습니다.',
+          ...emptyCompletion,
+        }),
+        { total: 0, saved: 0, ...emptyCompletion },
       )
     }
 
+    const poolArticleIds = articles.map(({ id }) => id)
+    const failedLlmArticleIds = new Set<string>()
+    let successfulLlmBatches = 0
+    let failedLlmBatches = 0
+    const finishPoolEvaluation = async (allLlmBatchesFailed = false) => {
+      const completion = resolvePoolEvaluationCompletion(
+        poolArticleIds,
+        failedLlmArticleIds,
+        allLlmBatchesFailed,
+      )
+      if (completion.checkedArticleIds.length > 0) {
+        await markRawArticlesChecked(completion.checkedArticleIds)
+      }
+      const detail = {
+        checked_article_count: completion.checkedArticleIds.length,
+        retryable_article_count: completion.retryableArticleIds.length,
+        retryable_article_ids: completion.retryableArticleIds,
+        successful_llm_batches: successfulLlmBatches,
+        failed_llm_batches: failedLlmBatches,
+      }
+      observer.event({
+        stage: 'pool_checked',
+        reason: allLlmBatchesFailed
+          ? 'all_llm_batches_failed'
+          : failedLlmBatches > 0 ? 'partial_llm_failure' : 'ok',
+        source: 'raw_articles',
+        item_url: null,
+        title: null,
+        detail,
+      })
+      return detail
+    }
     const rawArticles = await attachSourceMeta(articles as RawArticle[])
     const articleMeta = new Map(
       rawArticles.map((a) => [a.id, { id: a.id, title: a.title, url: a.url }])
@@ -247,6 +316,7 @@ export async function POST(req: NextRequest) {
     )
 
     if (llmInput.length === 0) {
+      const completion = await finishPoolEvaluation()
       return finishRun(observer, NextResponse.json({
         suggestions: [],
         saved: 0,
@@ -258,7 +328,13 @@ export async function POST(req: NextRequest) {
         supportingOnlyCount: partition.supportingOnly.length,
         noEntityCount: partition.notMatched.length,
         llmInputCount: 0,
-      }), { total: articles.length, saved: 0, llm_input_count: 0 })
+        ...completion,
+      }), {
+        total: articles.length,
+        saved: 0,
+        llm_input_count: 0,
+        ...completion,
+      })
     }
 
     // ───── Stage 2: LLM이 배치별 클러스터링 + 토픽 제안 ─────
@@ -305,6 +381,8 @@ export async function POST(req: NextRequest) {
           signal: controller.signal,
         })
       } catch (err: unknown) {
+        failedLlmBatches++
+        for (const article of batch) failedLlmArticleIds.add(article.id)
         clearTimeout(timeoutId)
         if (err instanceof Error && err.name === 'AbortError') {
           console.log(`[batch ${batchIndex}] 타임아웃 - 건너뜀`)
@@ -321,6 +399,8 @@ export async function POST(req: NextRequest) {
       clearTimeout(timeoutId)
 
       if (!ollamaRes.ok) {
+        failedLlmBatches++
+        for (const article of batch) failedLlmArticleIds.add(article.id)
         console.error(`[batch ${batchIndex}] Ollama 응답 오류: ${ollamaRes.status} - 건너뜀`)
         logSuggestionDropped(observer, {}, 'llm_http_error', {
           batch_index: batchIndex, status_code: ollamaRes.status,
@@ -338,6 +418,8 @@ export async function POST(req: NextRequest) {
       try {
         parsed = parseSuggestions(responseText)
       } catch (err) {
+        failedLlmBatches++
+        for (const article of batch) failedLlmArticleIds.add(article.id)
         console.error(`[batch ${batchIndex}] parseSuggestions 에러 - 건너뜀:`, String(err))
         logSuggestionDropped(observer, {}, 'llm_parse_error', {
           batch_index: batchIndex, raw_path: rawPath, error: String(err),
@@ -346,6 +428,7 @@ export async function POST(req: NextRequest) {
       }
 
       const suggestions = parsed.suggestions ?? []
+      successfulLlmBatches++
       llmSuggestionCount += suggestions.length
       
       for (const suggestion of suggestions) {
@@ -392,8 +475,28 @@ export async function POST(req: NextRequest) {
       + ` 정규화 통과: ${normalized.length}건`
     )
 
+    if (batches.length > 0 && successfulLlmBatches === 0) {
+      const completion = await finishPoolEvaluation(true)
+      return finishRun(
+        observer,
+        NextResponse.json(
+          {
+            error: '모든 LLM batch가 실패해 pool evaluation을 완료하지 못했습니다.',
+            ...completion,
+          },
+          { status: 502 },
+        ),
+        {
+          total: articles.length,
+          ...completion,
+        },
+        'error',
+      )
+    }
+
     if (normalized.length === 0) {
       console.log('[suggest-clusters] 저장 0건')
+      const completion = await finishPoolEvaluation()
       return finishRun(observer, NextResponse.json({
         suggestions: [],
         saved: 0,
@@ -408,7 +511,13 @@ export async function POST(req: NextRequest) {
         batchCount: batches.length,
         llmSuggestionCount,
         normalizedSuggestionCount: 0,
-      }), { total: articles.length, saved: 0, llm_suggestion_count: llmSuggestionCount })
+        ...completion,
+      }), {
+        total: articles.length,
+        saved: 0,
+        llm_suggestion_count: llmSuggestionCount,
+        ...completion,
+      })
     }
 
     const merged = mergeNormalizedSuggestions(normalized, rawArticles)
@@ -430,6 +539,7 @@ export async function POST(req: NextRequest) {
 
     if (saveableSuggestions.length === 0) {
       console.log('[suggest-clusters] 저장 0건')
+      const completion = await finishPoolEvaluation()
       return finishRun(observer, NextResponse.json({
         suggestions: [],
         saved: 0,
@@ -445,7 +555,13 @@ export async function POST(req: NextRequest) {
         llmSuggestionCount,
         normalizedSuggestionCount: normalized.length,
         duplicateSkipCount,
-      }), { total: articles.length, saved: 0, duplicate_skip_count: duplicateSkipCount })
+        ...completion,
+      }), {
+        total: articles.length,
+        saved: 0,
+        duplicate_skip_count: duplicateSkipCount,
+        ...completion,
+      })
     }
 
     const insertPayload = saveableSuggestions.map((s) => ({
@@ -464,15 +580,20 @@ export async function POST(req: NextRequest) {
       for (const suggestion of saveableSuggestions) {
         logSuggestionDropped(observer, suggestion, 'insert_error', { error: insertError.message })
       }
+      const failedCompletion = await finishPoolEvaluation(true)
       return finishRun(
         observer,
-        NextResponse.json({ error: `제안 저장 실패: ${insertError.message}` }, { status: 500 }),
-        { error: insertError.message },
+        NextResponse.json({
+          error: `제안 저장 실패: ${insertError.message}`,
+          ...failedCompletion,
+        }, { status: 500 }),
+        { error: insertError.message, ...failedCompletion },
         'error',
       )
     }
 
     await markRawArticlesSuggested(saveableSuggestions)
+    const completion = await finishPoolEvaluation()
 
     const persisted = await hydrateSuggestions((inserted ?? []) as DbSuggestedCluster[])
     console.log(`[suggest-clusters] 저장: ${persisted.length}건`)
@@ -499,6 +620,7 @@ export async function POST(req: NextRequest) {
       llmSuggestionCount,
       normalizedSuggestionCount: normalized.length,
       duplicateSkipCount,
+      ...completion,
     }), {
       total: articles.length,
       saved: persisted.length,
@@ -506,6 +628,7 @@ export async function POST(req: NextRequest) {
       llm_suggestion_count: llmSuggestionCount,
       normalized_suggestion_count: normalized.length,
       duplicate_skip_count: duplicateSkipCount,
+      ...completion,
     })
   } catch (err) {
     return finishRun(

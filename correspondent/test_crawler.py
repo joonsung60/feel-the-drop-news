@@ -514,6 +514,7 @@ class CrawlerTests(unittest.TestCase):
             },
             False,
             observer,
+            "10000000-0000-4000-8000-000000000001",
         )
         page = RenderedPage(
             "https://example.com/events",

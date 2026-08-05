@@ -75,6 +75,8 @@ EDM/전자음악 관련 해외 소스(RSS, 개별 URL, SNS/포스터 이미지)�
 - `OLLAMA_BASE_URL` (미설정 시 `http://localhost:11434`)
 - `OLLAMA_MODEL` (일반 기사 생성 기본 모델. 미설정 시 코드 default는 `qwen3:14b`)
 - `SUGGEST_MODEL` (자동 토픽 제안 전용. 미설정 시 `OLLAMA_MODEL`로 폴백)
+- `SUGGEST_POOL_POLICY` (자동 토픽 후보군 selector. 기본값은 `cohort_fair_v1`;
+  즉시 rollback은 `legacy`)
 - `ADMIN_PASSWORD` (proxy.ts에서 필수. 미설정 시 /admin/* 접근 시 500)
 - `CLOUDFLARE_DEPLOY_HOOK_URL`
 - `CRON_SECRET` (선택. 설정 시 `/api/cron`에 `Authorization: Bearer` 필수)
@@ -87,6 +89,17 @@ Cloudflare Pages:
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
 Cloudflare 배포본에는 `OLLAMA_BASE_URL`, `OLLAMA_MODEL`, `ADMIN_PASSWORD`가 필요 없다.
+
+### Suggest pool cohort 배포 순서
+
+1. `raw_articles.ingestion_run_id`, `ingestion_source`와 관련 index migration을 적용한다.
+2. Next.js application과 correspondent crawler 코드를 배포한다.
+3. `SUGGEST_POOL_POLICY`를 기본값 `cohort_fair_v1`로 두어 selector를 활성화한다.
+4. 문제가 있으면 `SUGGEST_POOL_POLICY=legacy`로 바꾸고 application을 재시작한다.
+
+Application/correspondent 코드를 migration보다 먼저 실행하면 아직 존재하지 않는
+ingestion 컬럼을 조회·삽입하므로 실패한다. Rollback은 selector만 legacy로 되돌리며
+nullable ingestion 컬럼과 index는 그대로 유지해도 기존 동작에 영향을 주지 않는다.
 
 ## 5. 주요 DB/Storage
 

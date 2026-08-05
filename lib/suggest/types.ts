@@ -18,7 +18,12 @@ export type RawArticle = {
   url: string
   source_id: string | number | null
   sourceName?: string
+  origin?: string | null
   published_at?: string | null
+  fetched_at?: string | null
+  suggestion_last_checked_at?: string | null
+  ingestion_run_id?: string | null
+  ingestion_source?: string | null
   event_date?: string | null
   facts?: {
     correspondent_gate?: {
