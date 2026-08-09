@@ -104,6 +104,22 @@ export async function markRawArticlesSuggested(suggestions: SuggestionWithArticl
   }
 }
 
+export async function markRawArticlesSuggestedBySuggest2(
+  suggestions: SuggestionWithArticles[],
+): Promise<void> {
+  const articleIds = Array.from(new Set(suggestions.flatMap((suggestion) => suggestion.articleIds)))
+  if (articleIds.length === 0) return
+
+  const { error } = await supabase
+    .from('raw_articles')
+    .update({ suggestion_state: 'suggested' })
+    .in('id', articleIds)
+
+  if (error) {
+    console.error('[suggest-clusters/extended] raw_articles suggestion_state 업데이트 실패:', error.message)
+  }
+}
+
 export async function markRawArticlesChecked(
   articleIds: string[],
   checkedAt = new Date().toISOString(),
@@ -118,5 +134,22 @@ export async function markRawArticlesChecked(
 
   if (error) {
     throw new Error(`raw_articles checked timestamp update failed: ${error.message}`)
+  }
+}
+
+export async function markRawArticlesSuggest2Checked(
+  articleIds: string[],
+  checkedAt = new Date().toISOString(),
+): Promise<void> {
+  const uniqueIds = Array.from(new Set(articleIds))
+  if (uniqueIds.length === 0) return
+
+  const { error } = await supabase
+    .from('raw_articles')
+    .update({ suggest2_last_checked_at: checkedAt })
+    .in('id', uniqueIds)
+
+  if (error) {
+    throw new Error(`raw_articles Suggest 2 checked timestamp update failed: ${error.message}`)
   }
 }

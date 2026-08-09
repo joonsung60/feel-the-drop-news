@@ -75,8 +75,9 @@ EDM/전자음악 관련 해외 소스(RSS, 개별 URL, SNS/포스터 이미지)�
 - `OLLAMA_BASE_URL` (미설정 시 `http://localhost:11434`)
 - `OLLAMA_MODEL` (일반 기사 생성 기본 모델. 미설정 시 코드 default는 `qwen3:14b`)
 - `SUGGEST_MODEL` (자동 토픽 제안 전용. 미설정 시 `OLLAMA_MODEL`로 폴백)
-- `SUGGEST_POOL_POLICY` (자동 토픽 후보군 selector. 기본값은 `cohort_fair_v1`;
-  즉시 rollback은 `legacy`)
+- `SUGGEST_POOL_POLICY` (자동 토픽 후보군 selector. 미설정/default는
+  `fresh_only_v1`; 즉시 이전 fair selector로 rollback하려면 `cohort_fair_v1`,
+  가장 오래된 published-at selector는 `legacy`)
 - `ADMIN_PASSWORD` (proxy.ts에서 필수. 미설정 시 /admin/* 접근 시 500)
 - `CLOUDFLARE_DEPLOY_HOOK_URL`
 - `CRON_SECRET` (선택. 설정 시 `/api/cron`에 `Authorization: Bearer` 필수)
@@ -94,12 +95,28 @@ Cloudflare 배포본에는 `OLLAMA_BASE_URL`, `OLLAMA_MODEL`, `ADMIN_PASSWORD`�
 
 1. `raw_articles.ingestion_run_id`, `ingestion_source`와 관련 index migration을 적용한다.
 2. Next.js application과 correspondent crawler 코드를 배포한다.
-3. `SUGGEST_POOL_POLICY`를 기본값 `cohort_fair_v1`로 두어 selector를 활성화한다.
-4. 문제가 있으면 `SUGGEST_POOL_POLICY=legacy`로 바꾸고 application을 재시작한다.
+3. `SUGGEST_POOL_POLICY`를 미설정 상태 또는 `fresh_only_v1`로 두어 fresh-only
+   selector를 활성화한다. Correspondent의 72시간 범위는 검증된 최적값이 아니라
+   초기 운영값이다.
+4. 문제가 있으면 `SUGGEST_POOL_POLICY=cohort_fair_v1`로 바꾸고 application을
+   재시작해 직전 fair selector로 rollback한다.
 
 Application/correspondent 코드를 migration보다 먼저 실행하면 아직 존재하지 않는
-ingestion 컬럼을 조회·삽입하므로 실패한다. Rollback은 selector만 legacy로 되돌리며
+ingestion 컬럼을 조회·삽입하므로 실패한다. Rollback은 selector만 `cohort_fair_v1`로 되돌리며
 nullable ingestion 컬럼과 index는 그대로 유지해도 기존 동작에 영향을 주지 않는다.
+
+### Suggest 1/2 역할 분리 배포 순서
+
+1. `raw_articles.suggest2_last_checked_at`과 partial index migration을 적용한다.
+2. application을 배포한다. Migration 전에 새 extended route를 실행하면 컬럼 부재로
+   실패한다.
+3. Suggest 1은 fresh explicit RSS/correspondent cohort만 사용하고,
+   Suggest 2(`/api/suggest-clusters/extended`)는 현재 fresh cohort를 제외한 backlog의
+   pair group만 사용한다.
+   Suggest 2 group의 LRU cursor는 그룹 기사 `suggest2_last_checked_at` 중 최댓값이다.
+   일부 기사만 최근 평가된 그룹도 최근 그룹으로 간주해 즉시 재선택하지 않는다.
+4. Suggest 1 문제 시 `SUGGEST_POOL_POLICY=cohort_fair_v1`로 rollback한다.
+   Suggest 2 migration은 nullable 컬럼 추가이므로 그대로 두어도 안전하다.
 
 ## 5. 주요 DB/Storage
 

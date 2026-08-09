@@ -3,6 +3,7 @@ import test from 'node:test'
 import {
   PoolArticleMetadata,
   selectSuggestPool,
+  suggestPoolPolicy,
 } from '../lib/suggest/pool-selection'
 
 type Row = PoolArticleMetadata & {
@@ -216,6 +217,7 @@ test('D selector drains an explicit 123-row cohort across consecutive runs', asy
   const first = await selectSuggestPool(database, {
     limit: 100,
     preferredIngestionRunId: RUN_A,
+    policy: 'cohort_fair_v1',
   })
   assert.equal(first.diagnostics.cohortSelected, 70)
   assert.equal(first.diagnostics.fairRemainderSelected, 30)
@@ -225,6 +227,7 @@ test('D selector drains an explicit 123-row cohort across consecutive runs', asy
   const second = await selectSuggestPool(database, {
     limit: 100,
     preferredIngestionRunId: RUN_A,
+    policy: 'cohort_fair_v1',
   })
   const remainingCohort = second.metadata
     .filter((row) => row.ingestion_run_id === RUN_A)
@@ -238,6 +241,7 @@ test('D selector drains an explicit 123-row cohort across consecutive runs', asy
   const third = await selectSuggestPool(database, {
     limit: 100,
     preferredIngestionRunId: RUN_A,
+    policy: 'cohort_fair_v1',
   })
   assert.equal(third.diagnostics.cohortSelected, 70)
   assert.equal(third.diagnostics.fairRemainderSelected, 30)
@@ -250,6 +254,7 @@ test('limits 100/120/200 preserve entitlement, uniqueness, and bounded size', as
     const result = await selectSuggestPool(fixture(), {
       limit,
       preferredIngestionRunId: RUN_A,
+      policy: 'cohort_fair_v1',
     })
     assert.equal(result.articleIds.length, limit)
     assert.equal(new Set(result.articleIds).size, limit)
@@ -272,6 +277,7 @@ test('new correspondent-only run receives entitlement without starving RSS backl
   const result = await selectSuggestPool(database, {
     limit: 100,
     preferredIngestionRunId: RUN_B,
+    policy: 'cohort_fair_v1',
   })
   assert.equal(result.diagnostics.resolvedIngestionRunId, RUN_B)
   assert.equal(result.diagnostics.cohortSelected, 20)
@@ -301,7 +307,7 @@ test('fair query excludes a large current cohort before applying its DB limit', 
   })
   const selection = await selectSuggestPool(
     new FakeSupabase([...currentCohort, ...backlog]),
-    { limit: 100, preferredIngestionRunId: RUN_A },
+    { limit: 100, preferredIngestionRunId: RUN_A, policy: 'cohort_fair_v1' },
   )
 
   assert.equal(selection.articleIds.length, 100)
@@ -333,6 +339,7 @@ test('D-original gives the newest correspondent remainder cohort weight 3', asyn
   const selection = await selectSuggestPool(database, {
     limit: 100,
     preferredIngestionRunId: RUN_A,
+    policy: 'cohort_fair_v1',
   })
 
   assert.equal(selection.diagnostics.cohortSelected, 70)
@@ -342,7 +349,7 @@ test('D-original gives the newest correspondent remainder cohort weight 3', asyn
   )
 })
 
-test('missing or malformed preferred run safely falls back to latest eligible run', async () => {
+test('missing or malformed preferred run falls back to latest explicit RSS run', async () => {
   const database = fixture()
   const latest = article('latest', {
     runId: RUN_B,
@@ -356,7 +363,7 @@ test('missing or malformed preferred run safely falls back to latest eligible ru
       limit: 100,
       preferredIngestionRunId: preferred,
     })
-    assert.equal(result.diagnostics.resolvedIngestionRunId, RUN_B)
+    assert.equal(result.diagnostics.resolvedIngestionRunId, RUN_A)
     assert.equal(result.diagnostics.invalidPreferredIngestionRunId, true)
   }
 })
@@ -370,4 +377,122 @@ test('legacy feature flag keeps the previous published-at selector available', a
   assert.equal(result.diagnostics.policy, 'legacy_published_at')
   assert.equal(result.articleIds.length, 100)
   assert.equal(result.diagnostics.cohortSelected, 0)
+})
+
+function freshFixture(correspondentCount: number, correspondentFetchedAt: string) {
+  const preferred = Array.from({ length: 160 }, (_, index) => {
+    const row = article(`preferred-${index}`, { runId: RUN_A, source: index % 12 })
+    row.fetched_at = '2026-08-08T12:00:00Z'
+    return row
+  })
+  const correspondent = Array.from({ length: correspondentCount }, (_, index) => {
+    const row = article(`fresh-corr-${index}`, {
+      runId: RUN_B,
+      origin: 'correspondent',
+      source: index % 6,
+    })
+    row.fetched_at = correspondentFetchedAt
+    return row
+  })
+  const backlog = Array.from({ length: 100 }, (_, index) =>
+    article(`excluded-backlog-${index}`, { source: index % 10 })
+  )
+  return new FakeSupabase([...preferred, ...correspondent, ...backlog])
+}
+
+test('fresh selector refills a 160-row preferred cohort to 100 without backlog', async () => {
+  const result = await selectSuggestPool(freshFixture(0, ''), {
+    limit: 100,
+    preferredIngestionRunId: RUN_A,
+    now: new Date('2026-08-09T00:00:00Z'),
+  })
+  assert.deepEqual(result.diagnostics.segments, {
+    preferred: 70, freshCorrespondent: 0, preferredRefill: 30, backlog: 0, legacy: 0,
+  })
+  assert.ok(result.metadata.every((row) => row.ingestion_run_id === RUN_A))
+})
+
+test('fresh selector uses 10 correspondent articles and 90 preferred articles', async () => {
+  const result = await selectSuggestPool(freshFixture(10, '2026-08-08T12:00:00Z'), {
+    limit: 100,
+    preferredIngestionRunId: RUN_A,
+    now: new Date('2026-08-09T00:00:00Z'),
+  })
+  assert.deepEqual(result.diagnostics.segments, {
+    preferred: 70, freshCorrespondent: 10, preferredRefill: 20, backlog: 0, legacy: 0,
+  })
+})
+
+test('fresh selector caps a 40-row correspondent cohort at 30', async () => {
+  const result = await selectSuggestPool(freshFixture(40, '2026-08-08T12:00:00Z'), {
+    limit: 100,
+    preferredIngestionRunId: RUN_A,
+    now: new Date('2026-08-09T00:00:00Z'),
+  })
+  assert.deepEqual(result.diagnostics.segments, {
+    preferred: 70, freshCorrespondent: 30, preferredRefill: 0, backlog: 0, legacy: 0,
+  })
+})
+
+test('fresh segments enforce origin even when ingestion run IDs contain mixed origins', async () => {
+  const database = freshFixture(40, '2026-08-08T12:00:00Z')
+  const mixedRows = [
+    article('mixed-corr-in-rss-run', {
+      runId: RUN_A, origin: 'correspondent', fetchedOffset: 1,
+    }),
+    article('mixed-url-in-rss-run', { runId: RUN_A, origin: 'url', fetchedOffset: 1 }),
+    article('mixed-rss-in-corr-run', { runId: RUN_B, origin: 'rss', fetchedOffset: 1 }),
+    article('mixed-url-in-corr-run', { runId: RUN_B, origin: 'url', fetchedOffset: 1 }),
+  ]
+  mixedRows.forEach((row) => { row.fetched_at = '2026-08-08T11:00:00Z' })
+  database.rows.push(...mixedRows)
+  const result = await selectSuggestPool(database, {
+    limit: 100,
+    preferredIngestionRunId: RUN_A,
+    now: new Date('2026-08-09T00:00:00Z'),
+  })
+  assert.deepEqual(result.diagnostics.segments, {
+    preferred: 70, freshCorrespondent: 30, preferredRefill: 0, backlog: 0, legacy: 0,
+  })
+  assert.ok(result.metadata.slice(0, 70).every((row) => row.origin === 'rss'))
+  assert.ok(result.metadata.slice(70).every((row) => row.origin === 'correspondent'))
+  assert.equal(result.metadata.some((row) => row.id.startsWith('mixed-')), false)
+  assert.equal(new Set(result.articleIds).size, result.articleIds.length)
+})
+
+test('fresh selector ignores a correspondent cohort older than the initial 72-hour window', async () => {
+  const result = await selectSuggestPool(freshFixture(40, '2026-08-05T00:00:00Z'), {
+    limit: 100,
+    preferredIngestionRunId: RUN_A,
+    now: new Date('2026-08-09T00:00:01Z'),
+  })
+  assert.deepEqual(result.diagnostics.segments, {
+    preferred: 70, freshCorrespondent: 0, preferredRefill: 30, backlog: 0, legacy: 0,
+  })
+})
+
+test('fresh selector returns an empty normal result when no explicit RSS run exists', async () => {
+  const database = freshFixture(10, '2026-08-08T12:00:00Z')
+  database.rows.splice(0, database.rows.length,
+    ...database.rows.filter((row) => row.ingestion_run_id !== RUN_A))
+  const result = await selectSuggestPool(database, {
+    limit: 100,
+    preferredIngestionRunId: RUN_A,
+    now: new Date('2026-08-09T00:00:00Z'),
+  })
+  assert.equal(result.articleIds.length, 0)
+  assert.equal(result.diagnostics.segments.backlog, 0)
+  assert.equal(result.diagnostics.resolvedIngestionRunId, null)
+})
+
+test('cohort_fair_v1 remains an explicit rollback policy', async () => {
+  assert.equal(suggestPoolPolicy(), 'fresh_only_v1')
+  assert.equal(suggestPoolPolicy('cohort_fair_v1'), 'cohort_fair_v1')
+  const result = await selectSuggestPool(fixture(), {
+    limit: 100,
+    preferredIngestionRunId: RUN_A,
+    policy: 'cohort_fair_v1',
+  })
+  assert.equal(result.diagnostics.policy, 'cohort_fair_v1')
+  assert.ok(result.diagnostics.fairRemainderSelected > 0)
 })

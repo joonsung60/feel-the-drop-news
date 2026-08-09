@@ -14,6 +14,8 @@ const METADATA_COLUMNS = [
 const HYDRATION_COLUMNS =
   'id, title, content, url, source_id, published_at, event_date, facts'
 const COHORT_RATIO = 0.7
+// Initial operating window, not an empirically validated optimum.
+export const INITIAL_CORRESPONDENT_FRESHNESS_HOURS = 72
 const OVERFETCH_FACTOR = 3
 const FAIR_QUEUE_DEFINITIONS = [
   { origin: 'rss', cohort: true, publishedIsNull: false, weight: 4 },
@@ -28,7 +30,7 @@ const FAIR_QUEUE_DEFINITIONS = [
   { origin: 'legacy', cohort: false, publishedIsNull: true, weight: 1 },
 ] as const
 
-export type PoolPolicy = 'cohort_fair_v1' | 'legacy_published_at'
+export type PoolPolicy = 'fresh_only_v1' | 'cohort_fair_v1' | 'legacy_published_at'
 
 export type PoolArticleMetadata = {
   id: string
@@ -49,6 +51,13 @@ export type PoolSelectionDiagnostics = {
   cohortEntitlement: number
   cohortSelected: number
   fairRemainderSelected: number
+  segments: {
+    preferred: number
+    freshCorrespondent: number
+    preferredRefill: number
+    backlog: 0 | number
+    legacy: 0 | number
+  }
   unchecked: number
   rechecked: number
   origin: Record<string, number>
@@ -292,6 +301,13 @@ function diagnostics(
   invalidPreferredIngestionRunId: boolean,
   cohortEntitlement: number,
   cohortSelected: number,
+  segments: PoolSelectionDiagnostics['segments'] = {
+    preferred: cohortSelected,
+    freshCorrespondent: 0,
+    preferredRefill: 0,
+    backlog: metadata.length - cohortSelected,
+    legacy: metadata.filter((row) => row.origin !== 'rss' && row.origin !== 'correspondent').length,
+  },
 ): PoolSelectionDiagnostics {
   const origin: Record<string, number> = {}
   const source: Record<string, number> = {}
@@ -309,6 +325,7 @@ function diagnostics(
     cohortEntitlement,
     cohortSelected,
     fairRemainderSelected: metadata.length - cohortSelected,
+    segments,
     unchecked: metadata.filter((row) => row.suggestion_last_checked_at === null).length,
     rechecked: metadata.filter((row) => row.suggestion_last_checked_at !== null).length,
     origin,
@@ -321,7 +338,71 @@ function diagnostics(
 }
 
 export function suggestPoolPolicy(value = process.env.SUGGEST_POOL_POLICY): PoolPolicy {
-  return value === 'legacy' ? 'legacy_published_at' : 'cohort_fair_v1'
+  if (value === 'legacy') return 'legacy_published_at'
+  if (value === 'cohort_fair_v1') return 'cohort_fair_v1'
+  return 'fresh_only_v1'
+}
+
+async function resolveFreshRssRunId(
+  client: SupabaseClientLike,
+  preferredIngestionRunId: string | null,
+): Promise<{ runId: string | null; invalidPreferred: boolean }> {
+  const validUuid = preferredIngestionRunId
+    && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+      .test(preferredIngestionRunId)
+    ? preferredIngestionRunId
+    : null
+  if (validUuid) {
+    const { data, error } = await client.from('raw_articles')
+      .select('ingestion_run_id').or(ELIGIBLE_FILTER)
+      .eq('origin', 'rss').eq('ingestion_run_id', validUuid).limit(1)
+    if (error) throw new Error(`preferred RSS ingestion run lookup failed: ${error.message}`)
+    if ((data?.length ?? 0) > 0) return { runId: validUuid, invalidPreferred: false }
+  }
+  const { data, error } = await client.from('raw_articles')
+    .select('ingestion_run_id, fetched_at').or(ELIGIBLE_FILTER)
+    .eq('origin', 'rss').not('ingestion_run_id', 'is', null)
+    .order('fetched_at', { ascending: false }).limit(1)
+  if (error) throw new Error(`latest RSS ingestion run lookup failed: ${error.message}`)
+  const latest = data?.[0] as { ingestion_run_id?: string | null } | undefined
+  return {
+    runId: latest?.ingestion_run_id ?? null,
+    invalidPreferred: Boolean(preferredIngestionRunId),
+  }
+}
+
+async function fetchRun(
+  client: SupabaseClientLike,
+  runId: string,
+  expectedOrigin: 'rss' | 'correspondent',
+  limit: number,
+): Promise<PoolArticleMetadata[]> {
+  const { data, error } = await orderedMetadataQuery(client)
+    .eq('ingestion_run_id', runId)
+    .eq('origin', expectedOrigin)
+    .limit(Math.max(limit, limit * OVERFETCH_FACTOR))
+  if (error) throw new Error(`fresh ingestion cohort query failed: ${error.message}`)
+  return sourceRoundRobin((data ?? []) as PoolArticleMetadata[]).slice(0, limit)
+}
+
+async function resolveFreshCorrespondentRun(
+  client: SupabaseClientLike,
+  now: Date,
+): Promise<string | null> {
+  const { data, error } = await client.from('raw_articles')
+    .select('ingestion_run_id, fetched_at').or(ELIGIBLE_FILTER)
+    .eq('origin', 'correspondent').not('ingestion_run_id', 'is', null)
+    .order('fetched_at', { ascending: false }).limit(1)
+  if (error) throw new Error(`latest correspondent ingestion run lookup failed: ${error.message}`)
+  const latest = data?.[0] as {
+    ingestion_run_id?: string | null
+    fetched_at?: string | null
+  } | undefined
+  if (!latest?.ingestion_run_id || !latest.fetched_at) return null
+  const ageMs = now.getTime() - Date.parse(latest.fetched_at)
+  return ageMs >= 0 && ageMs <= INITIAL_CORRESPONDENT_FRESHNESS_HOURS * 3_600_000
+    ? latest.ingestion_run_id
+    : null
 }
 
 export async function selectSuggestPool(
@@ -330,10 +411,12 @@ export async function selectSuggestPool(
     limit,
     preferredIngestionRunId = null,
     policy = suggestPoolPolicy(),
+    now = new Date(),
   }: {
     limit: number
     preferredIngestionRunId?: string | null
     policy?: PoolPolicy
+    now?: Date
   },
 ): Promise<PoolSelection> {
   const client = clientValue as SupabaseClientLike
@@ -351,6 +434,51 @@ export async function selectSuggestPool(
       metadata,
       diagnostics: diagnostics(
         metadata, policy, preferredIngestionRunId, null, false, 0, 0,
+      ),
+    }
+  }
+
+  if (policy === 'fresh_only_v1') {
+    const { runId, invalidPreferred } = await resolveFreshRssRunId(
+      client,
+      preferredIngestionRunId,
+    )
+    if (!runId) {
+      return {
+        articleIds: [],
+        metadata: [],
+        diagnostics: diagnostics([], policy, preferredIngestionRunId, null,
+          invalidPreferred, 0, 0, {
+            preferred: 0, freshCorrespondent: 0, preferredRefill: 0, backlog: 0, legacy: 0,
+          }),
+      }
+    }
+    const preferredTarget = Math.min(limit, Math.ceil(limit * COHORT_RATIO))
+    const correspondentTarget = Math.max(0, limit - preferredTarget)
+    const preferred = await fetchRun(client, runId, 'rss', limit)
+    const correspondentRunId = await resolveFreshCorrespondentRun(client, now)
+    const correspondent = correspondentRunId
+      ? await fetchRun(client, correspondentRunId, 'correspondent', correspondentTarget)
+      : []
+    const firstPreferred = preferred.slice(0, preferredTarget)
+    const refillCount = Math.max(0, limit - firstPreferred.length - correspondent.length)
+    const refill = preferred.slice(firstPreferred.length, firstPreferred.length + refillCount)
+    const metadata = [...new Map(
+      [...firstPreferred, ...correspondent, ...refill].map((article) => [article.id, article]),
+    ).values()].slice(0, limit)
+    return {
+      articleIds: metadata.map(({ id }) => id),
+      metadata,
+      diagnostics: diagnostics(
+        metadata, policy, preferredIngestionRunId, runId, invalidPreferred,
+        preferredTarget, firstPreferred.length,
+        {
+          preferred: firstPreferred.length,
+          freshCorrespondent: correspondent.length,
+          preferredRefill: refill.length,
+          backlog: 0,
+          legacy: 0,
+        },
       ),
     }
   }

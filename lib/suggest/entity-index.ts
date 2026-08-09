@@ -334,7 +334,11 @@ export function buildPairClusters(
   rawArticles: RawArticle[],
   articleEntities: Map<string, Set<string>>,
   entityArticles: Map<string, Set<string>>,
-  dict: EntityEntry[]
+  dict: EntityEntry[],
+  options: {
+    entityArticleComparator?: (a: RawArticle, b: RawArticle) => number
+    entityArticleSelector?: (articles: RawArticle[], limit: number) => RawArticle[]
+  } = {},
 ): { entity: string, articleIds: string[], weightSum: number }[] {
   const articlesMap = new Map(rawArticles.map(a => [a.id, a]))
   const titleWordsMap = new Map(rawArticles.map(a => [a.id, getTitleWords(a.title)]))
@@ -348,12 +352,22 @@ export function buildPairClusters(
     if (!qualifyingEntities.has(entity)) continue
     let ids = Array.from(articleIdSet)
     if (ids.length > 15) {
-      ids.sort((a, b) => {
-        const da = articlesMap.get(a)?.published_at ?? ''
-        const db = articlesMap.get(b)?.published_at ?? ''
-        return db.localeCompare(da)
-      })
-      ids = ids.slice(0, 15)
+      if (options.entityArticleSelector) {
+        ids = options.entityArticleSelector(
+          ids.map((id) => articlesMap.get(id)!).filter(Boolean),
+          15,
+        ).map(({ id }) => id)
+      } else {
+        ids.sort((a, b) => {
+          if (options.entityArticleComparator) {
+            return options.entityArticleComparator(articlesMap.get(a)!, articlesMap.get(b)!)
+          }
+          const da = articlesMap.get(a)?.published_at ?? ''
+          const db = articlesMap.get(b)?.published_at ?? ''
+          return db.localeCompare(da)
+        })
+        ids = ids.slice(0, 15)
+      }
     }
     if (ids.length >= 2) {
       filteredEntityArticles.set(entity, ids)

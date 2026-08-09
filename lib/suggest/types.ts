@@ -22,6 +22,7 @@ export type RawArticle = {
   published_at?: string | null
   fetched_at?: string | null
   suggestion_last_checked_at?: string | null
+  suggest2_last_checked_at?: string | null
   ingestion_run_id?: string | null
   ingestion_source?: string | null
   event_date?: string | null

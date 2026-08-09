@@ -70,3 +70,19 @@ test('full LLM failure checks nothing and retries the entire pool', () => {
   assert.deepEqual(completion.checkedArticleIds, [])
   assert.deepEqual(completion.retryableArticleIds, poolIds)
 })
+
+test('Suggest 2 uses independent checked state after completed group decisions', () => {
+  const source = fs.readFileSync(
+    path.join(root, 'app/api/suggest-clusters/extended/route.ts'),
+    'utf8',
+  )
+  assert.match(source, /excludeCurrentFreshCohorts\(eligibleArticles\)/)
+  assert.match(source, /fetchAllEligibleArticles\(\)/)
+  assert.match(source, /\.range\(from, from \+ BACKLOG_PAGE_SIZE - 1\)/)
+  assert.match(source, /buildPairClusters\(rawArticles/)
+  assert.match(source, /orderSuggest2Groups\(groups, rawArticles\)\.slice\(0, 30\)/)
+  assert.match(source, /markRawArticlesSuggest2Checked\(completedSuggest2ArticleIds\(groupResults\)\)/)
+  assert.match(source, /parseSuggest2Decision\(ollamaData\.response \?\? ''\)/)
+  assert.match(source, /markRawArticlesSuggestedBySuggest2\(saveableSuggestions\)/)
+  assert.doesNotMatch(source, /markRawArticlesChecked/)
+})

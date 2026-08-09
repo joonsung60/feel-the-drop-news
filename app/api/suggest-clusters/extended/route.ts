@@ -4,8 +4,19 @@ import { RawArticle, SuggestionWithArticles } from '@/lib/suggest/types'
 import { buildEntityIndex, loadEntityDictionary, buildPairClusters } from '@/lib/suggest/entity-index'
 import { normalizeSuggestion } from '@/lib/suggest/normalize'
 import { filterDuplicateSuggestions } from '@/lib/suggest/filters'
-import { attachSourceMeta, markRawArticlesSuggested } from '@/lib/suggest/db'
+import {
+  attachSourceMeta,
+  markRawArticlesSuggestedBySuggest2,
+  markRawArticlesSuggest2Checked,
+} from '@/lib/suggest/db'
 import { buildSingleGroupPrompt } from '@/lib/suggest/prompts'
+import {
+  completedSuggest2ArticleIds,
+  excludeCurrentFreshCohorts,
+  orderSuggest2Groups,
+  selectSuggest2EntityArticles,
+} from '@/lib/suggest/backlog-selection'
+import { parseSuggest2Decision } from '@/lib/suggest/suggest2-decision'
 
 const SUGGEST2_SYSTEM = `당신은 전세계 전자음악 씬 전반을 다루는 에디터입니다.
 주어진 기사들이 모두 "같은 사건/릴리즈/행사/인물에 대한 동일한 뉴스"를 다루는지 판단하세요.
@@ -24,28 +35,46 @@ const SUGGEST2_FORMAT = {
   required: ['approved', 'topic', 'keywords', 'reason']
 }
 
+const BACKLOG_PAGE_SIZE = 1000
+
+async function fetchAllEligibleArticles(): Promise<RawArticle[]> {
+  const rows: RawArticle[] = []
+  for (let from = 0; ; from += BACKLOG_PAGE_SIZE) {
+    const { data, error } = await supabase
+      .from('raw_articles')
+      .select('id, title, content, url, source_id, published_at, fetched_at, event_date, origin, ingestion_run_id, ingestion_source, suggest2_last_checked_at')
+      .or('suggestion_state.is.null,suggestion_state.eq.new')
+      .order('published_at', { ascending: false })
+      .order('id', { ascending: true })
+      .range(from, from + BACKLOG_PAGE_SIZE - 1)
+    if (error) {
+      throw new Error(`raw_articles backlog 조회 실패: ${error.message}`)
+    }
+    const page = (data ?? []) as RawArticle[]
+    rows.push(...page)
+    if (page.length < BACKLOG_PAGE_SIZE) break
+  }
+  return rows
+}
+
 export async function POST() {
   const runBackground = async () => {
     try {
       console.log('[suggest-clusters/extended] 백그라운드 작업 시작')
 
-      const { data: articles, error } = await supabase
-        .from('raw_articles')
-        .select('id, title, content, url, source_id, published_at, event_date')
-        .or('suggestion_state.is.null,suggestion_state.eq.new')
-        .order('published_at', { ascending: false })
-
-      if (error) {
-        console.error('[suggest-clusters/extended] raw_articles 조회 실패:', error.message)
-        return
-      }
+      const articles = await fetchAllEligibleArticles()
 
       if (!articles || articles.length === 0) {
         console.log('[suggest-clusters/extended] 처리할 기사가 없습니다.')
         return
       }
 
-      const rawArticles = await attachSourceMeta(articles as RawArticle[])
+      const eligibleArticles = await attachSourceMeta(articles as RawArticle[])
+      const { backlog: rawArticles, excludedRunIds } =
+        excludeCurrentFreshCohorts(eligibleArticles)
+      console.log(
+        `[suggest-clusters/extended] fresh cohort ${excludedRunIds.length}개 제외, backlog ${rawArticles.length}개`,
+      )
       const dict = loadEntityDictionary()
       if (!dict) {
         console.error('[suggest-clusters/extended] entity dictionary 로드 실패')
@@ -55,10 +84,11 @@ export async function POST() {
       const { articleEntities, entityArticles } = buildEntityIndex(rawArticles, dict)
 
       // 그래프 기반 쌍 유사도 점수 산정 및 서브클러스터 생성
-      const groups = buildPairClusters(rawArticles, articleEntities, entityArticles, dict)
-
-      groups.sort((a, b) => b.weightSum - a.weightSum)
-      const topGroups = groups.slice(0, 30)
+      const groups = buildPairClusters(rawArticles, articleEntities, entityArticles, dict, {
+        entityArticleSelector: (items, limit) =>
+          selectSuggest2EntityArticles(items, limit),
+      })
+      const topGroups = orderSuggest2Groups(groups, rawArticles).slice(0, 30)
 
       console.log(`[suggest-clusters/extended] 총 ${groups.length}개 후보 중 상위 ${topGroups.length}개 처리 시작`)
 
@@ -68,6 +98,10 @@ export async function POST() {
       const rawArticlesMap = new Map(rawArticles.map((a) => [a.id, a]))
 
       const normalized: SuggestionWithArticles[] = []
+      const groupResults: Array<{
+        articleIds: string[]
+        outcome: 'approved' | 'rejected' | 'failed'
+      }> = []
       let llmApprovedCount = 0
 
       for (const [index, group] of topGroups.entries()) {
@@ -86,33 +120,32 @@ export async function POST() {
               prompt: buildSingleGroupPrompt(batch, group.entity),
               format: SUGGEST2_FORMAT,
               stream: false,
-            })
+            }),
+            signal: AbortSignal.timeout(180000),
           })
 
           if (!ollamaRes.ok) {
             console.error(`[suggest-clusters/extended] Ollama 응답 오류: ${ollamaRes.status}`)
+            groupResults.push({ articleIds: group.articleIds, outcome: 'failed' })
             continue
           }
 
           const ollamaData = await ollamaRes.json()
-          const responseText: string = ollamaData.response ?? ''
-          
-          let parsed: Record<string, unknown> = {}
-          try {
-            parsed = JSON.parse(responseText)
-          } catch {
-            const jsonMatch = responseText.match(/\{[\s\S]*\}/)
-            if (jsonMatch) parsed = JSON.parse(jsonMatch[0])
-            else continue
-          }
-
-          if (parsed.approved === true && typeof parsed.topic === 'string') {
+          const decisionResult = parseSuggest2Decision(ollamaData.response ?? '')
+          if (decisionResult.outcome === 'failed') {
+            groupResults.push({ articleIds: group.articleIds, outcome: 'failed' })
+            console.error(
+              `[suggest-clusters/extended] LLM decision 오류: ${decisionResult.error}`,
+            )
+          } else if (decisionResult.outcome === 'approved') {
+            groupResults.push({ articleIds: group.articleIds, outcome: 'approved' })
             llmApprovedCount++
+            const { decision } = decisionResult
             const suggestion = {
-              topic: parsed.topic,
-              keywords: Array.isArray(parsed.keywords) ? parsed.keywords.map(String) : [],
+              topic: decision.topic,
+              keywords: decision.keywords,
               articleIds: group.articleIds,
-              reason: typeof parsed.reason === 'string' ? parsed.reason : undefined,
+              reason: decision.reason,
               commonEntities: [group.entity]
             }
             const norm = normalizeSuggestion(
@@ -124,12 +157,16 @@ export async function POST() {
             )
             if (norm) normalized.push(norm)
           } else {
-            console.log(`[suggest-clusters/extended] 거절됨: ${parsed.reason}`)
+            groupResults.push({ articleIds: group.articleIds, outcome: 'rejected' })
+            console.log(`[suggest-clusters/extended] 거절됨: ${decisionResult.decision.reason}`)
           }
         } catch (err) {
+          groupResults.push({ articleIds: group.articleIds, outcome: 'failed' })
           console.error(`[suggest-clusters/extended] LLM 처리 중 오류:`, err)
         }
       }
+
+      await markRawArticlesSuggest2Checked(completedSuggest2ArticleIds(groupResults))
 
       console.log(`[suggest-clusters/extended] LLM 승인: ${llmApprovedCount}건, 정규화 통과: ${normalized.length}건`)
 
@@ -151,7 +188,7 @@ export async function POST() {
           if (insertError) {
             console.error(`[suggest-clusters/extended] 제안 저장 실패:`, insertError.message)
           } else {
-            await markRawArticlesSuggested(saveableSuggestions)
+            await markRawArticlesSuggestedBySuggest2(saveableSuggestions)
             console.log(`[suggest-clusters/extended] 최종 저장: ${saveableSuggestions.length}건`)
           }
         }

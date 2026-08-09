@@ -145,6 +145,7 @@ export async function POST(req: NextRequest) {
       preferredIngestionRunId,
       policy: poolPolicy,
     })
+    const poolDiagnostics = pool.diagnostics
     const articles = await hydrateSelectedArticles(supabase, pool.articleIds)
     const publishedValues = articles
       .map((article) => article.published_at)
@@ -164,6 +165,7 @@ export async function POST(req: NextRequest) {
         cohort_entitlement: pool.diagnostics.cohortEntitlement,
         cohort_selected: pool.diagnostics.cohortSelected,
         fair_remainder_selected: pool.diagnostics.fairRemainderSelected,
+        segments: pool.diagnostics.segments,
         origin_distribution: pool.diagnostics.origin,
         source_distribution: pool.diagnostics.source,
         publication_distribution: pool.diagnostics.publication,
@@ -184,7 +186,10 @@ export async function POST(req: NextRequest) {
         NextResponse.json({
           suggestions: [],
           total: 0,
-          message: '최근 미사용 기사가 없습니다.',
+          message: pool.diagnostics.policy === 'fresh_only_v1'
+            ? '처리할 fresh ingestion cohort가 없습니다.'
+            : '최근 미사용 기사가 없습니다.',
+          poolDiagnostics: pool.diagnostics,
           ...emptyCompletion,
         }),
         { total: 0, saved: 0, ...emptyCompletion },
@@ -328,6 +333,7 @@ export async function POST(req: NextRequest) {
         supportingOnlyCount: partition.supportingOnly.length,
         noEntityCount: partition.notMatched.length,
         llmInputCount: 0,
+        poolDiagnostics,
         ...completion,
       }), {
         total: articles.length,
@@ -482,6 +488,7 @@ export async function POST(req: NextRequest) {
         NextResponse.json(
           {
             error: '모든 LLM batch가 실패해 pool evaluation을 완료하지 못했습니다.',
+            poolDiagnostics,
             ...completion,
           },
           { status: 502 },
@@ -511,6 +518,7 @@ export async function POST(req: NextRequest) {
         batchCount: batches.length,
         llmSuggestionCount,
         normalizedSuggestionCount: 0,
+        poolDiagnostics,
         ...completion,
       }), {
         total: articles.length,
@@ -555,6 +563,7 @@ export async function POST(req: NextRequest) {
         llmSuggestionCount,
         normalizedSuggestionCount: normalized.length,
         duplicateSkipCount,
+        poolDiagnostics,
         ...completion,
       }), {
         total: articles.length,
@@ -585,6 +594,7 @@ export async function POST(req: NextRequest) {
         observer,
         NextResponse.json({
           error: `제안 저장 실패: ${insertError.message}`,
+          poolDiagnostics,
           ...failedCompletion,
         }, { status: 500 }),
         { error: insertError.message, ...failedCompletion },
@@ -620,6 +630,7 @@ export async function POST(req: NextRequest) {
       llmSuggestionCount,
       normalizedSuggestionCount: normalized.length,
       duplicateSkipCount,
+      poolDiagnostics,
       ...completion,
     }), {
       total: articles.length,
