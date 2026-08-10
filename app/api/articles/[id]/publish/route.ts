@@ -1,9 +1,61 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin'
 import { triggerDeployHook } from '@/lib/deploy-hook'
+import entityDict from '@/lib/edm-entities-v2.json'
+import entitySurfacePolicy from '@/lib/entity-surface-policy.json'
+import { buildGroundingEvidence, validateArticleGrounding } from '@/lib/article-grounding'
+import { cleanArticleText } from '@/lib/article-extraction'
+import { orchestrateArticlePublish } from '@/lib/publish-article'
 
 type ClusterArticleRow = {
   raw_article_id: string
+}
+
+type RawArticleGroundingRow = {
+  title: string | null
+  content: string | null
+}
+
+async function validateClusterArticleBeforePublish(article: {
+  cluster_id: string
+  title: string
+  content: string
+}) {
+  const { data: clusterArticles, error: clusterError } = await supabase
+    .from('cluster_articles')
+    .select('raw_article_id')
+    .eq('cluster_id', article.cluster_id)
+
+  if (clusterError) throw clusterError
+  const rawArticleIds = Array.from(new Set(
+    ((clusterArticles ?? []) as ClusterArticleRow[]).map((row) => row.raw_article_id).filter(Boolean)
+  ))
+  if (rawArticleIds.length === 0) {
+    return validateArticleGrounding({
+      sourceEvidence: '',
+      title: article.title,
+      content: article.content,
+      entities: entityDict.entities,
+      policy: entitySurfacePolicy,
+    })
+  }
+
+  const { data: rawArticles, error: rawError } = await supabase
+    .from('raw_articles')
+    .select('title, content')
+    .in('id', rawArticleIds)
+  if (rawError) throw rawError
+
+  return validateArticleGrounding({
+    sourceEvidence: buildGroundingEvidence(((rawArticles ?? []) as RawArticleGroundingRow[]).map((raw) => ({
+      title: cleanArticleText(raw.title ?? '', 500),
+      content: cleanArticleText(raw.content ?? '', 2500, { preserveParagraphBreaks: true }),
+    }))),
+    title: article.title,
+    content: article.content,
+    entities: entityDict.entities,
+    policy: entitySurfacePolicy,
+  })
 }
 
 async function markClusterRawArticlesUsed(clusterId: string, usedAt: string): Promise<string | null> {
@@ -43,34 +95,72 @@ export async function PATCH(
     return NextResponse.json({ error: 'id가 필요합니다.' }, { status: 400 })
   }
 
-  const publishedAt = new Date().toISOString()
-  const { data, error } = await supabase
+  const { data: currentArticle, error: fetchError } = await supabase
     .from('articles')
-    .update({
-      published: true,
-      published_at: publishedAt,
-    })
+    .select('id, title, content, published, published_at, created_at, updated_at, cluster_id, image_url, slug, category, genre')
     .eq('id', id)
-    .select('id, title, content, published, published_at, created_at, cluster_id, image_url, slug, category, genre')
     .maybeSingle()
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+  if (fetchError) {
+    return NextResponse.json({ error: fetchError.message }, { status: 500 })
   }
 
-  if (!data) {
+  if (!currentArticle) {
     return NextResponse.json({ error: '기사를 찾을 수 없습니다.' }, { status: 404 })
   }
 
-  if (data.cluster_id) {
-    const rawArticleUpdateError = await markClusterRawArticlesUsed(data.cluster_id, publishedAt)
-    if (rawArticleUpdateError) {
-      console.error('[publish] raw_articles suggestion_state 업데이트 실패:', rawArticleUpdateError)
-      return NextResponse.json({ article: data, rawArticleUpdateError }, { status: 500 })
+  const publishedAt = new Date().toISOString()
+  try {
+    const result = await orchestrateArticlePublish({
+      clusterId: currentArticle.cluster_id,
+      validateGrounding: async () => currentArticle.cluster_id
+        ? validateClusterArticleBeforePublish({
+            cluster_id: currentArticle.cluster_id,
+            title: currentArticle.title,
+            content: currentArticle.content,
+          })
+        : { ok: true, issues: [] },
+      publishArticle: async () => {
+        let updateQuery = supabase
+          .from('articles')
+          .update({ published: true, published_at: publishedAt })
+          .eq('id', id)
+        updateQuery = currentArticle.updated_at === null
+          ? updateQuery.is('updated_at', null)
+          : updateQuery.eq('updated_at', currentArticle.updated_at)
+        const { data, error } = await updateQuery
+          .select('id, title, content, published, published_at, created_at, updated_at, cluster_id, image_url, slug, category, genre')
+          .maybeSingle()
+        return { article: data, error: error?.message ?? null }
+      },
+      markRawArticlesUsed: () => currentArticle.cluster_id
+        ? markClusterRawArticlesUsed(currentArticle.cluster_id, publishedAt)
+        : Promise.resolve(null),
+      triggerDeploy: triggerDeployHook,
+    })
+
+    if (result.type === 'grounding_failed') {
+      return NextResponse.json({
+        code: result.code,
+        error: '원문에 근거하지 않은 EDM 고유명사가 있어 게시할 수 없습니다.',
+        issues: result.grounding.issues,
+      }, { status: result.status })
     }
+    if (result.type === 'article_changed') {
+      return NextResponse.json({
+        code: result.code,
+        error: '검증 이후 기사 내용이 변경되었습니다. 다시 확인한 뒤 게시하세요.',
+      }, { status: result.status })
+    }
+    if (result.type === 'article_update_failed') {
+      return NextResponse.json({ error: result.error }, { status: 500 })
+    }
+    if (result.type === 'raw_article_update_failed') {
+      console.error('[publish] raw_articles suggestion_state 업데이트 실패:', result.error)
+      return NextResponse.json({ article: result.article, rawArticleUpdateError: result.error }, { status: 500 })
+    }
+    return NextResponse.json({ article: result.article })
+  } catch (publishError) {
+    return NextResponse.json({ error: String(publishError) }, { status: 500 })
   }
-
-  await triggerDeployHook()
-
-  return NextResponse.json({ article: data })
 }

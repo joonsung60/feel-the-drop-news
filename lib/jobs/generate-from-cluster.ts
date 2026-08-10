@@ -1,10 +1,16 @@
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin'
 import { cleanArticleText, extractArticleText } from '@/lib/article-extraction'
 import entityDict from '@/lib/edm-entities-v2.json'
+import entitySurfacePolicy from '@/lib/entity-surface-policy.json'
+import {
+  buildGroundingEvidence,
+  getSourceDisplayNames,
+  prepareGroundingSources,
+  validateArticleGrounding,
+} from '@/lib/article-grounding'
 import {
   applyDisplayNameMappingToTitle,
   applyKoreanAvoidCorrections,
-  getEstablishedEntityDisplayNames,
 } from '@/lib/jobs/entity-display-name'
 import { SYSTEM_PROMPT_A } from '@/lib/prompts'
 import { findGenre } from '@/lib/taxonomy'
@@ -20,16 +26,6 @@ const ARTICLE_RESPONSE_FORMAT = {
   },
   required: ['title', 'content', 'slug', 'category', 'genre'],
 }
-
-const establishedEntities = getEstablishedEntityDisplayNames(entityDict.entities)
-
-const displayNames: Record<string, string> = Object.fromEntries(
-  establishedEntities.map(({ en, ko }) => [en, ko])
-)
-
-const displayNameRules = Object.entries(displayNames)
-  .map(([en, ko]) => `- ${en} → ${ko}`)
-  .join('\n')
 
 type SourceArticle = {
   title: string
@@ -75,13 +71,6 @@ const RESPONSE_NOISE_PATTERNS = [
   /\b(previous article|next article|related articles|more from author|comments are closed)\b/i,
   /\b(sign up|subscribe|tags|just released|claim this offer|read more)\b/i,
 ]
-
-function compactSourceText(text: string): string {
-  return cleanArticleText(text, 2500, { preserveParagraphBreaks: true })
-    .replace(/[ \t\f\v]+/g, ' ')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim()
-}
 
 function domainFromUrl(url: string): string {
   try {
@@ -284,16 +273,30 @@ function validateKoreanArticle(article: GeneratedArticle): string | null {
 }
 
 async function generateKoreanArticle(articles: SourceArticle[]): Promise<GeneratedArticle> {
+  const preparedSources = prepareGroundingSources(articles.map((article) => ({
+    title: cleanArticleText(article.title, 500),
+    content: cleanArticleText(article.content, 2500, { preserveParagraphBreaks: true }),
+  })))
+  const sourceEvidence = buildGroundingEvidence(preparedSources)
+  const sourceDisplayNames = getSourceDisplayNames(
+    sourceEvidence,
+    entityDict.entities,
+    entitySurfacePolicy,
+  )
+  const displayNameRules = sourceDisplayNames.length > 0
+    ? sourceDisplayNames.map(({ en, ko }) => `- ${en} → ${ko}`).join('\n')
+    : '- 허용된 한국어 고유명사 표기 없음 — 원문 영어 표기를 유지'
   const articlesText = articles
     .map((article, index) => {
       const publishedAt = formatSourceDate(article.publishedAt)
+      const prepared = preparedSources[index]
       return [
         `[소스 ${index + 1}]`,
         `매체: ${article.sourceName}`,
         publishedAt ? `발행일: ${publishedAt}` : null,
-        `제목: ${article.title}`,
+        `제목: ${prepared.title}`,
         `URL: ${article.source}`,
-        `내용: ${compactSourceText(article.content)}`,
+        `내용: ${prepared.content}`,
       ].filter(Boolean).join('\n')
     })
     .join('\n\n---\n\n')
@@ -321,7 +324,7 @@ async function generateKoreanArticle(articles: SourceArticle[]): Promise<Generat
 - 제목에서는 허용된 한국어 표기만 사용하고 영문 병기를 하지 마세요.
 - 본문에서는 허용된 한국어 표기가 있는 고유명사가 처음 등장할 때 한 번만 "한국어(영문)" 형태로 쓰고, 이후에는 한국어만 쓰세요.
 - 목록에 없거나, 값이 영문과 같거나, 한국어 표기가 애매한 아티스트명·장소명·행사명은 영문 그대로 유지하세요.
-- 모델 지식으로 새 한국어 표기나 음역을 만들지 마세요. 예: Floating Points, Honey Dijon, Joy Orbison, Field Day, Represent는 목록에 한국어 값이 없으면 영문 그대로 써야 합니다.
+- 모델 지식으로 새 한국어 표기나 음역을 만들지 마세요. 예: SOURCE_ARTIST, SOURCE_FESTIVAL은 목록에 한국어 값이 없으면 원문 그대로 써야 합니다.
 ${displayNameRules}
 
 [출력 지시]
@@ -335,11 +338,11 @@ ${displayNameRules}
 - 릴리즈 기사에서 house 또는 techno로 명확히 특정되는 경우에만 각각 "house", "techno"를 쓰고, 그 외 모든 경우는 "edm"으로 두세요.
 - 본문 content에 마크다운 문법을 절대 사용하지 마세요. #, ##, **, *, -, 불릿 포인트, 번호 목록 등 일체 금지입니다.
 - 날짜별 일정을 나열할 때도 불릿이나 헤더 없이 자연스러운 문장으로 이어 쓰세요.
-- 곡명, 앨범명, EP명은 번역하지 말고 원문 그대로 작은따옴표로 표기하세요. 예: 'Your Eyes', 'Light Years', 'Pure Devotion'. 절대 한국어로 번역하지 마세요.
-- 원문이 인터뷰 형식(Q&A)인 경우 질문과 답변을 그대로 나열하지 말고 기사체로 재구성하세요. 아티스트의 발언은 간접 인용 형태로 처리하세요. 예: "메 엔 유는 낯선 사람들과의 대화에서 공연의 영감을 얻는다고 밝혔다." 직접 인용이 필요한 경우에만 따옴표로 한 문장 이내로 처리하세요.
+- 곡명, 앨범명, EP명은 번역하지 말고 원문 그대로 작은따옴표로 표기하세요. 예: 'SOURCE_TRACK'. 절대 한국어로 번역하지 마세요.
+- 원문이 인터뷰 형식(Q&A)인 경우 질문과 답변을 그대로 나열하지 말고 기사체로 재구성하세요. 아티스트의 발언은 간접 인용 형태로 처리하세요. 예: "SOURCE_ARTIST는 낯선 사람들과의 대화에서 공연의 영감을 얻는다고 밝혔다." 직접 인용이 필요한 경우에만 따옴표로 한 문장 이내로 처리하세요.
 - 실제 사실(날짜, 장소, 아티스트명, 곡명 등)이 없는 문장은 쓰지 마세요. "이러한 라인업은 ~의 역할을 보여줍니다", "특별한 경험을 선사합니다" 같은 홍보성 마무리 문장은 금지입니다.
 - content는 마크다운 문법 없이 순수 텍스트로 쓰되, 2~4개 단락으로 나누고 단락 사이는 빈 줄(\n\n)로 구분하세요.
-- slug: 영문 소문자와 하이픈만 사용하고 30자 이내. 기사 핵심 키워드 기반. 예: "martin-garrix-new-album-2026"
+- slug: 영문 소문자와 하이픈만 사용하고 30자 이내. 기사 핵심 키워드 기반. 예: "source-artist-new-album-2026"
 ${retryGuidance}
 
 [소스 데이터]
@@ -369,17 +372,26 @@ ${articlesText}
     }
     const generated = {
       ...parsed,
-      title: applyDisplayNameMappingToTitle(parsed.title, establishedEntities),
-      content: applyKoreanAvoidCorrections(parsed.content, establishedEntities),
+      title: applyDisplayNameMappingToTitle(parsed.title, sourceDisplayNames),
+      content: applyKoreanAvoidCorrections(parsed.content, sourceDisplayNames),
     }
 
     const validationError = validateKoreanArticle(generated)
-    if (!validationError) {
+    const grounding = validateArticleGrounding({
+      sourceEvidence,
+      title: generated.title,
+      content: generated.content,
+      entities: entityDict.entities,
+      policy: entitySurfacePolicy,
+    })
+    if (!validationError && grounding.ok) {
       return generated
     }
 
-    lastError = validationError
-    console.warn(`기사 검증 실패 attempt=${attempt}:`, validationError)
+    lastError = [validationError, ...grounding.issues.map((issue) => issue.message)]
+      .filter(Boolean)
+      .join(' ')
+    console.warn(`기사 검증 실패 attempt=${attempt}:`, lastError)
   }
 
   throw new Error(lastError)
