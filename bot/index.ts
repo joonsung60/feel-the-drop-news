@@ -3,6 +3,7 @@ import path from "node:path";
 import { setDefaultResultOrder } from "node:dns";
 import { Agent } from "node:https";
 import { Bot, InlineKeyboard } from "grammy";
+import { formatTopicDates } from "./topic-date";
 
 loadEnv({ path: path.resolve(__dirname, "../.env.local") });
 loadEnv({ path: path.resolve(__dirname, ".env") });
@@ -58,7 +59,8 @@ async function replyWithTopicCards(ctx: any, suggestions: any[]) {
   for (const s of suggestions) {
     const keywords = Array.isArray(s.keywords) ? s.keywords.join(", ") : s.keywords;
     const articleCount = s.articles?.length ?? s.articleIds?.length ?? s.article_ids?.length ?? 0;
-    const text = `*${s.topic}*\n키워드: ${keywords}\n관련 기사: ${articleCount}개`;
+    const dates = formatTopicDates(s);
+    const text = `*${s.topic}*\n주요 날짜: ${dates.eventDates}\n원문 게시: ${dates.publishedDates}\n키워드: ${keywords}\n관련 기사: ${articleCount}개`;
     const keyboard = new InlineKeyboard()
       .text("기사 생성", `approve:${s.id}`)
       .text("거절", `reject:${s.id}`);

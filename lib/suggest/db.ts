@@ -39,16 +39,29 @@ export async function hydrateSuggestions(rows: DbSuggestedCluster[]): Promise<Pe
   if (rows.length === 0) return []
 
   const allIds = Array.from(new Set(rows.flatMap((row) => row.article_ids ?? [])))
-  const articleMeta = new Map<string, { id: string; title: string; url: string }>()
+  type HydratedArticle = SuggestionWithArticles['articles'][number]
+  const articleMeta = new Map<string, HydratedArticle>()
 
   if (allIds.length > 0) {
     const { data: rawArticles } = await supabase
       .from('raw_articles')
-      .select('id, title, url')
+      .select('id, title, url, event_date, published_at')
       .in('id', allIds)
 
-    for (const article of (rawArticles ?? []) as { id: string; title: string; url: string }[]) {
-      articleMeta.set(article.id, { id: article.id, title: article.title, url: article.url })
+    for (const article of (rawArticles ?? []) as Array<{
+      id: string
+      title: string
+      url: string
+      event_date: string | null
+      published_at: string | null
+    }>) {
+      articleMeta.set(article.id, {
+        id: article.id,
+        title: article.title,
+        url: article.url,
+        eventDate: article.event_date,
+        publishedAt: article.published_at,
+      })
     }
   }
 
@@ -78,7 +91,7 @@ export async function hydrateSuggestions(rows: DbSuggestedCluster[]): Promise<Pe
         : undefined,
       articles: articleIds
         .map((id) => articleMeta.get(id))
-        .filter((a): a is { id: string; title: string; url: string } => Boolean(a)),
+        .filter((a): a is HydratedArticle => Boolean(a)),
       status: row.status,
       clusterId: row.cluster_id,
       articleId: null,

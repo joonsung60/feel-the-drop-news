@@ -8,7 +8,13 @@ export type Suggestion = {
 }
 
 export type SuggestionWithArticles = Suggestion & {
-  articles: { id: string; title: string; url: string }[]
+  articles: {
+    id: string
+    title: string
+    url: string
+    eventDate?: string | null
+    publishedAt?: string | null
+  }[]
 }
 
 export type RawArticle = {
