@@ -38,6 +38,13 @@ correspondent/logs/
 correspondent/.crawl4ai/
 correspondent/.playwright/
 
+# local/reverted Suggest 2 research artifacts
+research/run-suggest2-full-backlog-select-only-*.ts
+research/run-suggest2-strict-replay-*.ts
+research/suggest2-full-backlog-frozen-audit-*.json
+research/suggest2-gold-consistency-replay-*.json
+research/suggest2-strict-precision-improvement-*.json
+
 # env files (can opt-in for committing if needed)
 .env*
 

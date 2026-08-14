@@ -288,6 +288,14 @@ bot.command("suggest2", async (ctx) => {
       method: "POST",
     });
     const data = await res.json().catch(() => ({}));
+    if (res.status === 503 && data.code === "suggest2_rework") {
+      await ctx.api.editMessageText(
+        ctx.chat.id,
+        msg.message_id,
+        "Suggest 2는 재설계 중이라 임시 비활성화되어 있습니다. Suggest 1을 이용해 주세요."
+      );
+      return;
+    }
     if (!res.ok || data.error) {
       throw new Error(`토픽 확장 제안 실패 (status ${res.status}): ${data.error ?? res.statusText}`);
     }

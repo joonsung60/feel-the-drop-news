@@ -2,7 +2,16 @@
 
 이 문서는 프로젝트 상태를 웹 Claude/ChatGPT와 공유하기 위한 브리핑이다. 세부 구현을 전부 설명하기보다, 현재 구조와 중요한 판단을 빠르게 이해하는 것이 목적이다.
 
-최종 갱신: 2026-05-16 (아티스트 표기 규칙 자동화 업데이트 반영).
+최종 갱신: 2026-08-11 (Suggest 2 maintenance mode 반영).
+
+## Suggest 2 maintenance mode
+
+- Suggest 2 신규 실행(`/api/suggest-clusters/extended` POST)은 재설계 완료 전까지 기본적으로 비활성화한다.
+- server-side 환경변수 `SUGGEST2_ENABLED`가 정확히 `true`일 때만 신규 실행 guard를 통과한다. 미설정, 빈 값, `false`, `0`, 그 밖의 값은 모두 disabled다.
+- 현재 운영 제안 경로는 Suggest 1(`/api/suggest-clusters`)이다.
+- 기존 Suggest 2 pending/published 데이터는 삭제하지 않으며 열람, 검토, 기존 제안 기반 기사 생성 경로도 유지한다.
+- 이 비활성화에는 DB migration이나 schema 변경이 필요하지 않다.
+- Suggest 2 재설계와 검증이 끝나기 전에 운영 환경에서 `SUGGEST2_ENABLED=true`를 임의로 설정하지 않는다.
 
 ## 1. 프로젝트 목적
 

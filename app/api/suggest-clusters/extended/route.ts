@@ -17,6 +17,7 @@ import {
   selectSuggest2EntityArticles,
 } from '@/lib/suggest/backlog-selection'
 import { parseSuggest2Decision } from '@/lib/suggest/suggest2-decision'
+import { isSuggest2Enabled, SUGGEST2_DISABLED_BODY } from '@/lib/suggest/suggest2-maintenance'
 
 const SUGGEST2_SYSTEM = `당신은 전세계 전자음악 씬 전반을 다루는 에디터입니다.
 주어진 기사들이 모두 "같은 사건/릴리즈/행사/인물에 대한 동일한 뉴스"를 다루는지 판단하세요.
@@ -58,6 +59,10 @@ async function fetchAllEligibleArticles(): Promise<RawArticle[]> {
 }
 
 export async function POST() {
+  if (!isSuggest2Enabled()) {
+    return NextResponse.json(SUGGEST2_DISABLED_BODY, { status: 503 })
+  }
+
   const runBackground = async () => {
     try {
       console.log('[suggest-clusters/extended] 백그라운드 작업 시작')

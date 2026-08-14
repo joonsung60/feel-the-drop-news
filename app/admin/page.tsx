@@ -855,7 +855,16 @@ function SuggestTab({
     const initialCount = suggestions.length
 
     try {
-      await fetch('/api/suggest-clusters/extended', { method: 'POST' })
+      const res = await fetch('/api/suggest-clusters/extended', { method: 'POST' })
+      const data = await res.json().catch(() => ({}))
+      if (res.status === 503 && data.code === 'suggest2_rework') {
+        setExtendedMessage('Suggest 2는 재설계 중이라 임시 비활성화되어 있습니다. Suggest 1을 이용해 주세요.')
+        setIsExtendedGenerating(false)
+        return
+      }
+      if (!res.ok) {
+        throw new Error(data.message ?? data.error ?? `HTTP ${res.status}`)
+      }
 
       let polls = 0
       const poll = async () => {
@@ -877,7 +886,7 @@ function SuggestTab({
             setIsExtendedGenerating(false)
             return
           }
-        } catch (err) {
+        } catch {
           // ignore
         }
 
@@ -885,7 +894,7 @@ function SuggestTab({
       }
 
       setTimeout(poll, 30000)
-    } catch (err) {
+    } catch {
       setExtendedMessage('확장 제안 실행 중 오류가 발생했습니다.')
       setIsExtendedGenerating(false)
     }
