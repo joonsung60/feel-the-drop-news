@@ -36,6 +36,8 @@ export function ArticleCard({ article }: { article: ArticleListItem }) {
             <img
               src={article.imageUrl}
               alt={article.title}
+              loading="lazy"
+              decoding="async"
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
           ) : (

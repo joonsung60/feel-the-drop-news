@@ -38,6 +38,8 @@ export function ArticleList({
                 <img
                   src={article.imageUrl}
                   alt=""
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                 />
               ) : (

@@ -1,3 +1,5 @@
+import taxonomy from './taxonomy.json'
+
 export type CategoryNavItem = {
   slug: string
   label: string
@@ -10,38 +12,9 @@ export type ReleaseGenreNavItem = {
   aliases: string[]
 }
 
-export const CATEGORY_NAV: CategoryNavItem[] = [
-  { slug: 'festival', label: '페스티벌', aliases: ['festival', 'festivals', 'event', 'events', 'residency', 'residencies', '페스티벌', '행사', '레지던시'] },
-  { slug: 'release', label: '릴리즈', aliases: ['release', 'releases', '릴리즈', '신보'] },
-  { slug: 'news', label: '뉴스', aliases: ['news', '뉴스'] },
-  { slug: 'interview', label: '인터뷰', aliases: ['interview', '인터뷰'] },
-]
+export const CATEGORY_NAV: CategoryNavItem[] = taxonomy.categories
 
-export const RELEASE_GENRE_NAV: ReleaseGenreNavItem[] = [
-  { slug: 'house', label: 'House', aliases: ['house', '하우스'] },
-  { slug: 'techno', label: 'Techno', aliases: ['techno', '테크노'] },
-  {
-    slug: 'edm',
-    label: 'EDM',
-    aliases: [
-      'edm',
-      'electronic dance music',
-      'electronic',
-      'dance',
-      'trance',
-      '트랜스',
-      'drum and bass',
-      'drum & bass',
-      'drum-and-bass',
-      'dnb',
-      'd&b',
-      'dubstep',
-      '덥스텝',
-      'ambient',
-      '앰비언트',
-    ],
-  },
-]
+export const RELEASE_GENRE_NAV: ReleaseGenreNavItem[] = taxonomy.releaseGenres
 
 export function normalizeTaxonomySlug(value: string | null | undefined): string {
   return (value ?? '')

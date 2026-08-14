@@ -40,6 +40,8 @@ function Hero({ article }: { article: ArticleListItem }) {
           <img
             src={article.imageUrl}
             alt={article.title}
+            loading="eager"
+            decoding="async"
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (

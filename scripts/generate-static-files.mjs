@@ -1,8 +1,11 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { createClient } from '@supabase/supabase-js'
 
-const CATEGORY_SLUGS = ['festival', 'artist', 'release', 'news', 'interview']
-const GENRE_SLUGS = ['house', 'techno', 'trance', 'drum-and-bass', 'dubstep', 'ambient']
+const taxonomy = JSON.parse(
+  readFileSync(new URL('../lib/taxonomy.json', import.meta.url), 'utf8')
+)
+const CATEGORY_SLUGS = taxonomy.categories.map(({ slug }) => slug)
+const GENRE_SLUGS = taxonomy.releaseGenres.map(({ slug }) => slug)
 
 // Keep this fallback synchronized with lib/site.ts.
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://feel-the-drop.com').replace(/\/$/, '')

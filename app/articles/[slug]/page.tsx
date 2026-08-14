@@ -244,6 +244,7 @@ export default async function ArticlePage({
       extractFirstMarkdownImage(article.content);
 
   const articleBlocks = splitArticleBlocks(article.content, articleImageUrl);
+  const leadingImageIndex = articleBlocks.findIndex((block) => block.type === "image");
 
   const showUpdated =
     article.published_at &&
@@ -328,6 +329,8 @@ export default async function ArticlePage({
                   <img
                     src={block.src}
                     alt={block.alt}
+                    loading={idx === leadingImageIndex ? "eager" : "lazy"}
+                    decoding="async"
                     className="w-full h-auto object-cover"
                   />
                   {block.alt && (
