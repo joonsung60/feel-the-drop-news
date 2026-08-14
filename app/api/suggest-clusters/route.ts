@@ -12,8 +12,9 @@ import { SUGGEST_RESPONSE_FORMAT, SUGGEST_SYSTEM, buildClusterPrompt } from '@/l
 import { buildEntityIndex, loadEntityDictionary } from '@/lib/suggest/entity-index'
 import {
   chunkArticles,
+  findUnmentionedArticleIds,
   isSingletonRawSuggestion,
-  normalizeSuggestion,
+  normalizeSuggestionDetailed,
   parseSuggestions,
 } from '@/lib/suggest/normalize'
 import { hasEventDateConflict, knownEventDates } from '@/lib/suggest/event-date'
@@ -271,7 +272,11 @@ export async function POST(req: NextRequest) {
       })
     }
 
-    const { input: llmInput, noEntitySelected } = selectEligibleLlmInput(
+    const {
+      input: llmInput,
+      explicitEvidenceFailed,
+      noEntityCapped,
+    } = selectEligibleLlmInput(
       partition,
       LLM_INPUT_MAX,
       NO_ENTITY_RATIO_MAX,
@@ -283,11 +288,18 @@ export async function POST(req: NextRequest) {
         item_url: article.url, title: article.title, detail: { article_id: article.id },
       })
     }
-    const selectedNoEntityIds = new Set(noEntitySelected.map((article) => article.id))
-    for (const article of partition.notMatched.filter((item) => !selectedNoEntityIds.has(item.id))) {
+    for (const article of explicitEvidenceFailed) {
+      observer.event({
+        stage: 'llm_skipped', reason: 'explicit_edm_evidence_failed',
+        source: article.sourceName ?? null, item_url: article.url, title: article.title,
+        detail: { article_id: article.id, origin: article.origin ?? null },
+      })
+    }
+    for (const article of noEntityCapped) {
       observer.event({
         stage: 'llm_skipped', reason: 'non_entity_cap', source: article.sourceName ?? null,
-        item_url: article.url, title: article.title, detail: { article_id: article.id },
+        item_url: article.url, title: article.title,
+        detail: { article_id: article.id, origin: article.origin ?? null },
       })
     }
     for (const article of partition.supportingOnly) {
@@ -436,6 +448,21 @@ export async function POST(req: NextRequest) {
       const suggestions = parsed.suggestions ?? []
       successfulLlmBatches++
       llmSuggestionCount += suggestions.length
+      for (const articleId of findUnmentionedArticleIds(
+        batch.map((article) => article.id),
+        suggestions,
+      )) {
+        const article = batch.find((item) => item.id === articleId)!
+        observer.event({
+          stage: 'llm_output', reason: 'llm_unmentioned',
+          source: article.sourceName ?? null, item_url: article.url, title: article.title,
+          detail: {
+            article_id: article.id,
+            origin: article.origin ?? null,
+            batch_index: batchIndex,
+          },
+        })
+      }
       
       for (const suggestion of suggestions) {
         if (!isSingletonRawSuggestion(suggestion)) {
@@ -445,13 +472,14 @@ export async function POST(req: NextRequest) {
           })
           continue
         }
-        const normalizedSuggestion = normalizeSuggestion(
+        const normalization = normalizeSuggestionDetailed(
           suggestion,
           batchValidIds,
           articleMeta,
           rawArticles,
           articleEntities,
         )
+        const normalizedSuggestion = normalization.suggestion
         if (normalizedSuggestion) normalized.push(normalizedSuggestion)
         else {
           const articleIds = (Array.isArray(suggestion.articleIds) ? suggestion.articleIds : [])
@@ -469,7 +497,14 @@ export async function POST(req: NextRequest) {
               : hasEventDateConflict(articleIds, rawArticles)
                 ? 'event_date_conflict'
                 : 'normalization_failed',
-            { batch_index: batchIndex, raw_path: rawPath, article_ids: articleIds, event_dates: eventDates },
+            {
+              batch_index: batchIndex,
+              raw_path: rawPath,
+              article_ids: articleIds,
+              event_dates: eventDates,
+              normalization_failure_reason:
+                normalization.failureReason ?? 'unknown_normalization_failure',
+            },
           )
         }
       }

@@ -84,12 +84,9 @@ export function isCategoryKeyword(keyword: string): boolean {
 
 export function isUrlOrDomainText(text: string): boolean {
   const lower = text.toLowerCase()
-  const normalized = normalizeText(text)
   return /\bhttps?:\/\//.test(lower)
-    || /\bwww\./.test(lower)
-    || /\b[a-z0-9-]+\.(com|net|org|co|uk|de|fr|io|fm)\b/.test(lower)
-    || /\b(https|http|www)\b/.test(normalized)
-    || /\b(com|net|org|co|uk|de|fr|io|fm)\b/.test(normalized)
+    || /\bwww\.[a-z0-9-]+(?:\.[a-z0-9-]+)+\b/.test(lower)
+    || /\b[a-z0-9-]+(?:\.[a-z0-9-]+)*\.(?:com|net|org|co\.uk|uk|de|fr|io|fm)(?:\/[^\s]*)?\b/.test(lower)
 }
 
 export function isSourceOrSeriesEntity(text: string): boolean {
@@ -152,20 +149,36 @@ export function calculateCohesionScore(articleIds: string[], commonEntities: str
   return Math.max(0, Math.min(100, Math.round(averageEntityCoverage * 80 + sizeBonus - categoryPenalty)))
 }
 
-export function normalizeSuggestion(
+export type NormalizationFailureReason =
+  | 'invalid_article_ids'
+  | 'event_date_conflict'
+  | 'url_or_domain_text'
+  | 'low_signal_topic'
+  | 'singleton_grounding_failed'
+  | 'singleton_eligibility_failed'
+  | 'empty_keywords_or_entities'
+  | 'cohesion_failed'
+  | 'unknown_normalization_failure'
+
+export type NormalizationResult = {
+  suggestion: SuggestionWithArticles | null
+  failureReason: NormalizationFailureReason | null
+}
+
+export function normalizeSuggestionDetailed(
   suggestion: Partial<Suggestion>,
   validIds: Set<string>,
   articleMeta: Map<string, { id: string; title: string; url: string }>,
   rawArticles: RawArticle[],
   qualifyingEntitiesByArticle?: Map<string, Set<string>>,
-): SuggestionWithArticles | null {
+): NormalizationResult {
   const requestedArticleIds = Array.from(new Set(
     (Array.isArray(suggestion.articleIds) ? suggestion.articleIds : [])
       .map((id) => String(id).trim())
       .filter(Boolean)
   ))
   if (requestedArticleIds.some((id) => !validIds.has(id))) {
-    return null
+    return { suggestion: null, failureReason: 'invalid_article_ids' }
   }
   const articleIds = Array.from(new Set(
     requestedArticleIds.filter((id) => validIds.has(id))
@@ -232,43 +245,72 @@ export function normalizeSuggestion(
     && groundingCandidates.length > 0
     && groundingCandidates.every((value) => !/[a-z]/i.test(value))
   )
-  const singletonEligible = articleIds.length > 1 || (
+  const singletonHasEligibility = articleIds.length > 1 || (
     Boolean(singletonArticle)
-    && singletonGrounded
-    && (
-      qualifyingEntitiesByArticle
-        ? (qualifyingEntitiesByArticle.get(articleIds[0])?.size ?? 0) > 0
-          || hasExplicitEdmEvidence(singletonArticle!)
-        : hasExplicitEdmEvidence(singletonArticle!)
-    )
+    && (qualifyingEntitiesByArticle
+      ? (qualifyingEntitiesByArticle.get(articleIds[0])?.size ?? 0) > 0
+        || hasExplicitEdmEvidence(singletonArticle!)
+      : hasExplicitEdmEvidence(singletonArticle!))
   )
 
-  if (
-    !topic
-    || isUrlOrDomainText(topic)
-    || isSourceOrSeriesEntity(topic)
-    || isLowSignalClusterText(topic)
-    || articleIds.length < 1
-    || hasEventDateConflict(articleIds, rawArticles)
-    || (articleIds.length > 1 && cohesionScore < MIN_COHESION_SCORE)
-    || !singletonEligible
-  ) {
-    return null
+  if (articleIds.length < 1 || (articleIds.length === 1 && !singletonArticle)) {
+    return { suggestion: null, failureReason: 'invalid_article_ids' }
+  }
+  if (hasEventDateConflict(articleIds, rawArticles)) {
+    return { suggestion: null, failureReason: 'event_date_conflict' }
+  }
+  if (isUrlOrDomainText(topic)) {
+    return { suggestion: null, failureReason: 'url_or_domain_text' }
+  }
+  if (!topic || isSourceOrSeriesEntity(topic) || isLowSignalClusterText(topic)) {
+    return { suggestion: null, failureReason: 'low_signal_topic' }
+  }
+  if (articleIds.length > 1 && cohesionScore < MIN_COHESION_SCORE) {
+    return { suggestion: null, failureReason: 'cohesion_failed' }
+  }
+  if (articleIds.length === 1 && !singletonGrounded) {
+    return { suggestion: null, failureReason: 'singleton_grounding_failed' }
+  }
+  if (!singletonHasEligibility) {
+    return { suggestion: null, failureReason: 'singleton_eligibility_failed' }
   }
 
   if (keywords.length === 0 && commonEntities.length === 0) {
-    return null
+    return { suggestion: null, failureReason: 'empty_keywords_or_entities' }
   }
 
-  return {
-    topic,
-    keywords,
-    articleIds,
-    reason,
-    commonEntities,
-    cohesionScore,
+  const normalized = {
+    topic, keywords, articleIds, reason, commonEntities, cohesionScore,
     articles: articleIds.map((id) => articleMeta.get(id)!).filter(Boolean),
   }
+  if (normalized.articles.length !== articleIds.length) {
+    return { suggestion: null, failureReason: 'unknown_normalization_failure' }
+  }
+  return { suggestion: normalized, failureReason: null }
+}
+
+export function normalizeSuggestion(
+  suggestion: Partial<Suggestion>,
+  validIds: Set<string>,
+  articleMeta: Map<string, { id: string; title: string; url: string }>,
+  rawArticles: RawArticle[],
+  qualifyingEntitiesByArticle?: Map<string, Set<string>>,
+): SuggestionWithArticles | null {
+  return normalizeSuggestionDetailed(
+    suggestion, validIds, articleMeta, rawArticles, qualifyingEntitiesByArticle,
+  ).suggestion
+}
+
+export function findUnmentionedArticleIds(
+  inputArticleIds: string[],
+  suggestions: Array<Partial<Suggestion>>,
+): string[] {
+  const mentioned = new Set(suggestions.flatMap((suggestion) =>
+    Array.isArray(suggestion.articleIds)
+      ? suggestion.articleIds.map((id) => String(id).trim()).filter(Boolean)
+      : []
+  ))
+  return inputArticleIds.filter((id) => !mentioned.has(id))
 }
 
 export function normalizeTopicKey(topic: string): string {

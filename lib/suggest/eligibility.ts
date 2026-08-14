@@ -67,13 +67,26 @@ export function selectEligibleLlmInput(
   partition: ArticleEntityPartition,
   maxInput: number,
   noEntityRatioMax: number,
-): { input: RawArticle[]; noEntitySelected: RawArticle[] } {
+): {
+  input: RawArticle[]
+  noEntitySelected: RawArticle[]
+  explicitEvidenceFailed: RawArticle[]
+  noEntityCapped: RawArticle[]
+} {
   const qualifying = partition.qualifying.slice(0, maxInput)
   const danceExperience = partition.danceExperience.slice(0, maxInput - qualifying.length)
   const remainingSlots = maxInput - qualifying.length - danceExperience.length
   const noEntityLimit = Math.min(remainingSlots, Math.floor(maxInput * noEntityRatioMax))
-  const noEntitySelected = partition.notMatched
-    .filter(hasExplicitEdmEvidence)
-    .slice(0, noEntityLimit)
-  return { input: [...qualifying, ...danceExperience, ...noEntitySelected], noEntitySelected }
+  const explicitEvidencePassed = partition.notMatched.filter(hasExplicitEdmEvidence)
+  const explicitEvidenceFailed = partition.notMatched.filter(
+    (article) => !hasExplicitEdmEvidence(article),
+  )
+  const noEntitySelected = explicitEvidencePassed.slice(0, noEntityLimit)
+  const noEntityCapped = explicitEvidencePassed.slice(noEntityLimit)
+  return {
+    input: [...qualifying, ...danceExperience, ...noEntitySelected],
+    noEntitySelected,
+    explicitEvidenceFailed,
+    noEntityCapped,
+  }
 }
