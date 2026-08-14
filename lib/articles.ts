@@ -1,8 +1,8 @@
 import { supabase } from '@/lib/supabase'
+import { cache } from 'react'
 import {
   matchesCategory,
   matchesGenre,
-  normalizeTaxonomySlug,
 } from '@/lib/taxonomy'
 
 export type ArticleListItem = {
@@ -46,6 +46,26 @@ type LoadArticlesOptions = {
   genre?: string
 }
 
+type ArchiveIndexRow = Pick<
+  ArticleRow,
+  'id' | 'slug' | 'published_at' | 'category' | 'genre'
+>
+
+type LoadArchivePageOptions = {
+  page: number
+  pageSize?: number
+  category?: string
+  genre?: string
+}
+
+export type ArchivePageResult = {
+  articles: ArticleListItem[]
+  error: string | null
+  page: number
+  totalItems: number
+  totalPages: number
+}
+
 type ArticleViewRow = {
   slug: string
   views_30d: number
@@ -55,21 +75,29 @@ export async function loadPublishedArticles(
   options: LoadArticlesOptions = {}
 ): Promise<{ articles: ArticleListItem[]; error: string | null }> {
   const limit = options.limit ?? 50
+
+  if (options.category || options.genre) {
+    const result = await loadArchivePage({
+      category: options.category,
+      genre: options.genre,
+      page: 1,
+      pageSize: limit,
+    })
+    return { articles: result.articles, error: result.error }
+  }
+
   const { data, error } = await supabase
     .from('articles')
     .select('id, slug, title, content, published_at, cluster_id, image_url, category, genre')
     .eq('published', true)
     .order('published_at', { ascending: false })
-    .limit(200)
+    .limit(limit)
 
   if (error) {
     return { articles: [], error: error.message }
   }
 
-  const rows = ((data ?? []) as ArticleRow[])
-    .filter((row) => !options.category || matchesCategory(row.category, options.category))
-    .filter((row) => !options.genre || matchesGenre(row.genre, options.genre))
-    .slice(0, limit)
+  const rows = (data ?? []) as ArticleRow[]
 
   const imageByCluster = await loadImagesByCluster(rows)
 
@@ -91,6 +119,117 @@ export async function loadPublishedArticles(
   }))
 
   return { articles, error: null }
+}
+
+const loadPublishedArchiveIndex = cache(async (): Promise<{
+  rows: ArchiveIndexRow[]
+  error: string | null
+}> => {
+  const pageSize = 1000
+  const rows: ArchiveIndexRow[] = []
+
+  for (let from = 0; ; from += pageSize) {
+    const { data, error } = await supabase
+      .from('articles')
+      .select('id, slug, published_at, category, genre')
+      .eq('published', true)
+      .order('published_at', { ascending: false })
+      .order('id', { ascending: true })
+      .range(from, from + pageSize - 1)
+
+    if (error) return { rows: [], error: error.message }
+
+    const batch = (data ?? []) as ArchiveIndexRow[]
+    rows.push(...batch)
+    if (batch.length < pageSize) break
+  }
+
+  return { rows, error: null }
+})
+
+export async function loadArchivePage(
+  options: LoadArchivePageOptions
+): Promise<ArchivePageResult> {
+  const pageSize = options.pageSize ?? 50
+  const index = await loadPublishedArchiveIndex()
+
+  if (index.error) {
+    return {
+      articles: [],
+      error: index.error,
+      page: options.page,
+      totalItems: 0,
+      totalPages: 0,
+    }
+  }
+
+  const matchingRows = index.rows
+    .filter((row) => !options.category || matchesCategory(row.category, options.category))
+    .filter((row) => !options.genre || matchesGenre(row.genre, options.genre))
+  const totalItems = matchingRows.length
+  const totalPages = Math.ceil(totalItems / pageSize)
+  const offset = (options.page - 1) * pageSize
+  const pageRows = matchingRows.slice(offset, offset + pageSize)
+
+  if (pageRows.length === 0) {
+    return {
+      articles: [],
+      error: null,
+      page: options.page,
+      totalItems,
+      totalPages,
+    }
+  }
+
+  const ids = pageRows.map((row) => row.id)
+  const { data, error } = await supabase
+    .from('articles')
+    .select('id, slug, title, content, published_at, cluster_id, image_url, category, genre')
+    .eq('published', true)
+    .in('id', ids)
+
+  if (error) {
+    return {
+      articles: [],
+      error: error.message,
+      page: options.page,
+      totalItems,
+      totalPages,
+    }
+  }
+
+  const rowById = new Map(
+    ((data ?? []) as ArticleRow[]).map((row) => [row.id, row])
+  )
+  const rows = ids
+    .map((id) => rowById.get(id))
+    .filter((row): row is ArticleRow => Boolean(row))
+  const imageByCluster = await loadImagesByCluster(rows)
+
+  return {
+    articles: rows.map((row) => toArticleListItem(row, imageByCluster)),
+    error: null,
+    page: options.page,
+    totalItems,
+    totalPages,
+  }
+}
+
+export async function loadArchivePageParams(options: {
+  category?: string
+  genre?: string
+  pageSize?: number
+} = {}): Promise<number[]> {
+  const index = await loadPublishedArchiveIndex()
+  if (index.error) throw new Error(`Failed to load archive index: ${index.error}`)
+
+  const totalItems = index.rows
+    .filter((row) => !options.category || matchesCategory(row.category, options.category))
+    .filter((row) => !options.genre || matchesGenre(row.genre, options.genre))
+    .length
+  const totalPages = Math.ceil(totalItems / (options.pageSize ?? 50))
+
+  return Array.from({ length: Math.max(totalPages - 1, 0) }, (_, index) => index + 2)
 }
 
 export async function loadPopularArticles(
@@ -162,31 +301,6 @@ export async function loadPopularArticles(
   return popular
 }
 
-export async function loadTaxonomyParams(): Promise<{
-  categories: string[]
-  genres: string[]
-}> {
-  const { data } = await supabase
-    .from('articles')
-    .select('category, genre')
-    .eq('published', true)
-
-  const categories = new Set<string>()
-  const genres = new Set<string>()
-
-  for (const row of (data ?? []) as Pick<ArticleRow, 'category' | 'genre'>[]) {
-    const category = normalizeTaxonomySlug(row.category)
-    const genre = normalizeTaxonomySlug(row.genre)
-    if (category) categories.add(category)
-    if (genre) genres.add(genre)
-  }
-
-  return {
-    categories: Array.from(categories),
-    genres: Array.from(genres),
-  }
-}
-
 export async function loadClusterImageUrl(clusterId: string | null): Promise<string | null> {
   if (!clusterId) return null
 
@@ -247,6 +361,28 @@ async function loadImagesByCluster(rows: ArticleRow[]): Promise<Map<string, stri
   }
 
   return imageByCluster
+}
+
+function toArticleListItem(
+  row: ArticleRow,
+  imageByCluster: Map<string, string>
+): ArticleListItem {
+  return {
+    id: row.id,
+    slug: row.slug,
+    title: row.title,
+    content: row.content,
+    published_at: row.published_at,
+    cluster_id: row.cluster_id,
+    article_image_url: isUsableImageUrl(row.image_url) ? row.image_url : null,
+    imageUrl: isUsableImageUrl(row.image_url)
+      ? row.image_url
+      : row.cluster_id
+        ? imageByCluster.get(row.cluster_id) ?? null
+        : null,
+    category: row.category,
+    genre: row.genre,
+  }
 }
 
 function firstUsableImageUrl(rows: { image_url: string | null }[]): string | null {

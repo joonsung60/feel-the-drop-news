@@ -1,7 +1,10 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { ArticleList } from '@/components/ArticleList'
-import { loadPublishedArticles } from '@/lib/articles'
+import { ArchiveView } from '@/components/ArchiveView'
+import { loadArchivePage } from '@/lib/articles'
 import { RELEASE_GENRE_NAV, findGenre, genreLabel } from '@/lib/taxonomy'
+
+export const dynamicParams = false
 
 export async function generateStaticParams() {
   const slugs = new Set([
@@ -9,6 +12,17 @@ export async function generateStaticParams() {
   ])
 
   return Array.from(slugs).map((genre) => ({ genre }))
+}
+
+export async function generateMetadata({ params }: {
+  params: Promise<{ genre: string }>
+}): Promise<Metadata> {
+  const { genre } = await params
+  const label = genreLabel(genre)
+  return {
+    title: `${label} 릴리즈 | FEEL THE DROP`,
+    alternates: { canonical: `/genre/${genre}/` },
+  }
 }
 
 export default async function GenrePage({
@@ -19,26 +33,21 @@ export default async function GenrePage({
   const { genre } = await params
   const known = findGenre(genre)
   const label = genreLabel(genre)
-  const { articles, error } = await loadPublishedArticles({
-    category: 'release',
-    genre,
-    limit: 50,
-  })
-
   if (!known) notFound()
 
-  return (
-    <div className="max-w-5xl mx-auto px-6 py-8">
-      <header className="mb-6 border-b-2 border-zinc-900 pb-3">
-        <p className="text-sm font-medium text-zinc-500">장르</p>
-        <h1 className="mt-1 text-2xl font-bold">{label}</h1>
-      </header>
+  const archive = await loadArchivePage({
+    category: 'release',
+    genre,
+    page: 1,
+  })
 
-      <ArticleList
-        articles={articles}
-        error={error}
-        emptyMessage={`${label} 릴리즈 기사가 아직 없습니다.`}
-      />
-    </div>
+  return (
+    <ArchiveView
+      eyebrow="장르"
+      title={label}
+      archive={archive}
+      basePath={`/genre/${genre}`}
+      emptyMessage={`${label} 릴리즈 기사가 아직 없습니다.`}
+    />
   )
 }

@@ -69,7 +69,8 @@ if (error) {
 
 mkdirSync('public', { recursive: true })
 
-const articlesWithSlug = (articles ?? []).filter((article) => article.slug)
+const publishedArticles = articles ?? []
+const articlesWithSlug = publishedArticles.filter((article) => article.slug)
 
 const urls = [
   {
@@ -77,6 +78,12 @@ const urls = [
     lastmod: new Date().toISOString(),
     changefreq: 'hourly',
     priority: '1.0',
+  },
+  {
+    loc: `${SITE_URL}/archive/`,
+    lastmod: new Date().toISOString(),
+    changefreq: 'daily',
+    priority: '0.7',
   },
   ...CATEGORY_SLUGS.map((slug) => ({
     loc: `${SITE_URL}/category/${slug}/`,
@@ -90,8 +97,8 @@ const urls = [
     changefreq: 'daily',
     priority: '0.6',
   })),
-  ...articlesWithSlug.map((article) => ({
-    loc: `${SITE_URL}/articles/${article.slug}/`,
+  ...publishedArticles.map((article) => ({
+    loc: `${SITE_URL}/articles/${article.slug ?? article.id}/`,
     lastmod: formatDate(article.updated_at || article.published_at || article.created_at),
     changefreq: 'daily',
     priority: '0.8',
@@ -125,7 +132,7 @@ Sitemap: ${SITE_URL}/sitemap.xml
 ## Public Content
 
 - Home: ${SITE_URL}/
-- Articles: ${SITE_URL}/articles/
+- Articles: ${SITE_URL}/archive/
 
 ## Notes for AI Crawlers
 

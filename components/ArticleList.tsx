@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { ArticleListItem } from '@/lib/articles'
+import { createArticleExcerpt } from '@/lib/excerpt'
 
 type ArticleListProps = {
   articles: ArticleListItem[]
@@ -54,7 +55,7 @@ export function ArticleList({
                 {article.title}
               </h3>
               <p className="mt-1.5 text-sm text-zinc-600 line-clamp-2">
-                {article.content}
+                {createArticleExcerpt(article.content)}
               </p>
               {article.published_at && (
                 <time className="mt-2 block text-xs text-zinc-500">

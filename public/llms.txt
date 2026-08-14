@@ -8,7 +8,7 @@ Sitemap: https://feel-the-drop.com/sitemap.xml
 ## Public Content
 
 - Home: https://feel-the-drop.com/
-- Articles: https://feel-the-drop.com/articles/
+- Articles: https://feel-the-drop.com/archive/
 
 ## Notes for AI Crawlers
 

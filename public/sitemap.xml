@@ -2,49 +2,55 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://feel-the-drop.com/</loc>
-    <lastmod>2026-08-14T14:18:14.646Z</lastmod>
+    <lastmod>2026-08-14T14:34:24.457Z</lastmod>
     <changefreq>hourly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://feel-the-drop.com/archive/</loc>
+    <lastmod>2026-08-14T14:34:24.457Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://feel-the-drop.com/category/festival/</loc>
-    <lastmod>2026-08-14T14:18:14.646Z</lastmod>
+    <lastmod>2026-08-14T14:34:24.457Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://feel-the-drop.com/category/release/</loc>
-    <lastmod>2026-08-14T14:18:14.646Z</lastmod>
+    <lastmod>2026-08-14T14:34:24.457Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://feel-the-drop.com/category/news/</loc>
-    <lastmod>2026-08-14T14:18:14.646Z</lastmod>
+    <lastmod>2026-08-14T14:34:24.457Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://feel-the-drop.com/category/interview/</loc>
-    <lastmod>2026-08-14T14:18:14.646Z</lastmod>
+    <lastmod>2026-08-14T14:34:24.457Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://feel-the-drop.com/genre/house/</loc>
-    <lastmod>2026-08-14T14:18:14.646Z</lastmod>
+    <lastmod>2026-08-14T14:34:24.457Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://feel-the-drop.com/genre/techno/</loc>
-    <lastmod>2026-08-14T14:18:14.646Z</lastmod>
+    <lastmod>2026-08-14T14:34:24.457Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://feel-the-drop.com/genre/edm/</loc>
-    <lastmod>2026-08-14T14:18:14.646Z</lastmod>
+    <lastmod>2026-08-14T14:34:24.457Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -2439,6 +2445,60 @@
   <url>
     <loc>https://feel-the-drop.com/articles/deep-dish-gu49-dublin-mix-2026/</loc>
     <lastmod>2026-05-12T13:19:26.764Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://feel-the-drop.com/articles/1803c26c-b3f4-47d4-bb45-c751bf8d69bd/</loc>
+    <lastmod>2026-05-12T10:45:35.525Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://feel-the-drop.com/articles/8b5355a6-6eae-436f-af9b-5bea8813fff8/</loc>
+    <lastmod>2026-05-12T10:45:21.589Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://feel-the-drop.com/articles/ed9765d3-7eb3-4cc7-886b-28477ae4ae93/</loc>
+    <lastmod>2026-05-12T10:44:31.364Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://feel-the-drop.com/articles/9fc25fd8-2f0d-4ab6-83a6-d493845702d6/</loc>
+    <lastmod>2026-05-12T10:30:57.589Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://feel-the-drop.com/articles/c1f5f87a-e793-49f4-b5c6-41ad6d7e31b7/</loc>
+    <lastmod>2026-05-12T09:58:34.445Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://feel-the-drop.com/articles/58ed4af2-1153-4944-8a19-02fada02d1e0/</loc>
+    <lastmod>2026-05-12T08:42:53.002Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://feel-the-drop.com/articles/e904b17c-2b83-40c5-89ba-9036d833709d/</loc>
+    <lastmod>2026-05-12T03:59:47.058Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://feel-the-drop.com/articles/c47b4dcb-06fb-42f2-bb8c-820147bbc0ad/</loc>
+    <lastmod>2026-05-12T03:39:16.490Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://feel-the-drop.com/articles/b1adc567-fb25-48ef-afd7-4d42e48497b1/</loc>
+    <lastmod>2026-05-11T12:37:35.767Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
