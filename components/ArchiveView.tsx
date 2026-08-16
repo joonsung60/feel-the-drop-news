@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import { ArticleList } from '@/components/ArticleList'
+import { JsonLd } from '@/components/JsonLd'
 import type { ArchivePageResult } from '@/lib/articles'
+import { createBreadcrumbJsonLd, type BreadcrumbItem } from '@/lib/seo'
 
 type ArchiveViewProps = {
   eyebrow: string
@@ -8,6 +10,7 @@ type ArchiveViewProps = {
   archive: ArchivePageResult
   basePath: string
   emptyMessage: string
+  breadcrumbs: BreadcrumbItem[]
 }
 
 export function ArchiveView({
@@ -16,9 +19,11 @@ export function ArchiveView({
   archive,
   basePath,
   emptyMessage,
+  breadcrumbs,
 }: ArchiveViewProps) {
   return (
     <div className="max-w-5xl mx-auto px-6 py-8">
+      <JsonLd data={createBreadcrumbJsonLd(breadcrumbs)} />
       <header className="mb-6 border-b-2 border-zinc-900 pb-3">
         <p className="text-sm font-medium text-zinc-500">{eyebrow}</p>
         <h1 className="mt-1 text-2xl font-bold">{title}</h1>

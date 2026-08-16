@@ -4,6 +4,8 @@ import Link from "next/link";
 import Script from "next/script";
 import { Barlow_Condensed, Noto_Sans_KR } from "next/font/google";
 import { CONTACT_EMAIL, DEFAULT_OG_IMAGE_URL, PUBLISHER, SITE_URL, SOCIAL_LINKS } from "@/lib/site";
+import { JsonLd } from "@/components/JsonLd";
+import { ORGANIZATION_JSON_LD, WEBSITE_JSON_LD } from "@/lib/seo";
 import { CATEGORY_NAV, RELEASE_GENRE_NAV } from "@/lib/taxonomy";
 import "./globals.css";
 
@@ -30,6 +32,15 @@ export const metadata: Metadata = {
   verification: {
     google: "dBSG9LfIn9zB1n1Hu13rgD_RqKS5GeEknVNf9a2PlMg",
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+    },
+  },
   icons: {
     icon: "/icon.png",
     apple: "/apple-icon.png",
@@ -39,6 +50,7 @@ export const metadata: Metadata = {
     description: "한국어 EDM 뉴스 종합",
     url: SITE_URL,
     siteName: "FEEL THE DROP",
+    locale: "ko_KR",
     images: [{ url: DEFAULT_OG_IMAGE_URL }],
   },
 };
@@ -68,6 +80,8 @@ export default function RootLayout({
         className="min-h-full flex flex-col bg-white text-[#0A0A0A]"
         style={{ fontFamily: "var(--font-body), sans-serif" }}
       >
+        <JsonLd data={ORGANIZATION_JSON_LD} />
+        <JsonLd data={WEBSITE_JSON_LD} />
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
           strategy="afterInteractive"

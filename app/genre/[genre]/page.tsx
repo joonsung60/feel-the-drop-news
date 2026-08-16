@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { ArchiveView } from '@/components/ArchiveView'
 import { loadArchivePage } from '@/lib/articles'
 import { RELEASE_GENRE_NAV, findGenre, genreLabel } from '@/lib/taxonomy'
+import { createArchiveMetadata } from '@/lib/seo'
 
 export const dynamicParams = false
 
@@ -19,10 +20,11 @@ export async function generateMetadata({ params }: {
 }): Promise<Metadata> {
   const { genre } = await params
   const label = genreLabel(genre)
-  return {
+  return createArchiveMetadata({
     title: `${label} 릴리즈 | FEEL THE DROP`,
-    alternates: { canonical: `/genre/${genre}/` },
-  }
+    description: `FEEL THE DROP의 ${label} 릴리즈 기사와 소식을 확인하세요.`,
+    path: `/genre/${genre}/`,
+  })
 }
 
 export default async function GenrePage({
@@ -48,6 +50,10 @@ export default async function GenrePage({
       archive={archive}
       basePath={`/genre/${genre}`}
       emptyMessage={`${label} 릴리즈 기사가 아직 없습니다.`}
+      breadcrumbs={[
+        { name: '홈', path: '/' },
+        { name: label, path: `/genre/${genre}/` },
+      ]}
     />
   )
 }

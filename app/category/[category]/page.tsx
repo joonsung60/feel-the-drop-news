@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { ArchiveView } from '@/components/ArchiveView'
 import { loadArchivePage } from '@/lib/articles'
 import { CATEGORY_NAV, categoryLabel, findCategory } from '@/lib/taxonomy'
+import { createArchiveMetadata } from '@/lib/seo'
 
 export const dynamicParams = false
 
@@ -15,10 +16,11 @@ export async function generateMetadata({ params }: {
 }): Promise<Metadata> {
   const { category } = await params
   const label = categoryLabel(category)
-  return {
+  return createArchiveMetadata({
     title: `${label} 기사 | FEEL THE DROP`,
-    alternates: { canonical: `/category/${category}/` },
-  }
+    description: `FEEL THE DROP의 ${label} 관련 EDM 기사와 소식을 확인하세요.`,
+    path: `/category/${category}/`,
+  })
 }
 
 export default async function CategoryPage({
@@ -43,6 +45,10 @@ export default async function CategoryPage({
       archive={archive}
       basePath={`/category/${category}`}
       emptyMessage={`${label} 카테고리에 게시된 기사가 아직 없습니다.`}
+      breadcrumbs={[
+        { name: '홈', path: '/' },
+        { name: label, path: `/category/${category}/` },
+      ]}
     />
   )
 }

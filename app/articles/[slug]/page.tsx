@@ -4,7 +4,9 @@ import { notFound, permanentRedirect } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { isUsableImageUrl, loadClusterImageUrl, loadPublishedArticles } from "@/lib/articles";
 import { ArticleCard } from "@/components/ArticleCard";
-import { DEFAULT_OG_IMAGE_URL, PUBLISHER } from "@/lib/site";
+import { JsonLd } from "@/components/JsonLd";
+import { DEFAULT_OG_IMAGE_URL, ORGANIZATION_LOGO_URL, PUBLISHER, SITE_URL } from "@/lib/site";
+import { createBreadcrumbJsonLd, ORGANIZATION_ID } from "@/lib/seo";
 
 // ── 원본 유지 — 데이터/유틸 ───────────────────────────
 
@@ -56,10 +58,13 @@ export async function generateMetadata({
       description,
       type: "article",
       url: articlePath,
+      locale: "ko_KR",
+      siteName: PUBLISHER,
       publishedTime: data.published_at ?? data.created_at,
       modifiedTime: data.updated_at ?? undefined,
       images: [{ url: imageUrl ?? DEFAULT_OG_IMAGE_URL }],
     },
+    authors: [{ name: PUBLISHER, url: `${SITE_URL}/` }],
   };
 }
 
@@ -245,6 +250,43 @@ export default async function ArticlePage({
 
   const articleBlocks = splitArticleBlocks(article.content, articleImageUrl);
   const leadingImageIndex = articleBlocks.findIndex((block) => block.type === "image");
+  const articlePath = `/articles/${article.slug ?? article.id}/`;
+  const articleUrl = `${SITE_URL}${articlePath}`;
+  const description = createMetaDescription(article.content);
+  const publishedAt = toIsoDate(article.published_at ?? article.created_at);
+  const modifiedAt = toIsoDate(article.updated_at ?? article.published_at ?? article.created_at);
+  const structuredImageUrl = articleImageUrl ?? DEFAULT_OG_IMAGE_URL;
+  const organization = {
+    "@type": "Organization",
+    "@id": ORGANIZATION_ID,
+    name: PUBLISHER,
+    url: `${SITE_URL}/`,
+    logo: {
+      "@type": "ImageObject",
+      url: ORGANIZATION_LOGO_URL,
+    },
+  };
+  const newsArticleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    headline: article.title,
+    description,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": articleUrl,
+    },
+    datePublished: publishedAt,
+    dateModified: modifiedAt,
+    image: [structuredImageUrl],
+    articleSection: article.category ?? article.genre ?? "기사",
+    inLanguage: "ko-KR",
+    author: organization,
+    publisher: organization,
+  };
+  const breadcrumbJsonLd = createBreadcrumbJsonLd([
+    { name: "홈", path: "/" },
+    { name: article.title, path: articlePath },
+  ]);
 
   const showUpdated =
     article.published_at &&
@@ -264,6 +306,8 @@ export default async function ArticlePage({
 
   return (
     <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12">
+      <JsonLd data={newsArticleJsonLd} />
+      <JsonLd data={breadcrumbJsonLd} />
       <BackLink />
 
       <article className="mt-6 max-w-[720px]">
@@ -398,4 +442,12 @@ function BackLink() {
       ← 목록으로
     </Link>
   );
+}
+
+function toIsoDate(value: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    throw new Error(`Invalid article date: ${value}`);
+  }
+  return date.toISOString();
 }
