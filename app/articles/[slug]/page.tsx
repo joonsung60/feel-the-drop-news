@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { isUsableImageUrl, loadClusterImageUrl, loadPublishedArticles } from "@/lib/articles";
 import { ArticleCard } from "@/components/ArticleCard";
 import { JsonLd } from "@/components/JsonLd";
-import { DEFAULT_OG_IMAGE_URL, ORGANIZATION_LOGO_URL, PUBLISHER, SITE_URL } from "@/lib/site";
+import { DEFAULT_OG_IMAGE_URL, ORGANIZATION_LOGO_URL, PUBLISHER, RSS_ALTERNATE, SITE_URL } from "@/lib/site";
 import { createBreadcrumbJsonLd, ORGANIZATION_ID } from "@/lib/seo";
 
 // ── 원본 유지 — 데이터/유틸 ───────────────────────────
@@ -52,6 +52,7 @@ export async function generateMetadata({
     description,
     alternates: {
       canonical: articlePath,
+      types: { "application/rss+xml": RSS_ALTERNATE },
     },
     openGraph: {
       title: data.title,

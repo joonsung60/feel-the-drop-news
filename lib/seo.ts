@@ -3,6 +3,7 @@ import {
   DEFAULT_OG_IMAGE_URL,
   ORGANIZATION_LOGO_URL,
   PUBLISHER,
+  RSS_ALTERNATE,
   SITE_URL,
   SOCIAL_LINKS,
 } from '@/lib/site'
@@ -62,7 +63,10 @@ export function createArchiveMetadata({
   return {
     title,
     description,
-    alternates: { canonical: path },
+    alternates: {
+      canonical: path,
+      types: { 'application/rss+xml': RSS_ALTERNATE },
+    },
     openGraph: {
       title,
       description,

@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Script from "next/script";
 import { Barlow_Condensed, Noto_Sans_KR } from "next/font/google";
-import { CONTACT_EMAIL, DEFAULT_OG_IMAGE_URL, PUBLISHER, SITE_URL, SOCIAL_LINKS } from "@/lib/site";
+import { CONTACT_EMAIL, DEFAULT_OG_IMAGE_URL, PUBLISHER, RSS_ALTERNATE, SITE_URL, SOCIAL_LINKS } from "@/lib/site";
 import { JsonLd } from "@/components/JsonLd";
 import { ORGANIZATION_JSON_LD, WEBSITE_JSON_LD } from "@/lib/seo";
 import { CATEGORY_NAV, RELEASE_GENRE_NAV } from "@/lib/taxonomy";
@@ -29,6 +29,9 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "FEEL THE DROP",
   description: "한국어 EDM 뉴스 종합",
+  alternates: {
+    types: { 'application/rss+xml': RSS_ALTERNATE },
+  },
   verification: {
     google: "dBSG9LfIn9zB1n1Hu13rgD_RqKS5GeEknVNf9a2PlMg",
   },

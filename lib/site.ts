@@ -3,6 +3,8 @@ export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://feel-the-d
 export const DEFAULT_OG_IMAGE_PATH = '/og-default-1200x630.png'
 export const DEFAULT_OG_IMAGE_URL = SITE_URL + DEFAULT_OG_IMAGE_PATH
 export const ORGANIZATION_LOGO_URL = SITE_URL + '/logo.png'
+export const RSS_URL = SITE_URL + '/feed.xml'
+export const RSS_ALTERNATE = [{ title: 'FEEL THE DROP RSS', url: RSS_URL }]
 
 export const CONTACT_EMAIL = 'feelthedrop.official@gmail.com'
 

@@ -1,5 +1,6 @@
 import { loadPublishedArticles } from '@/lib/articles'
-import { SITE_URL } from '@/lib/site'
+import { createArticleExcerpt } from '@/lib/excerpt'
+import { RSS_URL, SITE_URL } from '@/lib/site'
 
 const FEED_CONTENT_TYPE = 'application/rss+xml; charset=utf-8'
 
@@ -14,17 +15,19 @@ export async function GET() {
   }
 
   const items = articles
-    .filter((article) => article.slug)
     .map((article) => {
-      const link = `${SITE_URL}/articles/${article.slug}`
+      const link = `${SITE_URL}/articles/${article.slug ?? article.id}/`
+      const pubDate = formatRssDate(article.published_at)
+      const category = article.category?.trim()
 
       return [
         '<item>',
         `<title>${escapeXml(article.title)}</title>`,
         `<link>${escapeXml(link)}</link>`,
-        `<description>${escapeXml(article.content.slice(0, 200))}</description>`,
-        `<pubDate>${formatRssDate(article.published_at)}</pubDate>`,
-        `<category>${escapeXml(article.category ?? '')}</category>`,
+        `<guid isPermaLink="true">${escapeXml(link)}</guid>`,
+        `<description>${escapeXml(createArticleExcerpt(article.content))}</description>`,
+        ...(pubDate ? [`<pubDate>${escapeXml(pubDate)}</pubDate>`] : []),
+        ...(category ? [`<category>${escapeXml(category)}</category>`] : []),
         '</item>',
       ].join('')
     })
@@ -32,10 +35,11 @@ export async function GET() {
 
   const xml = [
     '<?xml version="1.0" encoding="UTF-8"?>',
-    '<rss version="2.0">',
+    '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">',
     '<channel>',
     '<title>FEEL THE DROP</title>',
-    `<link>${SITE_URL}</link>`,
+    `<link>${escapeXml(`${SITE_URL}/`)}</link>`,
+    `<atom:link href="${escapeXml(RSS_URL)}" rel="self" type="application/rss+xml" />`,
     '<description>한국어 EDM 뉴스 종합</description>',
     '<language>ko</language>',
     items,
@@ -59,11 +63,11 @@ function escapeXml(value: string) {
     .replace(/'/g, '&apos;')
 }
 
-function formatRssDate(value: string | null) {
-  if (!value) return ''
+function formatRssDate(value: string | null): string | null {
+  if (!value) return null
 
   const date = new Date(value)
-  if (Number.isNaN(date.getTime())) return ''
+  if (Number.isNaN(date.getTime())) return null
 
   return date.toUTCString()
 }
