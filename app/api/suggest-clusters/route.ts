@@ -112,12 +112,50 @@ export async function POST(req: NextRequest) {
   const observer = new PipelineObserver('suggest')
   try {
     const body = await req.json().catch(() => ({}))
-    const { limit: rawLimit, preferredIngestionRunId: rawPreferredIngestionRunId } =
-      body as { limit?: unknown; preferredIngestionRunId?: unknown }
+    const {
+      limit: rawLimit,
+      preferredIngestionRunId: rawPreferredIngestionRunId,
+      dailyPipelineRunId: rawDailyPipelineRunId,
+    } = body as {
+      limit?: unknown
+      preferredIngestionRunId?: unknown
+      dailyPipelineRunId?: unknown
+    }
     const preferredIngestionRunId =
       typeof rawPreferredIngestionRunId === 'string' && rawPreferredIngestionRunId.trim()
         ? rawPreferredIngestionRunId.trim()
         : null
+    const dailyPipelineRunId = typeof rawDailyPipelineRunId === 'string'
+      && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(rawDailyPipelineRunId)
+      ? rawDailyPipelineRunId
+      : null
+
+    if (rawDailyPipelineRunId !== undefined && !dailyPipelineRunId) {
+      return finishRun(
+        observer,
+        NextResponse.json({ error: 'dailyPipelineRunId가 유효한 UUID가 아닙니다.' }, { status: 400 }),
+        { error: 'invalid dailyPipelineRunId' },
+        'error',
+      )
+    }
+
+    if (dailyPipelineRunId) {
+      const { data: existing, error: existingError } = await supabase
+        .from('suggested_clusters')
+        .select('*')
+        .eq('daily_pipeline_run_id', dailyPipelineRunId)
+        .order('daily_pipeline_selection_order', { ascending: true })
+      if (existingError) throw existingError
+      if (existing && existing.length > 0) {
+        const suggestions = await hydrateSuggestions(existing as DbSuggestedCluster[])
+        return finishRun(observer, NextResponse.json({
+          success: true,
+          suggestions,
+          saved: suggestions.length,
+          resumed: true,
+        }), { saved: suggestions.length, resumed: true })
+      }
+    }
 
     const MIN_LIMIT = 60
     const MAX_LIMIT = 200
@@ -608,11 +646,13 @@ export async function POST(req: NextRequest) {
       })
     }
 
-    const insertPayload = saveableSuggestions.map((s) => ({
+    const insertPayload = saveableSuggestions.map((s, index) => ({
       topic: s.topic,
       keywords: s.keywords,
       article_ids: s.articleIds,
       status: 'pending' as const,
+      daily_pipeline_run_id: dailyPipelineRunId,
+      daily_pipeline_selection_order: dailyPipelineRunId ? index + 1 : null,
     }))
 
     const { data: inserted, error: insertError } = await supabase
@@ -697,50 +737,15 @@ export async function DELETE(req: NextRequest) {
       )
     }
 
-    const { data: pendingRows, error: fetchError } = await supabase
-      .from('suggested_clusters')
-      .select('id, article_ids')
-      .eq('status', 'pending')
-
-    if (fetchError) {
-      return NextResponse.json({ error: fetchError.message }, { status: 500 })
-    }
-
-    const rawArticleIds = Array.from(new Set(
-      ((pendingRows ?? []) as { article_ids: string[] | null }[])
-        .flatMap((row) => row.article_ids ?? [])
-    ))
-
-    const { error } = await supabase
-      .from('suggested_clusters')
-      .delete()
-      .eq('status', 'pending')
-
+    const { data, error } = await supabase.rpc('clear_pending_suggested_clusters')
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+      return NextResponse.json({ success: false, error: error.message }, { status: 500 })
     }
-
-    let rawArticleResetError: string | null = null
-    if (rawArticleIds.length > 0) {
-      const { error: rawUpdateError } = await supabase
-        .from('raw_articles')
-        .update({
-          suggestion_state: 'new',
-          suggestion_last_checked_at: null,
-        })
-        .in('id', rawArticleIds)
-
-      if (rawUpdateError) {
-        rawArticleResetError = rawUpdateError.message
-        console.error('[suggest-clusters] pending 삭제 후 raw_articles 초기화 실패:', rawUpdateError.message)
-      }
-    }
-
-    return NextResponse.json({
+    return NextResponse.json(data ?? {
       success: true,
-      deleted: pendingRows?.length ?? 0,
-      resetRawArticles: rawArticleIds.length,
-      rawArticleResetError,
+      deleted: 0,
+      resetRawArticles: 0,
+      rawArticleResetError: null,
     })
   } catch (err) {
     return NextResponse.json({ error: String(err) }, { status: 500 })

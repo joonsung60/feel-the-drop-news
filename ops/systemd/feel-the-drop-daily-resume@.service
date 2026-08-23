@@ -1,0 +1,12 @@
+[Unit]
+Description=FEEL THE DROP daily pipeline resume for run %i
+After=network-online.target ollama.service feel-the-drop-api.service feel-the-drop-worker.service feel-the-drop-bot.service
+Wants=network-online.target ollama.service feel-the-drop-api.service feel-the-drop-worker.service feel-the-drop-bot.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/joonsung/feel-the-drop-news
+EnvironmentFile=/home/joonsung/feel-the-drop-news/.env.local
+Environment=PATH=/home/joonsung/.local/share/fnm/node-versions/v24.15.0/installation/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+ExecStart=/home/joonsung/feel-the-drop-news/worker/node_modules/.bin/tsx scripts/daily-pipeline.ts --resume-run %i
+TimeoutStartSec=5h

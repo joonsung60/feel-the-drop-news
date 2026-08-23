@@ -7,6 +7,7 @@ type SuggestedClusterRow = {
   keywords: string[] | null
   article_ids: string[] | null
   status: string | null
+  cluster_id: string | null
 }
 
 export type SuggestionGenerationResult = {
@@ -34,9 +35,8 @@ export async function generateFromSuggestion(
 
   const { data: suggestion, error: suggestionError } = await supabase
     .from('suggested_clusters')
-    .update({ status: 'approved' })
+    .select('id, topic, keywords, article_ids, status, cluster_id')
     .eq('id', suggestionId)
-    .select()
     .maybeSingle()
 
   if (suggestionError) {
@@ -47,6 +47,38 @@ export async function generateFromSuggestion(
   }
 
   const row = suggestion as SuggestedClusterRow
+  const generationKey = `suggestion:${suggestionId}`
+  const { data: generatedArticle, error: generatedArticleError } = await supabase
+    .from('articles')
+    .select('*')
+    .eq('generation_key', generationKey)
+    .maybeSingle()
+  if (generatedArticleError) throw generatedArticleError
+  if (generatedArticle && row.cluster_id) {
+    await supabase.from('suggested_clusters')
+      .update({ status: 'published' })
+      .eq('id', suggestionId)
+    return { suggestionId, clusterId: row.cluster_id, article: generatedArticle }
+  }
+  if (row.status === 'published' && row.cluster_id) {
+    const { data: existingArticle, error: existingArticleError } = await supabase
+      .from('articles')
+      .select('*')
+      .eq('cluster_id', row.cluster_id)
+      .order('created_at', { ascending: true })
+      .limit(1)
+      .maybeSingle()
+    if (existingArticleError) throw existingArticleError
+    if (existingArticle) {
+      return { suggestionId, clusterId: row.cluster_id, article: existingArticle }
+    }
+  }
+
+  const { error: approveError } = await supabase
+    .from('suggested_clusters')
+    .update({ status: 'approved' })
+    .eq('id', suggestionId)
+  if (approveError) throw new Error(`제안 승인 실패: ${approveError.message}`)
   const topic = typeof row.topic === 'string' ? row.topic.trim() : ''
   const keywords = Array.isArray(row.keywords)
     ? row.keywords.filter((k): k is string => typeof k === 'string' && k.trim().length > 0)
@@ -68,15 +100,18 @@ export async function generateFromSuggestion(
 
   let clusterId: string
   try {
-    let matchedArticleIds: string[]
-    if (articleIds.length > 0) {
+    if (row.cluster_id) {
+      clusterId = row.cluster_id
+    } else {
+      let matchedArticleIds: string[]
+      if (articleIds.length > 0) {
       const { data: matched, error: matchedError } = await supabase
         .from('raw_articles')
         .select('id')
         .in('id', articleIds)
       if (matchedError) throw matchedError
       matchedArticleIds = (matched ?? []).map((m: { id: string }) => m.id)
-    } else {
+      } else {
       const sanitized = keywords
         .map((k) => k.replace(/[(),]/g, ' ').replace(/\s+/g, ' ').trim())
         .filter((k) => k.length > 0)
@@ -94,29 +129,27 @@ export async function generateFromSuggestion(
         .limit(20)
       if (matchedError) throw matchedError
       matchedArticleIds = (matched ?? []).map((m: { id: string }) => m.id)
+      }
+
+      if (matchedArticleIds.length === 0) {
+        throw new Error('매칭된 기사가 없습니다.')
+      }
+
+      const { data: ensuredClusterId, error: ensureError } = await supabase.rpc(
+        'ensure_suggestion_cluster',
+        {
+          requested_suggestion_id: suggestionId,
+          requested_topic: topic,
+          requested_keywords: keywords,
+          requested_article_ids: matchedArticleIds,
+        },
+      )
+      if (ensureError) throw ensureError
+      if (typeof ensuredClusterId !== 'string' || !ensuredClusterId) {
+        throw new Error('제안 클러스터 생성 결과가 올바르지 않습니다.')
+      }
+      clusterId = ensuredClusterId
     }
-
-    if (matchedArticleIds.length === 0) {
-      throw new Error('매칭된 기사가 없습니다.')
-    }
-
-    const { data: cluster, error: clusterError } = await supabase
-      .from('article_clusters')
-      .insert({ topic, keywords })
-      .select()
-      .single()
-    if (clusterError) throw clusterError
-
-    clusterId = cluster.id as string
-
-    const clusterArticleLinks = matchedArticleIds.map((rawArticleId) => ({
-      cluster_id: clusterId,
-      raw_article_id: rawArticleId,
-    }))
-    const { error: linkError } = await supabase
-      .from('cluster_articles')
-      .insert(clusterArticleLinks)
-    if (linkError) throw linkError
   } catch (err) {
     await rollbackSuggestionToPending(suggestionId)
     throw err instanceof Error ? err : new Error(String(err))
@@ -124,15 +157,29 @@ export async function generateFromSuggestion(
 
   let article: Record<string, unknown>
   try {
-    const results = await generateFromCluster([clusterId])
-    const result = results[0]
-    if (!result) {
-      throw new Error('기사 생성 실패: 알 수 없는 오류')
+    const { data: existingArticle, error: existingArticleError } = await supabase
+      .from('articles')
+      .select('*')
+      .eq('cluster_id', clusterId)
+      .order('created_at', { ascending: true })
+      .limit(1)
+      .maybeSingle()
+    if (existingArticleError) throw existingArticleError
+    if (existingArticle) {
+      article = existingArticle
+    } else {
+      const results = await generateFromCluster([clusterId], {
+        generationKeyByCluster: { [clusterId]: generationKey },
+      })
+      const result = results[0]
+      if (!result) {
+        throw new Error('기사 생성 실패: 알 수 없는 오류')
+      }
+      if (result.success === false) {
+        throw new Error(`기사 생성 실패: ${result.error}`)
+      }
+      article = result.article
     }
-    if (result.success === false) {
-      throw new Error(`기사 생성 실패: ${result.error}`)
-    }
-    article = result.article
   } catch (err) {
     await rollbackSuggestionToPending(suggestionId)
     throw err instanceof Error ? err : new Error(String(err))

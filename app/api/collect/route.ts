@@ -343,8 +343,11 @@ export async function POST(req: NextRequest) {
   const observer = new PipelineObserver('collect')
   try {
     const body = await req.json().catch(() => ({}))
-    const { urls } = body
-    const ingestionRunId = createIngestionRunId()
+    const { urls, ingestionRunId: requestedIngestionRunId } = body
+    const ingestionRunId = typeof requestedIngestionRunId === 'string'
+      && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(requestedIngestionRunId)
+      ? requestedIngestionRunId
+      : createIngestionRunId()
 
     observer.event({
       stage: 'run_start', reason: null, source: null, item_url: null, title: null,

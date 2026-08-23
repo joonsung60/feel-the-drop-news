@@ -1,0 +1,10 @@
+[Unit]
+Description=Run FEEL THE DROP daily pipeline at 15:00 Asia/Seoul
+
+[Timer]
+OnCalendar=*-*-* 15:00:00 Asia/Seoul
+Persistent=true
+Unit=feel-the-drop-daily.service
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,16 @@
+[Unit]
+Description=FEEL THE DROP local Next.js API
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/joonsung/feel-the-drop-news
+EnvironmentFile=/home/joonsung/feel-the-drop-news/.env.local
+Environment=PATH=/home/joonsung/.local/share/fnm/node-versions/v24.15.0/installation/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+ExecStart=/usr/bin/env npm run start -- --hostname 127.0.0.1 --port 3001
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

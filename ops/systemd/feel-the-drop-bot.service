@@ -1,0 +1,16 @@
+[Unit]
+Description=FEEL THE DROP Telegram bot
+After=network-online.target feel-the-drop-api.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/joonsung/feel-the-drop-news/bot
+EnvironmentFile=/home/joonsung/feel-the-drop-news/.env.local
+Environment=PATH=/home/joonsung/.local/share/fnm/node-versions/v24.15.0/installation/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+ExecStart=/usr/bin/env npm start
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

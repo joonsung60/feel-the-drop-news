@@ -401,7 +401,10 @@ export type ClusterGenerationResult =
   | { success: true; clusterId: string; article: Record<string, unknown> }
   | { success: false; clusterId: string; error: string }
 
-export async function generateFromCluster(clusterIds: string[]): Promise<ClusterGenerationResult[]> {
+export async function generateFromCluster(
+  clusterIds: string[],
+  options: { generationKeyByCluster?: Record<string, string> } = {},
+): Promise<ClusterGenerationResult[]> {
   if (!Array.isArray(clusterIds) || clusterIds.length === 0) {
     throw new Error('clusterIds가 필요합니다.')
   }
@@ -410,6 +413,20 @@ export async function generateFromCluster(clusterIds: string[]): Promise<Cluster
 
   for (const clusterId of clusterIds) {
     try {
+      const generationKey = options.generationKeyByCluster?.[clusterId] ?? null
+      if (generationKey) {
+        const { data: existing, error: existingError } = await supabase
+          .from('articles')
+          .select('*')
+          .eq('generation_key', generationKey)
+          .maybeSingle()
+        if (existingError) throw existingError
+        if (existing) {
+          results.push({ success: true, clusterId, article: existing })
+          continue
+        }
+      }
+
       const { data: clusterArticles, error: clusterError } = await supabase
         .from('cluster_articles')
         .select('raw_article_id')
@@ -468,6 +485,7 @@ export async function generateFromCluster(clusterIds: string[]): Promise<Cluster
           title: generated.title,
           content,
           cluster_id: clusterId,
+          generation_key: generationKey,
           published: false,
           slug,
           category,
@@ -476,7 +494,21 @@ export async function generateFromCluster(clusterIds: string[]): Promise<Cluster
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {
+        if (error.code === '23505' && generationKey) {
+          const { data: existing, error: existingError } = await supabase
+            .from('articles')
+            .select('*')
+            .eq('generation_key', generationKey)
+            .maybeSingle()
+          if (existingError) throw existingError
+          if (existing) {
+            results.push({ success: true, clusterId, article: existing })
+            continue
+          }
+        }
+        throw error
+      }
 
       results.push({ success: true, clusterId, article: data })
     } catch (err) {

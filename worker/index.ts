@@ -3,15 +3,20 @@
 import './bootstrap'
 
 import { setDefaultResultOrder } from 'node:dns'
+import { randomUUID } from 'node:crypto'
 import { createClient } from '@supabase/supabase-js'
 import { generateFromCluster } from '../lib/jobs/generate-from-cluster'
 import { generateFromTextSource } from '../lib/jobs/generate-from-text-source'
 import { generateFromSuggestion } from '../lib/jobs/generate-from-suggestion'
+import { sendTelegramMessage } from '../lib/telegram'
+import { shouldNotifyWorkerForJob } from '../lib/daily-notification'
 
 // WSL2에서 api.telegram.org가 IPv6로 풀려 SYN이 막히는 케이스가 있어 IPv4 우선.
 setDefaultResultOrder('ipv4first')
 
 const POLL_INTERVAL_MS = 3000
+const JOB_LEASE_SECONDS = 900
+const JOB_HEARTBEAT_MS = 60_000
 
 const BOT_TOKEN = process.env.BOT_TOKEN
 const ALLOWED_USERS = (process.env.ALLOWED_USERS?.split(',') ?? [])
@@ -44,10 +49,15 @@ type JobRow = {
   job_type: string
   payload: Record<string, unknown> | null
   status: string
+  lock_token: string
 }
 
 async function claimNextJob(): Promise<JobRow | null> {
-  const { data, error } = await supabase.rpc('claim_pending_job')
+  const lockToken = randomUUID()
+  const { data, error } = await supabase.rpc('claim_pending_job', {
+    requested_lock_token: lockToken,
+    requested_lease_seconds: JOB_LEASE_SECONDS,
+  })
   if (error) {
     console.error('[worker] claim 실패:', error.message)
     console.error(error)
@@ -87,54 +97,55 @@ async function runJob(job: JobRow): Promise<unknown> {
   }
 }
 
-async function markDone(jobId: string, result: unknown): Promise<void> {
-  const { error } = await supabase
+async function markDone(jobId: string, lockToken: string, result: unknown): Promise<boolean> {
+  const { data, error } = await supabase
     .from('job_queue')
     .update({
       status: 'done',
       result: result as never,
+      lock_token: null,
+      lease_expires_at: null,
       updated_at: new Date().toISOString(),
     })
     .eq('id', jobId)
+    .eq('lock_token', lockToken)
+    .eq('status', 'processing')
+    .select('id')
+    .maybeSingle()
   if (error) {
     console.error('[worker] done 업데이트 실패:', error.message)
+    return false
   }
+  return Boolean(data)
 }
 
-async function markFailed(jobId: string, errorMessage: string): Promise<void> {
-  const { error } = await supabase
+async function markFailed(jobId: string, lockToken: string, errorMessage: string): Promise<boolean> {
+  const { data, error } = await supabase
     .from('job_queue')
     .update({
       status: 'failed',
       error_message: errorMessage,
+      lock_token: null,
+      lease_expires_at: null,
       updated_at: new Date().toISOString(),
     })
     .eq('id', jobId)
+    .eq('lock_token', lockToken)
+    .eq('status', 'processing')
+    .select('id')
+    .maybeSingle()
   if (error) {
     console.error('[worker] failed 업데이트 실패:', error.message)
+    return false
   }
-}
-
-async function sendTelegramMessage(chatId: string, text: string): Promise<void> {
-  const res = await fetch(
-    `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: chatId, text }),
-    }
-  )
-  if (!res.ok) {
-    const body = await res.text().catch(() => '')
-    throw new Error(`telegram sendMessage ${res.status}: ${body}`)
-  }
+  return Boolean(data)
 }
 
 async function notifyUsers(text: string): Promise<void> {
   if (!NOTIFY_ENABLED) return
   for (const chatId of ALLOWED_USERS) {
     try {
-      await sendTelegramMessage(chatId, text)
+      await sendTelegramMessage(BOT_TOKEN!, chatId, text)
     } catch (e) {
       console.error(`[worker] 텔레그램 알림 실패 (chat_id=${chatId}):`, e)
     }
@@ -172,32 +183,57 @@ async function processOne(): Promise<void> {
     payload: job.payload,
   })
 
+  const heartbeat = setInterval(async () => {
+    const leaseExpiresAt = new Date(Date.now() + JOB_LEASE_SECONDS * 1000).toISOString()
+    const { error } = await supabase
+      .from('job_queue')
+      .update({ lease_expires_at: leaseExpiresAt, updated_at: new Date().toISOString() })
+      .eq('id', job.id)
+      .eq('lock_token', job.lock_token)
+      .eq('status', 'processing')
+    if (error) console.error(`[worker] lease 갱신 실패 (${job.id}):`, error.message)
+  }, JOB_HEARTBEAT_MS)
+
   try {
     console.log(`[worker] 처리 함수 호출 시작: ${job.job_type} (${job.id})`)
     const result = await runJob(job)
-    await markDone(job.id, result)
+    const finalized = await markDone(job.id, job.lock_token, result)
+    if (!finalized) {
+      console.warn(`[worker] lease를 잃어 완료 결과를 기록하지 않았습니다: ${job.id}`)
+      return
+    }
     console.log(`[worker] 처리 완료: ${job.job_type} (${job.id})`)
 
     const title = extractArticleTitle(result)
     const successMessage = title
       ? `✅ ${job.job_type} 완료\n${title}`
       : `✅ ${job.job_type} 완료`
-    try {
-      await notifyUsers(successMessage)
-    } catch (e) {
-      console.error('[worker] 완료 알림 실패:', e)
+    if (shouldNotifyWorkerForJob(job.payload)) {
+      try {
+        await notifyUsers(successMessage)
+      } catch (e) {
+        console.error('[worker] 완료 알림 실패:', e)
+      }
     }
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : String(err)
     console.error(`[worker] 처리 실패: ${job.job_type} (${job.id}): ${errorMessage}`)
     console.error(err)
-    await markFailed(job.id, errorMessage)
-
-    try {
-      await notifyUsers(`❌ ${job.job_type} 실패\n${errorMessage}`)
-    } catch (e) {
-      console.error('[worker] 실패 알림 실패:', e)
+    const finalized = await markFailed(job.id, job.lock_token, errorMessage)
+    if (!finalized) {
+      console.warn(`[worker] lease를 잃어 실패 결과를 기록하지 않았습니다: ${job.id}`)
+      return
     }
+
+    if (shouldNotifyWorkerForJob(job.payload)) {
+      try {
+        await notifyUsers(`❌ ${job.job_type} 실패\n${errorMessage}`)
+      } catch (e) {
+        console.error('[worker] 실패 알림 실패:', e)
+      }
+    }
+  } finally {
+    clearInterval(heartbeat)
   }
 }
 

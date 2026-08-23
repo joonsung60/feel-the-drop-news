@@ -13,6 +13,7 @@ export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => ({})) as {
     job_type?: unknown
     payload?: unknown
+    idempotency_key?: unknown
   }
 
   const jobType = typeof body.job_type === 'string' ? body.job_type : ''
@@ -27,6 +28,20 @@ export async function POST(req: NextRequest) {
     body.payload && typeof body.payload === 'object' && !Array.isArray(body.payload)
       ? body.payload
       : {}
+  const idempotencyKey = typeof body.idempotency_key === 'string'
+    ? body.idempotency_key.trim()
+    : ''
+  if (idempotencyKey.length > 200) {
+    return NextResponse.json({ error: 'idempotency_key는 200자 이하여야 합니다.' }, { status: 400 })
+  }
+
+  const suggestionId = jobType === 'generate_from_suggestion'
+    ? (payload as { suggestionId?: unknown }).suggestionId
+    : null
+  if (jobType === 'generate_from_suggestion'
+    && (typeof suggestionId !== 'string' || suggestionId.length === 0)) {
+    return NextResponse.json({ error: 'suggestionId가 필요합니다.' }, { status: 400 })
+  }
 
   const { data, error } = await supabase
     .from('job_queue')
@@ -34,11 +49,26 @@ export async function POST(req: NextRequest) {
       job_type: jobType,
       payload,
       status: 'pending',
+      idempotency_key: idempotencyKey || null,
     })
     .select('id')
     .single()
 
   if (error) {
+    if (error.code === '23505' && idempotencyKey) {
+      const { data: existing, error: existingError } = await supabase
+        .from('job_queue')
+        .select('id, status')
+        .eq('idempotency_key', idempotencyKey)
+        .maybeSingle()
+      if (!existingError && existing) {
+        return NextResponse.json({
+          jobId: existing.id,
+          status: existing.status,
+          idempotent: true,
+        })
+      }
+    }
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 

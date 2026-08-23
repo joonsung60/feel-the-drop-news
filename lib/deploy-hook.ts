@@ -1,8 +1,10 @@
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin'
 
-export async function triggerDeployHook(): Promise<{ success: boolean; cooldown?: boolean }> {
+export type DeployHookResult = { success: boolean; cooldown?: boolean; error?: string }
+
+export async function triggerDeployHook(options: { force?: boolean } = {}): Promise<DeployHookResult> {
   const deployHookUrl = process.env.CLOUDFLARE_DEPLOY_HOOK_URL
-  if (!deployHookUrl) return { success: false }
+  if (!deployHookUrl) return { success: false, error: 'CLOUDFLARE_DEPLOY_HOOK_URL이 없습니다.' }
 
   try {
     const { data, error } = await supabase
@@ -18,7 +20,7 @@ export async function triggerDeployHook(): Promise<{ success: boolean; cooldown?
     const now = new Date()
     let shouldSend = true
 
-    if (data?.updated_at) {
+    if (!options.force && data?.updated_at) {
       const lastSent = new Date(data.updated_at)
       const diffMs = now.getTime() - lastSent.getTime()
       const diffMins = diffMs / (1000 * 60)
@@ -43,10 +45,10 @@ export async function triggerDeployHook(): Promise<{ success: boolean; cooldown?
         console.error('[deploy-hook] failed to update last sent time:', upsertError)
       }
 
-      const res = await fetch(deployHookUrl, { method: 'POST' })
+      const res = await fetch(deployHookUrl, { method: 'POST', signal: AbortSignal.timeout(15_000) })
       if (!res.ok) {
         console.error('[deploy-hook] returned', res.status, res.statusText)
-        return { success: false }
+        return { success: false, error: `Cloudflare deploy hook HTTP ${res.status}: ${res.statusText}` }
       } else {
         console.log('[deploy-hook] triggered successfully.')
         return { success: true }
@@ -56,6 +58,6 @@ export async function triggerDeployHook(): Promise<{ success: boolean; cooldown?
     return { success: false }
   } catch (err) {
     console.error('[deploy-hook] error:', err)
-    return { success: false }
+    return { success: false, error: err instanceof Error ? err.message : String(err) }
   }
 }

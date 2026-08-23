@@ -1,9 +1,11 @@
 import { config as loadEnv } from "dotenv";
 import path from "node:path";
 import { setDefaultResultOrder } from "node:dns";
-import { Agent } from "node:https";
 import { Bot, InlineKeyboard } from "grammy";
 import { formatTopicDates } from "./topic-date";
+import { parsePublishNumbers } from "../lib/daily-pipeline";
+import { createTelegramIpv4Agent } from "../lib/telegram";
+import { buildArticleCardMessage } from "../lib/telegram-article-card";
 
 loadEnv({ path: path.resolve(__dirname, "../.env.local") });
 loadEnv({ path: path.resolve(__dirname, ".env") });
@@ -14,8 +16,7 @@ const BOT_TOKEN = process.env.BOT_TOKEN;
 const ALLOWED_USERS = (process.env.ALLOWED_USERS?.split(",") ?? [])
   .map((id) => id.trim())
   .filter((id) => id.length > 0);
-const LOCAL_API = process.env.LOCAL_API ?? "http://localhost:3000";
-const ARTICLE_PREVIEW_LENGTH = 500;
+const LOCAL_API = process.env.LOCAL_API ?? "http://127.0.0.1:3001";
 
 if (!BOT_TOKEN) {
   throw new Error("BOT_TOKEN 환경변수가 없습니다. Telegram bot token을 설정하세요.");
@@ -27,7 +28,7 @@ if (ALLOWED_USERS.length === 0) {
 
 // WSL2 환경에서 api.telegram.org의 IPv6 주소로 SYN이 빠져나가지 못해 ETIMEDOUT으로
 // 죽는 케이스가 있다. family: 4를 강제해 socket이 무조건 IPv4로만 열리게 한다.
-const ipv4Agent = new Agent({ family: 4, keepAlive: true });
+const ipv4Agent = createTelegramIpv4Agent();
 
 const bot = new Bot(BOT_TOKEN, {
   client: {
@@ -35,23 +36,65 @@ const bot = new Bot(BOT_TOKEN, {
   },
 });
 
-function formatArticlePreview(content: unknown): string {
-  if (typeof content !== "string") {
-    return "";
-  }
-
-  const trimmed = content.trim();
-  if (trimmed.length <= ARTICLE_PREVIEW_LENGTH) {
-    return trimmed;
-  }
-
-  return `${trimmed.slice(0, ARTICLE_PREVIEW_LENGTH)}...`;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function replyArticleCard(ctx: any, input: {
+  title: unknown;
+  content: unknown;
+  displayOrder?: number | null;
+  publishData: string;
+  deleteData: string;
+}) {
+  const message = buildArticleCardMessage(input, input.publishData, input.deleteData);
+  await ctx.reply(message.text, { reply_markup: message.replyMarkup });
 }
 
-function formatArticleMessage(title: unknown, content: unknown): string {
-  const safeTitle = typeof title === "string" && title.trim().length > 0 ? title.trim() : "제목 없음";
-  const preview = formatArticlePreview(content);
-  return preview ? `${safeTitle}\n\n${preview}` : safeTitle;
+async function readApiResponse<T extends Record<string, unknown>>(res: Response, label: string): Promise<T> {
+  const text = await res.text();
+  let data: Record<string, unknown> = {};
+  try {
+    data = text ? JSON.parse(text) : {};
+  } catch {
+    throw new Error(`${label} 응답이 JSON이 아닙니다. (HTTP ${res.status}): ${text.slice(0, 300)}`);
+  }
+  if (!res.ok || data.error) {
+    throw new Error(`${label} 실패 (HTTP ${res.status}): ${data.error ?? text.slice(0, 300)}`);
+  }
+  return data as T;
+}
+
+async function getActiveDailyRun() {
+  const res = await fetch(`${LOCAL_API}/api/daily-pipeline/active`);
+  return readApiResponse<{
+    run: { id: string; run_date: string } | null;
+    items: Array<{
+      display_order: number;
+      article_id: string;
+      article_title: string | null;
+      articles: { title: string; content: string; published: boolean }
+        | Array<{ title: string; content: string; published: boolean }> | null;
+    }>;
+  }>(res, "일일 실행 조회");
+}
+
+async function publishDailySelection(runId: string, numbers: string) {
+  const res = await fetch(`${LOCAL_API}/api/articles/publish-batch`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ runId, numbers }),
+  });
+  return readApiResponse<{ published?: unknown[]; deployWarning?: string | null; deploy?: { status?: string } }>(res, "일괄 게시");
+}
+
+async function deleteDailyArticle(runId: string, displayOrder: string) {
+  const res = await fetch(`${LOCAL_API}/api/daily-pipeline/${runId}/items/${displayOrder}`, {
+    method: "DELETE",
+  });
+  return readApiResponse<{ deleted?: boolean; deploy?: { status?: string; error?: string } }>(res, "일일 초안 삭제");
+}
+
+async function retryDailyDeploy(runId: string) {
+  const res = await fetch(`${LOCAL_API}/api/daily-pipeline/${runId}/deploy`, { method: "POST" });
+  return readApiResponse<{ deploy?: { status?: string } }>(res, "일일 배포 재시도");
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -105,6 +148,10 @@ bot.command("start", async (ctx) => {
     "/topics - 제안된 토픽 목록\n" +
     "/clear_topics - pending 토픽 제안 전체 삭제\n" +
     "/articles - 기사 초안 목록\n" +
+    "/daily - 최근 일일 실행 초안 목록\n" +
+    "/daily_status - 최근 일일 실행 상태\n" +
+    "/daily_deploy_retry RUN_ID - 실패한 최종 배포 재시도\n" +
+    "/publish 1,3,5 - 최근 일일 실행 초안 게시\n" +
     "/deploy - 사이트 배포 트리거"
   );
 });
@@ -115,7 +162,7 @@ bot.command("clear_topics", async (ctx) => {
   const msg = await ctx.reply("pending 토픽 제안 삭제 중...");
   try {
     const getRes = await fetch(`${LOCAL_API}/api/suggest-clusters?status=pending`);
-    const getData = await getRes.json().catch(() => ({}));
+    const getData = await readApiResponse<{ suggestions?: unknown[] }>(getRes, "pending 토픽 조회");
     const count = getData.suggestions?.length || 0;
 
     const res = await fetch(`${LOCAL_API}/api/suggest-clusters?status=pending`, { method: "DELETE" });
@@ -393,20 +440,25 @@ bot.callbackQuery(/^approve:(.+)$/, async (ctx) => {
 bot.callbackQuery(/^reject:(.+)$/, async (ctx) => {
   const id = ctx.match[1];
   await ctx.answerCallbackQuery();
-  await fetch(`${LOCAL_API}/api/suggest-clusters/${id}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ status: "rejected" }),
-  });
-  await ctx.editMessageReplyMarkup({ reply_markup: new InlineKeyboard() });
-  await ctx.reply("거절됨");
+  try {
+    const res = await fetch(`${LOCAL_API}/api/suggest-clusters/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: "rejected" }),
+    });
+    await readApiResponse(res, "토픽 거절");
+    await ctx.editMessageReplyMarkup({ reply_markup: new InlineKeyboard() });
+    await ctx.reply("거절됨");
+  } catch (e) {
+    await ctx.reply(`오류 발생: ${e}`);
+  }
 });
 
 // /articles
 bot.command("articles", async (ctx) => {
   try {
     const res = await fetch(`${LOCAL_API}/api/articles?published=false`);
-    const data = await res.json();
+    const data = await readApiResponse<{ articles?: Array<Record<string, unknown>> }>(res, "초안 목록 조회");
     const articles = data.articles ?? [];
 
     if (articles.length === 0) {
@@ -417,10 +469,12 @@ bot.command("articles", async (ctx) => {
     await ctx.reply(`기사 초안 ${articles.length}개`);
 
     for (const a of articles.slice(0, 10)) {
-      const keyboard = new InlineKeyboard()
-        .text("게시", `publish:${a.id}`)
-        .text("삭제", `delete:${a.id}`);
-      await ctx.reply(formatArticleMessage(a.title, a.content), { reply_markup: keyboard });
+      await replyArticleCard(ctx, {
+        title: a.title,
+        content: a.content,
+        publishData: `publish:${a.id}`,
+        deleteData: `delete:${a.id}`,
+      });
     }
   } catch (e) {
     await ctx.reply(`오류 발생: ${e}`);
@@ -432,11 +486,113 @@ bot.callbackQuery(/^publish:(.+)$/, async (ctx) => {
   const id = ctx.match[1];
   await ctx.answerCallbackQuery();
   try {
-    await fetch(`${LOCAL_API}/api/articles/${id}/publish`, { method: "PATCH" });
+    const res = await fetch(`${LOCAL_API}/api/articles/${id}/publish`, { method: "PATCH" });
+    await readApiResponse(res, "기사 게시");
     await ctx.editMessageReplyMarkup({ reply_markup: new InlineKeyboard() });
     await ctx.reply("게시 완료");
   } catch (e) {
     await ctx.reply(`오류 발생: ${e}`);
+  }
+});
+
+bot.command("daily", async (ctx) => {
+  try {
+    const data = await getActiveDailyRun();
+    if (!data.run || !Array.isArray(data.items) || data.items.length === 0) {
+      await ctx.reply("게시 가능한 일일 실행 초안이 없습니다.");
+      return;
+    }
+    await ctx.reply(
+      `${data.run.run_date} 일일 초안 ${data.items.length}개\n게시: /publish 1,3,5`,
+    );
+    for (const item of data.items) {
+      const article = Array.isArray(item.articles) ? item.articles[0] : item.articles;
+      if (!article) throw new Error(`${item.display_order}번 기사 본문을 찾을 수 없습니다.`);
+      await replyArticleCard(ctx, {
+        displayOrder: item.display_order,
+        title: article.title ?? item.article_title ?? item.article_id,
+        content: article.content,
+        publishData: `daily_publish:${data.run.id}:${item.display_order}`,
+        deleteData: `daily_delete:${data.run.id}:${item.display_order}`,
+      });
+    }
+  } catch (e) {
+    await ctx.reply(`오류 발생: ${e}`);
+  }
+});
+
+bot.command("publish", async (ctx) => {
+  const raw = typeof ctx.match === "string" ? ctx.match.trim() : "";
+  const numbers = parsePublishNumbers(raw);
+  if (!numbers) {
+    await ctx.reply("형식이 올바르지 않습니다. 예: /publish 1,3,5");
+    return;
+  }
+  try {
+    const active = await getActiveDailyRun();
+    if (!active.run) throw new Error("활성 일일 실행이 없습니다.");
+    const result = await publishDailySelection(active.run.id, numbers.join(","));
+    const warning = result.deployWarning ? `\n⚠️ ${result.deployWarning}` : "";
+    await ctx.reply(`게시 완료: ${result.published?.length ?? 0}개${warning}`);
+  } catch (e) {
+    await ctx.reply(`아무 기사도 게시하지 않았습니다. 번호를 확인해 다시 입력하세요.\n${e}`);
+  }
+});
+
+bot.callbackQuery(/^daily_publish:([0-9a-f-]+):(\d+)$/, async (ctx) => {
+  await ctx.answerCallbackQuery();
+  try {
+    const result = await publishDailySelection(ctx.match[1], ctx.match[2]);
+    await ctx.editMessageReplyMarkup({ reply_markup: new InlineKeyboard() });
+    const warning = result.deployWarning ? `\n⚠️ ${result.deployWarning}` : "";
+    await ctx.reply(`${ctx.match[2]}번 기사 게시 완료${warning}`);
+  } catch (e) {
+    await ctx.reply(`게시하지 않았습니다.\n${e}`);
+  }
+});
+
+bot.callbackQuery(/^daily_delete:([0-9a-f-]+):(\d+)$/, async (ctx) => {
+  await ctx.answerCallbackQuery();
+  try {
+    const result = await deleteDailyArticle(ctx.match[1], ctx.match[2]);
+    await ctx.editMessageReplyMarkup({ reply_markup: new InlineKeyboard() });
+    const warning = result.deploy?.status === "failed" ? "\n⚠️ 최종 Cloudflare 배포 실패. /daily_deploy_retry를 사용하세요." : "";
+    await ctx.reply(`${ctx.match[2]}번 초안 삭제 완료${warning}`);
+  } catch (e) {
+    await ctx.reply(`삭제하지 않았습니다.\n${e}`);
+  }
+});
+
+bot.command("daily_status", async (ctx) => {
+  try {
+    const res = await fetch(`${LOCAL_API}/api/daily-pipeline/status`);
+    const data = await readApiResponse<{
+      run: null | { id: string; run_date: string; status: string; selected_count: number; success_count: number; failure_count: number; deploy_status: string; deploy_attempt_count: number; deploy_error?: string | null };
+      progress: Record<string, number>;
+    }>(res, "일일 상태 조회");
+    if (!data.run) return void await ctx.reply("일일 실행 기록이 없습니다.");
+    const progress = Object.entries(data.progress).map(([status, count]) => `${status} ${count}`).join(", ") || "item 없음";
+    await ctx.reply(
+      `Daily ${data.run.run_date}\nrun: ${data.run.id}\n상태: ${data.run.status}\n진행: ${progress}\n` +
+      `생성 성공/실패: ${data.run.success_count}/${data.run.failure_count}\n배포: ${data.run.deploy_status} (시도 ${data.run.deploy_attempt_count})` +
+      (data.run.deploy_error ? `\n배포 오류: ${data.run.deploy_error}` : ""),
+    );
+  } catch (error) {
+    await ctx.reply(`일일 상태 조회 실패: ${error}`);
+  }
+});
+
+bot.command("daily_deploy_retry", async (ctx) => {
+  const runId = typeof ctx.match === "string" ? ctx.match.trim() : "";
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(runId)) {
+    await ctx.reply("형식: /daily_deploy_retry RUN_ID");
+    return;
+  }
+  try {
+    await retryDailyDeploy(runId);
+    await ctx.reply(`Daily 최종 배포 재시도 성공\nrun: ${runId}`);
+  } catch (error) {
+    await ctx.reply(`Daily 최종 배포 재시도 실패\n${error}`);
   }
 });
 
@@ -445,7 +601,8 @@ bot.callbackQuery(/^delete:(.+)$/, async (ctx) => {
   const id = ctx.match[1];
   await ctx.answerCallbackQuery();
   try {
-    await fetch(`${LOCAL_API}/api/articles/${id}`, { method: "DELETE" });
+    const res = await fetch(`${LOCAL_API}/api/articles/${id}`, { method: "DELETE" });
+    await readApiResponse(res, "기사 삭제");
     await ctx.editMessageReplyMarkup({ reply_markup: new InlineKeyboard() });
     await ctx.reply("삭제 완료");
   } catch (e) {
@@ -465,6 +622,10 @@ async function main() {
       { command: "topics", description: "제안된 토픽 목록" },
       { command: "clear_topics", description: "pending 토픽 제안 전체 삭제" },
       { command: "articles", description: "기사 초안 목록" },
+      { command: "daily", description: "최근 일일 실행 초안 목록" },
+      { command: "daily_status", description: "최근 일일 실행 상태" },
+      { command: "daily_deploy_retry", description: "실패한 Daily 배포 재시도" },
+      { command: "publish", description: "일일 실행 번호로 게시" },
       { command: "deploy", description: "사이트 배포 트리거" },
     ]);
 

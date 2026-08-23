@@ -27,7 +27,9 @@ test('ingestion helpers produce UUID runs and stable source keys', () => {
 
 test('collect route stores and returns one explicit ingestion run', () => {
   const source = fs.readFileSync(path.join(root, 'app/api/collect/route.ts'), 'utf8')
-  assert.match(source, /const ingestionRunId = createIngestionRunId\(\)/)
+  assert.match(source, /ingestionRunId: requestedIngestionRunId/)
+  assert.match(source, /typeof requestedIngestionRunId === 'string'/)
+  assert.match(source, /\? requestedIngestionRunId\s*:\s*createIngestionRunId\(\)/)
   assert.match(source, /ingestion_run_id: ingestionRunId/)
   assert.match(source, /ingestion_source: rssIngestionSource\(source\.id\)/)
   assert.match(source, /ingestion_source: directUrlIngestionSource\(\)/)

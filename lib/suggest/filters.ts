@@ -1,6 +1,10 @@
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin'
 import { SuggestionWithArticles, TopicBlockRule } from './types'
 import { normalizeTopicKey } from './normalize'
+import { fetchPublishedTopicRows } from './published-topic-query'
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
 export function isMissingBlocklistTableError(error: { code?: string; message?: string }): boolean {
   return (
@@ -79,16 +83,18 @@ export async function loadExistingTopicKeys(): Promise<Set<string>> {
   ))
 
   if (publishedClusterIds.length > 0) {
-    const { data: clusterRows, error: clusterError } = await supabase
-      .from('article_clusters')
-      .select('id, topic')
-      .in('id', publishedClusterIds)
-
-    if (clusterError) {
-      throw new Error(`게시 완료 토픽 조회 실패: ${clusterError.message}`)
+    if (!supabaseUrl || !supabaseServiceRoleKey) {
+      throw new Error('게시 완료 토픽 조회 실패: Supabase 서버 환경변수가 없습니다.')
     }
+    const clusterRows = await fetchPublishedTopicRows(
+      publishedClusterIds,
+      supabaseUrl,
+      supabaseServiceRoleKey,
+    ).catch((error) => {
+      throw new Error(`게시 완료 토픽 조회 실패: ${error instanceof Error ? error.message : String(error)}`)
+    })
 
-    for (const row of (clusterRows ?? []) as { topic: string | null }[]) {
+    for (const row of clusterRows) {
       if (row.topic) existingTopicKeys.add(normalizeTopicKey(row.topic))
     }
   }
