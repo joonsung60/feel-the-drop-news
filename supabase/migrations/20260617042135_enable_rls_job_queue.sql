@@ -1,0 +1,1 @@
+ALTER TABLE public.job_queue ENABLE ROW LEVEL SECURITY;
