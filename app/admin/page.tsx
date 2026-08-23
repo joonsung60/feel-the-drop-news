@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import type { PercentCrop } from 'react-image-crop'
 import { ImageCropper, getCroppedDataUrl } from '@/components/ImageCropper'
 import { ArticleRenderer } from '@/components/ArticleRenderer'
+import { EditorialArticleEditor } from '@/components/EditorialArticleEditor'
 import { supabase } from '@/lib/supabase'
 
 type AdminGroup = 'rss' | 'image' | 'interview'
@@ -694,6 +695,7 @@ type AdminArticle = {
   slug: string | null
   title: string
   content: string
+  content_blocks?: unknown | null
   published: boolean
   published_at: string | null
   created_at: string
@@ -1388,6 +1390,7 @@ function ArticlesReviewTab() {
   const [publishedSearch, setPublishedSearch] = useState('')
   const [preview, setPreview] = useState<ArticlePreviewPayload | null>(null)
   const [isPreviewLoading, setIsPreviewLoading] = useState(false)
+  const [editorArticleId, setEditorArticleId] = useState<string | null | undefined>(undefined)
 
   const load = useCallback(async (tab: ArticleReviewSubTab, search: string = '') => {
     setIsLoading(true)
@@ -1489,16 +1492,6 @@ function ArticlesReviewTab() {
     }
 
     setProcessing(null)
-  }
-
-  const startEdit = (article: AdminArticle) => {
-    setEditingId(article.id)
-    setEditTitle(article.title)
-    setEditContent(article.content)
-    setEditCategory(article.category ?? '')
-    setEditGenre(article.genre ?? '')
-    setError('')
-    setMessage('')
   }
 
   const cancelEdit = () => {
@@ -1656,6 +1649,13 @@ function ArticlesReviewTab() {
 
   return (
     <div>
+      {editorArticleId !== undefined && (
+        <EditorialArticleEditor
+          articleId={editorArticleId}
+          onClose={() => setEditorArticleId(undefined)}
+          onSaved={() => load(subTab, subTab === 'published' ? publishedSearch : '')}
+        />
+      )}
       {preview && (
         <ArticlePreviewModal
           preview={preview}
@@ -1665,6 +1665,14 @@ function ArticlesReviewTab() {
       <p className="text-gray-600 mb-6">
         생성된 기사 초안과 게시된 기사를 검토하고 수정합니다. 게시된 기사를 저장하면 Cloudflare 재빌드가 자동으로 요청됩니다.
       </p>
+
+      <button
+        type="button"
+        onClick={() => setEditorArticleId(null)}
+        className="mb-6 rounded bg-black px-4 py-2 text-sm font-semibold text-white"
+      >
+        새 기사
+      </button>
 
       <div className="flex gap-2 mb-4 border-b text-sm">
         {[
@@ -1908,11 +1916,11 @@ function ArticlesReviewTab() {
                           {isPreviewLoading ? '불러오는 중...' : '검토'}
                         </button>
                         <button
-                          onClick={() => startEdit(article)}
+                          onClick={() => setEditorArticleId(article.id)}
                           disabled={processing !== null || editingId !== null || replacingId !== null}
                           className="px-3 py-2 border border-gray-300 text-gray-600 text-sm rounded font-semibold hover:bg-gray-50 disabled:opacity-50 whitespace-nowrap"
                         >
-                          수정
+                          에디터 열기
                         </button>
                         <button
                           onClick={() => startReplaceImage(article)}
@@ -2024,7 +2032,11 @@ function ArticlePreviewModal({
             <span className="text-gray-500">기사 · 편집</span>
             <span className="ml-2 font-medium text-gray-800">FEEL THE DROP</span>
           </div>
-          <ArticleRenderer content={article.content} leadingImageUrl={leadingImageUrl} />
+          <ArticleRenderer
+            content={article.content}
+            contentBlocks={article.content_blocks}
+            leadingImageUrl={leadingImageUrl}
+          />
         </article>
       </div>
     </div>

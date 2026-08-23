@@ -5,6 +5,7 @@ import entitySurfacePolicy from '@/lib/entity-surface-policy.json'
 import { buildGroundingEvidence, validateArticleGrounding } from '@/lib/article-grounding'
 import { cleanArticleText } from '@/lib/article-extraction'
 import { orchestrateArticlePublish } from '@/lib/publish-article'
+import { validateMinimumPublishContent } from '@/lib/article-publish-validation'
 
 type ArticleRow = {
   id: string; title: string; content: string; published: boolean; published_at: string | null
@@ -42,6 +43,8 @@ export async function prepareArticlePublish(id: string): Promise<PreparedPublish
   if (!data) return { status: 404, body: { error: '기사를 찾을 수 없습니다.' } }
   const article = data as ArticleRow
   if (article.published) return { status: 409, body: { code: 'ARTICLE_ALREADY_PUBLISHED', error: '이미 게시된 기사입니다.' } }
+  const contentError = validateMinimumPublishContent(article.content)
+  if (contentError) return contentError
   const grounding = await validateClusterArticle(article)
   if (!grounding.ok) {
     return { status: 409, body: { code: 'ARTICLE_GROUNDING_FAILED', error: '원문에 근거하지 않은 EDM 고유명사가 있어 게시할 수 없습니다.', issues: grounding.issues } }

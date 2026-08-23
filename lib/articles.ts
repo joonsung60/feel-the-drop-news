@@ -10,6 +10,7 @@ export type ArticleListItem = {
   slug: string | null
   title: string
   content: string
+  content_blocks: unknown | null
   published_at: string | null
   cluster_id: string | null
   article_image_url: string | null
@@ -23,6 +24,7 @@ type ArticleRow = {
   slug: string | null
   title: string
   content: string
+  content_blocks: unknown | null
   published_at: string | null
   cluster_id: string | null
   image_url: string | null
@@ -88,7 +90,7 @@ export async function loadPublishedArticles(
 
   const { data, error } = await supabase
     .from('articles')
-    .select('id, slug, title, content, published_at, cluster_id, image_url, category, genre')
+    .select('id, slug, title, content, content_blocks, published_at, cluster_id, image_url, category, genre')
     .eq('published', true)
     .order('published_at', { ascending: false })
     .limit(limit)
@@ -106,6 +108,7 @@ export async function loadPublishedArticles(
     slug: row.slug,
     title: row.title,
     content: row.content,
+    content_blocks: row.content_blocks,
     published_at: row.published_at,
     cluster_id: row.cluster_id,
     article_image_url: isUsableImageUrl(row.image_url) ? row.image_url : null,
@@ -184,7 +187,7 @@ export async function loadArchivePage(
   const ids = pageRows.map((row) => row.id)
   const { data, error } = await supabase
     .from('articles')
-    .select('id, slug, title, content, published_at, cluster_id, image_url, category, genre')
+    .select('id, slug, title, content, content_blocks, published_at, cluster_id, image_url, category, genre')
     .eq('published', true)
     .in('id', ids)
 
@@ -255,7 +258,7 @@ export async function loadPopularArticles(
   const rankedSlugs = rankedViews.map((row) => row.slug)
   const { data: articleData, error: articleError } = await supabase
     .from('articles')
-    .select('id, slug, title, content, published_at, cluster_id, image_url, category, genre')
+    .select('id, slug, title, content, content_blocks, published_at, cluster_id, image_url, category, genre')
     .eq('published', true)
     .in('slug', rankedSlugs)
 
@@ -278,6 +281,7 @@ export async function loadPopularArticles(
     slug: row.slug,
     title: row.title,
     content: row.content,
+    content_blocks: row.content_blocks,
     published_at: row.published_at,
     cluster_id: row.cluster_id,
     article_image_url: isUsableImageUrl(row.image_url) ? row.image_url : null,
@@ -372,6 +376,7 @@ function toArticleListItem(
     slug: row.slug,
     title: row.title,
     content: row.content,
+    content_blocks: row.content_blocks,
     published_at: row.published_at,
     cluster_id: row.cluster_id,
     article_image_url: isUsableImageUrl(row.image_url) ? row.image_url : null,

@@ -25,7 +25,7 @@ export async function GET() {
         `<title>${escapeXml(article.title)}</title>`,
         `<link>${escapeXml(link)}</link>`,
         `<guid isPermaLink="true">${escapeXml(link)}</guid>`,
-        `<description>${escapeXml(createArticleExcerpt(article.content))}</description>`,
+        `<description>${escapeXml(createArticleExcerpt(article.content, undefined, article.content_blocks))}</description>`,
         ...(pubDate ? [`<pubDate>${escapeXml(pubDate)}</pubDate>`] : []),
         ...(category ? [`<category>${escapeXml(category)}</category>`] : []),
         '</item>',

@@ -1,0 +1,23 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { authorizeAdminRequest } from '@/lib/admin-api-auth'
+import { validateEditorialArticleInput } from '@/lib/editorial-article-input'
+import { createEditorialDraft } from '@/lib/editorial-article-service'
+import { supabaseAdmin as supabase } from '@/lib/supabase-admin'
+
+const ARTICLE_SELECT =
+  'id, title, content, content_blocks, published, published_at, created_at, updated_at, cluster_id, image_url, slug, category, genre'
+
+export async function POST(request: NextRequest) {
+  const authorization = await authorizeAdminRequest(request)
+  if (!authorization.ok) return authorization.response
+  const body = await request.json().catch(() => null)
+  const validated = validateEditorialArticleInput(body)
+  if (!validated.ok) return NextResponse.json({ error: validated.error }, { status: 400 })
+
+  const result = await createEditorialDraft(validated.input, async (payload) => {
+    const { data, error } = await supabase.from('articles').insert(payload).select(ARTICLE_SELECT).single()
+    return { data, error: error?.message ?? null }
+  })
+  if (result.error) return NextResponse.json({ error: result.error }, { status: 500 })
+  return NextResponse.json({ article: result.data }, { status: 201 })
+}

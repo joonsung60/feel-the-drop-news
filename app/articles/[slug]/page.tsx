@@ -9,19 +9,21 @@ import { DEFAULT_OG_IMAGE_URL, ORGANIZATION_LOGO_URL, PUBLISHER, RSS_ALTERNATE, 
 import { createBreadcrumbJsonLd, ORGANIZATION_ID } from "@/lib/seo";
 import { ArticleRenderer } from "@/components/ArticleRenderer";
 import { extractFirstMarkdownImage } from "@/lib/article-body";
+import { createArticleExcerpt } from "@/lib/excerpt";
 
 // ── 원본 유지 — 데이터/유틸 ───────────────────────────
 
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const ARTICLE_SELECT =
-  "id, title, content, published, published_at, created_at, updated_at, cluster_id, image_url, slug, category, genre";
+  "id, title, content, content_blocks, published, published_at, created_at, updated_at, cluster_id, image_url, slug, category, genre";
 
 export async function generateStaticParams() {
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("articles")
     .select("id, slug")
     .eq("published", true);
+  if (error) throw new Error(`Failed to generate article routes: ${error.message}`);
   return (data ?? []).map((row: { id: string; slug: string | null }) => ({
     slug: row.slug ?? row.id,
   }));
@@ -42,7 +44,7 @@ export async function generateMetadata({
     };
   }
 
-  const description = createMetaDescription(data.content);
+  const description = createMetaDescription(data.content, data.content_blocks);
   const imageUrl = isUsableImageUrl(data.image_url)
     ? data.image_url
     : (await loadClusterImageUrl(data.cluster_id)) ??
@@ -75,6 +77,7 @@ type ArticleDetail = {
   id: string;
   title: string;
   content: string;
+  content_blocks: unknown | null;
   published: boolean;
   published_at: string | null;
   created_at: string;
@@ -96,7 +99,7 @@ async function loadArticle(key: string): Promise<{
     .eq("slug", key)
     .eq("published", true)
     .maybeSingle();
-  if (bySlug.error) return { data: null, errorMessage: bySlug.error.message };
+  if (bySlug.error) return handleArticleQueryError(bySlug.error.message);
   if (bySlug.data)
     return { data: bySlug.data as ArticleDetail, errorMessage: null };
 
@@ -107,7 +110,7 @@ async function loadArticle(key: string): Promise<{
       .eq("id", key)
       .eq("published", true)
       .maybeSingle();
-    if (byId.error) return { data: null, errorMessage: byId.error.message };
+    if (byId.error) return handleArticleQueryError(byId.error.message);
     return {
       data: (byId.data as ArticleDetail | null) ?? null,
       errorMessage: null,
@@ -117,11 +120,18 @@ async function loadArticle(key: string): Promise<{
   return { data: null, errorMessage: null };
 }
 
-function createMetaDescription(content: string): string {
-  const normalized = content
-    .replace(/!\[[^\]]*\]\(https?:\/\/[^)\s]+\)/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
+function handleArticleQueryError(message: string): {
+  data: null;
+  errorMessage: string;
+} {
+  if (process.env.BUILD_STATIC === "1") {
+    throw new Error(`Failed to load article during static export: ${message}`);
+  }
+  return { data: null, errorMessage: message };
+}
+
+function createMetaDescription(content: string, contentBlocks: unknown | null): string {
+  const normalized = createArticleExcerpt(content, Number.MAX_SAFE_INTEGER, contentBlocks);
   if (normalized.length <= 155) return normalized || "한국어 EDM 뉴스 종합";
   return `${normalized.slice(0, 152).replace(/\s+\S*$/, "")}...`;
 }
@@ -181,7 +191,7 @@ export default async function ArticlePage({
 
   const articlePath = `/articles/${article.slug ?? article.id}/`;
   const articleUrl = `${SITE_URL}${articlePath}`;
-  const description = createMetaDescription(article.content);
+  const description = createMetaDescription(article.content, article.content_blocks);
   const publishedAt = toIsoDate(article.published_at ?? article.created_at);
   const modifiedAt = toIsoDate(article.updated_at ?? article.published_at ?? article.created_at);
   const structuredImageUrl = articleImageUrl ?? DEFAULT_OG_IMAGE_URL;
@@ -293,7 +303,11 @@ export default async function ArticlePage({
         </div>
 
         {/* 본문 블록 */}
-        <ArticleRenderer content={article.content} leadingImageUrl={articleImageUrl} />
+        <ArticleRenderer
+          content={article.content}
+          contentBlocks={article.content_blocks}
+          leadingImageUrl={articleImageUrl}
+        />
 
         {/* 하단 */}
         <div className="mt-12 pt-8 border-t border-gray-200">

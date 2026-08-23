@@ -39,3 +39,21 @@ test('cover image remains first and duplicate markdown image is not added twice'
   const withSeparateCover = parseLegacyArticleBody('본문입니다.', imageUrl)
   assert.deepEqual(withSeparateCover[0], { type: 'image', alt: '', src: imageUrl })
 })
+
+test('valid blocks render structured content and malformed blocks fall back to legacy content', () => {
+  const valid = {
+    version: 1,
+    blocks: [
+      { type: 'heading', level: 2, content: [{ type: 'text', text: '소제목' }] },
+      { type: 'paragraph', content: [{ type: 'link', text: '외부 링크', href: 'https://example.com' }] },
+    ],
+  }
+  const html = renderToStaticMarkup(<ArticleRenderer content="legacy" contentBlocks={valid} />)
+  assert.match(html, /<h2[^>]*>소제목<\/h2>/)
+  assert.match(html, /rel="noopener noreferrer nofollow"/)
+
+  const fallback = renderToStaticMarkup(
+    <ArticleRenderer content="legacy 본문" contentBlocks={{ version: 1, blocks: [{ type: 'unknown' }] }} />
+  )
+  assert.match(fallback, /<p>legacy 본문<\/p>/)
+})

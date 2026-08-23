@@ -55,7 +55,7 @@ export function ArticleList({
                 {article.title}
               </h3>
               <p className="mt-1.5 text-sm text-zinc-600 line-clamp-2">
-                {createArticleExcerpt(article.content)}
+                {createArticleExcerpt(article.content, undefined, article.content_blocks)}
               </p>
               {article.published_at && (
                 <time className="mt-2 block text-xs text-zinc-500">

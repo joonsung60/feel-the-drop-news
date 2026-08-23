@@ -23,3 +23,35 @@ test('truncates near the requested length at a word boundary', () => {
 test('keeps short content unchanged', () => {
   assert.equal(createArticleExcerpt('짧은 본문'), '짧은 본문')
 })
+
+test('removes public-summary Markdown decoration without changing legacy prose', () => {
+  const markdown = [
+    '## 소제목',
+    '- 첫 항목',
+    '> 인용문',
+    '[표시 문구](https://example.com/path)',
+    '![이미지](https://example.com/image.jpg)',
+    '*출처 문구*',
+  ].join('\n')
+
+  assert.equal(
+    createArticleExcerpt(markdown),
+    '소제목 첫 항목 인용문 표시 문구 출처 문구'
+  )
+  assert.equal(createArticleExcerpt('기존 일반 본문입니다. 둘째 문장입니다.'), '기존 일반 본문입니다. 둘째 문장입니다.')
+})
+
+test('uses valid blocks as the plain-text source for public summaries', () => {
+  const blocks = {
+    version: 1,
+    blocks: [
+      { type: 'heading', level: 2, content: [{ type: 'text', text: '블록 제목' }] },
+      { type: 'paragraph', content: [{ type: 'link', text: '링크 문구', href: 'https://example.com' }] },
+      { type: 'image', src: 'https://example.com/image.jpg', alt: '이미지 설명' },
+    ],
+  }
+  assert.equal(
+    createArticleExcerpt('stale legacy', 180, blocks),
+    '블록 제목 링크 문구 이미지 설명'
+  )
+})

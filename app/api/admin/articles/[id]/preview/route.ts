@@ -5,7 +5,7 @@ import { isUsableImageUrl, loadClusterImageUrl } from '@/lib/articles'
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin'
 
 const ARTICLE_SELECT =
-  'id, title, content, published, published_at, created_at, updated_at, cluster_id, image_url, slug, category, genre'
+  'id, title, content, content_blocks, published, published_at, created_at, updated_at, cluster_id, image_url, slug, category, genre'
 
 export async function GET(
   request: NextRequest,

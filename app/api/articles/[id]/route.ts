@@ -53,7 +53,7 @@ export async function PATCH(
 
   const { data, error } = await supabase
     .from('articles')
-    .update({ title, content, category, genre, updated_at: new Date().toISOString() })
+    .update({ title, content, content_blocks: null, category, genre, updated_at: new Date().toISOString() })
     .eq('id', id)
     .select('id, title, content, published, published_at, created_at, updated_at, cluster_id, image_url, slug, category, genre')
     .maybeSingle()
