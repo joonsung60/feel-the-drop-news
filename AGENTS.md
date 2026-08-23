@@ -46,6 +46,12 @@ SUPABASE_ACCESS_TOKEN    # Claude Code Supabase MCP용
 
 ## 빌드 및 배포
 
+### 로컬 포트 및 상시 서비스
+- `127.0.0.1:3001`은 `feel-the-drop-api.service`와 매일 15시 Daily Pipeline 전용이다. 명시적 승인 없이 이 서비스를 중지·재시작·종료하거나 3001에 개발 서버를 바인딩하지 마라.
+- 온디맨드 관리자/개발 UI는 `npm run dev` 또는 `npm run dev:all`로 3002에서 실행한다.
+- `feel-the-drop-worker.service`가 상시 실행되므로 `npm run dev:all`은 별도 worker를 시작하지 않는다. 중복 worker를 띄우지 마라.
+- 이 live checkout에서 production/static build를 실행하면 상시 API가 사용하는 `.next`가 바뀔 수 있다. 3001 서비스를 건드리지 않는 검증은 별도 worktree에서 수행하라.
+
 ### Cloudflare Stash Rule
 `scripts/build-static.mjs`는 정적 빌드 시 `app/admin`, `app/api`, `proxy.ts`를 `.cf-build-stash`로 임시 이동한다. 빌드 중 이 파일들이 사라진 것처럼 보여도 절대 새로 생성하거나 삭제하지 마라. 이 스크립트를 임의로 리팩토링하지 마라.
 

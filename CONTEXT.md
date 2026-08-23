@@ -37,14 +37,15 @@ EDM/전자음악 관련 해외 소스(RSS, 개별 URL, SNS/포스터 이미지)�
 
 ### 로컬 어드민
 
-- `npm run dev`로 로컬 Next.js 실행
+- `127.0.0.1:3001`은 systemd의 상시 API와 매일 15시 Daily Pipeline 전용
+- `npm run dev` 또는 `npm run dev:all`로 3002에서 온디맨드 로컬 Next.js 실행
 - Next.js 16.2.6이며 dev/build 모두 webpack 사용
 - `/admin`에서 수집, 분석, 기사 생성, 검토, 게시 수행
 - Ollama는 로컬에서만 사용
 - Supabase에 원문, 이미지 소스, 기사 초안, 게시 기사 저장
 - `/admin/*`은 로컬에서 `proxy.ts`와 쿠키 세션으로 보호
 - `worker/`가 별도 mini Node 프로젝트로 존재. `tsx worker/index.ts`로 실행.
-- `npm run dev:all`로 Next.js dev 서버와 worker를 동시에 실행 가능.
+- systemd의 `feel-the-drop-worker.service`가 상시 실행되므로 `npm run dev:all`은 중복 worker 없이 3002 UI만 실행
 
 ### 공개 사이트
 
