@@ -7,6 +7,8 @@ import { ArticleCard } from "@/components/ArticleCard";
 import { JsonLd } from "@/components/JsonLd";
 import { DEFAULT_OG_IMAGE_URL, ORGANIZATION_LOGO_URL, PUBLISHER, RSS_ALTERNATE, SITE_URL } from "@/lib/site";
 import { createBreadcrumbJsonLd, ORGANIZATION_ID } from "@/lib/seo";
+import { ArticleRenderer } from "@/components/ArticleRenderer";
+import { extractFirstMarkdownImage } from "@/lib/article-body";
 
 // ── 원본 유지 — 데이터/유틸 ───────────────────────────
 
@@ -115,73 +117,6 @@ async function loadArticle(key: string): Promise<{
   return { data: null, errorMessage: null };
 }
 
-// ── 본문 블록 파싱 ─────────────────────────────────────
-type ArticleBlock =
-  | { type: "paragraph"; text: string }
-  | {
-      type: "attribution";
-      textBeforeLink: string;
-      linkText: string;
-      href: string;
-      textAfterLink: string;
-    }
-  | { type: "image"; alt: string; src: string };
-
-function splitTextBlocks(text: string): ArticleBlock[] {
-  return text.split('\n\n').map((s) => s.trim()).filter(Boolean).map((paragraph) => {
-    const attributionMatch = paragraph.match(
-      /^\*([^\n]*?)\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)([^\n]*?)\*$/
-    );
-
-    if (attributionMatch) {
-      return {
-        type: "attribution" as const,
-        textBeforeLink: attributionMatch[1],
-        linkText: attributionMatch[2],
-        href: attributionMatch[3],
-        textAfterLink: attributionMatch[4],
-      };
-    }
-
-    return { type: "paragraph" as const, text: paragraph };
-  });
-}
-
-function splitArticleBlocks(
-  text: string,
-  leadingImageUrl?: string | null
-): ArticleBlock[] {
-  if (!text?.trim()) return [];
-
-  const imagePattern = /!\[([^\]]*)\]\((https?:\/\/[^)\s]+)\)/g;
-  const blocks: ArticleBlock[] = [];
-  const normalizedLeadingImageUrl = leadingImageUrl?.trim();
-
-  if (
-    normalizedLeadingImageUrl &&
-    !text.includes(normalizedLeadingImageUrl)
-  ) {
-    blocks.push({ type: "image", alt: "", src: normalizedLeadingImageUrl });
-  }
-
-  let cursor = 0;
-  for (const match of text.matchAll(imagePattern)) {
-    const index = match.index ?? 0;
-    const before = text.slice(cursor, index);
-    blocks.push(...splitTextBlocks(before));
-    blocks.push({
-      type: "image",
-      alt: match[1].trim(),
-      src: match[2].trim(),
-    });
-    cursor = index + match[0].length;
-  }
-
-  blocks.push(...splitTextBlocks(text.slice(cursor)));
-
-  return blocks;
-}
-
 function createMetaDescription(content: string): string {
   const normalized = content
     .replace(/!\[[^\]]*\]\(https?:\/\/[^)\s]+\)/g, " ")
@@ -189,11 +124,6 @@ function createMetaDescription(content: string): string {
     .trim();
   if (normalized.length <= 155) return normalized || "한국어 EDM 뉴스 종합";
   return `${normalized.slice(0, 152).replace(/\s+\S*$/, "")}...`;
-}
-
-function extractFirstMarkdownImage(content: string): string | null {
-  const match = content.match(/!\[[^\]]*\]\((https?:\/\/[^)\s]+)\)/);
-  return match?.[1] ?? null;
 }
 
 function formatDate(iso: string) {
@@ -249,8 +179,6 @@ export default async function ArticlePage({
     : (await loadClusterImageUrl(article.cluster_id)) ??
       extractFirstMarkdownImage(article.content);
 
-  const articleBlocks = splitArticleBlocks(article.content, articleImageUrl);
-  const leadingImageIndex = articleBlocks.findIndex((block) => block.type === "image");
   const articlePath = `/articles/${article.slug ?? article.id}/`;
   const articleUrl = `${SITE_URL}${articlePath}`;
   const description = createMetaDescription(article.content);
@@ -365,48 +293,7 @@ export default async function ArticlePage({
         </div>
 
         {/* 본문 블록 */}
-        <div className="text-[17px] leading-[1.9] text-[#0A0A0A] space-y-5">
-          {articleBlocks.map((block, idx) => {
-            if (block.type === "image") {
-              return (
-                <figure key={idx} className="my-8 overflow-hidden bg-gray-100">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={block.src}
-                    alt={block.alt}
-                    loading={idx === leadingImageIndex ? "eager" : "lazy"}
-                    decoding="async"
-                    className="w-full h-auto object-cover"
-                  />
-                  {block.alt && (
-                    <figcaption className="mt-2 text-sm text-gray-500 px-1">
-                      {block.alt}
-                    </figcaption>
-                  )}
-                </figure>
-              );
-            }
-            if (block.type === "attribution") {
-              return (
-                <p key={idx}>
-                  <em>
-                    {block.textBeforeLink}
-                    <a
-                      href={block.href}
-                      target="_blank"
-                      rel="noopener noreferrer nofollow"
-                      className="underline underline-offset-2"
-                    >
-                      {block.linkText}
-                    </a>
-                    {block.textAfterLink}
-                  </em>
-                </p>
-              );
-            }
-            return <p key={idx}>{block.text}</p>;
-          })}
-        </div>
+        <ArticleRenderer content={article.content} leadingImageUrl={articleImageUrl} />
 
         {/* 하단 */}
         <div className="mt-12 pt-8 border-t border-gray-200">

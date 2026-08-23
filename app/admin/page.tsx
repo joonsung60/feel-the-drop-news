@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { PercentCrop } from 'react-image-crop'
 import { ImageCropper, getCroppedDataUrl } from '@/components/ImageCropper'
+import { ArticleRenderer } from '@/components/ArticleRenderer'
 import { supabase } from '@/lib/supabase'
 
 type AdminGroup = 'rss' | 'image' | 'interview'
@@ -703,6 +704,11 @@ type AdminArticle = {
   genre: string | null
 }
 
+type ArticlePreviewPayload = {
+  article: AdminArticle
+  leadingImageUrl: string | null
+}
+
 type GenerateResult = {
   success: boolean
   article?: {
@@ -1380,6 +1386,8 @@ function ArticlesReviewTab() {
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
   const [publishedSearch, setPublishedSearch] = useState('')
+  const [preview, setPreview] = useState<ArticlePreviewPayload | null>(null)
+  const [isPreviewLoading, setIsPreviewLoading] = useState(false)
 
   const load = useCallback(async (tab: ArticleReviewSubTab, search: string = '') => {
     setIsLoading(true)
@@ -1585,8 +1593,22 @@ function ArticlesReviewTab() {
     setProcessing(null)
   }
 
-  const handleReview = (article: AdminArticle) => {
-    window.open(`/articles/${article.slug ?? article.id}`, '_blank', 'noopener,noreferrer')
+  const handleReview = async (article: AdminArticle) => {
+    setIsPreviewLoading(true)
+    setError('')
+    try {
+      const res = await fetch(`/api/admin/articles/${article.id}/preview`)
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || data.error) {
+        setError(data.error ?? '미리보기를 불러오지 못했습니다.')
+        return
+      }
+      setPreview(data as ArticlePreviewPayload)
+    } catch {
+      setError('미리보기를 불러오지 못했습니다.')
+    } finally {
+      setIsPreviewLoading(false)
+    }
   }
 
   const handleSaveReplacementImage = async (article: AdminArticle) => {
@@ -1634,6 +1656,12 @@ function ArticlesReviewTab() {
 
   return (
     <div>
+      {preview && (
+        <ArticlePreviewModal
+          preview={preview}
+          onClose={() => setPreview(null)}
+        />
+      )}
       <p className="text-gray-600 mb-6">
         생성된 기사 초안과 게시된 기사를 검토하고 수정합니다. 게시된 기사를 저장하면 Cloudflare 재빌드가 자동으로 요청됩니다.
       </p>
@@ -1874,9 +1902,10 @@ function ArticlesReviewTab() {
                         <button
                           type="button"
                           onClick={() => handleReview(article)}
+                          disabled={isPreviewLoading}
                           className="px-3 py-2 border border-gray-300 text-gray-600 text-sm rounded font-semibold hover:bg-gray-50 whitespace-nowrap"
                         >
-                          검토
+                          {isPreviewLoading ? '불러오는 중...' : '검토'}
                         </button>
                         <button
                           onClick={() => startEdit(article)}
@@ -1928,6 +1957,76 @@ function ArticlesReviewTab() {
           })}
         </div>
       )}
+    </div>
+  )
+}
+
+function ArticlePreviewModal({
+  preview,
+  onClose,
+}: {
+  preview: ArticlePreviewPayload
+  onClose: () => void
+}) {
+  const { article, leadingImageUrl } = preview
+
+  return (
+    <div
+      className="fixed inset-0 z-50 overflow-y-auto bg-black/60 p-4 md:p-8"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${article.title} 미리보기`}
+    >
+      <div className="mx-auto min-h-full max-w-[1280px] bg-white px-4 py-8 shadow-2xl md:px-8 md:py-12">
+        <div className="mb-8 flex items-center justify-between border-b border-gray-200 pb-4">
+          <span className="text-sm font-semibold text-gray-600">관리자 초안 미리보기</span>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded border border-gray-300 px-4 py-2 text-sm font-semibold hover:bg-gray-50"
+          >
+            닫기
+          </button>
+        </div>
+
+        <article className="max-w-[720px]">
+          <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-gray-500">
+            <time>
+              {article.published_at ? '발행' : '생성'}{' '}
+              {formatDate(article.published_at ?? article.created_at)}
+            </time>
+            {!article.published && (
+              <span className="bg-gray-200 px-1.5 py-0.5 text-[11px] font-medium text-gray-600">
+                초안
+              </span>
+            )}
+          </div>
+
+          {(article.category || article.genre) && (
+            <div className="mb-4 flex flex-wrap items-center gap-1.5">
+              {article.category && (
+                <span className="inline-block bg-gray-900 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-white">
+                  {article.category}
+                </span>
+              )}
+              {article.genre && (
+                <span className="inline-block border border-gray-300 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-gray-600">
+                  {article.genre}
+                </span>
+              )}
+            </div>
+          )}
+
+          <h1 className="mb-4 text-2xl font-black leading-tight tracking-tight sm:text-3xl md:text-4xl">
+            {article.title}
+          </h1>
+          <div className="mb-8 border-b border-gray-200 pb-4 text-sm">
+            <span className="text-gray-500">기사 · 편집</span>
+            <span className="ml-2 font-medium text-gray-800">FEEL THE DROP</span>
+          </div>
+          <ArticleRenderer content={article.content} leadingImageUrl={leadingImageUrl} />
+        </article>
+      </div>
     </div>
   )
 }
