@@ -54,7 +54,7 @@ test('deploy 실패를 기록하고 Telegram 재시도 안내를 만든다', asy
 })
 
 test('migration은 item 처리 완료 후에만 deploy를 atomic claim하고 service_role만 실행한다', () => {
-  const migration = readFileSync(path.resolve(process.cwd(), 'supabase/migrations/20260820114500_daily_final_deploy_telemetry.sql'), 'utf8')
+  const migration = readFileSync(path.resolve(process.cwd(), 'supabase/migrations/20260820031351_daily_final_deploy_telemetry.sql'), 'utf8')
   assert.match(migration, /status not in \('published', 'deleted', 'failed'\)/)
   assert.match(migration, /deploy_status = 'claimed'/)
   assert.match(migration, /deploy_claim_token = requested_claim_token/)

@@ -70,7 +70,7 @@ test('선택 결과가 없거나 enqueue가 전부 실패하면 job polling을 �
 
 test('migration은 일일 이력을 보존하면서 pending suggestion 삭제를 허용한다', () => {
   const migration = readFileSync(
-    path.resolve(process.cwd(), 'supabase/migrations/20260818000000_daily_pipeline.sql'),
+    path.resolve(process.cwd(), 'supabase/migrations/20260818141606_daily_pipeline.sql'),
     'utf8',
   )
   assert.match(migration, /suggestion_id uuid references public\.suggested_clusters\(id\) on delete set null/)
@@ -91,7 +91,7 @@ test('운영 runner는 clear_topics 다음에 RSS collect를 실행한다', () =
 
 test('migration은 자동 job과 생성 기사 및 batch publish에 DB idempotency 경계를 둔다', () => {
   const migration = readFileSync(
-    path.resolve(process.cwd(), 'supabase/migrations/20260818000000_daily_pipeline.sql'),
+    path.resolve(process.cwd(), 'supabase/migrations/20260818141606_daily_pipeline.sql'),
     'utf8',
   )
   assert.match(migration, /job_queue_idempotency_key_idx/)
@@ -293,7 +293,7 @@ test('삭제된 daily 번호는 batch publish 조회에서 제외된다', () => 
 
 test('daily 삭제 migration은 item 이력을 보존하고 deleted 상태를 허용한다', () => {
   const migration = readFileSync(
-    path.resolve(process.cwd(), 'supabase/migrations/20260818154745_preserve_daily_item_on_article_delete.sql'),
+    path.resolve(process.cwd(), 'supabase/migrations/20260818161351_preserve_daily_item_on_article_delete.sql'),
     'utf8',
   )
   assert.match(migration, /on delete set null/)
