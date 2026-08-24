@@ -8,6 +8,7 @@ const valid = {
   genre: 'edm',
   slug: null,
   coverImageMode: 'none',
+  showCoverInArticle: true,
   imageUrl: null,
   coverImagePath: null,
   contentBlocks: {
@@ -29,4 +30,9 @@ test('editor input rejects malformed block documents', () => {
     ...valid,
     contentBlocks: { version: 1, blocks: [{ type: 'heading', level: 4, content: [] }] },
   }).ok, false)
+})
+
+test('editor input requires an explicit article cover visibility boolean', () => {
+  assert.equal(validateEditorialArticleInput({ ...valid, showCoverInArticle: false }).ok, true)
+  assert.equal(validateEditorialArticleInput({ ...valid, showCoverInArticle: null }).ok, false)
 })

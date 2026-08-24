@@ -5,7 +5,7 @@ import { createEditorialDraft } from '@/lib/editorial-article-service'
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin'
 
 const ARTICLE_SELECT =
-  'id, title, content, content_blocks, published, published_at, created_at, updated_at, cluster_id, image_url, cover_image_mode, cover_image_path, slug, category, genre'
+  'id, title, content, content_blocks, published, published_at, created_at, updated_at, cluster_id, image_url, cover_image_mode, cover_image_path, show_cover_in_article, slug, category, genre'
 
 export async function POST(request: NextRequest) {
   const authorization = await authorizeAdminRequest(request)

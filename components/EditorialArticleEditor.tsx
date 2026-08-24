@@ -44,6 +44,7 @@ export function EditorialArticleEditor({ articleId, onClose, onSaved }: Editoria
   const [genre, setGenre] = useState('')
   const [slug, setSlug] = useState('')
   const [coverImageMode, setCoverImageMode] = useState<Exclude<ArticleCoverImageMode, null>>('none')
+  const [showCoverInArticle, setShowCoverInArticle] = useState(true)
   const [imageUrl, setImageUrl] = useState('')
   const [coverImagePath, setCoverImagePath] = useState<string | null>(null)
   const [autoLeadingImageUrl, setAutoLeadingImageUrl] = useState<string | null>(null)
@@ -71,6 +72,7 @@ export function EditorialArticleEditor({ articleId, onClose, onSaved }: Editoria
         setGenre(data.article.genre ?? '')
         setSlug(data.article.slug ?? '')
         setCoverImageMode(data.article.cover_image_mode ?? 'auto')
+        setShowCoverInArticle(data.article.show_cover_in_article !== false)
         setImageUrl(data.article.image_url ?? '')
         setCoverImagePath(data.article.cover_image_path ?? null)
         setAutoLeadingImageUrl(data.leadingImageUrl ?? null)
@@ -151,6 +153,7 @@ export function EditorialArticleEditor({ articleId, onClose, onSaved }: Editoria
           genre: genre || null,
           slug: slug || null,
           coverImageMode,
+          showCoverInArticle,
           imageUrl: imageUrl || null,
           coverImagePath,
           contentBlocks: document,
@@ -202,6 +205,15 @@ export function EditorialArticleEditor({ articleId, onClose, onSaved }: Editoria
               <input value={imageUrl} onChange={(event) => { setImageUrl(event.target.value); setCoverImagePath(null); setDirty(true) }} placeholder="https://..." className="rounded border p-2" aria-label="대표 이미지 URL" />
               <label className="rounded border px-3 py-2 text-center text-sm font-semibold">{uploading ? '업로드 중...' : 'PC에서 업로드'}<input type="file" accept="image/jpeg,image/png,image/webp" disabled={uploading} className="sr-only" onChange={(event) => { const file = event.target.files?.[0]; if (file) void uploadImage(file, (upload) => { setImageUrl(upload.publicUrl); setCoverImagePath(upload.storagePath) }) }} /></label>
             </div>}
+            <label className="mt-3 flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={showCoverInArticle}
+                disabled={coverImageMode === 'none'}
+                onChange={(event) => { setShowCoverInArticle(event.target.checked); setDirty(true) }}
+              />
+              기사 본문 상단에도 대표 이미지 표시
+            </label>
           </fieldset>
         </div>
 
@@ -244,7 +256,7 @@ export function EditorialArticleEditor({ articleId, onClose, onSaved }: Editoria
             <article className="max-w-[720px]">
               <h1 className="mb-4 text-2xl font-black leading-tight tracking-tight sm:text-3xl md:text-4xl">{title}</h1>
               <div className="mb-8 border-b border-gray-200 pb-4 text-sm text-gray-500">기사 · 편집 <span className="font-medium text-gray-800">FEEL THE DROP</span></div>
-              <ArticleRenderer content={projectedContent} contentBlocks={document} leadingImageUrl={coverImageMode === 'none' ? null : coverImageMode === 'custom' ? imageUrl : autoLeadingImageUrl} />
+              <ArticleRenderer content={projectedContent} contentBlocks={document} leadingImageUrl={!showCoverInArticle || coverImageMode === 'none' ? null : coverImageMode === 'custom' ? imageUrl : autoLeadingImageUrl} />
             </article>
           </div>
         </div>

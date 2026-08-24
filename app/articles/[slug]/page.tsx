@@ -10,14 +10,14 @@ import { createBreadcrumbJsonLd, ORGANIZATION_ID } from "@/lib/seo";
 import { ArticleRenderer } from "@/components/ArticleRenderer";
 import { extractFirstMarkdownImage } from "@/lib/article-body";
 import { createArticleExcerpt } from "@/lib/excerpt";
-import { resolveArticleCoverImage, type ArticleCoverImageMode } from "@/lib/article-cover";
+import { resolveArticleCoverImage, shouldShowCoverInArticle, type ArticleCoverImageMode } from "@/lib/article-cover";
 
 // ── 원본 유지 — 데이터/유틸 ───────────────────────────
 
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const ARTICLE_SELECT =
-  "id, title, content, content_blocks, published, published_at, created_at, updated_at, cluster_id, image_url, cover_image_mode, cover_image_path, slug, category, genre";
+  "id, title, content, content_blocks, published, published_at, created_at, updated_at, cluster_id, image_url, cover_image_mode, cover_image_path, show_cover_in_article, slug, category, genre";
 
 export async function generateStaticParams() {
   const { data, error } = await supabase
@@ -84,6 +84,7 @@ type ArticleDetail = {
   image_url: string | null;
   cover_image_mode: ArticleCoverImageMode;
   cover_image_path: string | null;
+  show_cover_in_article: boolean | null;
   slug: string | null;
   category: string | null;
   genre: string | null;
@@ -197,6 +198,9 @@ export default async function ArticlePage({
 
   const article = data;
   const articleImageUrl = await resolveCoverForArticle(article);
+  const leadingImageUrl = shouldShowCoverInArticle(article.show_cover_in_article)
+    ? articleImageUrl
+    : null;
 
   const articlePath = `/articles/${article.slug ?? article.id}/`;
   const articleUrl = `${SITE_URL}${articlePath}`;
@@ -315,7 +319,7 @@ export default async function ArticlePage({
         <ArticleRenderer
           content={article.content}
           contentBlocks={article.content_blocks}
-          leadingImageUrl={articleImageUrl}
+          leadingImageUrl={leadingImageUrl}
         />
 
         {/* 하단 */}

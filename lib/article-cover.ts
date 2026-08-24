@@ -3,6 +3,10 @@ import { extractFirstMarkdownImage } from '@/lib/article-body'
 
 export type ArticleCoverImageMode = 'auto' | 'none' | 'custom' | null
 
+export function shouldShowCoverInArticle(value: boolean | null | undefined): boolean {
+  return value !== false
+}
+
 export function isArticleCoverImageMode(value: unknown): value is ArticleCoverImageMode {
   return value === null || value === 'auto' || value === 'none' || value === 'custom'
 }

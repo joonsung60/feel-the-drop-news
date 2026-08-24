@@ -8,6 +8,7 @@ export type EditorialArticleInput = {
   genre: string | null
   slug: string | null
   coverImageMode: Exclude<ArticleCoverImageMode, null>
+  showCoverInArticle: boolean
   imageUrl: string | null
   coverImagePath: string | null
   contentBlocks: ArticleBlockDocument
@@ -25,6 +26,7 @@ export async function createEditorialDraft<T>(
     genre: input.genre,
     slug: input.slug,
     cover_image_mode: input.coverImageMode,
+    show_cover_in_article: input.showCoverInArticle,
     image_url: input.imageUrl,
     cover_image_path: input.coverImagePath,
     cluster_id: null,
@@ -47,6 +49,7 @@ export async function saveEditorialArticle<T>(
     genre: input.genre,
     slug: input.slug,
     cover_image_mode: input.coverImageMode,
+    show_cover_in_article: input.showCoverInArticle,
     image_url: input.imageUrl,
     cover_image_path: input.coverImagePath,
     content: projectBlocksToContent(input.contentBlocks),

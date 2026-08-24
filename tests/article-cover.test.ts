@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { resolveArticleCoverImage, resolveArticleListCoverImage } from '@/lib/article-cover'
+import { resolveArticleCoverImage, resolveArticleListCoverImage, shouldShowCoverInArticle } from '@/lib/article-cover'
 
 const article = 'https://example.com/article.jpg'
 const cluster = 'https://example.com/cluster.jpg'
@@ -24,4 +24,10 @@ test('list cover uses projected content inline image after article and cluster f
   assert.equal(resolveArticleListCoverImage({ mode: 'auto', clusterImageUrl: cluster, content }), cluster)
   assert.equal(resolveArticleListCoverImage({ mode: 'none', content }), null)
   assert.equal(resolveArticleListCoverImage({ mode: 'custom', articleImageUrl: article, content }), article)
+})
+
+test('article body visibility preserves legacy null and supports thumbnail-only cover', () => {
+  assert.equal(shouldShowCoverInArticle(null), true)
+  assert.equal(shouldShowCoverInArticle(true), true)
+  assert.equal(shouldShowCoverInArticle(false), false)
 })
