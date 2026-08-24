@@ -14,6 +14,7 @@ type DictionaryEntry = {
 
 type Dictionary = {
   counts: {
+    total: number
     ko_established: number
   }
   entities: DictionaryEntry[]
@@ -24,6 +25,7 @@ const dictionary = JSON.parse(
 ) as Dictionary
 const displayNames = getEstablishedEntityDisplayNames(dictionary.entities)
 const carlCox = dictionary.entities.find(({ id }) => id === 'artist_carl_cox')
+const organicHouse = dictionary.entities.find(({ id }) => id === 'genre_organic_house')
 
 test('Carl Cox is an established Korean entity and dictionary count is accurate', () => {
   assert.ok(carlCox)
@@ -33,6 +35,21 @@ test('Carl Cox is an established Korean entity and dictionary count is accurate'
   assert.equal(
     dictionary.counts.ko_established,
     dictionary.entities.filter(({ ko_status }) => ko_status === 'established').length
+  )
+  assert.equal(dictionary.counts.total, dictionary.entities.length)
+})
+
+test('organic house uses the editorial Korean genre name and corrects literal translations', () => {
+  assert.ok(organicHouse)
+  assert.equal(organicHouse.ko, '오가닉 하우스')
+  assert.deepEqual(organicHouse.ko_avoid, ['유기적인 하우스', '유기 하우스'])
+  assert.equal(
+    applyDisplayNameMappingToTitle("KSHMR, 새로운 프로젝트 'TEJA'로 유기 하우스 앨범 발표", displayNames),
+    "카슈미르, 새로운 프로젝트 'TEJA'로 오가닉 하우스 앨범 발표"
+  )
+  assert.equal(
+    applyKoreanAvoidCorrections('유기적인 하우스와 유기 하우스 음악을 선보인다.', displayNames),
+    '오가닉 하우스와 오가닉 하우스 음악을 선보인다.'
   )
 })
 
