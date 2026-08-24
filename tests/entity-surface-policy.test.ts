@@ -99,6 +99,14 @@ test('broad Bandcamp surface is supporting-only', () => {
   assert.equal(index.articleSupportingEntities.get(article.id)?.has('Bandcamp'), true)
 })
 
+test('organic house is supporting-only and cannot qualify unrelated articles', () => {
+  const article = raw('organic-house', 'A producer announces a new organic house album')
+  const index = buildEntityIndex([article], dictionary!)
+  assert.equal(index.articleEntities.get(article.id)?.has('organic house'), false)
+  assert.equal(index.articleSupportingEntities.get(article.id)?.has('organic house'), true)
+  assert.equal(index.entityArticles.has('organic house'), false)
+})
+
 test('Better and ADVANCED require artist context', () => {
   for (const title of [
     'Andrew Chow, better known as DJ Wiz, has died',

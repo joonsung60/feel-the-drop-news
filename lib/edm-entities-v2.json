@@ -1,8 +1,8 @@
 {
   "schema_version": "2.0",
   "title": "FEEL THE DROP EDM Entity Dictionary (SOT)",
-  "last_reviewed": "2026-07-12",
-  "scope": "EDM/electronic music artists, festivals, venues, labels, equipment brands. Korea + Japan + global coverage.",
+  "last_reviewed": "2026-08-24",
+  "scope": "EDM/electronic music artists, festivals, venues, labels, equipment brands, and selected editorial genre terms. Korea + Japan + global coverage.",
   "usage_policy": {
     "english": "Preserve exact capitalization, spacing, punctuation, and accents in `en`.",
     "korean_established": "ko_status=established: use `ko` as the Korean output. Verified against Korean media / official festival lineups (see ko_source).",
@@ -15,10 +15,11 @@
     "artist": 387,
     "equipment": 33,
     "festival": 63,
+    "genre": 1,
     "label": 49,
     "venue": 42,
-    "total": 574,
-    "ko_established": 91
+    "total": 575,
+    "ko_established": 92
   },
   "entities": [
     {
@@ -8039,6 +8040,25 @@
       "weight": 1.0,
       "region": "HU",
       "ko_source": null
+    },
+    {
+      "id": "genre_organic_house",
+      "type": "genre",
+      "en": "organic house",
+      "aliases_en": [],
+      "ko": "오가닉 하우스",
+      "ko_status": "established",
+      "ko_avoid": [
+        "유기적인 하우스",
+        "유기 하우스"
+      ],
+      "tier": "B",
+      "weight": 0.8,
+      "region": "GLOBAL",
+      "ko_source": {
+        "name": "FEEL THE DROP 편집 표기",
+        "url": "editorial"
+      }
     }
   ]
 }
