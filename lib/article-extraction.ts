@@ -10,7 +10,7 @@ const BOILERPLATE_PATTERNS = [
 
 const STOP_SECTION_PATTERNS = [
   /\b(previous article|next article)\b/i,
-  /\b(related articles|more from author)\b/i,
+  /\b(related articles|related posts|more from author)\b/i,
   /\b(comments are closed|just released)\b/i,
   /\b(sign up|subscribe)\b/i,
 ]
