@@ -6,6 +6,10 @@ const valid = {
   title: '수동 기사 제목',
   category: '뉴스',
   genre: 'edm',
+  slug: null,
+  coverImageMode: 'none',
+  imageUrl: null,
+  coverImagePath: null,
   contentBlocks: {
     version: 1,
     blocks: [{ type: 'paragraph', content: [{ type: 'text', text: '본문' }] }],

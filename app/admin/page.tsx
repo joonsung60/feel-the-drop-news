@@ -1671,7 +1671,7 @@ function ArticlesReviewTab() {
         onClick={() => setEditorArticleId(null)}
         className="mb-6 rounded bg-black px-4 py-2 text-sm font-semibold text-white"
       >
-        새 기사
+        백지에서 새 기사 작성
       </button>
 
       <div className="flex gap-2 mb-4 border-b text-sm">

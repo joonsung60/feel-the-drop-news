@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import { isUsableImageUrl, loadClusterImageUrl, loadPublishedArticles } from "@/lib/articles";
+import { loadClusterImageUrl, loadPublishedArticles } from "@/lib/articles";
 import { ArticleCard } from "@/components/ArticleCard";
 import { JsonLd } from "@/components/JsonLd";
 import { DEFAULT_OG_IMAGE_URL, ORGANIZATION_LOGO_URL, PUBLISHER, RSS_ALTERNATE, SITE_URL } from "@/lib/site";
@@ -10,13 +10,14 @@ import { createBreadcrumbJsonLd, ORGANIZATION_ID } from "@/lib/seo";
 import { ArticleRenderer } from "@/components/ArticleRenderer";
 import { extractFirstMarkdownImage } from "@/lib/article-body";
 import { createArticleExcerpt } from "@/lib/excerpt";
+import { resolveArticleCoverImage, type ArticleCoverImageMode } from "@/lib/article-cover";
 
 // ── 원본 유지 — 데이터/유틸 ───────────────────────────
 
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const ARTICLE_SELECT =
-  "id, title, content, content_blocks, published, published_at, created_at, updated_at, cluster_id, image_url, slug, category, genre";
+  "id, title, content, content_blocks, published, published_at, created_at, updated_at, cluster_id, image_url, cover_image_mode, cover_image_path, slug, category, genre";
 
 export async function generateStaticParams() {
   const { data, error } = await supabase
@@ -45,10 +46,7 @@ export async function generateMetadata({
   }
 
   const description = createMetaDescription(data.content, data.content_blocks);
-  const imageUrl = isUsableImageUrl(data.image_url)
-    ? data.image_url
-    : (await loadClusterImageUrl(data.cluster_id)) ??
-      extractFirstMarkdownImage(data.content);
+  const imageUrl = await resolveCoverForArticle(data);
   const articlePath = `/articles/${data.slug ?? data.id}/`;
 
   return {
@@ -84,6 +82,8 @@ type ArticleDetail = {
   updated_at: string | null;
   cluster_id: string | null;
   image_url: string | null;
+  cover_image_mode: ArticleCoverImageMode;
+  cover_image_path: string | null;
   slug: string | null;
   category: string | null;
   genre: string | null;
@@ -136,6 +136,18 @@ function createMetaDescription(content: string, contentBlocks: unknown | null): 
   return `${normalized.slice(0, 152).replace(/\s+\S*$/, "")}...`;
 }
 
+async function resolveCoverForArticle(article: Pick<ArticleDetail, "cover_image_mode" | "image_url" | "cluster_id" | "content">) {
+  const clusterImageUrl = article.cover_image_mode === "none" || article.cover_image_mode === "custom"
+    ? null
+    : await loadClusterImageUrl(article.cluster_id);
+  return resolveArticleCoverImage({
+    mode: article.cover_image_mode,
+    articleImageUrl: article.image_url,
+    clusterImageUrl,
+    inlineImageUrl: extractFirstMarkdownImage(article.content),
+  });
+}
+
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("ko-KR", {
     year: "numeric",
@@ -184,10 +196,7 @@ export default async function ArticlePage({
   }
 
   const article = data;
-  const articleImageUrl = isUsableImageUrl(article.image_url)
-    ? article.image_url
-    : (await loadClusterImageUrl(article.cluster_id)) ??
-      extractFirstMarkdownImage(article.content);
+  const articleImageUrl = await resolveCoverForArticle(article);
 
   const articlePath = `/articles/${article.slug ?? article.id}/`;
   const articleUrl = `${SITE_URL}${articlePath}`;

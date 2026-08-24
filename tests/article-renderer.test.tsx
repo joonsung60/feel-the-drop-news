@@ -57,3 +57,24 @@ test('valid blocks render structured content and malformed blocks fall back to l
   )
   assert.match(fallback, /<p>legacy 본문<\/p>/)
 })
+
+test('strong, emphasis, formatted list items, and image metadata render semantic DOM', () => {
+  const document = {
+    version: 1,
+    blocks: [
+      { type: 'list', ordered: false, items: [[
+        { type: 'strong', content: [{ type: 'text', text: '행사명' }] },
+        { type: 'text', text: ': ' },
+        { type: 'link', text: 'TRICO', href: 'https://example.com' },
+      ]] },
+      { type: 'paragraph', content: [{ type: 'emphasis', content: [{ type: 'text', text: '강조' }] }] },
+      { type: 'image', src: 'https://example.com/poster.webp', alt: '포스터', caption: '행사 포스터', credit: 'TRICO' },
+    ],
+  }
+  const html = renderToStaticMarkup(<ArticleRenderer content="" contentBlocks={document} />)
+  assert.match(html, /<strong>행사명<\/strong>/)
+  assert.match(html, /<em>강조<\/em>/)
+  assert.match(html, /<a[^>]+>TRICO<\/a>/)
+  assert.match(html, /alt="포스터"/)
+  assert.match(html, /<figcaption[^>]*>행사 포스터 · TRICO<\/figcaption>/)
+})

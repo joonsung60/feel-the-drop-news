@@ -1,6 +1,8 @@
 export type ArticleInline =
   | { type: 'text'; text: string }
   | { type: 'link'; text: string; href: string }
+  | { type: 'strong'; content: ArticleInline[] }
+  | { type: 'emphasis'; content: ArticleInline[] }
 
 export type ArticleContentBlock =
   | { type: 'paragraph'; content: ArticleInline[] }
@@ -8,7 +10,7 @@ export type ArticleContentBlock =
   | { type: 'list'; ordered: boolean; items: ArticleInline[][] }
   | { type: 'blockquote'; content: ArticleInline[] }
   | { type: 'attribution'; content: ArticleInline[] }
-  | { type: 'image'; src: string; alt: string }
+  | { type: 'image'; src: string; alt: string; caption?: string; credit?: string; storagePath?: string }
 
 export type ArticleBlockDocument = {
   version: 1
@@ -36,7 +38,8 @@ export function isSafeArticleUrl(value: string): boolean {
   }
 }
 
-function validateInline(value: unknown): value is ArticleInline {
+function validateInline(value: unknown, depth = 0): value is ArticleInline {
+  if (depth > 8) return false
   if (!isRecord(value) || typeof value.type !== 'string') return false
   if (value.type === 'text') {
     return hasOnlyKeys(value, ['type', 'text']) && typeof value.text === 'string'
@@ -47,11 +50,15 @@ function validateInline(value: unknown): value is ArticleInline {
       typeof value.href === 'string' &&
       isSafeArticleUrl(value.href)
   }
+  if (value.type === 'strong' || value.type === 'emphasis') {
+    return hasOnlyKeys(value, ['type', 'content']) &&
+      Array.isArray(value.content) && value.content.every((inline) => validateInline(inline, depth + 1))
+  }
   return false
 }
 
 function validateInlineArray(value: unknown): value is ArticleInline[] {
-  return Array.isArray(value) && value.every(validateInline)
+  return Array.isArray(value) && value.every((inline) => validateInline(inline, 0))
 }
 
 function validateBlock(value: unknown): value is ArticleContentBlock {
@@ -59,9 +66,12 @@ function validateBlock(value: unknown): value is ArticleContentBlock {
     return false
   }
   if (value.type === 'image') {
-    return hasOnlyKeys(value, ['type', 'src', 'alt']) &&
+    return hasOnlyKeys(value, ['type', 'src', 'alt', 'caption', 'credit', 'storagePath']) &&
       typeof value.src === 'string' && isSafeArticleUrl(value.src) &&
-      typeof value.alt === 'string'
+      typeof value.alt === 'string' &&
+      (value.caption === undefined || typeof value.caption === 'string') &&
+      (value.credit === undefined || typeof value.credit === 'string') &&
+      (value.storagePath === undefined || typeof value.storagePath === 'string')
   }
   if (value.type === 'heading') {
     return hasOnlyKeys(value, ['type', 'level', 'content']) &&
@@ -92,13 +102,17 @@ export function validateArticleBlockDocument(value: unknown):
 
 export function parseInlineMarkdown(text: string): ArticleInline[] {
   const result: ArticleInline[] = []
-  const linkPattern = /\[([^\]]+)\]\(([^)\s]+)\)/g
+  const tokenPattern = /(\*\*([^*]+)\*\*|\*([^*]+)\*|\[([^\]]+)\]\(([^)\s]+)\))/g
   let cursor = 0
-  for (const match of text.matchAll(linkPattern)) {
+  for (const match of text.matchAll(tokenPattern)) {
     const index = match.index ?? 0
     if (index > cursor) result.push({ type: 'text', text: text.slice(cursor, index) })
-    if (isSafeArticleUrl(match[2])) {
-      result.push({ type: 'link', text: match[1], href: match[2] })
+    if (match[2] !== undefined) {
+      result.push({ type: 'strong', content: parseInlineMarkdown(match[2]) })
+    } else if (match[3] !== undefined) {
+      result.push({ type: 'emphasis', content: parseInlineMarkdown(match[3]) })
+    } else if (isSafeArticleUrl(match[5])) {
+      result.push({ type: 'link', text: match[4], href: match[5] })
     } else {
       result.push({ type: 'text', text: match[0] })
     }
@@ -109,9 +123,12 @@ export function parseInlineMarkdown(text: string): ArticleInline[] {
 }
 
 export function inlineToMarkdown(content: ArticleInline[]): string {
-  return content.map((inline) => inline.type === 'link'
-    ? `[${inline.text}](${inline.href})`
-    : inline.text).join('')
+  return content.map((inline) => {
+    if (inline.type === 'link') return `[${inline.text}](${inline.href})`
+    if (inline.type === 'strong') return `**${inlineToMarkdown(inline.content)}**`
+    if (inline.type === 'emphasis') return `*${inlineToMarkdown(inline.content)}*`
+    return inline.text
+  }).join('')
 }
 
 export function importMarkdownDocument(markdown: string): ArticleBlockDocument {
@@ -202,11 +219,14 @@ export function projectBlocksToContent(document: ArticleBlockDocument): string {
 }
 
 export function blocksToPlainText(document: ArticleBlockDocument): string {
+  const inlineToPlainText = (content: ArticleInline[]): string => content.map((inline) => {
+    if (inline.type === 'text') return inline.text
+    if (inline.type === 'link') return isSafeArticleUrl(inline.text) ? '' : inline.text
+    return inlineToPlainText(inline.content)
+  }).join('')
   return document.blocks.map((block) => {
     if (block.type === 'image') return block.alt
-    if (block.type === 'list') return block.items.map(inlineToMarkdown)
-      .join(' ')
-      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-    return inlineToMarkdown(block.content).replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    if (block.type === 'list') return block.items.map(inlineToPlainText).join(' ')
+    return inlineToPlainText(block.content)
   }).filter(Boolean).join('\n\n')
 }

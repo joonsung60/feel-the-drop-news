@@ -12,17 +12,16 @@ type ArticleRendererProps = {
 }
 
 function InlineContent({ content }: { content: ArticleInline[] }) {
-  return content.map((inline, index) => inline.type === 'link' ? (
-    <a
-      key={index}
-      href={inline.href}
-      target="_blank"
-      rel="noopener noreferrer nofollow"
-      className="underline underline-offset-2"
-    >
-      {inline.text}
-    </a>
-  ) : inline.text)
+  return content.map((inline, index) => {
+    if (inline.type === 'link') return (
+      <a key={index} href={inline.href} target="_blank" rel="noopener noreferrer nofollow" className="underline underline-offset-2">
+        {inline.text}
+      </a>
+    )
+    if (inline.type === 'strong') return <strong key={index}><InlineContent content={inline.content} /></strong>
+    if (inline.type === 'emphasis') return <em key={index}><InlineContent content={inline.content} /></em>
+    return inline.text
+  })
 }
 
 function BlockDocumentRenderer({ document }: { document: ArticleBlockDocument }) {
@@ -34,7 +33,11 @@ function BlockDocumentRenderer({ document }: { document: ArticleBlockDocument })
           <figure key={index} className="my-8 overflow-hidden bg-gray-100">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={block.src} alt={block.alt} loading={index === leadingImageIndex ? 'eager' : 'lazy'} decoding="async" className="w-full h-auto object-cover" />
-            {block.alt && <figcaption className="mt-2 text-sm text-gray-500 px-1">{block.alt}</figcaption>}
+            {(block.caption || block.credit || (block.alt && block.caption === undefined && block.credit === undefined)) && (
+              <figcaption className="mt-2 text-sm text-gray-500 px-1">
+                {block.caption || block.alt}{block.caption && block.credit ? ' · ' : ''}{block.credit}
+              </figcaption>
+            )}
           </figure>
         )
         if (block.type === 'heading') {

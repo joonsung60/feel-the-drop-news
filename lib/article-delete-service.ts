@@ -1,4 +1,7 @@
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin'
+import { validateArticleBlockDocument } from '@/lib/article-blocks'
+import { collectManagedEditorialPaths } from '@/lib/editorial-media'
+import { cleanupUnreferencedEditorialMedia } from '@/lib/editorial-media-cleanup'
 
 type ClusterArticleRow = { raw_article_id: string }
 export type DeleteDraftResult = {
@@ -21,7 +24,7 @@ async function resetClusterRawArticlesForDraftDelete(clusterId: string): Promise
 
 export async function deleteDraftArticle(id: string): Promise<DeleteDraftResult> {
   const { data: article, error: fetchError } = await supabase.from('articles')
-    .select('id, title, published, cluster_id').eq('id', id).maybeSingle()
+    .select('id, title, published, cluster_id, content_blocks, cover_image_path').eq('id', id).maybeSingle()
   if (fetchError) return { status: 500, body: { error: fetchError.message }, deleted: false }
   if (!article) return { status: 404, body: { error: '기사를 찾을 수 없습니다.' }, deleted: false }
   if (article.published) {
@@ -40,5 +43,8 @@ export async function deleteDraftArticle(id: string): Promise<DeleteDraftResult>
     .delete().eq('id', id).eq('published', false).select('id').maybeSingle()
   if (deleteError) return { status: 500, body: { error: deleteError.message }, deleted: false }
   if (!deleted) return { status: 409, body: { error: '기사 상태가 변경되어 삭제하지 않았습니다.' }, deleted: false }
+  const document = validateArticleBlockDocument(article.content_blocks)
+  const managedPaths = collectManagedEditorialPaths(document.ok ? document.document : null, article.cover_image_path)
+  await cleanupUnreferencedEditorialMedia(managedPaths)
   return { status: 200, body: { deleted: true, article }, deleted: true }
 }

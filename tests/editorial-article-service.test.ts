@@ -4,6 +4,7 @@ import { createEditorialDraft, saveEditorialArticle } from '@/lib/editorial-arti
 
 const input = {
   title: '수동 기사 제목', category: '뉴스', genre: 'edm',
+  slug: null, coverImageMode: 'none' as const, imageUrl: null, coverImagePath: null,
   contentBlocks: { version: 1 as const, blocks: [{ type: 'paragraph' as const, content: [{ type: 'text' as const, text: '본문' }] }] },
 }
 
@@ -16,6 +17,10 @@ test('manual article creation always inserts an unpublished draft with projectio
   assert.equal(payload.published, false)
   assert.equal(payload.content, '본문')
   assert.deepEqual(payload.content_blocks, input.contentBlocks)
+  assert.equal(payload.cover_image_mode, 'none')
+  assert.equal(payload.image_url, null)
+  assert.equal(payload.cover_image_path, null)
+  assert.equal(payload.cluster_id, null)
 })
 
 test('draft save writes blocks and projection without deploy', async () => {

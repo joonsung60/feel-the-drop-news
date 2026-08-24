@@ -4,6 +4,7 @@ import {
   matchesCategory,
   matchesGenre,
 } from '@/lib/taxonomy'
+import { resolveArticleListCoverImage, type ArticleCoverImageMode } from '@/lib/article-cover'
 
 export type ArticleListItem = {
   id: string
@@ -28,6 +29,7 @@ type ArticleRow = {
   published_at: string | null
   cluster_id: string | null
   image_url: string | null
+  cover_image_mode: ArticleCoverImageMode
   category: string | null
   genre: string | null
 }
@@ -90,7 +92,7 @@ export async function loadPublishedArticles(
 
   const { data, error } = await supabase
     .from('articles')
-    .select('id, slug, title, content, content_blocks, published_at, cluster_id, image_url, category, genre')
+    .select('id, slug, title, content, content_blocks, published_at, cluster_id, image_url, cover_image_mode, category, genre')
     .eq('published', true)
     .order('published_at', { ascending: false })
     .limit(limit)
@@ -112,11 +114,7 @@ export async function loadPublishedArticles(
     published_at: row.published_at,
     cluster_id: row.cluster_id,
     article_image_url: isUsableImageUrl(row.image_url) ? row.image_url : null,
-    imageUrl: isUsableImageUrl(row.image_url)
-      ? row.image_url
-      : row.cluster_id
-        ? imageByCluster.get(row.cluster_id) ?? null
-        : null,
+    imageUrl: resolveArticleListCoverImage({ mode: row.cover_image_mode, articleImageUrl: row.image_url, clusterImageUrl: row.cluster_id ? imageByCluster.get(row.cluster_id) : null, content: row.content }),
     category: row.category,
     genre: row.genre,
   }))
@@ -187,7 +185,7 @@ export async function loadArchivePage(
   const ids = pageRows.map((row) => row.id)
   const { data, error } = await supabase
     .from('articles')
-    .select('id, slug, title, content, content_blocks, published_at, cluster_id, image_url, category, genre')
+    .select('id, slug, title, content, content_blocks, published_at, cluster_id, image_url, cover_image_mode, category, genre')
     .eq('published', true)
     .in('id', ids)
 
@@ -258,7 +256,7 @@ export async function loadPopularArticles(
   const rankedSlugs = rankedViews.map((row) => row.slug)
   const { data: articleData, error: articleError } = await supabase
     .from('articles')
-    .select('id, slug, title, content, content_blocks, published_at, cluster_id, image_url, category, genre')
+    .select('id, slug, title, content, content_blocks, published_at, cluster_id, image_url, cover_image_mode, category, genre')
     .eq('published', true)
     .in('slug', rankedSlugs)
 
@@ -285,11 +283,7 @@ export async function loadPopularArticles(
     published_at: row.published_at,
     cluster_id: row.cluster_id,
     article_image_url: isUsableImageUrl(row.image_url) ? row.image_url : null,
-    imageUrl: isUsableImageUrl(row.image_url)
-      ? row.image_url
-      : row.cluster_id
-        ? imageByCluster.get(row.cluster_id) ?? null
-        : null,
+    imageUrl: resolveArticleListCoverImage({ mode: row.cover_image_mode, articleImageUrl: row.image_url, clusterImageUrl: row.cluster_id ? imageByCluster.get(row.cluster_id) : null, content: row.content }),
     category: row.category,
     genre: row.genre,
   }))
@@ -380,11 +374,7 @@ function toArticleListItem(
     published_at: row.published_at,
     cluster_id: row.cluster_id,
     article_image_url: isUsableImageUrl(row.image_url) ? row.image_url : null,
-    imageUrl: isUsableImageUrl(row.image_url)
-      ? row.image_url
-      : row.cluster_id
-        ? imageByCluster.get(row.cluster_id) ?? null
-        : null,
+    imageUrl: resolveArticleListCoverImage({ mode: row.cover_image_mode, articleImageUrl: row.image_url, clusterImageUrl: row.cluster_id ? imageByCluster.get(row.cluster_id) : null, content: row.content }),
     category: row.category,
     genre: row.genre,
   }
