@@ -7,10 +7,8 @@ import { ArticleRenderer } from '@/components/ArticleRenderer'
 import { EditorialArticleEditor } from '@/components/EditorialArticleEditor'
 import { supabase } from '@/lib/supabase'
 import type { DeployHookResult } from '@/lib/deploy-hook'
-import {
-  resolveHeroUnpublishOutcome,
-  type HeroDeployState,
-} from '@/lib/homepage-hero-mutation'
+import { type HeroDeployState } from '@/lib/homepage-hero-mutation'
+import { resolveHomepageUnpublishOutcome } from '@/lib/homepage-editorial-mutation'
 
 type AdminGroup = 'rss' | 'image' | 'interview'
 type RssTab = 'collect' | 'add-urls' | 'suggest' | 'articles' | 'cluster' | 'generate'
@@ -729,6 +727,22 @@ type AdminHomepageHero = {
   } | null
 }
 
+type HomepagePlacementName = 'homepage_hero' | 'homepage_featured_1' | 'homepage_featured_2' | 'homepage_featured_3'
+type HomepageEditorialState = {
+  placements: Array<{
+    placement: HomepagePlacementName
+    manualArticle: AdminHomepageHero['article']
+    effectiveArticle: AdminHomepageHero['article']
+    source: 'manual' | 'automatic' | 'latest'
+    updatedAt: string | null
+  }>
+  features: Array<{
+    articleId: string
+    featuredAt: string
+    article: AdminHomepageHero['article']
+  }>
+}
+
 type GenerateResult = {
   success: boolean
   article?: {
@@ -1415,6 +1429,22 @@ function ArticlesReviewTab() {
   const [isHeroDeploying, setIsHeroDeploying] = useState(false)
   const [heroDeploy, setHeroDeploy] = useState<HeroDeployState | null>(null)
   const [heroError, setHeroError] = useState('')
+  const [homepageEditorial, setHomepageEditorial] = useState<HomepageEditorialState | null>(null)
+  const [editorialProcessingId, setEditorialProcessingId] = useState<string | null>(null)
+  const homepageMutationBusy = processing !== null || heroProcessingId !== null ||
+    editorialProcessingId !== null || isHeroDeploying
+  const articleHomepageMutationBusy = homepageMutationBusy || editingId !== null || replacingId !== null
+
+  const loadHomepageEditorial = useCallback(async () => {
+    try {
+      const res = await fetch('/api/admin/homepage/placements')
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || data.error) setHeroError(data.error ?? '홈페이지 편집 상태를 불러오지 못했습니다.')
+      else setHomepageEditorial(data as HomepageEditorialState)
+    } catch {
+      setHeroError('홈페이지 편집 상태를 불러오지 못했습니다.')
+    }
+  }, [])
 
   const loadHomepageHero = useCallback(async () => {
     setIsHeroLoading(true)
@@ -1488,40 +1518,13 @@ function ArticlesReviewTab() {
     void loadHomepageHero()
   }, [loadHomepageHero])
 
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void loadHomepageEditorial()
+  }, [loadHomepageEditorial])
+
   const applyHeroDeployResult = (deploy: HeroDeployState) => {
     setHeroDeploy(deploy.status === 'not_required' ? null : deploy)
-  }
-
-  const handlePinHero = async (article: AdminArticle) => {
-    if (
-      homepageHero &&
-      homepageHero.articleId !== article.id &&
-      !window.confirm(`현재 Hero를 이 기사로 교체할까요?\n\n${article.title}`)
-    ) {
-      return
-    }
-
-    setHeroProcessingId(article.id)
-    setHeroError('')
-    setHeroDeploy(null)
-    try {
-      const res = await fetch('/api/admin/homepage/hero', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ articleId: article.id }),
-      })
-      const data = await res.json().catch(() => ({}))
-      if (!res.ok || data.error) {
-        setHeroError(data.error ?? 'Hero를 지정하지 못했습니다.')
-      } else {
-        applyHeroDeployResult(data.deploy as HeroDeployState)
-        await loadHomepageHero()
-      }
-    } catch {
-      setHeroError('Hero를 지정하지 못했습니다.')
-    } finally {
-      setHeroProcessingId(null)
-    }
   }
 
   const handleUnpinHero = async () => {
@@ -1535,7 +1538,7 @@ function ArticlesReviewTab() {
         setHeroError(data.error ?? 'Hero를 해제하지 못했습니다.')
       } else {
         applyHeroDeployResult(data.deploy as HeroDeployState)
-        await loadHomepageHero()
+        await Promise.all([loadHomepageHero(), loadHomepageEditorial()])
       }
     } catch {
       setHeroError('Hero를 해제하지 못했습니다.')
@@ -1548,7 +1551,7 @@ function ArticlesReviewTab() {
     setIsHeroDeploying(true)
     setHeroError('')
     try {
-      const res = await fetch('/api/admin/homepage/hero/deploy', { method: 'POST' })
+      const res = await fetch('/api/admin/homepage/deploy', { method: 'POST' })
       const data = await res.json().catch(() => ({}))
       if (!res.ok || data.error) {
         setHeroError(data.error ?? '재배포를 요청하지 못했습니다.')
@@ -1560,6 +1563,80 @@ function ArticlesReviewTab() {
     } finally {
       setIsHeroDeploying(false)
     }
+  }
+
+  const refreshHomepageState = async () => {
+    await Promise.all([loadHomepageHero(), loadHomepageEditorial()])
+  }
+
+  const handleSetFeature = async (article: AdminArticle, placement: HomepagePlacementName | null = null) => {
+    const target = placement ? homepageEditorial?.placements.find((item) => item.placement === placement) : null
+    const currentPlacement = homepageEditorial?.placements.find((item) => item.manualArticle?.id === article.id)
+    if (target?.manualArticle && target.manualArticle.id !== article.id && !window.confirm(`${placementLabel(placement!)}의 현재 기사를 교체할까요?`)) return
+    if (placement && currentPlacement && currentPlacement.placement !== placement && !window.confirm(`${placementLabel(currentPlacement.placement)}에서 ${placementLabel(placement)}로 이동할까요?`)) return
+    setEditorialProcessingId(article.id)
+    setHeroError('')
+    setHeroDeploy(null)
+    try {
+      const res = await fetch(`/api/admin/articles/${article.id}/feature`, {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ placement }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || data.error) setHeroError(data.error ?? 'Feature 상태를 저장하지 못했습니다.')
+      else {
+        applyHeroDeployResult(data.deploy as HeroDeployState)
+        await refreshHomepageState()
+      }
+    } catch { setHeroError('Feature 상태를 저장하지 못했습니다.') }
+    finally { setEditorialProcessingId(null) }
+  }
+
+  const handleSetPlacement = async (article: AdminArticle, placement: HomepagePlacementName) => {
+    const target = homepageEditorial?.placements.find((item) => item.placement === placement)
+    const current = homepageEditorial?.placements.find((item) => item.manualArticle?.id === article.id)
+    if (target?.manualArticle && target.manualArticle.id !== article.id && !window.confirm(`${placementLabel(placement)}의 현재 기사를 교체할까요?`)) return
+    if (current && current.placement !== placement && !window.confirm(`${placementLabel(current.placement)}에서 ${placementLabel(placement)}로 이동할까요?`)) return
+    setEditorialProcessingId(article.id)
+    setHeroError('')
+    setHeroDeploy(null)
+    try {
+      const res = await fetch(`/api/admin/homepage/placements/${placement}`, {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ articleId: article.id }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || data.error) setHeroError(data.error ?? '홈페이지 placement를 저장하지 못했습니다.')
+      else { applyHeroDeployResult(data.deploy as HeroDeployState); await refreshHomepageState() }
+    } catch { setHeroError('홈페이지 placement를 저장하지 못했습니다.') }
+    finally { setEditorialProcessingId(null) }
+  }
+
+  const handleClearPlacement = async (placement: HomepagePlacementName) => {
+    setEditorialProcessingId(placement)
+    setHeroError('')
+    setHeroDeploy(null)
+    try {
+      const res = await fetch(`/api/admin/homepage/placements/${placement}`, { method: 'DELETE' })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || data.error) setHeroError(data.error ?? '홈페이지 placement를 해제하지 못했습니다.')
+      else { applyHeroDeployResult(data.deploy as HeroDeployState); await refreshHomepageState() }
+    } catch { setHeroError('홈페이지 placement를 해제하지 못했습니다.') }
+    finally { setEditorialProcessingId(null) }
+  }
+
+  const handleRemoveFeature = async (article: AdminArticle) => {
+    const placements = homepageEditorial?.placements.filter((item) => item.manualArticle?.id === article.id) ?? []
+    const impact = placements.map((item) => placementLabel(item.placement)).join(', ')
+    if (!window.confirm(impact ? `Feature를 해제하면 ${impact} 수동 배치도 해제됩니다. 계속할까요?` : '이 기사의 Feature 자격을 해제할까요?')) return
+    setEditorialProcessingId(article.id)
+    setHeroError('')
+    setHeroDeploy(null)
+    try {
+      const res = await fetch(`/api/admin/articles/${article.id}/feature`, { method: 'DELETE' })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || data.error) setHeroError(data.error ?? 'Feature를 해제하지 못했습니다.')
+      else { applyHeroDeployResult(data.deploy as HeroDeployState); await refreshHomepageState() }
+    } catch { setHeroError('Feature를 해제하지 못했습니다.') }
+    finally { setEditorialProcessingId(null) }
   }
 
   const handlePublish = async (article: AdminArticle) => {
@@ -1587,14 +1664,19 @@ function ArticlesReviewTab() {
   }
 
   const handleUnpublish = async (article: AdminArticle) => {
-    const ok = window.confirm('이 기사를 게시 취소하시겠습니까?')
-    if (!ok) return
-
     const wasPinnedHero = homepageHero?.articleId === article.id
+    const wasHomepagePlacement = homepageEditorial?.placements.some((item) => item.manualArticle?.id === article.id) ?? false
+    const isFeature = homepageEditorial?.features.some((item) => item.articleId === article.id) ?? false
+    const prompt = wasHomepagePlacement
+      ? '이 기사의 Feature 자격과 수동 홈페이지 배치도 함께 해제됩니다. 게시 취소할까요?'
+      : isFeature
+        ? '이 기사의 Feature 자격도 함께 해제됩니다. 게시 취소할까요?'
+        : '이 기사를 게시 취소하시겠습니까?'
+    if (!window.confirm(prompt)) return
     setProcessing(article.id)
     setError('')
     setMessage('')
-    if (wasPinnedHero) setHeroDeploy(null)
+    if (isFeature) setHeroDeploy(null)
 
     try {
       const res = await fetch(`/api/articles/${article.id}/unpublish`, {
@@ -1606,13 +1688,15 @@ function ArticlesReviewTab() {
         setError(data.error)
       } else {
         setMessage(`게시 취소 완료: ${data.article?.title ?? article.title}`)
-        const heroOutcome = resolveHeroUnpublishOutcome(
-          wasPinnedHero,
+        const homepageOutcome = resolveHomepageUnpublishOutcome(
+          { wasPinnedHero, wasFeature: isFeature },
           data.deploy as DeployHookResult,
           heroDeploy
         )
-        setHeroDeploy(heroOutcome.deploy)
-        if (heroOutcome.reloadHero) await loadHomepageHero()
+        setHeroDeploy(homepageOutcome.deploy)
+        if (homepageOutcome.reloadHero && homepageOutcome.reloadEditorial) await refreshHomepageState()
+        else if (homepageOutcome.reloadHero) await loadHomepageHero()
+        else if (homepageOutcome.reloadEditorial) await loadHomepageEditorial()
         setArticles((prev) => prev.filter((a) => a.id !== article.id))
         setPublishedSearch('')
         setSubTab('draft')
@@ -1836,13 +1920,39 @@ function ArticlesReviewTab() {
             <button
               type="button"
               onClick={handleUnpinHero}
-              disabled={processing !== null || heroProcessingId !== null || isHeroDeploying}
+              disabled={homepageMutationBusy}
               className="rounded border border-blue-300 bg-white px-3 py-2 text-sm font-semibold text-blue-700 disabled:opacity-50"
             >
               {heroProcessingId !== null ? '처리 중...' : 'Hero 해제'}
             </button>
           )}
         </div>
+
+        {homepageEditorial && (
+          <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
+            {homepageEditorial.placements.map((item) => (
+              <div key={item.placement} className="rounded border border-blue-100 bg-white p-3">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-sm font-bold">{placementLabel(item.placement)}</p>
+                  <span className="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
+                    {item.source === 'manual' ? '수동 고정' : item.source === 'automatic' ? '자동 선택' : '최신 기사 자동 선택'}
+                  </span>
+                </div>
+                <p className="mt-2 text-sm text-gray-800">
+                  {(item.manualArticle ?? item.effectiveArticle)?.title ?? (item.placement === 'homepage_hero' ? '최신 공개 기사' : '선택 가능한 Feature 없음')}
+                </p>
+                {item.source === 'manual' && item.updatedAt && <p className="mt-1 text-xs text-gray-500">지정 시각 {formatDate(item.updatedAt)}</p>}
+                {item.source === 'manual' && (
+                  <button type="button" onClick={() => handleClearPlacement(item.placement)}
+                    disabled={homepageMutationBusy}
+                    className="mt-2 rounded border border-blue-200 px-2 py-1 text-xs font-semibold text-blue-700 disabled:opacity-50">
+                    수동 배치 해제
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
 
         {heroDeploy?.status === 'triggered' && (
           <p className="mt-3 text-sm text-green-700">
@@ -1858,7 +1968,7 @@ function ArticlesReviewTab() {
             <button
               type="button"
               onClick={handleRetryHeroDeploy}
-              disabled={isHeroDeploying || heroProcessingId !== null || processing !== null}
+              disabled={homepageMutationBusy}
               className="rounded border border-amber-300 bg-white px-3 py-1.5 font-semibold disabled:opacity-50"
             >
               {isHeroDeploying ? '재배포 요청 중...' : '재배포'}
@@ -1921,6 +2031,8 @@ function ArticlesReviewTab() {
           {articles.map((article) => {
             const isEditing = editingId === article.id
             const isReplacing = replacingId === article.id
+            const feature = homepageEditorial?.features.find((item) => item.articleId === article.id)
+            const manualPlacement = homepageEditorial?.placements.find((item) => item.manualArticle?.id === article.id)
             return (
               <article key={article.id} className="border rounded p-4">
                 <div className="flex items-start justify-between gap-4">
@@ -2057,6 +2169,11 @@ function ArticlesReviewTab() {
                               {article.genre}
                             </span>
                           )}
+                          {feature && (
+                            <span className="rounded bg-violet-100 px-2 py-0.5 font-semibold text-violet-700">
+                              Feature · {formatDate(feature.featuredAt)}
+                            </span>
+                          )}
                         </div>
                         <h3 className="text-lg font-semibold leading-snug">{article.title}</h3>
                         <p className="mt-2 text-sm text-gray-600 line-clamp-3">{article.content}</p>
@@ -2125,44 +2242,25 @@ function ArticlesReviewTab() {
                         </button>
                         {subTab === 'published' && (
                           <>
-                            {homepageHero?.articleId === article.id ? (
-                              <button
-                                type="button"
-                                onClick={handleUnpinHero}
-                                disabled={
-                                  processing !== null ||
-                                  editingId !== null ||
-                                  replacingId !== null ||
-                                  heroProcessingId !== null ||
-                                  isHeroDeploying
-                                }
-                                className="px-3 py-2 border border-blue-300 bg-blue-50 text-blue-700 text-sm rounded font-semibold disabled:opacity-50 whitespace-nowrap"
-                              >
-                                {heroProcessingId === article.id ? '처리 중...' : '현재 Hero · 해제'}
-                              </button>
+                            {!feature ? (
+                              <>
+                                <button type="button" onClick={() => handleSetFeature(article)} disabled={articleHomepageMutationBusy} className="px-3 py-2 border border-violet-300 text-violet-700 text-sm rounded font-semibold disabled:opacity-50 whitespace-nowrap">Feature 지정</button>
+                                {(['homepage_hero', 'homepage_featured_1', 'homepage_featured_2', 'homepage_featured_3'] as HomepagePlacementName[]).map((placement) => (
+                                  <button key={placement} type="button" onClick={() => handleSetFeature(article, placement)} disabled={articleHomepageMutationBusy} className="px-3 py-2 border border-violet-200 text-violet-700 text-sm rounded font-semibold disabled:opacity-50 whitespace-nowrap">Feature + {placementLabel(placement)}</button>
+                                ))}
+                              </>
                             ) : (
-                              <button
-                                type="button"
-                                onClick={() => handlePinHero(article)}
-                                disabled={
-                                  processing !== null ||
-                                  editingId !== null ||
-                                  replacingId !== null ||
-                                  heroProcessingId !== null ||
-                                  isHeroDeploying
-                                }
-                                className="px-3 py-2 border border-blue-300 text-blue-700 text-sm rounded font-semibold hover:bg-blue-50 disabled:opacity-50 whitespace-nowrap"
-                              >
-                                {heroProcessingId === article.id ? '처리 중...' : 'Hero로 지정'}
-                              </button>
+                              <>
+                                {(['homepage_hero', 'homepage_featured_1', 'homepage_featured_2', 'homepage_featured_3'] as HomepagePlacementName[]).map((placement) => (
+                                  <button key={placement} type="button" onClick={() => handleSetPlacement(article, placement)} disabled={articleHomepageMutationBusy} className={`px-3 py-2 border text-sm rounded font-semibold disabled:opacity-50 whitespace-nowrap ${manualPlacement?.placement === placement ? 'border-violet-400 bg-violet-50 text-violet-700' : 'border-gray-300 text-gray-600'}`}>{manualPlacement?.placement === placement ? `현재 ${placementLabel(placement)}` : `${placementLabel(placement)}로 지정`}</button>
+                                ))}
+                                <button type="button" onClick={() => handleRemoveFeature(article)} disabled={articleHomepageMutationBusy} className="px-3 py-2 border border-red-200 text-red-600 text-sm rounded font-semibold disabled:opacity-50 whitespace-nowrap">Feature 해제</button>
+                              </>
                             )}
                             <button
                               onClick={() => handleUnpublish(article)}
                               disabled={
-                                processing !== null ||
-                                editingId !== null ||
-                                replacingId !== null ||
-                                heroProcessingId !== null
+                                articleHomepageMutationBusy
                               }
                               className="px-3 py-2 border border-red-300 text-red-600 text-sm rounded font-semibold hover:bg-red-50 disabled:opacity-50 whitespace-nowrap"
                             >
@@ -2340,6 +2438,10 @@ function GenerateTab() {
       )}
     </div>
   )
+}
+
+function placementLabel(placement: HomepagePlacementName) {
+  return placement === 'homepage_hero' ? 'Hero' : `Featured #${placement.slice(-1)}`
 }
 
 function formatDate(value: string) {

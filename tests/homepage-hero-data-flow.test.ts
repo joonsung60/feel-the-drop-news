@@ -16,10 +16,9 @@ test('pinned article 별도 조회는 published 조건과 기존 cover projectio
   assert.match(loader, /toArticleListItem\(row, imageByCluster\)/)
 })
 
-test('홈페이지는 placement 오류를 non-fatal fallback하고 popular 입력을 재정렬하지 않는다', () => {
-  assert.match(page, /placement 조회 실패, 최신 기사로 대체/)
-  assert.match(page, /loadPublishedArticleById\(placement\.articleId\)/)
-  assert.match(page, /loadPopularArticles\(articles, 5\)/)
-  assert.match(page, /selectHomepageHero\(articles, pinnedArticle\)/)
+test('홈페이지는 placement 오류를 non-fatal fallback하고 popular 입력을 상위 20개로 보존한다', () => {
+  assert.match(page, /placement 조회가 불완전해 유효한 데이터만 사용/)
+  assert.match(page, /loadPublishedArticlesByIds\(missingPlacedIds\)/)
+  assert.match(page, /loadPopularArticles\(articles\.slice\(0, HOMEPAGE_POPULAR_INPUT_LIMIT\), 5\)/)
+  assert.match(page, /selectHomepageContent/)
 })
-

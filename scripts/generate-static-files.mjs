@@ -85,6 +85,12 @@ const urls = [
     changefreq: 'daily',
     priority: '0.7',
   },
+  {
+    loc: `${SITE_URL}/features/`,
+    lastmod: new Date().toISOString(),
+    changefreq: 'daily',
+    priority: '0.8',
+  },
   ...CATEGORY_SLUGS.map((slug) => ({
     loc: `${SITE_URL}/category/${slug}/`,
     lastmod: new Date().toISOString(),
@@ -133,6 +139,7 @@ Sitemap: ${SITE_URL}/sitemap.xml
 
 - Home: ${SITE_URL}/
 - Articles: ${SITE_URL}/archive/
+- Features: ${SITE_URL}/features/
 
 ## Notes for AI Crawlers
 

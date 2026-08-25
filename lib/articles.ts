@@ -128,6 +128,24 @@ export async function loadPublishedArticleById(
   return { article: toArticleListItem(row, imageByCluster), error: null }
 }
 
+export async function loadPublishedArticlesByIds(
+  ids: string[]
+): Promise<{ articles: ArticleListItem[]; error: string | null }> {
+  const uniqueIds = Array.from(new Set(ids))
+  if (uniqueIds.length === 0) return { articles: [], error: null }
+
+  const { data, error } = await supabase
+    .from('articles')
+    .select('id, slug, title, content, content_blocks, published_at, cluster_id, image_url, cover_image_mode, category, genre')
+    .eq('published', true)
+    .in('id', uniqueIds)
+  if (error) return { articles: [], error: error.message }
+
+  const rows = (data ?? []) as ArticleRow[]
+  const imageByCluster = await loadImagesByCluster(rows)
+  return { articles: rows.map((row) => toArticleListItem(row, imageByCluster)), error: null }
+}
+
 const loadPublishedArchiveIndex = cache(async (): Promise<{
   rows: ArchiveIndexRow[]
   error: string | null

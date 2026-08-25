@@ -1,16 +1,18 @@
 import Link from "next/link";
 import {
   loadPopularArticles,
-  loadPublishedArticleById,
   loadPublishedArticles,
+  loadPublishedArticlesByIds,
 } from "@/lib/articles";
 import type { ArticleListItem } from "@/lib/articles";
 import { ArticleCard } from "@/components/ArticleCard";
 import {
-  HOMEPAGE_LATEST_LIMIT,
-  selectHomepageHero,
-} from "@/lib/homepage-hero";
-import { loadHomepageHeroPlacement } from "@/lib/homepage-placement";
+  HOMEPAGE_LATEST_FETCH_LIMIT,
+  HOMEPAGE_POPULAR_INPUT_LIMIT,
+  selectHomepageContent,
+} from "@/lib/homepage-selection";
+import { loadHomepagePlacements } from "@/lib/homepage-placement";
+import { loadFeatureArticleIds, loadPublishedFeatureCandidates } from "@/lib/article-features";
 
 // ── 유틸 ──────────────────────────────────────────────
 
@@ -144,34 +146,55 @@ function ErrorBanner({ message }: { message: string }) {
 // ── 페이지 ────────────────────────────────────────────
 
 export default async function Home() {
-  const [{ articles, error }, placement] = await Promise.all([
-    loadPublishedArticles({ limit: HOMEPAGE_LATEST_LIMIT }),
-    loadHomepageHeroPlacement(),
+  const [{ articles, error }, placementResult, featureResult] = await Promise.all([
+    loadPublishedArticles({ limit: HOMEPAGE_LATEST_FETCH_LIMIT }),
+    loadHomepagePlacements(),
+    loadPublishedFeatureCandidates(10),
   ]);
 
-  if (placement.error) {
-    console.warn('[Homepage Hero] placement 조회 실패, 최신 기사로 대체:', placement.error);
+  if (placementResult.error || placementResult.missing.length > 0) {
+    console.warn('[Homepage] placement 조회가 불완전해 유효한 데이터만 사용합니다:', placementResult.error ?? placementResult.missing.join(', '));
+  }
+  if (featureResult.error) {
+    console.warn('[Homepage] Feature 조회 실패, Featured를 생략합니다:', featureResult.error);
   }
 
-  let pinnedArticle = placement.articleId
-    ? articles.find((article) => article.id === placement.articleId) ?? null
-    : null;
+  const placedIds = placementResult.placements.flatMap((row) => row.articleId ? [row.articleId] : []);
+  const articlesById = new Map(articles.map((article) => [article.id, article]));
+  const missingPlacedIds = placedIds.filter((id) => !articlesById.has(id));
+  const [placedResult, featureIdsResult] = await Promise.all([
+    loadPublishedArticlesByIds(missingPlacedIds),
+    featureResult.error ? Promise.resolve({ articleIds: new Set<string>(), error: featureResult.error }) : loadFeatureArticleIds(placedIds),
+  ]);
+  if (placedResult.error) console.warn('[Homepage] placed article 조회 실패:', placedResult.error);
+  if (featureIdsResult.error) console.warn('[Homepage] placement Feature 검증 실패:', featureIdsResult.error);
+  for (const article of placedResult.articles) articlesById.set(article.id, article);
 
-  if (placement.articleId && !pinnedArticle) {
-    const pinnedResult = await loadPublishedArticleById(placement.articleId);
-    if (pinnedResult.error) {
-      console.warn('[Homepage Hero] pinned article 조회 실패, 최신 기사로 대체:', pinnedResult.error);
-    }
-    pinnedArticle = pinnedResult.article;
-  }
-
-  const popular = await loadPopularArticles(articles, 5);
-  const { hero, latest } = selectHomepageHero(articles, pinnedArticle);
+  const featureArticleIds = featureResult.error
+    ? new Set<string>()
+    : new Set([...featureIdsResult.articleIds, ...featureResult.features.map((feature) => feature.article.id)]);
+  const popular = await loadPopularArticles(articles.slice(0, HOMEPAGE_POPULAR_INPUT_LIMIT), 5);
+  const { hero, featured, latest } = selectHomepageContent({
+    latestArticles: articles,
+    manualPlacements: placementResult.placements,
+    placementArticles: articlesById,
+    featureCandidates: featureResult.error ? [] : featureResult.features,
+    featureArticleIds,
+  });
 
   return (
     <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-8 py-6 md:py-8">
       {/* 히어로 */}
       {hero && <Hero article={hero} />}
+
+      {featured.length > 0 && (
+        <section className="mb-10 md:mb-14">
+          <SectionHeader label="특집" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
+            {featured.map(({ article }) => <ArticleCard key={article.id} article={article} />)}
+          </div>
+        </section>
+      )}
 
       {error && <ErrorBanner message={error} />}
 
