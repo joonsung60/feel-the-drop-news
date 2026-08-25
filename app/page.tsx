@@ -1,7 +1,16 @@
 import Link from "next/link";
-import { loadPopularArticles, loadPublishedArticles } from "@/lib/articles";
+import {
+  loadPopularArticles,
+  loadPublishedArticleById,
+  loadPublishedArticles,
+} from "@/lib/articles";
 import type { ArticleListItem } from "@/lib/articles";
 import { ArticleCard } from "@/components/ArticleCard";
+import {
+  HOMEPAGE_LATEST_LIMIT,
+  selectHomepageHero,
+} from "@/lib/homepage-hero";
+import { loadHomepageHeroPlacement } from "@/lib/homepage-placement";
 
 // ── 유틸 ──────────────────────────────────────────────
 
@@ -135,11 +144,29 @@ function ErrorBanner({ message }: { message: string }) {
 // ── 페이지 ────────────────────────────────────────────
 
 export default async function Home() {
-  // 기존 시그니처 그대로 유지
-  const { articles, error } = await loadPublishedArticles({ limit: 20 });
+  const [{ articles, error }, placement] = await Promise.all([
+    loadPublishedArticles({ limit: HOMEPAGE_LATEST_LIMIT }),
+    loadHomepageHeroPlacement(),
+  ]);
+
+  if (placement.error) {
+    console.warn('[Homepage Hero] placement 조회 실패, 최신 기사로 대체:', placement.error);
+  }
+
+  let pinnedArticle = placement.articleId
+    ? articles.find((article) => article.id === placement.articleId) ?? null
+    : null;
+
+  if (placement.articleId && !pinnedArticle) {
+    const pinnedResult = await loadPublishedArticleById(placement.articleId);
+    if (pinnedResult.error) {
+      console.warn('[Homepage Hero] pinned article 조회 실패, 최신 기사로 대체:', pinnedResult.error);
+    }
+    pinnedArticle = pinnedResult.article;
+  }
 
   const popular = await loadPopularArticles(articles, 5);
-  const [hero, ...rest] = articles;
+  const { hero, latest } = selectHomepageHero(articles, pinnedArticle);
 
   return (
     <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-8 py-6 md:py-8">
@@ -152,11 +179,11 @@ export default async function Home() {
         {/* 기사 그리드 */}
         <section className="flex-1 min-w-0">
           <SectionHeader label="최신 기사" />
-          {rest.length === 0 && !error && (
+          {latest.length === 0 && !error && (
             <p className="text-sm text-gray-400">아직 발행된 기사가 없습니다.</p>
           )}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
-            {rest.map((article) => (
+            {latest.map((article) => (
               <ArticleCard key={article.id} article={article} />
             ))}
           </div>

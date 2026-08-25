@@ -6,6 +6,11 @@ import { ImageCropper, getCroppedDataUrl } from '@/components/ImageCropper'
 import { ArticleRenderer } from '@/components/ArticleRenderer'
 import { EditorialArticleEditor } from '@/components/EditorialArticleEditor'
 import { supabase } from '@/lib/supabase'
+import type { DeployHookResult } from '@/lib/deploy-hook'
+import {
+  resolveHeroUnpublishOutcome,
+  type HeroDeployState,
+} from '@/lib/homepage-hero-mutation'
 
 type AdminGroup = 'rss' | 'image' | 'interview'
 type RssTab = 'collect' | 'add-urls' | 'suggest' | 'articles' | 'cluster' | 'generate'
@@ -711,6 +716,19 @@ type ArticlePreviewPayload = {
   leadingImageUrl: string | null
 }
 
+type AdminHomepageHero = {
+  articleId: string
+  updatedAt: string
+  effective: boolean
+  article: {
+    id: string
+    title: string
+    slug: string | null
+    published: boolean
+    publishedAt: string | null
+  } | null
+}
+
 type GenerateResult = {
   success: boolean
   article?: {
@@ -1391,6 +1409,30 @@ function ArticlesReviewTab() {
   const [preview, setPreview] = useState<ArticlePreviewPayload | null>(null)
   const [isPreviewLoading, setIsPreviewLoading] = useState(false)
   const [editorArticleId, setEditorArticleId] = useState<string | null | undefined>(undefined)
+  const [homepageHero, setHomepageHero] = useState<AdminHomepageHero | null>(null)
+  const [isHeroLoading, setIsHeroLoading] = useState(true)
+  const [heroProcessingId, setHeroProcessingId] = useState<string | null>(null)
+  const [isHeroDeploying, setIsHeroDeploying] = useState(false)
+  const [heroDeploy, setHeroDeploy] = useState<HeroDeployState | null>(null)
+  const [heroError, setHeroError] = useState('')
+
+  const loadHomepageHero = useCallback(async () => {
+    setIsHeroLoading(true)
+    setHeroError('')
+    try {
+      const res = await fetch('/api/admin/homepage/hero')
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || data.error) {
+        setHeroError(data.error ?? '현재 Hero를 불러오지 못했습니다.')
+      } else {
+        setHomepageHero((data.hero ?? null) as AdminHomepageHero | null)
+      }
+    } catch {
+      setHeroError('현재 Hero를 불러오지 못했습니다.')
+    } finally {
+      setIsHeroLoading(false)
+    }
+  }, [])
 
   const load = useCallback(async (tab: ArticleReviewSubTab, search: string = '') => {
     setIsLoading(true)
@@ -1441,6 +1483,85 @@ function ArticlesReviewTab() {
     return () => clearTimeout(timer)
   }, [subTab, publishedSearch, load])
 
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void loadHomepageHero()
+  }, [loadHomepageHero])
+
+  const applyHeroDeployResult = (deploy: HeroDeployState) => {
+    setHeroDeploy(deploy.status === 'not_required' ? null : deploy)
+  }
+
+  const handlePinHero = async (article: AdminArticle) => {
+    if (
+      homepageHero &&
+      homepageHero.articleId !== article.id &&
+      !window.confirm(`현재 Hero를 이 기사로 교체할까요?\n\n${article.title}`)
+    ) {
+      return
+    }
+
+    setHeroProcessingId(article.id)
+    setHeroError('')
+    setHeroDeploy(null)
+    try {
+      const res = await fetch('/api/admin/homepage/hero', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ articleId: article.id }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || data.error) {
+        setHeroError(data.error ?? 'Hero를 지정하지 못했습니다.')
+      } else {
+        applyHeroDeployResult(data.deploy as HeroDeployState)
+        await loadHomepageHero()
+      }
+    } catch {
+      setHeroError('Hero를 지정하지 못했습니다.')
+    } finally {
+      setHeroProcessingId(null)
+    }
+  }
+
+  const handleUnpinHero = async () => {
+    setHeroProcessingId(homepageHero?.articleId ?? 'unpin')
+    setHeroError('')
+    setHeroDeploy(null)
+    try {
+      const res = await fetch('/api/admin/homepage/hero', { method: 'DELETE' })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || data.error) {
+        setHeroError(data.error ?? 'Hero를 해제하지 못했습니다.')
+      } else {
+        applyHeroDeployResult(data.deploy as HeroDeployState)
+        await loadHomepageHero()
+      }
+    } catch {
+      setHeroError('Hero를 해제하지 못했습니다.')
+    } finally {
+      setHeroProcessingId(null)
+    }
+  }
+
+  const handleRetryHeroDeploy = async () => {
+    setIsHeroDeploying(true)
+    setHeroError('')
+    try {
+      const res = await fetch('/api/admin/homepage/hero/deploy', { method: 'POST' })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || data.error) {
+        setHeroError(data.error ?? '재배포를 요청하지 못했습니다.')
+      } else {
+        applyHeroDeployResult(data.deploy as HeroDeployState)
+      }
+    } catch {
+      setHeroError('재배포를 요청하지 못했습니다.')
+    } finally {
+      setIsHeroDeploying(false)
+    }
+  }
+
   const handlePublish = async (article: AdminArticle) => {
     setProcessing(article.id)
     setError('')
@@ -1469,9 +1590,11 @@ function ArticlesReviewTab() {
     const ok = window.confirm('이 기사를 게시 취소하시겠습니까?')
     if (!ok) return
 
+    const wasPinnedHero = homepageHero?.articleId === article.id
     setProcessing(article.id)
     setError('')
     setMessage('')
+    if (wasPinnedHero) setHeroDeploy(null)
 
     try {
       const res = await fetch(`/api/articles/${article.id}/unpublish`, {
@@ -1483,6 +1606,13 @@ function ArticlesReviewTab() {
         setError(data.error)
       } else {
         setMessage(`게시 취소 완료: ${data.article?.title ?? article.title}`)
+        const heroOutcome = resolveHeroUnpublishOutcome(
+          wasPinnedHero,
+          data.deploy as DeployHookResult,
+          heroDeploy
+        )
+        setHeroDeploy(heroOutcome.deploy)
+        if (heroOutcome.reloadHero) await loadHomepageHero()
         setArticles((prev) => prev.filter((a) => a.id !== article.id))
         setPublishedSearch('')
         setSubTab('draft')
@@ -1673,6 +1803,70 @@ function ArticlesReviewTab() {
       >
         백지에서 새 기사 작성
       </button>
+
+      <section className="mb-6 rounded border border-blue-200 bg-blue-50 p-4">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-blue-700">
+              현재 홈페이지 Hero
+            </p>
+            {isHeroLoading ? (
+              <p className="mt-2 text-sm text-gray-500">불러오는 중...</p>
+            ) : homepageHero ? (
+              <div className="mt-2">
+                <p className="font-semibold text-gray-900">
+                  {homepageHero.article?.title ?? `삭제된 기사 (${homepageHero.articleId})`}
+                </p>
+                <p className="mt-1 text-xs text-gray-500">
+                  지정 시각 {formatDate(homepageHero.updatedAt)}
+                </p>
+                {!homepageHero.effective && (
+                  <p className="mt-2 text-sm text-amber-700">
+                    현재 기사가 공개 상태가 아니므로 홈페이지는 최신 기사로 대체됩니다.
+                  </p>
+                )}
+              </div>
+            ) : (
+              <p className="mt-2 text-sm text-gray-700">
+                자동 선택 중 — 가장 최근 공개 기사가 Hero로 표시됩니다.
+              </p>
+            )}
+          </div>
+          {homepageHero && (
+            <button
+              type="button"
+              onClick={handleUnpinHero}
+              disabled={processing !== null || heroProcessingId !== null || isHeroDeploying}
+              className="rounded border border-blue-300 bg-white px-3 py-2 text-sm font-semibold text-blue-700 disabled:opacity-50"
+            >
+              {heroProcessingId !== null ? '처리 중...' : 'Hero 해제'}
+            </button>
+          )}
+        </div>
+
+        {heroDeploy?.status === 'triggered' && (
+          <p className="mt-3 text-sm text-green-700">
+            {heroDeploy.message}
+          </p>
+        )}
+        {(heroDeploy?.status === 'cooldown' || heroDeploy?.status === 'failed') && (
+          <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-amber-800">
+            <p>
+              {heroDeploy.warning}
+              {heroDeploy.status === 'cooldown' && ' 잠시 후 다시 시도해주세요.'}
+            </p>
+            <button
+              type="button"
+              onClick={handleRetryHeroDeploy}
+              disabled={isHeroDeploying || heroProcessingId !== null || processing !== null}
+              className="rounded border border-amber-300 bg-white px-3 py-1.5 font-semibold disabled:opacity-50"
+            >
+              {isHeroDeploying ? '재배포 요청 중...' : '재배포'}
+            </button>
+          </div>
+        )}
+        {heroError && <p className="mt-3 text-sm text-red-600">{heroError}</p>}
+      </section>
 
       <div className="flex gap-2 mb-4 border-b text-sm">
         {[
@@ -1870,7 +2064,7 @@ function ArticlesReviewTab() {
                     )}
                   </div>
 
-                  <div className="flex shrink-0 gap-2">
+                  <div className="flex shrink-0 flex-wrap justify-end gap-2">
                     {isReplacing ? (
                       <>
                         <button
@@ -1930,13 +2124,51 @@ function ArticlesReviewTab() {
                           이미지 교체
                         </button>
                         {subTab === 'published' && (
-                          <button
-                            onClick={() => handleUnpublish(article)}
-                            disabled={processing !== null || editingId !== null || replacingId !== null}
-                            className="px-3 py-2 border border-red-300 text-red-600 text-sm rounded font-semibold hover:bg-red-50 disabled:opacity-50 whitespace-nowrap"
-                          >
-                            {processing === article.id ? '처리 중...' : '게시 취소'}
-                          </button>
+                          <>
+                            {homepageHero?.articleId === article.id ? (
+                              <button
+                                type="button"
+                                onClick={handleUnpinHero}
+                                disabled={
+                                  processing !== null ||
+                                  editingId !== null ||
+                                  replacingId !== null ||
+                                  heroProcessingId !== null ||
+                                  isHeroDeploying
+                                }
+                                className="px-3 py-2 border border-blue-300 bg-blue-50 text-blue-700 text-sm rounded font-semibold disabled:opacity-50 whitespace-nowrap"
+                              >
+                                {heroProcessingId === article.id ? '처리 중...' : '현재 Hero · 해제'}
+                              </button>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => handlePinHero(article)}
+                                disabled={
+                                  processing !== null ||
+                                  editingId !== null ||
+                                  replacingId !== null ||
+                                  heroProcessingId !== null ||
+                                  isHeroDeploying
+                                }
+                                className="px-3 py-2 border border-blue-300 text-blue-700 text-sm rounded font-semibold hover:bg-blue-50 disabled:opacity-50 whitespace-nowrap"
+                              >
+                                {heroProcessingId === article.id ? '처리 중...' : 'Hero로 지정'}
+                              </button>
+                            )}
+                            <button
+                              onClick={() => handleUnpublish(article)}
+                              disabled={
+                                processing !== null ||
+                                editingId !== null ||
+                                replacingId !== null ||
+                                heroProcessingId !== null
+                              }
+                              className="px-3 py-2 border border-red-300 text-red-600 text-sm rounded font-semibold hover:bg-red-50 disabled:opacity-50 whitespace-nowrap"
+                            >
+                              {processing === article.id ? '처리 중...' : '게시 취소'}
+                            </button>
+                          </>
                         )}
                         {subTab === 'draft' && (
                           <>

@@ -105,21 +105,27 @@ export async function loadPublishedArticles(
 
   const imageByCluster = await loadImagesByCluster(rows)
 
-  const articles: ArticleListItem[] = rows.map((row) => ({
-    id: row.id,
-    slug: row.slug,
-    title: row.title,
-    content: row.content,
-    content_blocks: row.content_blocks,
-    published_at: row.published_at,
-    cluster_id: row.cluster_id,
-    article_image_url: isUsableImageUrl(row.image_url) ? row.image_url : null,
-    imageUrl: resolveArticleListCoverImage({ mode: row.cover_image_mode, articleImageUrl: row.image_url, clusterImageUrl: row.cluster_id ? imageByCluster.get(row.cluster_id) : null, content: row.content }),
-    category: row.category,
-    genre: row.genre,
-  }))
+  const articles = rows.map((row) => toArticleListItem(row, imageByCluster))
 
   return { articles, error: null }
+}
+
+export async function loadPublishedArticleById(
+  id: string
+): Promise<{ article: ArticleListItem | null; error: string | null }> {
+  const { data, error } = await supabase
+    .from('articles')
+    .select('id, slug, title, content, content_blocks, published_at, cluster_id, image_url, cover_image_mode, category, genre')
+    .eq('id', id)
+    .eq('published', true)
+    .maybeSingle()
+
+  if (error) return { article: null, error: error.message }
+  if (!data) return { article: null, error: null }
+
+  const row = data as ArticleRow
+  const imageByCluster = await loadImagesByCluster([row])
+  return { article: toArticleListItem(row, imageByCluster), error: null }
 }
 
 const loadPublishedArchiveIndex = cache(async (): Promise<{
