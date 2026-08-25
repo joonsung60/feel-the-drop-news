@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin'
 import { triggerDeployHook } from '@/lib/deploy-hook'
+import { completeArticleUnpublish } from '@/lib/article-unpublish'
 
 export async function PATCH(
   _req: NextRequest,
@@ -30,18 +31,22 @@ export async function PATCH(
     return NextResponse.json({ error: '이미 게시 취소된 기사입니다.' }, { status: 400 })
   }
 
-  const { data, error } = await supabase
-    .from('articles')
-    .update({ published: false })
-    .eq('id', id)
-    .select('id, title, content, published, published_at, created_at, updated_at, cluster_id, image_url, slug, category, genre')
-    .maybeSingle()
+  const result = await completeArticleUnpublish({
+    updateArticle: async () => {
+      const { data, error } = await supabase
+        .from('articles')
+        .update({ published: false })
+        .eq('id', id)
+        .select('id, title, content, published, published_at, created_at, updated_at, cluster_id, image_url, slug, category, genre')
+        .maybeSingle()
+      return { data, error }
+    },
+    triggerDeploy: triggerDeployHook,
+  })
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+  if (result.error) {
+    return NextResponse.json({ error: result.error }, { status: 500 })
   }
 
-  await triggerDeployHook()
-
-  return NextResponse.json({ article: data })
+  return NextResponse.json({ article: result.article, deploy: result.deploy })
 }
