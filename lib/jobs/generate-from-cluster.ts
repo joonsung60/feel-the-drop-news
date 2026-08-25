@@ -1,5 +1,6 @@
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin'
 import { cleanArticleText, extractArticleText } from '@/lib/article-extraction'
+import editorialTerms from '@/lib/editorial-terms.json'
 import entityDict from '@/lib/edm-entities-v2.json'
 import entitySurfacePolicy from '@/lib/entity-surface-policy.json'
 import {
@@ -12,6 +13,10 @@ import {
   applyDisplayNameMappingToTitle,
   applyKoreanAvoidCorrections,
 } from '@/lib/jobs/entity-display-name'
+import {
+  applyKoreanEditorialTermCorrections,
+  formatKoreanEditorialTermRules,
+} from '@/lib/jobs/editorial-terms'
 import { SYSTEM_PROMPT_A } from '@/lib/prompts'
 import { findGenre } from '@/lib/taxonomy'
 
@@ -286,6 +291,7 @@ async function generateKoreanArticle(articles: SourceArticle[]): Promise<Generat
   const displayNameRules = sourceDisplayNames.length > 0
     ? sourceDisplayNames.map(({ en, ko }) => `- ${en} → ${ko}`).join('\n')
     : '- 허용된 한국어 고유명사 표기 없음 — 원문 영어 표기를 유지'
+  const editorialTermRules = formatKoreanEditorialTermRules(editorialTerms.korean_terms)
   const articlesText = articles
     .map((article, index) => {
       const publishedAt = formatSourceDate(article.publishedAt)
@@ -326,6 +332,10 @@ async function generateKoreanArticle(articles: SourceArticle[]): Promise<Generat
 - 목록에 없거나, 값이 영문과 같거나, 한국어 표기가 애매한 아티스트명·장소명·행사명은 영문 그대로 유지하세요.
 - 모델 지식으로 새 한국어 표기나 음역을 만들지 마세요. 예: SOURCE_ARTIST, SOURCE_FESTIVAL은 목록에 한국어 값이 없으면 원문 그대로 써야 합니다.
 ${displayNameRules}
+
+[editorialTermRules]
+아래 음악 업계 용어는 지정된 한국어 표기를 사용하세요.
+${editorialTermRules}
 
 [출력 지시]
 - 소스 내용을 그대로 복사하지 마세요.
@@ -372,8 +382,14 @@ ${articlesText}
     }
     const generated = {
       ...parsed,
-      title: applyDisplayNameMappingToTitle(parsed.title, sourceDisplayNames),
-      content: applyKoreanAvoidCorrections(parsed.content, sourceDisplayNames),
+      title: applyKoreanEditorialTermCorrections(
+        applyDisplayNameMappingToTitle(parsed.title, sourceDisplayNames),
+        editorialTerms.korean_terms,
+      ),
+      content: applyKoreanEditorialTermCorrections(
+        applyKoreanAvoidCorrections(parsed.content, sourceDisplayNames),
+        editorialTerms.korean_terms,
+      ),
     }
 
     const validationError = validateKoreanArticle(generated)
