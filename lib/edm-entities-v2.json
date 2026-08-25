@@ -1,7 +1,7 @@
 {
   "schema_version": "2.0",
   "title": "FEEL THE DROP EDM Entity Dictionary (SOT)",
-  "last_reviewed": "2026-08-24",
+  "last_reviewed": "2026-08-25",
   "scope": "EDM/electronic music artists, festivals, venues, labels, equipment brands, and selected editorial genre terms. Korea + Japan + global coverage.",
   "usage_policy": {
     "english": "Preserve exact capitalization, spacing, punctuation, and accents in `en`.",
@@ -19,7 +19,7 @@
     "label": 49,
     "venue": 42,
     "total": 575,
-    "ko_established": 92
+    "ko_established": 93
   },
   "entities": [
     {
@@ -975,12 +975,15 @@
       "en": "Amelie Lens",
       "aliases_en": [],
       "ko": "아멜리 렌즈",
-      "ko_status": "none",
+      "ko_status": "established",
       "ko_avoid": ["아멜리에 렌즈", "아멜리아 렌즈", "아멜리 렌스"],
       "tier": "A",
       "weight": 1.0,
       "region": "EU",
-      "ko_source": null
+      "ko_source": {
+        "name": "FEEL THE DROP 편집 표기",
+        "url": "editorial"
+      }
     },
     {
       "id": "artist_nina_kraviz",
@@ -2494,15 +2497,17 @@
       "type": "artist",
       "en": "Sasha",
       "aliases_en": [],
-      "ko": "샤샤",
+      "ko": "사샤",
       "ko_status": "established",
-      "ko_avoid": [],
+      "ko_avoid": [
+        "샤샤"
+      ],
       "tier": "A",
       "weight": 1.0,
       "region": "UK",
       "ko_source": {
-        "name": "울트라 코리아 2017 1차 라인업 발표 기사",
-        "url": "https://www.maniareport.com/view.php?ud=201703131358080212555nr_19"
+        "name": "FEEL THE DROP 편집 표기",
+        "url": "editorial"
       }
     },
     {

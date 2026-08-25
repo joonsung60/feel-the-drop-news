@@ -1,0 +1,15 @@
+{
+  "korean_terms": [
+    {
+      "sources": [
+        "music publishing",
+        "音楽出版"
+      ],
+      "preferred": "퍼블리싱",
+      "avoid": [
+        "음악 출판"
+      ],
+      "guidance": "음악 산업 문맥에서는 '출판'으로 번역하지 말고 '퍼블리싱'을 사용"
+    }
+  ]
+}

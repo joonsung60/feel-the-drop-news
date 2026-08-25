@@ -26,6 +26,8 @@ const dictionary = JSON.parse(
 const displayNames = getEstablishedEntityDisplayNames(dictionary.entities)
 const carlCox = dictionary.entities.find(({ id }) => id === 'artist_carl_cox')
 const organicHouse = dictionary.entities.find(({ id }) => id === 'genre_organic_house')
+const sasha = dictionary.entities.find(({ id }) => id === 'artist_sasha')
+const amelieLens = dictionary.entities.find(({ id }) => id === 'artist_amelie_lens')
 
 test('Carl Cox is an established Korean entity and dictionary count is accurate', () => {
   assert.ok(carlCox)
@@ -50,6 +52,33 @@ test('organic house uses the editorial Korean genre name and corrects literal tr
   assert.equal(
     applyKoreanAvoidCorrections('유기적인 하우스와 유기 하우스 음악을 선보인다.', displayNames),
     '오가닉 하우스와 오가닉 하우스 음악을 선보인다.'
+  )
+})
+
+test('Sasha uses the editorial Korean display name', () => {
+  assert.ok(sasha)
+  assert.equal(sasha.ko, '사샤')
+  assert.equal(sasha.ko_status, 'established')
+  assert.deepEqual(sasha.ko_avoid, ['샤샤'])
+  assert.equal(applyDisplayNameMappingToTitle('Sasha 공연 확정', displayNames), '사샤 공연 확정')
+  assert.equal(
+    applyKoreanAvoidCorrections('샤샤(Sasha)가 공연한다.', displayNames),
+    '사샤(Sasha)가 공연한다.'
+  )
+})
+
+test('Amelie Lens is an active established display name', () => {
+  assert.ok(amelieLens)
+  assert.equal(amelieLens.ko, '아멜리 렌즈')
+  assert.equal(amelieLens.ko_status, 'established')
+  assert.ok(amelieLens.ko_avoid.includes('아멜리아 렌즈'))
+  assert.equal(
+    applyDisplayNameMappingToTitle('Amelie Lens & Sara Landry 첫 B2B', displayNames),
+    '아멜리 렌즈 & Sara Landry 첫 B2B'
+  )
+  assert.equal(
+    applyKoreanAvoidCorrections('아멜리아 렌즈(Amelie Lens)가 공연했다.', displayNames),
+    '아멜리 렌즈(Amelie Lens)가 공연했다.'
   )
 })
 
