@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import test from 'node:test'
 
-const sql = readFileSync(path.resolve('supabase/migrations/20260825220000_feature_collection_homepage_placements.sql'), 'utf8')
+const sql = readFileSync(path.resolve('supabase/migrations/20260825145032_feature_collection_homepage_placements.sql'), 'utf8')
 
 test('Feature schema, 정렬 index, 네 singleton과 Feature-only unique FK를 정의한다', () => {
   assert.match(sql, /create table public\.article_features/)
