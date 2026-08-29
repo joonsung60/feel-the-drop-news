@@ -2,7 +2,14 @@ import { supabaseAdmin as supabase } from '@/lib/supabase-admin'
 import { HOMEPAGE_PLACEMENTS, type HomepagePlacement } from '@/lib/homepage-selection'
 import type { EditorialMutationResult, EditorialMutationStatus } from '@/lib/homepage-editorial-mutation'
 
-type ArticleSummary = { id: string; title: string; slug: string | null; published: boolean; published_at: string | null }
+type ArticleSummary = {
+  id: string
+  title: string
+  slug: string | null
+  published: boolean
+  published_at: string | null
+  category: string | null
+}
 type PlacementRow = { placement: HomepagePlacement; article_id: string | null; updated_at: string }
 type FeatureRow = { article_id: string; featured_at: string }
 type AdminPlacementState = {
@@ -33,7 +40,7 @@ export async function loadAdminHomepageEditorialState() {
   const features = (featureData ?? []) as FeatureRow[]
   const ids = Array.from(new Set([...placements.flatMap((row) => row.article_id ? [row.article_id] : []), ...features.map((row) => row.article_id)]))
   const { data: articleData, error: articleError } = ids.length
-    ? await supabase.from('articles').select('id, title, slug, published, published_at').in('id', ids)
+    ? await supabase.from('articles').select('id, title, slug, published, published_at, category').in('id', ids)
     : { data: [], error: null }
   if (articleError) throw new Error(articleError.message)
   const articles = (articleData ?? []) as ArticleSummary[]

@@ -8,7 +8,10 @@ import { EditorialArticleEditor } from '@/components/EditorialArticleEditor'
 import { supabase } from '@/lib/supabase'
 import type { DeployHookResult } from '@/lib/deploy-hook'
 import { type HeroDeployState } from '@/lib/homepage-hero-mutation'
-import { resolveHomepageUnpublishOutcome } from '@/lib/homepage-editorial-mutation'
+import {
+  confirmAndApplyHomepagePlacement,
+  resolveHomepageUnpublishOutcome,
+} from '@/lib/homepage-editorial-mutation'
 
 type AdminGroup = 'rss' | 'image' | 'interview'
 type RssTab = 'collect' | 'add-urls' | 'suggest' | 'articles' | 'cluster' | 'generate'
@@ -728,18 +731,19 @@ type AdminHomepageHero = {
 }
 
 type HomepagePlacementName = 'homepage_hero' | 'homepage_featured_1' | 'homepage_featured_2' | 'homepage_featured_3'
+type HomepageEditorialArticle = NonNullable<AdminHomepageHero['article']> & { category: string | null }
 type HomepageEditorialState = {
   placements: Array<{
     placement: HomepagePlacementName
-    manualArticle: AdminHomepageHero['article']
-    effectiveArticle: AdminHomepageHero['article']
+    manualArticle: HomepageEditorialArticle | null
+    effectiveArticle: HomepageEditorialArticle | null
     source: 'manual' | 'automatic' | 'latest'
     updatedAt: string | null
   }>
   features: Array<{
     articleId: string
     featuredAt: string
-    article: AdminHomepageHero['article']
+    article: HomepageEditorialArticle
   }>
 }
 
@@ -1431,6 +1435,8 @@ function ArticlesReviewTab() {
   const [heroError, setHeroError] = useState('')
   const [homepageEditorial, setHomepageEditorial] = useState<HomepageEditorialState | null>(null)
   const [editorialProcessingId, setEditorialProcessingId] = useState<string | null>(null)
+  const [draggedFeatureId, setDraggedFeatureId] = useState<string | null>(null)
+  const [dragOverPlacement, setDragOverPlacement] = useState<HomepagePlacementName | null>(null)
   const homepageMutationBusy = processing !== null || heroProcessingId !== null ||
     editorialProcessingId !== null || isHeroDeploying
   const articleHomepageMutationBusy = homepageMutationBusy || editingId !== null || replacingId !== null
@@ -1527,26 +1533,6 @@ function ArticlesReviewTab() {
     setHeroDeploy(deploy.status === 'not_required' ? null : deploy)
   }
 
-  const handleUnpinHero = async () => {
-    setHeroProcessingId(homepageHero?.articleId ?? 'unpin')
-    setHeroError('')
-    setHeroDeploy(null)
-    try {
-      const res = await fetch('/api/admin/homepage/hero', { method: 'DELETE' })
-      const data = await res.json().catch(() => ({}))
-      if (!res.ok || data.error) {
-        setHeroError(data.error ?? 'Hero를 해제하지 못했습니다.')
-      } else {
-        applyHeroDeployResult(data.deploy as HeroDeployState)
-        await Promise.all([loadHomepageHero(), loadHomepageEditorial()])
-      }
-    } catch {
-      setHeroError('Hero를 해제하지 못했습니다.')
-    } finally {
-      setHeroProcessingId(null)
-    }
-  }
-
   const handleRetryHeroDeploy = async () => {
     setIsHeroDeploying(true)
     setHeroError('')
@@ -1569,17 +1555,13 @@ function ArticlesReviewTab() {
     await Promise.all([loadHomepageHero(), loadHomepageEditorial()])
   }
 
-  const handleSetFeature = async (article: AdminArticle, placement: HomepagePlacementName | null = null) => {
-    const target = placement ? homepageEditorial?.placements.find((item) => item.placement === placement) : null
-    const currentPlacement = homepageEditorial?.placements.find((item) => item.manualArticle?.id === article.id)
-    if (target?.manualArticle && target.manualArticle.id !== article.id && !window.confirm(`${placementLabel(placement!)}의 현재 기사를 교체할까요?`)) return
-    if (placement && currentPlacement && currentPlacement.placement !== placement && !window.confirm(`${placementLabel(currentPlacement.placement)}에서 ${placementLabel(placement)}로 이동할까요?`)) return
+  const handleSetFeature = async (article: AdminArticle) => {
     setEditorialProcessingId(article.id)
     setHeroError('')
     setHeroDeploy(null)
     try {
       const res = await fetch(`/api/admin/articles/${article.id}/feature`, {
-        method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ placement }),
+        method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ placement: null }),
       })
       const data = await res.json().catch(() => ({}))
       if (!res.ok || data.error) setHeroError(data.error ?? 'Feature 상태를 저장하지 못했습니다.')
@@ -1591,26 +1573,34 @@ function ArticlesReviewTab() {
     finally { setEditorialProcessingId(null) }
   }
 
-  const handleSetPlacement = async (article: AdminArticle, placement: HomepagePlacementName) => {
+  const handleSetPlacement = async (article: { id: string; title: string }, placement: HomepagePlacementName) => {
     const target = homepageEditorial?.placements.find((item) => item.placement === placement)
     const current = homepageEditorial?.placements.find((item) => item.manualArticle?.id === article.id)
-    if (target?.manualArticle && target.manualArticle.id !== article.id && !window.confirm(`${placementLabel(placement)}의 현재 기사를 교체할까요?`)) return
-    if (current && current.placement !== placement && !window.confirm(`${placementLabel(current.placement)}에서 ${placementLabel(placement)}로 이동할까요?`)) return
-    setEditorialProcessingId(article.id)
-    setHeroError('')
-    setHeroDeploy(null)
-    try {
-      const res = await fetch(`/api/admin/homepage/placements/${placement}`, {
-        method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ articleId: article.id }),
-      })
-      const data = await res.json().catch(() => ({}))
-      if (!res.ok || data.error) setHeroError(data.error ?? '홈페이지 placement를 저장하지 못했습니다.')
-      else { applyHeroDeployResult(data.deploy as HeroDeployState); await refreshHomepageState() }
-    } catch { setHeroError('홈페이지 placement를 저장하지 못했습니다.') }
-    finally { setEditorialProcessingId(null) }
+    await confirmAndApplyHomepagePlacement({
+      currentPlacement: current?.placement ?? null,
+      targetPlacement: placement,
+      targetOccupied: Boolean(target?.manualArticle && target.manualArticle.id !== article.id),
+    }, {
+      confirm: window.confirm,
+      apply: async () => {
+        setEditorialProcessingId(article.id)
+        setHeroError('')
+        setHeroDeploy(null)
+        try {
+          const res = await fetch(`/api/admin/homepage/placements/${placement}`, {
+            method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ articleId: article.id }),
+          })
+          const data = await res.json().catch(() => ({}))
+          if (!res.ok || data.error) setHeroError(data.error ?? '홈페이지 placement를 저장하지 못했습니다.')
+          else { applyHeroDeployResult(data.deploy as HeroDeployState); await refreshHomepageState() }
+        } catch { setHeroError('홈페이지 placement를 저장하지 못했습니다.') }
+        finally { setEditorialProcessingId(null) }
+      },
+    })
   }
 
   const handleClearPlacement = async (placement: HomepagePlacementName) => {
+    if (placement === 'homepage_hero') setHeroProcessingId('homepage_hero')
     setEditorialProcessingId(placement)
     setHeroError('')
     setHeroDeploy(null)
@@ -1620,10 +1610,34 @@ function ArticlesReviewTab() {
       if (!res.ok || data.error) setHeroError(data.error ?? '홈페이지 placement를 해제하지 못했습니다.')
       else { applyHeroDeployResult(data.deploy as HeroDeployState); await refreshHomepageState() }
     } catch { setHeroError('홈페이지 placement를 해제하지 못했습니다.') }
-    finally { setEditorialProcessingId(null) }
+    finally {
+      setEditorialProcessingId(null)
+      if (placement === 'homepage_hero') setHeroProcessingId(null)
+    }
   }
 
-  const handleRemoveFeature = async (article: AdminArticle) => {
+  const handlePlacementDrop = (placement: HomepagePlacementName, articleId: string) => {
+    if (homepageMutationBusy) return
+    const feature = homepageEditorial?.features.find((item) => item.articleId === articleId)
+    setDraggedFeatureId(null)
+    setDragOverPlacement(null)
+    if (feature?.article) void handleSetPlacement(feature.article, placement)
+  }
+
+  const handlePlacementSelect = (
+    feature: HomepageEditorialState['features'][number],
+    placement: HomepagePlacementName | ''
+  ) => {
+    if (homepageMutationBusy) return
+    const current = homepageEditorial?.placements.find((item) => item.manualArticle?.id === feature.articleId)
+    if (!placement) {
+      if (current) void handleClearPlacement(current.placement)
+      return
+    }
+    void handleSetPlacement(feature.article, placement)
+  }
+
+  const handleRemoveFeature = async (article: { id: string; title: string }) => {
     const placements = homepageEditorial?.placements.filter((item) => item.manualArticle?.id === article.id) ?? []
     const impact = placements.map((item) => placementLabel(item.placement)).join(', ')
     if (!window.confirm(impact ? `Feature를 해제하면 ${impact} 수동 배치도 해제됩니다. 계속할까요?` : '이 기사의 Feature 자격을 해제할까요?')) return
@@ -1889,69 +1903,176 @@ function ArticlesReviewTab() {
       </button>
 
       <section className="mb-6 rounded border border-blue-200 bg-blue-50 p-4">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-blue-700">
-              현재 홈페이지 Hero
-            </p>
-            {isHeroLoading ? (
-              <p className="mt-2 text-sm text-gray-500">불러오는 중...</p>
-            ) : homepageHero ? (
-              <div className="mt-2">
-                <p className="font-semibold text-gray-900">
-                  {homepageHero.article?.title ?? `삭제된 기사 (${homepageHero.articleId})`}
-                </p>
-                <p className="mt-1 text-xs text-gray-500">
-                  지정 시각 {formatDate(homepageHero.updatedAt)}
-                </p>
-                {!homepageHero.effective && (
-                  <p className="mt-2 text-sm text-amber-700">
-                    현재 기사가 공개 상태가 아니므로 홈페이지는 최신 기사로 대체됩니다.
-                  </p>
-                )}
-              </div>
-            ) : (
-              <p className="mt-2 text-sm text-gray-700">
-                자동 선택 중 — 가장 최근 공개 기사가 Hero로 표시됩니다.
-              </p>
-            )}
-          </div>
-          {homepageHero && (
-            <button
-              type="button"
-              onClick={handleUnpinHero}
-              disabled={homepageMutationBusy}
-              className="rounded border border-blue-300 bg-white px-3 py-2 text-sm font-semibold text-blue-700 disabled:opacity-50"
-            >
-              {heroProcessingId !== null ? '처리 중...' : 'Hero 해제'}
-            </button>
-          )}
+        <div>
+          <p className="text-xs font-bold uppercase tracking-wider text-blue-700">홈페이지 배치</p>
+          <p className="mt-1 text-sm text-gray-600">
+            Feature 기사를 슬롯으로 드래그하거나 카드의 배치 선택 메뉴를 사용하세요.
+          </p>
         </div>
 
+        {isHeroLoading && !homepageEditorial && (
+          <p className="mt-4 text-sm text-gray-500">불러오는 중...</p>
+        )}
+
         {homepageEditorial && (
-          <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
-            {homepageEditorial.placements.map((item) => (
-              <div key={item.placement} className="rounded border border-blue-100 bg-white p-3">
-                <div className="flex items-center justify-between gap-2">
-                  <p className="text-sm font-bold">{placementLabel(item.placement)}</p>
-                  <span className="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
-                    {item.source === 'manual' ? '수동 고정' : item.source === 'automatic' ? '자동 선택' : '최신 기사 자동 선택'}
-                  </span>
-                </div>
-                <p className="mt-2 text-sm text-gray-800">
-                  {(item.manualArticle ?? item.effectiveArticle)?.title ?? (item.placement === 'homepage_hero' ? '최신 공개 기사' : '선택 가능한 Feature 없음')}
-                </p>
-                {item.source === 'manual' && item.updatedAt && <p className="mt-1 text-xs text-gray-500">지정 시각 {formatDate(item.updatedAt)}</p>}
-                {item.source === 'manual' && (
-                  <button type="button" onClick={() => handleClearPlacement(item.placement)}
-                    disabled={homepageMutationBusy}
-                    className="mt-2 rounded border border-blue-200 px-2 py-1 text-xs font-semibold text-blue-700 disabled:opacity-50">
-                    수동 배치 해제
-                  </button>
-                )}
+          <>
+            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              {homepageEditorial.placements.map((item) => {
+                const displayedArticle = item.manualArticle ?? item.effectiveArticle
+                const isDropTarget = dragOverPlacement === item.placement
+                return (
+                  <div
+                    key={item.placement}
+                    data-placement-drop-zone={item.placement}
+                    onDragOver={(event) => {
+                      if (homepageMutationBusy || !draggedFeatureId) return
+                      event.preventDefault()
+                      event.dataTransfer.dropEffect = 'move'
+                      setDragOverPlacement(item.placement)
+                    }}
+                    onDragLeave={() => setDragOverPlacement(null)}
+                    onDrop={(event) => {
+                      event.preventDefault()
+                      const articleId = draggedFeatureId ?? event.dataTransfer.getData('text/plain')
+                      if (articleId) handlePlacementDrop(item.placement, articleId)
+                    }}
+                    className={`min-h-44 rounded border-2 border-dashed bg-white p-3 transition-colors ${
+                      isDropTarget
+                        ? 'border-violet-500 bg-violet-50 ring-2 ring-violet-200'
+                        : draggedFeatureId && !homepageMutationBusy
+                          ? 'border-blue-400 bg-blue-50'
+                          : 'border-blue-100'
+                    }`}
+                  >
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <p className="text-sm font-bold">{placementLabel(item.placement)}</p>
+                      <span className="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
+                        {item.source === 'manual' ? '수동 고정' : item.source === 'automatic' ? '자동 선택' : '최신 기사 자동 선택'}
+                      </span>
+                    </div>
+                    <div className={`mt-3 min-w-0 rounded p-2 ${
+                      item.source === 'manual' ? 'bg-blue-50' : 'bg-gray-50'
+                    } ${draggedFeatureId === item.manualArticle?.id ? 'opacity-50 ring-2 ring-violet-300' : ''}`}>
+                      {item.source === 'manual' && (
+                        <div
+                          data-placement-drag-handle={item.placement}
+                          draggable={!homepageMutationBusy}
+                          onDragStart={(event) => {
+                            if (!item.manualArticle || homepageMutationBusy) return
+                            event.dataTransfer.setData('text/plain', item.manualArticle.id)
+                            event.dataTransfer.effectAllowed = 'move'
+                            setDraggedFeatureId(item.manualArticle.id)
+                          }}
+                          onDragEnd={() => {
+                            setDraggedFeatureId(null)
+                            setDragOverPlacement(null)
+                          }}
+                          className="mb-1 inline-flex cursor-grab select-none items-center text-xs font-semibold text-blue-600 active:cursor-grabbing"
+                        >
+                          ⋮⋮ 드래그하여 이동
+                        </div>
+                      )}
+                      <p className="break-words text-sm font-medium text-gray-800">
+                        {displayedArticle?.title ?? (item.placement === 'homepage_hero' ? '최신 공개 기사' : '선택 가능한 Feature 없음')}
+                      </p>
+                    </div>
+                    {item.source === 'manual' && item.updatedAt && (
+                      <p className="mt-2 text-xs text-gray-500">지정 시각 {formatDate(item.updatedAt)}</p>
+                    )}
+                    {item.source === 'manual' && (
+                      <button
+                        type="button"
+                        onClick={() => handleClearPlacement(item.placement)}
+                        disabled={homepageMutationBusy}
+                        className="mt-3 rounded border border-blue-200 px-2 py-1 text-xs font-semibold text-blue-700 disabled:opacity-50"
+                      >
+                        수동 배치 해제
+                      </button>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+
+            <div className="mt-5 border-t border-blue-200 pt-4">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h3 className="font-bold text-gray-900">Feature 기사</h3>
+                <p className="text-xs text-gray-500">드래그 또는 배치 변경 메뉴로 수동 슬롯을 관리합니다.</p>
               </div>
-            ))}
-          </div>
+              {homepageEditorial.features.length === 0 ? (
+                <p className="mt-3 rounded bg-white p-3 text-sm text-gray-500">지정된 Feature 기사가 없습니다.</p>
+              ) : (
+                <div className="mt-3 grid grid-cols-1 gap-3 lg:grid-cols-2">
+                  {homepageEditorial.features.map((feature) => {
+                    const manualPlacement = homepageEditorial.placements.find((item) => item.manualArticle?.id === feature.articleId)
+                    const isDragging = draggedFeatureId === feature.articleId
+                    return (
+                      <article
+                        key={feature.articleId}
+                        data-feature-card={feature.articleId}
+                        className={`min-w-0 rounded border bg-white p-3 transition ${
+                          homepageMutationBusy ? 'opacity-60' : ''
+                        } ${isDragging ? 'opacity-50 ring-2 ring-violet-400' : 'border-blue-100'}`}
+                      >
+                        <div
+                          data-feature-drag-handle={feature.articleId}
+                          draggable={!homepageMutationBusy}
+                          onDragStart={(event) => {
+                            if (homepageMutationBusy) return
+                            event.dataTransfer.setData('text/plain', feature.articleId)
+                            event.dataTransfer.effectAllowed = 'move'
+                            setDraggedFeatureId(feature.articleId)
+                          }}
+                          onDragEnd={() => {
+                            setDraggedFeatureId(null)
+                            setDragOverPlacement(null)
+                          }}
+                          className={`inline-flex select-none items-center text-xs font-semibold text-violet-600 ${
+                            homepageMutationBusy ? 'cursor-not-allowed' : 'cursor-grab active:cursor-grabbing'
+                          }`}
+                        >
+                          ⋮⋮ 드래그하여 배치
+                        </div>
+                        <p className="mt-1 break-words font-semibold text-gray-900">{feature.article.title}</p>
+                        <div className="mt-2 flex flex-wrap gap-2 text-xs text-gray-500">
+                          <span>{feature.article.category ?? '카테고리 없음'}</span>
+                          <span>Feature 지정 {formatDate(feature.featuredAt)}</span>
+                          {manualPlacement && (
+                            <span className="font-semibold text-blue-700">현재 {placementLabel(manualPlacement.placement)}</span>
+                          )}
+                        </div>
+                        <div className="mt-3 flex flex-wrap items-end gap-2">
+                          <label className="min-w-44 flex-1 text-xs font-semibold text-gray-600">
+                            배치 변경
+                            <select
+                              value={manualPlacement?.placement ?? ''}
+                              onChange={(event) => handlePlacementSelect(feature, event.target.value as HomepagePlacementName | '')}
+                              disabled={homepageMutationBusy}
+                              className="mt-1 w-full rounded border bg-white px-2 py-2 text-sm font-normal text-gray-800 disabled:opacity-50"
+                            >
+                              <option value="">배치 없음</option>
+                              <option value="homepage_hero">Hero</option>
+                              <option value="homepage_featured_1">Featured #1</option>
+                              <option value="homepage_featured_2">Featured #2</option>
+                              <option value="homepage_featured_3">Featured #3</option>
+                            </select>
+                          </label>
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveFeature(feature.article)}
+                            disabled={homepageMutationBusy}
+                            className="rounded border border-red-200 px-3 py-2 text-sm font-semibold text-red-600 disabled:opacity-50"
+                          >
+                            Feature 해제
+                          </button>
+                        </div>
+                      </article>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
+          </>
         )}
 
         {heroDeploy?.status === 'triggered' && (
@@ -2032,11 +2153,10 @@ function ArticlesReviewTab() {
             const isEditing = editingId === article.id
             const isReplacing = replacingId === article.id
             const feature = homepageEditorial?.features.find((item) => item.articleId === article.id)
-            const manualPlacement = homepageEditorial?.placements.find((item) => item.manualArticle?.id === article.id)
             return (
               <article key={article.id} className="border rounded p-4">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="min-w-0 flex-1">
+                <div className="flex min-w-0 flex-col gap-4">
+                  <div className="min-w-0 w-full">
                     <div className="mb-2 flex flex-wrap items-center gap-2 text-xs text-gray-500">
                       <span>{article.published ? '게시일' : '생성일'} {formatDate(article.published_at ?? article.created_at)}</span>
                       {article.updated_at && <span>수정일 {formatDate(article.updated_at)}</span>}
@@ -2181,7 +2301,7 @@ function ArticlesReviewTab() {
                     )}
                   </div>
 
-                  <div className="flex shrink-0 flex-wrap justify-end gap-2">
+                  <div className="flex w-full min-w-0 flex-wrap gap-2">
                     {isReplacing ? (
                       <>
                         <button
@@ -2243,19 +2363,9 @@ function ArticlesReviewTab() {
                         {subTab === 'published' && (
                           <>
                             {!feature ? (
-                              <>
-                                <button type="button" onClick={() => handleSetFeature(article)} disabled={articleHomepageMutationBusy} className="px-3 py-2 border border-violet-300 text-violet-700 text-sm rounded font-semibold disabled:opacity-50 whitespace-nowrap">Feature 지정</button>
-                                {(['homepage_hero', 'homepage_featured_1', 'homepage_featured_2', 'homepage_featured_3'] as HomepagePlacementName[]).map((placement) => (
-                                  <button key={placement} type="button" onClick={() => handleSetFeature(article, placement)} disabled={articleHomepageMutationBusy} className="px-3 py-2 border border-violet-200 text-violet-700 text-sm rounded font-semibold disabled:opacity-50 whitespace-nowrap">Feature + {placementLabel(placement)}</button>
-                                ))}
-                              </>
+                              <button type="button" onClick={() => handleSetFeature(article)} disabled={articleHomepageMutationBusy} className="px-3 py-2 border border-violet-300 text-violet-700 text-sm rounded font-semibold disabled:opacity-50 whitespace-nowrap">Feature 지정</button>
                             ) : (
-                              <>
-                                {(['homepage_hero', 'homepage_featured_1', 'homepage_featured_2', 'homepage_featured_3'] as HomepagePlacementName[]).map((placement) => (
-                                  <button key={placement} type="button" onClick={() => handleSetPlacement(article, placement)} disabled={articleHomepageMutationBusy} className={`px-3 py-2 border text-sm rounded font-semibold disabled:opacity-50 whitespace-nowrap ${manualPlacement?.placement === placement ? 'border-violet-400 bg-violet-50 text-violet-700' : 'border-gray-300 text-gray-600'}`}>{manualPlacement?.placement === placement ? `현재 ${placementLabel(placement)}` : `${placementLabel(placement)}로 지정`}</button>
-                                ))}
-                                <button type="button" onClick={() => handleRemoveFeature(article)} disabled={articleHomepageMutationBusy} className="px-3 py-2 border border-red-200 text-red-600 text-sm rounded font-semibold disabled:opacity-50 whitespace-nowrap">Feature 해제</button>
-                              </>
+                              <button type="button" onClick={() => handleRemoveFeature(article)} disabled={articleHomepageMutationBusy} className="px-3 py-2 border border-red-200 text-red-600 text-sm rounded font-semibold disabled:opacity-50 whitespace-nowrap">Feature 해제</button>
                             )}
                             <button
                               onClick={() => handleUnpublish(article)}
