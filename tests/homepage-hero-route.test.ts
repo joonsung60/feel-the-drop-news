@@ -37,14 +37,17 @@ test('기존 unpublish route는 deploy hook을 한 번만 호출한다', () => {
   assert.doesNotMatch(unpublishRoute, /homepage_placements|set_homepage_hero/)
 })
 
-test('Admin은 요청 전에 pinned 여부를 기억하고 성공 후 기존 Hero 배너와 상태 reload를 사용한다', () => {
+test('Admin은 요청 전에 pinned/Feature 여부를 기억하고 결과에 맞는 상태 reload를 사용한다', () => {
   const admin = readFileSync(path.resolve(process.cwd(), 'app/admin/page.tsx'), 'utf8')
   const handler = admin.slice(
     admin.indexOf('const handleUnpublish = async'),
     admin.indexOf('const cancelEdit')
   )
   assert.match(handler, /const wasPinnedHero = homepageHero\?\.articleId === article\.id/)
+  assert.match(handler, /const isFeature = homepageEditorial\?\.features\.some/)
   assert.ok(handler.indexOf('const wasPinnedHero') < handler.indexOf("fetch(`/api/articles/"))
-  assert.match(handler, /resolveHeroUnpublishOutcome/)
-  assert.match(handler, /if \(heroOutcome\.reloadHero\) await loadHomepageHero\(\)/)
+  assert.ok(handler.indexOf('const isFeature') < handler.indexOf("fetch(`/api/articles/"))
+  assert.match(handler, /resolveHomepageUnpublishOutcome/)
+  assert.match(handler, /homepageOutcome\.reloadHero && homepageOutcome\.reloadEditorial/)
+  assert.match(handler, /homepageOutcome\.reloadEditorial\) await loadHomepageEditorial\(\)/)
 })

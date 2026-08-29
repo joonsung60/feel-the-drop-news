@@ -22,4 +22,3 @@ export function selectHomepageHero(
       .slice(0, HOMEPAGE_GRID_LIMIT),
   }
 }
-
