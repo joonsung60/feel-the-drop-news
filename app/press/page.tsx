@@ -6,7 +6,6 @@ import CopyEmailButton from './CopyEmailButton'
 const title = '보도문의 | FEEL THE DROP'
 const description = 'FEEL THE DROP에 프레스킷, 보도자료, 신곡 및 공연·행사 소식을 보내주세요.'
 const pressUrl = `${SITE_URL}/press/`
-const mailto = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('[보도자료] 행사명 또는 아티스트명')}`
 const focusStyle = 'focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current'
 
 export const metadata: Metadata = {
@@ -37,22 +36,15 @@ const materials = [
   '공식 홈페이지, 음원, 예매 및 SNS 링크',
   '고해상도 이미지·포스터·영상 또는 다운로드 링크',
   '이미지·영상 크레딧과 사용 가능 범위',
-  '담당자 이름과 연락처',
 ]
 
-function PressContact({ dark = false }: { dark?: boolean }) {
+function PressContact() {
   return (
     <div className="min-w-0">
       <p className="select-text text-lg font-bold tracking-tight [overflow-wrap:anywhere] sm:text-2xl">
         {CONTACT_EMAIL}
       </p>
-      <div className="mt-4 flex flex-wrap items-start gap-x-3 gap-y-2">
-        <a
-          href={mailto}
-          className={`inline-flex min-h-11 items-center justify-center border px-4 py-2.5 text-sm font-bold transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-4 ${dark ? 'border-white bg-white text-black focus-visible:outline-white' : 'border-black bg-black text-white focus-visible:outline-black'}`}
-        >
-          보도자료 보내기
-        </a>
+      <div className="mt-4">
         <CopyEmailButton />
       </div>
     </div>
@@ -77,9 +69,9 @@ export default function PressPage() {
           </p>
           <div className="mt-6 grid gap-5 border-t border-white/30 pt-5 lg:mt-8 lg:grid-cols-2 lg:gap-12 lg:pt-7">
             <p className="max-w-xl break-keep text-sm leading-7 text-zinc-300 md:text-base">
-              소개하고 싶은 소식이 있다면 프레스킷과 보도자료를 보내주세요. 보내주신 자료는 편집 검토를 거쳐 FEEL THE DROP의 뉴스 기사로 소개할 수 있습니다.
+              소개하고 싶은 소식이 있다면 프레스킷이나 보도자료를 보내주세요.
             </p>
-            <PressContact dark />
+            <PressContact />
           </div>
         </div>
       </section>
@@ -129,7 +121,7 @@ export default function PressPage() {
           <div>
             <h2 id="distribution-title" className="break-keep text-2xl font-bold tracking-tight md:text-3xl">다음 소식도 함께 보내주세요.</h2>
             <p className="mt-4 max-w-xl break-keep text-sm leading-7 text-zinc-600 md:text-base">
-              아티스트, 음원, 공연 및 행사 소식을 정기적으로 배포하신다면 FEEL THE DROP을 프레스·미디어 수신처에 포함해주세요.
+              보도자료를 정기적으로 배포하신다면 FEEL THE DROP을 수신처에 포함해주세요.
             </p>
           </div>
           <div className="min-w-0">
