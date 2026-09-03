@@ -91,6 +91,12 @@ const urls = [
     changefreq: 'daily',
     priority: '0.8',
   },
+  {
+    loc: `${SITE_URL}/press/`,
+    lastmod: new Date().toISOString(),
+    changefreq: 'monthly',
+    priority: '0.5',
+  },
   ...CATEGORY_SLUGS.map((slug) => ({
     loc: `${SITE_URL}/category/${slug}/`,
     lastmod: new Date().toISOString(),

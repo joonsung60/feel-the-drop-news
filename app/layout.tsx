@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Script from "next/script";
 import { Barlow_Condensed, Noto_Sans_KR } from "next/font/google";
-import { CONTACT_EMAIL, DEFAULT_OG_IMAGE_URL, PUBLISHER, RSS_ALTERNATE, SITE_URL, SOCIAL_LINKS } from "@/lib/site";
+import { DEFAULT_OG_IMAGE_URL, PUBLISHER, RSS_ALTERNATE, SITE_URL, SOCIAL_LINKS } from "@/lib/site";
 import { JsonLd } from "@/components/JsonLd";
 import { ORGANIZATION_JSON_LD, WEBSITE_JSON_LD } from "@/lib/seo";
 import { CATEGORY_NAV, RELEASE_GENRE_NAV } from "@/lib/taxonomy";
@@ -103,11 +103,11 @@ export default function RootLayout({
         <header className="border-b border-gray-200 bg-white sticky top-0 z-50">
           <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-8">
             {/* 상단 바 — 로고 + 슬로건 + 우측 액션 */}
-            <div className="flex items-center justify-between gap-4 py-3 md:py-4">
+            <div className="flex items-center justify-between gap-2 py-3 md:py-4">
               <div className="min-w-0">
                 <Link
                   href="/"
-                  className="block transition-opacity hover:opacity-80"
+                  className="block w-fit max-w-full transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4"
                   aria-label="FEEL THE DROP home"
                 >
                   <Image
@@ -116,19 +116,25 @@ export default function RootLayout({
                     width={2508}
                     height={627}
                     priority
-                    className="h-8 w-auto md:h-10"
+                    className="h-auto w-32 max-w-full md:w-40"
                   />
                 </Link>
-                <p className="mt-1 text-xs font-medium text-gray-500">
+                <p className="mt-1 text-[10px] font-medium text-gray-500 sm:text-xs">
                   EDM의 순간을 기록합니다
                 </p>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+                <Link
+                  href="/press/"
+                  className="inline-flex h-8 items-center justify-center whitespace-nowrap bg-black px-2 text-xs font-bold text-white transition-colors hover:bg-zinc-700 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black sm:px-3"
+                >
+                  보도문의
+                </Link>
                 <Link
                   href="/search"
                   aria-label="검색"
                   title="검색"
-                  className="flex h-8 w-8 items-center justify-center border border-gray-200 text-gray-500 transition-colors hover:border-gray-400 hover:text-black"
+                  className="flex h-8 w-8 items-center justify-center border border-gray-200 text-gray-500 transition-colors hover:border-gray-400 hover:text-black focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black"
                 >
                   <svg
                     aria-hidden="true"
@@ -147,7 +153,7 @@ export default function RootLayout({
                 {showAdminLink && (
                   <Link
                     href="/admin"
-                    className="text-[11px] font-bold uppercase tracking-widest text-gray-400 hover:text-black transition-colors border border-gray-200 hover:border-gray-400 px-2.5 py-1"
+                    className="text-[11px] font-bold uppercase tracking-widest text-gray-400 hover:text-black transition-colors border border-gray-200 hover:border-gray-400 px-2 py-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black"
                     style={{ fontFamily: "var(--font-display), sans-serif" }}
                   >
                     Admin
@@ -158,7 +164,7 @@ export default function RootLayout({
 
             {/* 하단 바 — 카테고리 네비 */}
             <nav className="relative flex items-center border-t border-gray-100 -mx-4 px-4 md:mx-0 md:px-0 md:border-t-0">
-              <div className="flex min-w-0 flex-1 items-center">
+              <div className="flex min-w-0 flex-1 flex-wrap items-center">
                 {NAV_ITEMS.map((item) => (
                   item.href === "/category/release" ? (
                     <details key={item.label} className="group relative shrink-0">
@@ -207,7 +213,7 @@ export default function RootLayout({
                 </div>
               </div>
               <div><h2 className="text-xs font-bold tracking-[0.2em] uppercase" style={{ fontFamily: "var(--font-display), sans-serif" }}>섹션</h2><div className="mt-4 grid grid-cols-2 gap-x-5 gap-y-3 text-sm font-medium text-gray-700"><Link href="/features/" className="hover:text-black transition-colors">특집</Link>{CATEGORY_NAV.map((item) => <Link key={item.slug} href={`/category/${item.slug}`} className="hover:text-black transition-colors">{item.label}</Link>)}{RELEASE_GENRE_NAV.map((item) => <Link key={item.slug} href={`/genre/${item.slug}`} className="hover:text-black transition-colors">{item.label}</Link>)}<Link href="/archive/" className="hover:text-black transition-colors">전체 기사</Link><Link href="/books" className="hover:text-black transition-colors">도서</Link><Link href="/feed.xml" className="hover:text-black transition-colors">RSS</Link></div></div>
-              <div><h2 className="text-xs font-bold tracking-[0.2em] uppercase" style={{ fontFamily: "var(--font-display), sans-serif" }}>정보</h2><div className="mt-4 flex flex-col gap-3 text-sm font-medium text-gray-700"><Link href="/about" className="hover:text-black transition-colors">소개</Link><Link href="/editorial-policy" className="hover:text-black transition-colors">편집·출처 정책</Link><Link href="/corrections" className="hover:text-black transition-colors">정정·제보</Link><Link href="/privacy" className="hover:text-black transition-colors">개인정보처리방침</Link><Link href="/terms" className="hover:text-black transition-colors">이용약관</Link><a href={`mailto:${CONTACT_EMAIL}`} className="hover:text-black transition-colors">문의</a></div></div>
+              <div><h2 className="text-xs font-bold tracking-[0.2em] uppercase" style={{ fontFamily: "var(--font-display), sans-serif" }}>정보</h2><div className="mt-4 flex flex-col gap-3 text-sm font-medium text-gray-700"><Link href="/about" className="hover:text-black transition-colors">소개</Link><Link href="/editorial-policy" className="hover:text-black transition-colors">편집·출처 정책</Link><Link href="/corrections" className="hover:text-black transition-colors">정정·제보</Link><Link href="/privacy" className="hover:text-black transition-colors">개인정보처리방침</Link><Link href="/terms" className="hover:text-black transition-colors">이용약관</Link><Link href="/press/" className="hover:text-black transition-colors focus-visible:outline-2 focus-visible:outline-offset-4">보도문의</Link></div></div>
             </div>
             <div className="mt-10 pt-6 border-t border-gray-200 flex flex-col md:flex-row justify-between gap-6 text-xs text-gray-500"><p>© 2026 FEEL THE DROP. All rights reserved.</p><p>발행인·편집인 {PUBLISHER}</p></div>
           </div>
