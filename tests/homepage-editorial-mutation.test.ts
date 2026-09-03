@@ -2,9 +2,48 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
   applyEditorialMutation,
+  confirmAndApplyHomepagePlacement,
+  homepagePlacementConfirmationMessage,
   resolveHomepageUnpublishOutcome,
   toHomepageDeployState,
 } from '../lib/homepage-editorial-mutation'
+
+test('placement confirmation 문구는 이동과 교체 영향을 한 번에 설명한다', () => {
+  assert.equal(homepagePlacementConfirmationMessage({
+    currentPlacement: 'homepage_hero', targetPlacement: 'homepage_featured_1', targetOccupied: false,
+  }), 'Hero에서 Featured #1로 이동할까요?')
+  assert.equal(homepagePlacementConfirmationMessage({
+    currentPlacement: null, targetPlacement: 'homepage_featured_1', targetOccupied: true,
+  }), 'Featured #1의 현재 기사를 이 기사로 교체할까요?')
+  assert.equal(homepagePlacementConfirmationMessage({
+    currentPlacement: 'homepage_hero', targetPlacement: 'homepage_featured_1', targetOccupied: true,
+  }), 'Hero에서 Featured #1로 이동하면 Featured #1의 현재 수동 배치가 해제됩니다. 계속할까요?')
+})
+
+test('placement 변경은 confirmation을 최대 한 번 호출하고 취소 시 PUT 동작을 실행하지 않는다', async () => {
+  let confirmations = 0
+  let puts = 0
+  const cancelled = await confirmAndApplyHomepagePlacement({
+    currentPlacement: 'homepage_hero', targetPlacement: 'homepage_featured_1', targetOccupied: true,
+  }, {
+    confirm: () => { confirmations += 1; return false },
+    apply: async () => { puts += 1 },
+  })
+  assert.equal(cancelled, 'cancelled')
+  assert.equal(confirmations, 1)
+  assert.equal(puts, 0)
+
+  confirmations = 0
+  const applied = await confirmAndApplyHomepagePlacement({
+    currentPlacement: 'homepage_hero', targetPlacement: 'homepage_featured_1', targetOccupied: true,
+  }, {
+    confirm: () => { confirmations += 1; return true },
+    apply: async () => { puts += 1 },
+  })
+  assert.equal(applied, 'applied')
+  assert.equal(confirmations, 1)
+  assert.equal(puts, 1)
+})
 
 test('changed Feature+placement mutation은 deploy를 정확히 한 번 호출한다', async () => {
   let deploys = 0

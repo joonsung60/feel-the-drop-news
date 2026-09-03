@@ -19,6 +19,43 @@ export type EditorialMutationResult = {
   clearedPlacements?: HomepagePlacement[]
 }
 
+const homepagePlacementLabels: Record<HomepagePlacement, string> = {
+  homepage_hero: 'Hero',
+  homepage_featured_1: 'Featured #1',
+  homepage_featured_2: 'Featured #2',
+  homepage_featured_3: 'Featured #3',
+}
+
+export function homepagePlacementConfirmationMessage(context: {
+  currentPlacement: HomepagePlacement | null
+  targetPlacement: HomepagePlacement
+  targetOccupied: boolean
+}): string | null {
+  if (context.currentPlacement === context.targetPlacement) return null
+
+  const currentLabel = context.currentPlacement
+    ? homepagePlacementLabels[context.currentPlacement]
+    : null
+  const targetLabel = homepagePlacementLabels[context.targetPlacement]
+
+  if (currentLabel && context.targetOccupied) {
+    return `${currentLabel}에서 ${targetLabel}로 이동하면 ${targetLabel}의 현재 수동 배치가 해제됩니다. 계속할까요?`
+  }
+  if (currentLabel) return `${currentLabel}에서 ${targetLabel}로 이동할까요?`
+  if (context.targetOccupied) return `${targetLabel}의 현재 기사를 이 기사로 교체할까요?`
+  return null
+}
+
+export async function confirmAndApplyHomepagePlacement(
+  context: Parameters<typeof homepagePlacementConfirmationMessage>[0],
+  dependencies: { confirm: (message: string) => boolean; apply: () => Promise<void> }
+): Promise<'applied' | 'cancelled'> {
+  const message = homepagePlacementConfirmationMessage(context)
+  if (message && !dependencies.confirm(message)) return 'cancelled'
+  await dependencies.apply()
+  return 'applied'
+}
+
 export function editorialMutationError(result: EditorialMutationStatus) {
   if (result === 'article_not_found') return { status: 404 as const, error: '기사를 찾을 수 없습니다.' }
   if (result === 'article_unpublished') return { status: 409 as const, error: '공개 기사만 Feature로 지정할 수 있습니다.' }
