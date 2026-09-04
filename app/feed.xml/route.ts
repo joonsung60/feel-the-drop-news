@@ -1,6 +1,6 @@
 import { loadPublishedArticles } from '@/lib/articles'
 import { createArticleExcerpt } from '@/lib/excerpt'
-import { RSS_URL, SITE_URL } from '@/lib/site'
+import { getArticleUrl, RSS_URL, SITE_URL } from '@/lib/site'
 
 const FEED_CONTENT_TYPE = 'application/rss+xml; charset=utf-8'
 
@@ -16,7 +16,7 @@ export async function GET() {
 
   const items = articles
     .map((article) => {
-      const link = `${SITE_URL}/articles/${article.slug ?? article.id}/`
+      const link = getArticleUrl(article)
       const pubDate = formatRssDate(article.published_at)
       const category = article.category?.trim()
 

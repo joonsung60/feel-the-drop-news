@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { CONTACT_EMAIL, PUBLISHER } from '@/lib/site'
+import { CONTACT_EMAIL, EDITOR_NAME, MAKER_NAMES, PUBLISHER_NAMES } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: '소개 | FEEL THE DROP',
@@ -22,8 +22,10 @@ export default function AboutPage() {
         <dl className="mt-16 pt-8 border-t border-zinc-200 space-y-3 text-sm">
           <div className="flex gap-4"><dt className="w-28 shrink-0 text-zinc-500">운영 매체명</dt><dd className="text-zinc-800">FEEL THE DROP</dd></div>
           <div className="flex gap-4"><dt className="w-28 shrink-0 text-zinc-500">다루는 분야</dt><dd className="text-zinc-800">EDM, 전자음악, 페스티벌, DJ/프로듀서, 릴리즈, 클럽 문화, 아시아 씬</dd></div>
-          <div className="flex gap-4"><dt className="w-28 shrink-0 text-zinc-500">발행인·편집인</dt><dd className="text-zinc-800 font-medium">{PUBLISHER}</dd></div>
-          <div className="flex gap-4"><dt className="w-28 shrink-0 text-zinc-500">도서</dt><dd><Link href="/books" className="text-zinc-800 hover:underline">/books</Link></dd></div>
+          <div className="flex gap-4"><dt className="w-28 shrink-0 text-zinc-500">발행인</dt><dd className="text-zinc-800 font-medium">{PUBLISHER_NAMES}</dd></div>
+          <div className="flex gap-4"><dt className="w-28 shrink-0 text-zinc-500">편집인</dt><dd className="text-zinc-800 font-medium">{EDITOR_NAME}</dd></div>
+          <div className="flex gap-4"><dt className="w-28 shrink-0 text-zinc-500">만드는 사람들</dt><dd className="text-zinc-800 font-medium">{MAKER_NAMES}</dd></div>
+          <div className="flex gap-4"><dt className="w-28 shrink-0 text-zinc-500">도서</dt><dd><Link href="/books/" className="text-zinc-800 hover:underline">/books/</Link></dd></div>
           <div className="flex gap-4"><dt className="w-28 shrink-0 text-zinc-500">문의</dt><dd><a href={`mailto:${CONTACT_EMAIL}`} className="text-zinc-800 hover:underline">{CONTACT_EMAIL}</a></dd></div>
         </dl>
       </main>

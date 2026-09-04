@@ -1,3 +1,5 @@
+import { EDITOR_NAME } from '@/lib/site'
+
 export type Book = {
   slug: string
   title: string
@@ -19,7 +21,7 @@ export const BOOKS: Book[] = [
   {
     slug: 'hidden-history-of-edm',
     title: '당신이 몰랐던 EDM의 역사',
-    author: 'FEEL THE DROP',
+    author: EDITOR_NAME,
     publisher: '유페이퍼',
     publishedAt: '2026-02-16',
     isbn: '9791176264594',

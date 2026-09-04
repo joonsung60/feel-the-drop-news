@@ -4,11 +4,13 @@
 
 Base URL: https://feel-the-drop.com
 Sitemap: https://feel-the-drop.com/sitemap.xml
+News Sitemap: https://feel-the-drop.com/news-sitemap.xml
 
 ## Public Content
 
 - Home: https://feel-the-drop.com/
 - Articles: https://feel-the-drop.com/archive/
+- Features: https://feel-the-drop.com/features/
 
 ## Notes for AI Crawlers
 

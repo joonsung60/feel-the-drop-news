@@ -6,6 +6,14 @@ export const ORGANIZATION_LOGO_URL = SITE_URL + '/logo.png'
 export const RSS_URL = SITE_URL + '/feed.xml'
 export const RSS_ALTERNATE = [{ title: 'FEEL THE DROP RSS', url: RSS_URL }]
 
+export function getArticlePath(article: { id: string; slug?: string | null }): string {
+  return `/articles/${article.slug ?? article.id}/`
+}
+
+export function getArticleUrl(article: { id: string; slug?: string | null }): string {
+  return SITE_URL + getArticlePath(article)
+}
+
 export const CONTACT_EMAIL = 'feelthedrop.official@gmail.com'
 
 export const SOCIAL_LINKS = [
@@ -14,3 +22,6 @@ export const SOCIAL_LINKS = [
 ] as const
 
 export const PUBLISHER = 'FEEL THE DROP'
+export const PUBLISHER_NAMES = '최민지, 곽준성'
+export const EDITOR_NAME = '곽준성'
+export const MAKER_NAMES = PUBLISHER_NAMES

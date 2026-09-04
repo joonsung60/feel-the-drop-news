@@ -12,6 +12,7 @@ import {
 import { prepareDailyNotification, type NotificationItem, type NotificationRun } from '../lib/daily-notification'
 import { sendTelegramMessage } from '../lib/telegram'
 import { buildArticleCardMessage } from '../lib/telegram-article-card'
+import { formatErrorWithCause, requestWithExplicitTimeout } from '../lib/long-running-http'
 
 loadEnvConfig(process.cwd())
 
@@ -68,9 +69,12 @@ function koreanDate(now = new Date()): string {
 }
 
 async function apiJson(path: string, init: RequestInit): Promise<Record<string, unknown>> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    ...init,
-    signal: AbortSignal.timeout(HTTP_TIMEOUT_MS),
+  const response = await requestWithExplicitTimeout(`${API_BASE_URL}${path}`, {
+    method: init.method,
+    headers: init.headers,
+    body: typeof init.body === 'string' ? init.body : undefined,
+    timeoutMs: HTTP_TIMEOUT_MS,
+    label: `${init.method ?? 'GET'} ${path}`,
   })
   const text = await response.text()
   let body: Record<string, unknown> = {}
@@ -389,7 +393,7 @@ async function main(allowTerminalRetry = false) {
     failureStage = 'notification'
     await finish(run, lockToken)
   } catch (error) {
-    const detail = error instanceof Error ? error.message : String(error)
+    const detail = formatErrorWithCause(error)
     const message = `${failureStage} 단계 실패: ${detail}`
     const timedOut = error instanceof Error && (error.name === 'TimeoutError' || error.name === 'AbortError')
     if (run) {
@@ -449,7 +453,7 @@ async function resumeRun(requestedRunId: string): Promise<void> {
     await waitForJobs(run, items, lockToken)
     await finish(run, lockToken)
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error)
+    const message = formatErrorWithCause(error)
     const timedOut = error instanceof Error && (error.name === 'TimeoutError' || error.name === 'AbortError')
     if (run) {
       await updateRun(run.id, lockToken, {
@@ -481,6 +485,6 @@ async function entrypoint(): Promise<void> {
 }
 
 void entrypoint().catch((error) => {
-  console.error('[daily-pipeline] 실행 실패:', error instanceof Error ? error.message : String(error))
+  console.error('[daily-pipeline] 실행 실패:', formatErrorWithCause(error))
   process.exitCode = 1
 })

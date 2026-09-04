@@ -7,6 +7,7 @@ import { dirname } from 'node:path'
 import { spawnSync } from 'node:child_process'
 
 const STASH = '.cf-build-stash'
+const DISCOVERY_MANIFEST = `${STASH}/discovery-manifest.json`
 const STATIC_ROUTE_PATHS = new Set(['app/feed.xml'])
 const STASH_CANDIDATES = [
   ['app/admin', `${STASH}/app/admin`],
@@ -52,7 +53,7 @@ let status = 0
 try {
   const generateStaticFiles = spawnSync(process.execPath, ['scripts/generate-static-files.mjs'], {
     stdio: 'inherit',
-    env: process.env,
+    env: { ...process.env, DISCOVERY_MANIFEST_PATH: DISCOVERY_MANIFEST },
   })
   if ((generateStaticFiles.status ?? 1) !== 0) {
     process.exit(generateStaticFiles.status ?? 1)
@@ -66,6 +67,14 @@ try {
     env: { ...process.env, BUILD_STATIC: '1' },
   })
   status = result.status ?? 1
+  if (status === 0) {
+    const validation = spawnSync(
+      process.execPath,
+      ['scripts/validate-discoverability.mjs', DISCOVERY_MANIFEST, 'out'],
+      { stdio: 'inherit', env: process.env }
+    )
+    status = validation.status ?? 1
+  }
 } finally {
   cleanup()
 }

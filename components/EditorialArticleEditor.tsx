@@ -12,6 +12,7 @@ import {
 } from '@/lib/article-blocks'
 import type { ArticleCoverImageMode } from '@/lib/article-cover'
 import { EditorialUploadSession } from '@/lib/editorial-upload-session'
+import { EDITOR_NAME } from '@/lib/site'
 
 type EditorialArticleEditorProps = {
   articleId: string | null
@@ -255,7 +256,7 @@ export function EditorialArticleEditor({ articleId, onClose, onSaved }: Editoria
             <div className="mb-6 flex justify-end"><button type="button" onClick={() => setShowPreview(false)} className="rounded border px-4 py-2 font-semibold">닫기</button></div>
             <article className="max-w-[720px]">
               <h1 className="mb-4 text-2xl font-black leading-tight tracking-tight sm:text-3xl md:text-4xl">{title}</h1>
-              <div className="mb-8 border-b border-gray-200 pb-4 text-sm text-gray-500">기사 · 편집 <span className="font-medium text-gray-800">FEEL THE DROP</span></div>
+              <div className="mb-8 border-b border-gray-200 pb-4 text-sm text-gray-500">기사 · 편집 <span className="font-medium text-gray-800">{EDITOR_NAME}</span></div>
               <ArticleRenderer content={projectedContent} contentBlocks={document} leadingImageUrl={!showCoverInArticle || coverImageMode === 'none' ? null : coverImageMode === 'custom' ? imageUrl : autoLeadingImageUrl} />
             </article>
           </div>

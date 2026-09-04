@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ArticleListItem } from "@/lib/articles";
+import { getArticlePath } from "@/lib/site";
 
 const CATEGORY_BADGE: Record<string, string> = {
   페스티벌: "bg-orange-500",
@@ -9,10 +10,6 @@ const CATEGORY_BADGE: Record<string, string> = {
 
 function badgeCls(category?: string | null): string {
   return category ? (CATEGORY_BADGE[category] ?? "bg-gray-800") : "bg-gray-800";
-}
-
-function articleHref(a: ArticleListItem): string {
-  return `/articles/${a.slug ?? a.id}`;
 }
 
 function formatDate(iso?: string | null): string {
@@ -25,7 +22,7 @@ function formatDate(iso?: string | null): string {
 }
 
 export function ArticleCard({ article }: { article: ArticleListItem }) {
-  const href = articleHref(article);
+  const href = getArticlePath(article);
   return (
     <article className="group">
       <Link href={href} className="block">

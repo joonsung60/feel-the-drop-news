@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { CONTACT_EMAIL, PUBLISHER } from '@/lib/site'
+import { CONTACT_EMAIL, EDITOR_NAME, PUBLISHER_NAMES } from '@/lib/site'
 
 export const metadata: Metadata = { title: '이용약관 | FEEL THE DROP' }
 
@@ -13,7 +13,7 @@ export default function TermsOfServicePage() {
       <section><h2 className="text-xl font-bold mb-3">3. 외부 링크에 대한 책임 제한</h2><p>본 사이트는 다른 웹사이트나 자료에 대한 링크를 포함할 수 있습니다. 이는 이용자의 편의를 위한 것이며, 해당 외부 웹사이트의 내용이나 정책에 대해 본 사이트는 어떠한 통제권도 없고 이에 대한 책임을 지지 않습니다.</p></section>
       <section><h2 className="text-xl font-bold mb-3">4. 서비스 변경 및 중단</h2><p>본 사이트는 운영상의 필요에 따라 제공하는 서비스의 내용을 변경하거나 중단할 수 있습니다.</p></section>
       <section><h2 className="text-xl font-bold mb-3">5. 분쟁 해결 및 관할 법원</h2><p>본 사이트 이용과 관련하여 발생한 분쟁은 대한민국 법령을 적용하며, 법적 다툼이 발생할 경우 대한민국의 관할 법원 절차를 따릅니다.</p></section>
-      <section><h2 className="text-xl font-bold mb-3">6. 운영자 정보</h2><ul className="list-none space-y-1"><li><strong>운영 매체명:</strong> FEEL THE DROP</li><li><strong>발행인·편집인:</strong> {PUBLISHER}</li><li><strong>문의:</strong> <a href={`mailto:${CONTACT_EMAIL}`} className="text-blue-600 hover:underline">{CONTACT_EMAIL}</a></li></ul></section>
+      <section><h2 className="text-xl font-bold mb-3">6. 운영자 정보</h2><ul className="list-none space-y-1"><li><strong>운영 매체명:</strong> FEEL THE DROP</li><li><strong>발행인:</strong> {PUBLISHER_NAMES}</li><li><strong>편집인:</strong> {EDITOR_NAME}</li><li><strong>문의:</strong> <a href={`mailto:${CONTACT_EMAIL}`} className="text-blue-600 hover:underline">{CONTACT_EMAIL}</a></li></ul></section>
     </div>
   </main></div>
 }

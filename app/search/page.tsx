@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
+import { getArticlePath } from "@/lib/site";
 
 type ArticleSearchResult = {
   id: string;
@@ -30,10 +31,6 @@ function formatDate(iso: string | null) {
     month: "long",
     day: "numeric",
   });
-}
-
-function articleHref(article: ArticleSearchResult) {
-  return `/articles/${article.slug ?? article.id}`;
 }
 
 function badgeClass(category: string | null) {
@@ -146,7 +143,7 @@ export default function SearchPage() {
           <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {results.map((article) => (
               <li key={article.id}>
-                <Link href={articleHref(article)} className="group block">
+                <Link href={getArticlePath(article)} className="group block">
                   <div className="relative aspect-[16/9] overflow-hidden bg-gray-100">
                     {article.image_url ? (
                       // eslint-disable-next-line @next/next/no-img-element

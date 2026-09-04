@@ -16,12 +16,12 @@ export default function BooksPage() {
       <div className="mt-12 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
         {BOOKS.map((book) => (
           <article key={book.slug}>
-            <Link href={`/books/${book.slug}`} className="block border border-gray-200 hover:border-gray-500 transition-colors">
+            <Link href={`/books/${book.slug}/`} className="block border border-gray-200 hover:border-gray-500 transition-colors">
               <Image src={book.coverImage} alt={`${book.title} 표지`} width={800} height={1136} className="h-auto w-full" />
             </Link>
             <p className="mt-4 text-xs text-gray-500">{book.publishedAt}</p>
-            <h2 className="mt-1 text-xl font-bold"><Link href={`/books/${book.slug}`} className="hover:underline">{book.title}</Link></h2>
-            <Link href={`/books/${book.slug}`} className="mt-3 inline-block text-sm font-bold text-[#0052D4] hover:underline">상세 보기 →</Link>
+            <h2 className="mt-1 text-xl font-bold"><Link href={`/books/${book.slug}/`} className="hover:underline">{book.title}</Link></h2>
+            <Link href={`/books/${book.slug}/`} className="mt-3 inline-block text-sm font-bold text-[#0052D4] hover:underline">상세 보기 →</Link>
           </article>
         ))}
       </div>

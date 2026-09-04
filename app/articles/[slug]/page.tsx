@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { loadClusterImageUrl, loadPublishedArticles } from "@/lib/articles";
 import { ArticleCard } from "@/components/ArticleCard";
 import { JsonLd } from "@/components/JsonLd";
-import { DEFAULT_OG_IMAGE_URL, ORGANIZATION_LOGO_URL, PUBLISHER, RSS_ALTERNATE, SITE_URL } from "@/lib/site";
+import { DEFAULT_OG_IMAGE_URL, EDITOR_NAME, getArticlePath, getArticleUrl, ORGANIZATION_LOGO_URL, PUBLISHER, RSS_ALTERNATE, SITE_URL } from "@/lib/site";
 import { createBreadcrumbJsonLd, ORGANIZATION_ID } from "@/lib/seo";
 import { ArticleRenderer } from "@/components/ArticleRenderer";
 import { extractFirstMarkdownImage } from "@/lib/article-body";
@@ -47,7 +47,7 @@ export async function generateMetadata({
 
   const description = createMetaDescription(data.content, data.content_blocks);
   const imageUrl = await resolveCoverForArticle(data);
-  const articlePath = `/articles/${data.slug ?? data.id}/`;
+  const articlePath = getArticlePath(data);
 
   return {
     title: `${data.title} | FEEL THE DROP`,
@@ -67,7 +67,7 @@ export async function generateMetadata({
       modifiedTime: data.updated_at ?? undefined,
       images: [{ url: imageUrl ?? DEFAULT_OG_IMAGE_URL }],
     },
-    authors: [{ name: PUBLISHER, url: `${SITE_URL}/` }],
+    authors: [{ name: EDITOR_NAME }],
   };
 }
 
@@ -193,7 +193,7 @@ export default async function ArticlePage({
   if (!data) notFound();
 
   if (data.slug && slug !== data.slug) {
-    permanentRedirect(`/articles/${data.slug}/`);
+    permanentRedirect(getArticlePath(data));
   }
 
   const article = data;
@@ -202,8 +202,8 @@ export default async function ArticlePage({
     ? articleImageUrl
     : null;
 
-  const articlePath = `/articles/${article.slug ?? article.id}/`;
-  const articleUrl = `${SITE_URL}${articlePath}`;
+  const articlePath = getArticlePath(article);
+  const articleUrl = getArticleUrl(article);
   const description = createMetaDescription(article.content, article.content_blocks);
   const publishedAt = toIsoDate(article.published_at ?? article.created_at);
   const modifiedAt = toIsoDate(article.updated_at ?? article.published_at ?? article.created_at);
@@ -217,6 +217,10 @@ export default async function ArticlePage({
       "@type": "ImageObject",
       url: ORGANIZATION_LOGO_URL,
     },
+  };
+  const author = {
+    "@type": "Person",
+    name: EDITOR_NAME,
   };
   const newsArticleJsonLd = {
     "@context": "https://schema.org",
@@ -232,7 +236,7 @@ export default async function ArticlePage({
     image: [structuredImageUrl],
     articleSection: article.category ?? article.genre ?? "기사",
     inLanguage: "ko-KR",
-    author: organization,
+    author,
     publisher: organization,
   };
   const breadcrumbJsonLd = createBreadcrumbJsonLd([
@@ -309,10 +313,10 @@ export default async function ArticlePage({
           {article.title}
         </h1>
 
-        {/* 발행인 구분선 */}
+        {/* 작성자 구분선 */}
         <div className="mb-8 pb-4 border-b border-gray-200 text-sm">
           <span className="text-gray-500">기사 · 편집</span>
-          <span className="ml-2 text-gray-800 font-medium">{PUBLISHER}</span>
+          <span className="ml-2 text-gray-800 font-medium">{EDITOR_NAME}</span>
         </div>
 
         {/* 본문 블록 */}

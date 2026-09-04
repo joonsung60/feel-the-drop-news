@@ -8,7 +8,7 @@
 
 예제 unit의 `PATH`는 현재 설치된 fnm Node.js `v24.15.0` 경로를 사용한다. Node.js 버전을 바꾸면 `readlink -f "$(command -v node)"`로 실제 설치 경로를 확인해 네 unit의 `Environment=PATH=...`를 함께 갱신한다.
 
-필수 값은 `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `BOT_TOKEN`, `ALLOWED_USERS`, `ADMIN_PASSWORD`다. Ollama 관련 값은 기존 설정을 사용한다. `LOCAL_API=http://127.0.0.1:3001`, `AUTO_DRAFT_LIMIT=15`를 권장한다. 선택 값은 `DAILY_PIPELINE_HTTP_TIMEOUT_MS`, `DAILY_PIPELINE_JOB_TIMEOUT_MS`, `DAILY_PIPELINE_POLL_INTERVAL_MS`, `DAILY_PIPELINE_READINESS_TIMEOUT_MS`다. runner는 DB 실행을 만들기 전에 Next API와 Ollama가 준비될 때까지 제한된 시간 동안 기다린다. `CRON_SECRET`은 `/api/cron`을 외부에서 사용할 때만 설정하며 localhost one-shot runner에는 필요하지 않다.
+필수 값은 `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `BOT_TOKEN`, `ALLOWED_USERS`, `ADMIN_PASSWORD`다. Ollama 관련 값은 기존 설정을 사용한다. `LOCAL_API=http://127.0.0.1:3001`, `AUTO_DRAFT_LIMIT=15`를 권장한다. 선택 값은 `DAILY_PIPELINE_HTTP_TIMEOUT_MS`, `DAILY_PIPELINE_JOB_TIMEOUT_MS`, `DAILY_PIPELINE_POLL_INTERVAL_MS`, `DAILY_PIPELINE_READINESS_TIMEOUT_MS`, `OLLAMA_GENERATE_TIMEOUT_MS`다. `OLLAMA_GENERATE_TIMEOUT_MS`의 기본값은 10분이며 Node 내장 fetch의 5분 제한을 사용하지 않는다. runner는 DB 실행을 만들기 전에 Next API와 Ollama가 준비될 때까지 제한된 시간 동안 기다린다. `CRON_SECRET`은 `/api/cron`을 외부에서 사용할 때만 설정하며 localhost one-shot runner에는 필요하지 않다.
 
 ## 설치와 시작
 

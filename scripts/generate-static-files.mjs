@@ -1,5 +1,15 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { dirname } from 'node:path'
 import { createClient } from '@supabase/supabase-js'
+import {
+  articleLastModified,
+  articlePath,
+  articleUrl,
+  isRecentPublishedArticle,
+  renderNewsSitemap,
+  renderSitemap,
+  toReliableIso,
+} from './discovery-artifacts.mjs'
 
 const taxonomy = JSON.parse(
   readFileSync(new URL('../lib/taxonomy.json', import.meta.url), 'utf8')
@@ -9,6 +19,7 @@ const GENRE_SLUGS = taxonomy.releaseGenres.map(({ slug }) => slug)
 
 // Keep this fallback synchronized with lib/site.ts.
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://feel-the-drop.com').replace(/\/$/, '')
+const QUERY_PAGE_SIZE = 1000
 
 function loadEnvLocal() {
   let text = ''
@@ -30,21 +41,6 @@ function loadEnvLocal() {
   }
 }
 
-function escapeXml(value) {
-  return String(value)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;')
-}
-
-function formatDate(value) {
-  if (!value) return new Date().toISOString()
-  const date = new Date(value)
-  return Number.isNaN(date.getTime()) ? new Date().toISOString() : date.toISOString()
-}
-
 loadEnvLocal()
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -55,83 +51,58 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
+const publishedArticles = []
 
-const { data: articles, error } = await supabase
-  .from('articles')
-  .select('id, slug, title, published_at, updated_at, created_at')
-  .eq('published', true)
-  .order('published_at', { ascending: false })
-  .limit(5000)
+for (let from = 0; ; from += QUERY_PAGE_SIZE) {
+  const { data, error } = await supabase
+    .from('articles')
+    .select('id, slug, title, published_at, updated_at, created_at')
+    .eq('published', true)
+    .order('published_at', { ascending: false, nullsFirst: false })
+    .order('id', { ascending: true })
+    .range(from, from + QUERY_PAGE_SIZE - 1)
 
-if (error) {
-  throw new Error(`Failed to load articles for sitemap: ${error.message}`)
+  if (error) {
+    throw new Error(`Failed to load articles for discovery artifacts: ${error.message}`)
+  }
+
+  const batch = data ?? []
+  publishedArticles.push(...batch)
+  if (batch.length < QUERY_PAGE_SIZE) break
 }
 
 mkdirSync('public', { recursive: true })
 
-const publishedArticles = articles ?? []
+const generatedAt = new Date()
 const articlesWithSlug = publishedArticles.filter((article) => article.slug)
-
-const urls = [
-  {
-    loc: `${SITE_URL}/`,
-    lastmod: new Date().toISOString(),
-    changefreq: 'hourly',
-    priority: '1.0',
-  },
-  {
-    loc: `${SITE_URL}/archive/`,
-    lastmod: new Date().toISOString(),
-    changefreq: 'daily',
-    priority: '0.7',
-  },
-  {
-    loc: `${SITE_URL}/features/`,
-    lastmod: new Date().toISOString(),
-    changefreq: 'daily',
-    priority: '0.8',
-  },
-  {
-    loc: `${SITE_URL}/press/`,
-    lastmod: new Date().toISOString(),
-    changefreq: 'monthly',
-    priority: '0.5',
-  },
-  ...CATEGORY_SLUGS.map((slug) => ({
-    loc: `${SITE_URL}/category/${slug}/`,
-    lastmod: new Date().toISOString(),
-    changefreq: 'daily',
-    priority: '0.7',
-  })),
-  ...GENRE_SLUGS.map((slug) => ({
-    loc: `${SITE_URL}/genre/${slug}/`,
-    lastmod: new Date().toISOString(),
-    changefreq: 'daily',
-    priority: '0.6',
-  })),
+const staticPaths = [
+  '/',
+  '/archive/',
+  '/features/',
+  '/press/',
+  ...CATEGORY_SLUGS.map((slug) => `/category/${slug}/`),
+  ...GENRE_SLUGS.map((slug) => `/genre/${slug}/`),
+]
+const sitemapEntries = [
+  ...staticPaths.map((path) => ({ loc: `${SITE_URL}${path}`, lastmod: null })),
   ...publishedArticles.map((article) => ({
-    loc: `${SITE_URL}/articles/${article.slug ?? article.id}/`,
-    lastmod: formatDate(article.updated_at || article.published_at || article.created_at),
-    changefreq: 'daily',
-    priority: '0.8',
+    loc: articleUrl(SITE_URL, article),
+    lastmod: articleLastModified(article),
   })),
 ]
 
-const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls.map((url) => `  <url>
-    <loc>${escapeXml(url.loc)}</loc>
-    <lastmod>${escapeXml(url.lastmod)}</lastmod>
-    <changefreq>${url.changefreq}</changefreq>
-    <priority>${url.priority}</priority>
-  </url>`).join('\n')}
-</urlset>
-`
+const sitemap = renderSitemap(sitemapEntries)
+const newsSitemap = renderNewsSitemap({
+  siteUrl: SITE_URL,
+  articles: publishedArticles,
+  now: generatedAt,
+})
 
 const robots = `User-agent: *
 Allow: /
 
 Sitemap: ${SITE_URL}/sitemap.xml
+Sitemap: ${SITE_URL}/news-sitemap.xml
 `
 
 const llms = `# FEEL THE DROP
@@ -140,6 +111,7 @@ const llms = `# FEEL THE DROP
 
 Base URL: ${SITE_URL}
 Sitemap: ${SITE_URL}/sitemap.xml
+News Sitemap: ${SITE_URL}/news-sitemap.xml
 
 ## Public Content
 
@@ -155,12 +127,36 @@ Sitemap: ${SITE_URL}/sitemap.xml
 `
 
 const redirects = articlesWithSlug
-  .map((article) => `/articles/${article.id}/ /articles/${article.slug}/ 301`)
+  .map((article) => `/articles/${article.id}/ ${articlePath(article)} 301`)
   .join('\n') + '\n'
 
 writeFileSync('public/sitemap.xml', sitemap)
+writeFileSync('public/news-sitemap.xml', newsSitemap)
 writeFileSync('public/robots.txt', robots)
 writeFileSync('public/llms.txt', llms)
 writeFileSync('public/_redirects', redirects)
 
-console.log(`Generated sitemap.xml, robots.txt, llms.txt, _redirects for ${(articles ?? []).length} published articles (${articlesWithSlug.length} with slug)`)
+const manifestPath = process.env.DISCOVERY_MANIFEST_PATH
+if (manifestPath) {
+  mkdirSync(dirname(manifestPath), { recursive: true })
+  writeFileSync(manifestPath, JSON.stringify({
+    generatedAt: generatedAt.toISOString(),
+    siteUrl: SITE_URL,
+    articles: publishedArticles.map((article) => ({
+      id: article.id,
+      slug: article.slug,
+      title: article.title,
+      publishedAt: toReliableIso(article.published_at),
+      canonicalPath: articlePath(article),
+      canonicalUrl: articleUrl(SITE_URL, article),
+      recent: isRecentPublishedArticle(article, generatedAt),
+    })),
+  }, null, 2))
+}
+
+const recentCount = publishedArticles.filter((article) =>
+  isRecentPublishedArticle(article, generatedAt)
+).length
+console.log(
+  `Generated sitemap.xml, news-sitemap.xml, robots.txt, llms.txt, _redirects for ${publishedArticles.length} published articles (${recentCount} recent, ${articlesWithSlug.length} with slug)`
+)

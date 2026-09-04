@@ -13,6 +13,7 @@ import {
 } from "@/lib/homepage-selection";
 import { loadHomepagePlacements } from "@/lib/homepage-placement";
 import { loadFeatureArticleIds, loadPublishedFeatureCandidates } from "@/lib/article-features";
+import { getArticlePath } from "@/lib/site";
 
 // ── 유틸 ──────────────────────────────────────────────
 
@@ -24,10 +25,6 @@ const CATEGORY_BADGE: Record<string, string> = {
 
 function badgeCls(category?: string | null): string {
   return category ? (CATEGORY_BADGE[category] ?? "bg-gray-800") : "bg-gray-800";
-}
-
-function articleHref(a: ArticleListItem): string {
-  return `/articles/${a.slug ?? a.id}`;
 }
 
 function formatDate(iso?: string | null): string {
@@ -42,7 +39,7 @@ function formatDate(iso?: string | null): string {
 // ── 히어로 ────────────────────────────────────────────
 
 function Hero({ article }: { article: ArticleListItem }) {
-  const href = articleHref(article);
+  const href = getArticlePath(article);
   return (
     <Link href={href} className="group block mb-10 md:mb-14">
       <div className="relative w-full aspect-[16/9] md:aspect-[21/9] overflow-hidden bg-gray-900">
@@ -86,7 +83,7 @@ function Hero({ article }: { article: ArticleListItem }) {
 // ── 사이드바 인기 기사 ─────────────────────────────────
 
 function SidebarItem({ article, rank }: { article: ArticleListItem; rank: number }) {
-  const href = articleHref(article);
+  const href = getArticlePath(article);
   return (
     <article className="group flex gap-3 py-4 border-b border-gray-100 last:border-0">
       {/* 순위 */}

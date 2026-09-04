@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Script from "next/script";
 import { Barlow_Condensed, Noto_Sans_KR } from "next/font/google";
-import { DEFAULT_OG_IMAGE_URL, PUBLISHER, RSS_ALTERNATE, SITE_URL, SOCIAL_LINKS } from "@/lib/site";
+import { DEFAULT_OG_IMAGE_URL, EDITOR_NAME, PUBLISHER_NAMES, RSS_ALTERNATE, SITE_URL, SOCIAL_LINKS } from "@/lib/site";
 import { JsonLd } from "@/components/JsonLd";
 import { ORGANIZATION_JSON_LD, WEBSITE_JSON_LD } from "@/lib/seo";
 import { CATEGORY_NAV, RELEASE_GENRE_NAV } from "@/lib/taxonomy";
@@ -63,9 +63,9 @@ const NAV_ITEMS = [
   { label: "특집", href: "/features/" },
   ...CATEGORY_NAV.map((item) => ({
     label: item.label,
-    href: `/category/${item.slug}`,
+    href: `/category/${item.slug}/`,
   })),
-  { label: "도서", href: "/books" },
+  { label: "도서", href: "/books/" },
 ];
 
 const showAdminLink = process.env.BUILD_STATIC !== "1";
@@ -131,7 +131,7 @@ export default function RootLayout({
                   보도문의
                 </Link>
                 <Link
-                  href="/search"
+                  href="/search/"
                   aria-label="검색"
                   title="검색"
                   className="flex h-8 w-8 items-center justify-center border border-gray-200 text-gray-500 transition-colors hover:border-gray-400 hover:text-black focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black"
@@ -212,10 +212,10 @@ export default function RootLayout({
                   {SOCIAL_LINKS.map((link) => <a key={link.locale} href={link.url} target="_blank" rel="noopener noreferrer" aria-label={`FEEL THE DROP ${link.locale === 'KR' ? '한국어' : '일본어'} 인스타그램`} className="inline-flex items-center gap-1.5 hover:text-black transition-colors"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" /></svg>{link.locale}</a>)}
                 </div>
               </div>
-              <div><h2 className="text-xs font-bold tracking-[0.2em] uppercase" style={{ fontFamily: "var(--font-display), sans-serif" }}>섹션</h2><div className="mt-4 grid grid-cols-2 gap-x-5 gap-y-3 text-sm font-medium text-gray-700"><Link href="/features/" className="hover:text-black transition-colors">특집</Link>{CATEGORY_NAV.map((item) => <Link key={item.slug} href={`/category/${item.slug}`} className="hover:text-black transition-colors">{item.label}</Link>)}{RELEASE_GENRE_NAV.map((item) => <Link key={item.slug} href={`/genre/${item.slug}`} className="hover:text-black transition-colors">{item.label}</Link>)}<Link href="/archive/" className="hover:text-black transition-colors">전체 기사</Link><Link href="/books" className="hover:text-black transition-colors">도서</Link><Link href="/feed.xml" className="hover:text-black transition-colors">RSS</Link></div></div>
-              <div><h2 className="text-xs font-bold tracking-[0.2em] uppercase" style={{ fontFamily: "var(--font-display), sans-serif" }}>정보</h2><div className="mt-4 flex flex-col gap-3 text-sm font-medium text-gray-700"><Link href="/about" className="hover:text-black transition-colors">소개</Link><Link href="/editorial-policy" className="hover:text-black transition-colors">편집·출처 정책</Link><Link href="/corrections" className="hover:text-black transition-colors">정정·제보</Link><Link href="/privacy" className="hover:text-black transition-colors">개인정보처리방침</Link><Link href="/terms" className="hover:text-black transition-colors">이용약관</Link><Link href="/press/" className="hover:text-black transition-colors focus-visible:outline-2 focus-visible:outline-offset-4">보도문의</Link></div></div>
+              <div><h2 className="text-xs font-bold tracking-[0.2em] uppercase" style={{ fontFamily: "var(--font-display), sans-serif" }}>섹션</h2><div className="mt-4 grid grid-cols-2 gap-x-5 gap-y-3 text-sm font-medium text-gray-700"><Link href="/features/" className="hover:text-black transition-colors">특집</Link>{CATEGORY_NAV.map((item) => <Link key={item.slug} href={`/category/${item.slug}/`} className="hover:text-black transition-colors">{item.label}</Link>)}{RELEASE_GENRE_NAV.map((item) => <Link key={item.slug} href={`/genre/${item.slug}/`} className="hover:text-black transition-colors">{item.label}</Link>)}<Link href="/archive/" className="hover:text-black transition-colors">전체 기사</Link><Link href="/books/" className="hover:text-black transition-colors">도서</Link><Link href="/feed.xml" className="hover:text-black transition-colors">RSS</Link></div></div>
+              <div><h2 className="text-xs font-bold tracking-[0.2em] uppercase" style={{ fontFamily: "var(--font-display), sans-serif" }}>정보</h2><div className="mt-4 flex flex-col gap-3 text-sm font-medium text-gray-700"><Link href="/about/" className="hover:text-black transition-colors">소개</Link><Link href="/editorial-policy/" className="hover:text-black transition-colors">편집·출처 정책</Link><Link href="/corrections/" className="hover:text-black transition-colors">정정·제보</Link><Link href="/privacy/" className="hover:text-black transition-colors">개인정보처리방침</Link><Link href="/terms/" className="hover:text-black transition-colors">이용약관</Link><Link href="/press/" className="hover:text-black transition-colors focus-visible:outline-2 focus-visible:outline-offset-4">보도문의</Link></div></div>
             </div>
-            <div className="mt-10 pt-6 border-t border-gray-200 flex flex-col md:flex-row justify-between gap-6 text-xs text-gray-500"><p>© 2026 FEEL THE DROP. All rights reserved.</p><p>발행인·편집인 {PUBLISHER}</p></div>
+            <div className="mt-10 pt-6 border-t border-gray-200 flex flex-col md:flex-row justify-between gap-6 text-xs text-gray-500"><p>© 2026 FEEL THE DROP. All rights reserved.</p><p>발행인 {PUBLISHER_NAMES} · 편집인 {EDITOR_NAME}</p></div>
           </div>
         </footer>
       </body>

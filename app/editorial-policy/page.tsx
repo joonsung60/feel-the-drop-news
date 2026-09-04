@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { EDITOR_NAME } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: '편집·출처 정책 | FEEL THE DROP',
@@ -28,7 +29,7 @@ export default function EditorialPolicyPage() {
           <section>
             <h2 className="text-xl font-bold mb-3">2. 기술 및 AI의 보조적 활용</h2>
             <p>
-              방대한 글로벌 소식을 신속하게 한국어로 전달하기 위해, 기사 초안 작성, 텍스트 번역 및 요약, 토픽 분류, 이미지 분석 과정에서 자동화 도구와 AI 모델을 보조적으로 활용할 수 있습니다. 그러나 모든 콘텐츠는 최종 게시 전 사람(편집인)의 검토와 승인을 거쳐 발행됩니다.
+              방대한 글로벌 소식을 신속하게 한국어로 전달하기 위해, 기사 초안 작성, 텍스트 번역 및 요약, 토픽 분류, 이미지 분석 과정에서 자동화 도구와 AI 모델을 보조적으로 활용할 수 있습니다. 그러나 모든 콘텐츠는 최종 게시 전 편집인 {EDITOR_NAME}의 검토와 승인을 거쳐 발행됩니다.
             </p>
           </section>
 

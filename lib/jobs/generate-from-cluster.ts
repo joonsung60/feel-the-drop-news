@@ -19,6 +19,7 @@ import {
 } from '@/lib/jobs/editorial-terms'
 import { SYSTEM_PROMPT_A } from '@/lib/prompts'
 import { findGenre } from '@/lib/taxonomy'
+import { formatErrorWithCause, requestWithExplicitTimeout } from '@/lib/long-running-http'
 
 const ARTICLE_RESPONSE_FORMAT = {
   type: 'object',
@@ -52,6 +53,7 @@ const ALLOWED_CATEGORIES = ['페스티벌', '릴리즈', '뉴스']
 const SLUG_MAX_LENGTH = 50
 const DEFAULT_CATEGORY = '뉴스'
 const DEFAULT_GENRE = 'edm'
+const DEFAULT_OLLAMA_GENERATE_TIMEOUT_MS = 10 * 60_000
 
 type ClusterArticleRow = {
   raw_article_id: string
@@ -309,6 +311,10 @@ async function generateKoreanArticle(articles: SourceArticle[]): Promise<Generat
 
   const ollamaUrl = process.env.OLLAMA_BASE_URL || 'http://localhost:11434'
   const ollamaModel = process.env.OLLAMA_GENERATE_MODEL || process.env.OLLAMA_MODEL || 'qwen3:14b'
+  const configuredTimeout = Number(process.env.OLLAMA_GENERATE_TIMEOUT_MS)
+  const ollamaTimeoutMs = Number.isInteger(configuredTimeout) && configuredTimeout > 0
+    ? configuredTimeout
+    : DEFAULT_OLLAMA_GENERATE_TIMEOUT_MS
   let lastError = '생성 실패'
 
   for (let attempt = 1; attempt <= 2; attempt++) {
@@ -316,7 +322,7 @@ async function generateKoreanArticle(articles: SourceArticle[]): Promise<Generat
       ? `\n이전 응답은 검증에 실패했습니다. 실패 이유: ${lastError}\n이번에는 영어 원문 문장과 사이트 메뉴 문구를 절대 포함하지 말고, 자연스러운 한국어 기사로 다시 작성하세요.\n`
       : ''
 
-    const res = await fetch(`${ollamaUrl}/api/generate`, {
+    const res = await requestWithExplicitTimeout(`${ollamaUrl}/api/generate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -365,6 +371,8 @@ ${articlesText}
         stream: false,
         think: false,
       }),
+      timeoutMs: ollamaTimeoutMs,
+      label: `Ollama article generation attempt ${attempt}`,
     })
 
     const data = await res.json()
@@ -528,7 +536,7 @@ export async function generateFromCluster(
 
       results.push({ success: true, clusterId, article: data })
     } catch (err) {
-      results.push({ success: false, clusterId, error: String(err) })
+      results.push({ success: false, clusterId, error: formatErrorWithCause(err) })
     }
   }
 

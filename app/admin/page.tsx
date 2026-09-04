@@ -12,6 +12,7 @@ import {
   confirmAndApplyHomepagePlacement,
   resolveHomepageUnpublishOutcome,
 } from '@/lib/homepage-editorial-mutation'
+import { EDITOR_NAME } from '@/lib/site'
 
 type AdminGroup = 'rss' | 'image' | 'interview'
 type RssTab = 'collect' | 'add-urls' | 'suggest' | 'articles' | 'cluster' | 'generate'
@@ -2470,7 +2471,7 @@ function ArticlePreviewModal({
           </h1>
           <div className="mb-8 border-b border-gray-200 pb-4 text-sm">
             <span className="text-gray-500">기사 · 편집</span>
-            <span className="ml-2 font-medium text-gray-800">FEEL THE DROP</span>
+            <span className="ml-2 font-medium text-gray-800">{EDITOR_NAME}</span>
           </div>
           <ArticleRenderer
             content={article.content}

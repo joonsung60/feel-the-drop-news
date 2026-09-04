@@ -12,8 +12,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const book = findBook((await params).slug)
   if (!book) return { title: '도서를 찾을 수 없습니다 | FEEL THE DROP' }
   const description = book.description[0]
-  const url = `/books/${book.slug}`
-  return { title: `${book.title} | FEEL THE DROP`, description, openGraph: { title: book.title, description, url, images: [{ url: `${SITE_URL}${book.coverImage}` }] } }
+  const url = `/books/${book.slug}/`
+  return { title: `${book.title} | FEEL THE DROP`, description, alternates: { canonical: url }, openGraph: { title: book.title, description, url, images: [{ url: `${SITE_URL}${book.coverImage}` }] } }
 }
 
 export default async function BookDetailPage({ params }: PageProps) {

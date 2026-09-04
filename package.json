@@ -7,6 +7,7 @@
     "dev:all": "npm run dev",
     "build": "next build --webpack",
     "build:static": "node scripts/build-static.mjs",
+    "test:discovery": "node --test tests/discovery-artifacts.test.mjs",
     "start": "next start",
     "lint": "eslint"
   },

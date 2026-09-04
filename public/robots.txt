@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://feel-the-drop.com/sitemap.xml
+Sitemap: https://feel-the-drop.com/news-sitemap.xml
